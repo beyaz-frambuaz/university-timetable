@@ -20,10 +20,11 @@ public class Schedule implements Comparable<Schedule> {
     private final Group group;
     private final Professor professor;
     private ScheduleTemplate scheduleTemplate;
-    
-    public Schedule(ScheduleTemplate scheduleTemplate, LocalDate date) {
-        
-        this.id = 0;
+
+    public Schedule(long id, ScheduleTemplate scheduleTemplate,
+            LocalDate date) {
+
+        this.id = id;
         this.templateId = scheduleTemplate.getId();
         this.scheduleTemplate = scheduleTemplate;
         this.date = date;
@@ -34,7 +35,7 @@ public class Schedule implements Comparable<Schedule> {
         this.group = scheduleTemplate.getGroup();
         this.professor = scheduleTemplate.getProfessor();
     }
-    
+
     @Override
     public int compareTo(Schedule other) {
         if (date.compareTo(other.getDate()) == 0) {

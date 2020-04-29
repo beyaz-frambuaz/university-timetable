@@ -1,0 +1,172 @@
+package com.foxminded.timetable.dao.jdbc;
+
+import static org.assertj.core.api.Assertions.assertThat;
+
+import java.sql.ResultSet;
+import java.time.DayOfWeek;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
+import java.util.Optional;
+
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.test.autoconfigure.jdbc.JdbcTest;
+import org.springframework.context.annotation.ComponentScan;
+import org.springframework.jdbc.core.namedparam.MapSqlParameterSource;
+import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
+import org.springframework.jdbc.core.namedparam.SqlParameterSource;
+import org.springframework.jdbc.core.namedparam.SqlParameterSourceUtils;
+import org.springframework.test.context.jdbc.Sql;
+
+import com.foxminded.timetable.dao.GroupDao;
+import com.foxminded.timetable.model.Auditorium;
+import com.foxminded.timetable.model.Course;
+import com.foxminded.timetable.model.Group;
+import com.foxminded.timetable.model.Period;
+import com.foxminded.timetable.model.Professor;
+import com.foxminded.timetable.model.ScheduleTemplate;
+
+@JdbcTest
+@ComponentScan
+@Sql(scripts = "classpath:schema.sql")
+class JdbcGroupDaoTest {
+
+    @Autowired
+    private NamedParameterJdbcTemplate jdbc;
+
+    private GroupDao groupRepository;
+
+    private List<Group> groups = Arrays.asList(new Group(1L, "one"),
+            new Group(2L, "two"), new Group(3L, "three"));
+
+    @BeforeEach
+    private void setUp() {
+        this.groupRepository = new JdbcGroupDao(jdbc);
+    }
+
+    @Test
+    public void countShouldReturnCorrectAmountOfGroups() {
+
+        manuallySaveAll();
+        long expected = 3L;
+
+        long actual = groupRepository.count();
+
+        assertThat(actual).isEqualTo(expected);
+    }
+
+    @Test
+    public void findAllShouldRetrieveCorrectListOfGroups() {
+
+        manuallySaveAll();
+
+        List<Group> actual = groupRepository.findAll();
+
+        assertThat(actual).hasSameElementsAs(groups);
+    }
+
+    @Test
+    public void findAllByProfessorAndCourseShouldReturnCorrectListOfGroups() {
+
+        manuallySaveAll();
+
+        Course course = new Course(1L, "");
+        Auditorium auditorium = new Auditorium(1L, "");
+        Professor professorOne = new Professor(1L, "one", "one");
+        Professor professorTwo = new Professor(2L, "two", "two");
+
+        String insertCourseSql = "INSERT INTO courses (name) VALUES (:name)";
+        jdbc.update(insertCourseSql,
+                new MapSqlParameterSource("name", course.getName()));
+
+        String insertAuditoriumSql = "INSERT INTO auditoriums (name) VALUES (:name)";
+        jdbc.update(insertAuditoriumSql,
+                new MapSqlParameterSource("name", auditorium.getName()));
+
+        String insertProfessorSql = "INSERT INTO professors "
+                + "(first_name, last_name) VALUES (:firstName, :lastName)";
+        jdbc.batchUpdate(insertProfessorSql, SqlParameterSourceUtils
+                .createBatch(professorOne, professorTwo));
+
+        boolean weekParity = false;
+        Group expectedOne = groups.get(0);
+        ScheduleTemplate templateAuditoriumOne = new ScheduleTemplate(1L,
+                weekParity, DayOfWeek.MONDAY, Period.FIRST, auditorium, course,
+                expectedOne, professorOne);
+        Group notExpected = groups.get(1);
+        ScheduleTemplate templateAuditoriumTwo = new ScheduleTemplate(2L,
+                weekParity, DayOfWeek.MONDAY, Period.FIRST, auditorium, course,
+                notExpected, professorTwo);
+        Group expectedTwo = groups.get(2);
+        ScheduleTemplate templateAuditoriumThree = new ScheduleTemplate(3L,
+                weekParity, DayOfWeek.MONDAY, Period.SECOND, auditorium, course,
+                expectedTwo, professorOne);
+        List<ScheduleTemplate> templates = Arrays.asList(templateAuditoriumOne,
+                templateAuditoriumTwo, templateAuditoriumThree);
+
+        String insertTemplatesSql = "INSERT INTO schedule_templates "
+                + "(week_parity, day, period, auditorium_id, course_id, "
+                + "group_id, professor_id) VALUES (:weekParity, :day, :period, "
+                + ":auditoriumId, :courseId, :groupId, :professorId)";
+        List<SqlParameterSource> paramSource = new ArrayList<>();
+        for (ScheduleTemplate template : templates) {
+            paramSource.add(new MapSqlParameterSource()
+                    .addValue("weekParity", template.getWeekParity())
+                    .addValue("day", template.getDay().toString())
+                    .addValue("period", template.getPeriod().name())
+                    .addValue("auditoriumId", template.getAuditorium().getId())
+                    .addValue("courseId", template.getCourse().getId())
+                    .addValue("groupId", template.getGroup().getId())
+                    .addValue("professorId", template.getProfessor().getId()));
+        }
+        jdbc.batchUpdate(insertTemplatesSql, paramSource
+                .toArray(new SqlParameterSource[paramSource.size()]));
+
+        List<Group> actual = groupRepository.findAllByProfessorAndCourse(
+                professorOne.getId(), course.getId());
+
+        assertThat(actual).containsOnly(expectedOne, expectedTwo)
+                .doesNotContain(notExpected);
+    }
+
+    @Test
+    public void findByIdShouldReturnCorrectGroups() {
+
+        manuallySaveAll();
+        Group expectedGroup = new Group(3L, "three");
+
+        Optional<Group> actualAuditorium = groupRepository.findById(3L);
+
+        assertThat(actualAuditorium).isNotEmpty().contains(expectedGroup);
+    }
+
+    @Test
+    public void findByIdShouldReturnEmptyOptionalGivenNonExistingId() {
+
+        manuallySaveAll();
+
+        Optional<Group> actualGroup = groupRepository.findById(999L);
+
+        assertThat(actualGroup).isEmpty();
+    }
+
+    @Test
+    public void saveAllShouldSaveAllGroups() {
+
+        groupRepository.saveAll(groups);
+
+        String sql = "SELECT groups.id, groups.name FROM groups";
+        List<Group> actual = jdbc.query(sql, (ResultSet rs,
+                int rowNum) -> new Group(rs.getLong(1), rs.getString(2)));
+
+        assertThat(actual).hasSameElementsAs(groups);
+    }
+    
+    private void manuallySaveAll() {
+        String sql = "INSERT INTO groups (name) VALUES (:name)";
+        jdbc.batchUpdate(sql, SqlParameterSourceUtils.createBatch(groups));
+    }
+
+}

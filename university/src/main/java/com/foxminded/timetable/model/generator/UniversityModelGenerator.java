@@ -24,9 +24,11 @@ import com.foxminded.timetable.model.Professor;
 import com.foxminded.timetable.model.Student;
 
 import lombok.RequiredArgsConstructor;
+import lombok.Setter;
 import lombok.extern.slf4j.Slf4j;
 
 @Slf4j
+@Setter
 @Service
 @RequiredArgsConstructor
 public class UniversityModelGenerator {
@@ -65,7 +67,7 @@ public class UniversityModelGenerator {
     }
 
     /*
-     * Randomly assign 1-3 courses per professor and 1-2 professors per course
+     * Randomly assign 1-4 courses per professor and 1-2 professors per course
      */
     private void assignCoursesToProfessors(List<Course> courses,
             List<Professor> professors) {

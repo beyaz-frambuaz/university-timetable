@@ -182,8 +182,8 @@ public class MenuManager {
             LocalDate end) {
 
         System.out.println("Pick a student ID: ");
-        int studentId = inputCollector.requestOption(1,
-                timetable.countStudents());
+        Long studentId = Long.valueOf(inputCollector.requestOption(1,
+                timetable.countStudents()));
         log.debug("User chose to view schedule for student ID {}", studentId);
         List<Schedule> studentSchedule = timetable
                 .findScheduleByStudentId(studentId, start, end);

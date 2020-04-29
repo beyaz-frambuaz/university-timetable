@@ -39,7 +39,7 @@ public class Timetable {
         return (int) repositories.getStudentRepository().count();
     }
 
-    public List<Schedule> findScheduleByStudentId(int id, LocalDate startDate,
+    public List<Schedule> findScheduleByStudentId(long id, LocalDate startDate,
             LocalDate endDate) {
 
         log.debug("Fetching student from repository");
@@ -134,6 +134,33 @@ public class Timetable {
         }
         return schedules;
     }
+    
+    private List<Schedule> lookupSchedule(LocalDate date) {
+
+        log.debug("Fetching schedules for {} from repository", date);
+        List<Schedule> dateSchedules = repositories.getScheduleRepository()
+                .findAllByDate(date);
+
+        if (dateSchedules.isEmpty()) {
+            log.debug("Nothing found, generating schedules for {}", date);
+            dateSchedules = generateAndSaveSchedule(date);
+        }
+        return dateSchedules;
+    }
+
+    private List<Schedule> generateAndSaveSchedule(LocalDate date) {
+
+        boolean weekParity = semesterCalendar.getWeekParityOf(date);
+        DayOfWeek day = date.getDayOfWeek();
+        List<ScheduleTemplate> dateTemplates = repositories
+                .getTemplateRepository().findAllByDate(weekParity, day);
+        List<Schedule> dateSchedules = dateTemplates.stream()
+                .map(template -> new Schedule(1L, template, date))
+                .collect(toList());
+
+        repositories.getScheduleRepository().saveAll(dateSchedules);
+        return repositories.getScheduleRepository().findAllByDate(date);
+    }
 
     public Schedule substituteProfessor(long scheduleId, long professorId) {
 
@@ -158,6 +185,21 @@ public class Timetable {
             }
         }
         return results;
+    }
+
+    private Map<LocalDate, List<ReschedulingOption>> getDayReschedulingOptions(
+            Schedule candidate, LocalDate targetDate) {
+
+        log.debug("Fetching rescheduling options from repository for {}",
+                targetDate);
+        Map<LocalDate, List<ReschedulingOption>> result = new HashMap<>();
+        boolean weekParity = semesterCalendar.getWeekParityOf(targetDate);
+        List<ReschedulingOption> options = repositories
+                .getReschedulingOptionRepository()
+                .findDayReschedulingOptionsForSchedule(weekParity, targetDate,
+                        candidate);
+        result.put(targetDate, options);
+        return result;
     }
 
     public Schedule rescheduleOnce(Schedule candidate, LocalDate targetDate,
@@ -196,48 +238,6 @@ public class Timetable {
         repositories.getScheduleRepository().updateAllWithTemplateId(
                 candidate.getTemplateId(), targetOption, deltaDays);
 
-    }
-
-    private Map<LocalDate, List<ReschedulingOption>> getDayReschedulingOptions(
-            Schedule candidate, LocalDate targetDate) {
-
-        log.debug("Fetching rescheduling options from repository for {}",
-                targetDate);
-        Map<LocalDate, List<ReschedulingOption>> result = new HashMap<>();
-        boolean weekParity = semesterCalendar.getWeekParityOf(targetDate);
-        List<ReschedulingOption> options = repositories
-                .getReschedulingOptionRepository()
-                .findDayReschedulingOptionsForSchedule(weekParity, targetDate,
-                        candidate);
-        result.put(targetDate, options);
-        return result;
-    }
-
-    private List<Schedule> lookupSchedule(LocalDate date) {
-
-        log.debug("Fetching schedules for {} from repository", date);
-        List<Schedule> dateSchedules = repositories.getScheduleRepository()
-                .findAllByDate(date);
-
-        if (dateSchedules.isEmpty()) {
-            log.debug("Nothing found, generating schedules for {}", date);
-            dateSchedules = generateAndSaveSchedule(date);
-        }
-        return dateSchedules;
-    }
-
-    private List<Schedule> generateAndSaveSchedule(LocalDate date) {
-
-        boolean weekParity = semesterCalendar.getWeekParityOf(date);
-        DayOfWeek day = date.getDayOfWeek();
-        List<ScheduleTemplate> dateTemplates = repositories
-                .getTemplateRepository().findAllByDate(weekParity, day);
-        List<Schedule> dateSchedules = dateTemplates.stream()
-                .map(template -> new Schedule(template, date))
-                .collect(toList());
-
-        repositories.getScheduleRepository().saveAll(dateSchedules);
-        return repositories.getScheduleRepository().findAllByDate(date);
     }
 
 }
