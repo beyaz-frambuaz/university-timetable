@@ -13,15 +13,16 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.jdbc.JdbcTest;
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
-import org.springframework.jdbc.core.namedparam.SqlParameterSourceUtils;
 import org.springframework.test.context.jdbc.Sql;
+import org.springframework.test.context.jdbc.SqlMergeMode;
 
 import com.foxminded.timetable.dao.CourseDao;
 import com.foxminded.timetable.model.Course;
 
 @JdbcTest
 @ComponentScan
-@Sql(scripts = "classpath:schema.sql")
+@Sql("classpath:schema.sql")
+@SqlMergeMode(SqlMergeMode.MergeMode.MERGE)
 class JdbcCourseDaoTest {
 
     @Autowired
@@ -38,20 +39,18 @@ class JdbcCourseDaoTest {
     }
 
     @Test
+    @Sql("classpath:preload_sample_data_course_test.sql")
     public void countShouldReturnCorrectAmountOfCourses() {
 
-        manuallySaveAll();
         long expected = 3L;
-
         long actual = courseRepository.count();
 
         assertThat(actual).isEqualTo(expected);
     }
 
     @Test
+    @Sql("classpath:preload_sample_data_course_test.sql")
     public void findAllShouldRetrieveCorrectListOfCourses() {
-
-        manuallySaveAll();
 
         List<Course> actual = courseRepository.findAll();
 
@@ -59,11 +58,10 @@ class JdbcCourseDaoTest {
     }
 
     @Test
+    @Sql("classpath:preload_sample_data_course_test.sql")
     public void findByIdShouldReturnCorrectCourse() {
 
-        manuallySaveAll();
         Course expectedCourse = new Course(3L, "three");
-
         Optional<Course> actualCourse = courseRepository
                 .findById(3L);
 
@@ -71,9 +69,8 @@ class JdbcCourseDaoTest {
     }
 
     @Test
+    @Sql("classpath:preload_sample_data_course_test.sql")
     public void findByIdShouldReturnEmptyOptionalGivenNonExistingId() {
-
-        manuallySaveAll();
 
         Optional<Course> actualCourse = courseRepository
                 .findById(999L);
@@ -91,11 +88,6 @@ class JdbcCourseDaoTest {
                 int rowNum) -> new Course(rs.getLong(1), rs.getString(2)));
 
         assertThat(actual).hasSameElementsAs(courses);
-    }
-    
-    private void manuallySaveAll() {
-        String sql = "INSERT INTO courses (name) VALUES (:name)";
-        jdbc.batchUpdate(sql, SqlParameterSourceUtils.createBatch(courses));
     }
 
 }

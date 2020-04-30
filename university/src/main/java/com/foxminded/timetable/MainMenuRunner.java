@@ -6,9 +6,9 @@ import org.springframework.boot.ApplicationArguments;
 import org.springframework.boot.ApplicationRunner;
 import org.springframework.stereotype.Component;
 
-import com.foxminded.timetable.menu.MenuManager;
-import com.foxminded.timetable.model.generator.TimetableModelGenerator;
-import com.foxminded.timetable.model.generator.UniversityModelGenerator;
+import com.foxminded.timetable.service.menu.MenuManager;
+import com.foxminded.timetable.service.model.generator.TimetableModelGenerator;
+import com.foxminded.timetable.service.model.generator.UniversityModelGenerator;
 
 import lombok.RequiredArgsConstructor;
 

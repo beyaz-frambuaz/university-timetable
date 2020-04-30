@@ -5,7 +5,6 @@ import static org.assertj.core.api.Assertions.assertThat;
 import java.sql.ResultSet;
 import java.time.DayOfWeek;
 import java.time.LocalDate;
-import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;
@@ -17,9 +16,8 @@ import org.springframework.boot.test.autoconfigure.jdbc.JdbcTest;
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.jdbc.core.namedparam.MapSqlParameterSource;
 import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
-import org.springframework.jdbc.core.namedparam.SqlParameterSource;
-import org.springframework.jdbc.core.namedparam.SqlParameterSourceUtils;
 import org.springframework.test.context.jdbc.Sql;
+import org.springframework.test.context.jdbc.SqlMergeMode;
 
 import com.foxminded.timetable.dao.ScheduleDao;
 import com.foxminded.timetable.model.Auditorium;
@@ -33,7 +31,8 @@ import com.foxminded.timetable.model.ScheduleTemplate;
 
 @JdbcTest
 @ComponentScan
-@Sql(scripts = "classpath:schema.sql")
+@Sql("classpath:schema.sql")
+@SqlMergeMode(SqlMergeMode.MergeMode.MERGE)
 class JdbcScheduleDaoTest {
 
     @Autowired
@@ -44,11 +43,11 @@ class JdbcScheduleDaoTest {
     private LocalDate dateOne = LocalDate.of(2020, 9, 7);
     private LocalDate dateTwo = LocalDate.of(2020, 9, 14);
 
-    private Auditorium auditorium = new Auditorium(1L, "");
+    private Auditorium auditorium = new Auditorium(1L, "one");
     private Auditorium auditoriumNew = new Auditorium(2L, "new");
-    private Course course = new Course(1L, "");
-    private Group group = new Group(1L, "");
-    private Professor professorOriginal = new Professor(1L, "", "");
+    private Course course = new Course(1L, "one");
+    private Group group = new Group(1L, "one");
+    private Professor professorOriginal = new Professor(1L, "one", "one");
     private Professor professorNew = new Professor(2L, "new", "new");
 
     private ScheduleTemplate templateOne = new ScheduleTemplate(1L, false,
@@ -64,6 +63,17 @@ class JdbcScheduleDaoTest {
 
     private List<Schedule> schedules = Arrays.asList(scheduleOne, scheduleTwo,
             scheduleThree);
+    
+    private String findSql = "SELECT schedules.id, "
+            + "schedules.template_id, schedules.on_date, schedules.day, "
+            + "schedules.period, schedules.auditorium_id, auditoriums.name, "
+            + "schedules.course_id, courses.name, schedules.group_id, groups.name, "
+            + "schedules.professor_id, professors.first_name, professors.last_name "
+            + "FROM schedules "
+            + "LEFT JOIN auditoriums ON schedules.auditorium_id = auditoriums.id "
+            + "LEFT JOIN courses ON schedules.course_id = courses.id "
+            + "LEFT JOIN groups ON schedules.group_id = groups.id "
+            + "LEFT JOIN professors ON schedules.professor_id = professors.id";
 
     @BeforeEach
     private void setUp() {
@@ -71,20 +81,18 @@ class JdbcScheduleDaoTest {
     }
 
     @Test
+    @Sql("classpath:preload_sample_data_schedule_test.sql")
     public void countShouldReturnCorrectAmountOfSchedules() {
 
-        manuallySaveAll();
         long expected = 3L;
-
         long actual = scheduleRepository.count();
 
         assertThat(actual).isEqualTo(expected);
     }
 
     @Test
+    @Sql("classpath:preload_sample_data_schedule_test.sql")
     public void findAllShouldRetrieveCorrectListOfSchedules() {
-
-        manuallySaveAll();
 
         List<Schedule> actual = scheduleRepository.findAll();
 
@@ -94,9 +102,8 @@ class JdbcScheduleDaoTest {
     }
 
     @Test
+    @Sql("classpath:preload_sample_data_schedule_test.sql")
     public void findAllByDateShouldRetrieveCorrectListOfSchedules() {
-
-        manuallySaveAll();
 
         List<Schedule> actual = scheduleRepository.findAllByDate(dateOne);
 
@@ -107,9 +114,8 @@ class JdbcScheduleDaoTest {
     }
 
     @Test
+    @Sql("classpath:preload_sample_data_schedule_test.sql")
     public void findAllByTemplateIdShouldRetrieveCorrectListOfSchedules() {
-
-        manuallySaveAll();
 
         List<Schedule> actual = scheduleRepository.findAllByTemplateId(1L);
 
@@ -120,11 +126,10 @@ class JdbcScheduleDaoTest {
     }
 
     @Test
+    @Sql("classpath:preload_sample_data_schedule_test.sql")
     public void findByIdShouldReturnCorrectSchedule() {
 
-        manuallySaveAll();
         Schedule expectedSchedule = scheduleThree;
-
         Optional<Schedule> actualSchedule = scheduleRepository.findById(3L);
 
         assertThat(actualSchedule).isNotEmpty();
@@ -133,9 +138,8 @@ class JdbcScheduleDaoTest {
     }
 
     @Test
+    @Sql("classpath:preload_sample_data_schedule_test.sql")
     public void findByIdShouldReturnEmptyOptionalGivenNonExistingId() {
-
-        manuallySaveAll();
 
         Optional<Schedule> actualSchedule = scheduleRepository.findById(999L);
 
@@ -143,57 +147,12 @@ class JdbcScheduleDaoTest {
     }
 
     @Test
+    @Sql("classpath:preload_sample_data_schedule_test_save_all.sql")
     public void saveAllShouldSaveAllAuditoriums() {
-
-        String sqlAuditorium = "INSERT INTO auditoriums (name) VALUES (:name)";
-        jdbc.update(sqlAuditorium,
-                new MapSqlParameterSource("name", auditorium.getName()));
-
-        String sqlCourse = "INSERT INTO courses (name) VALUES (:name)";
-        jdbc.update(sqlCourse,
-                new MapSqlParameterSource("name", course.getName()));
-
-        String sqlGroup = "INSERT INTO groups (name) VALUES (:name)";
-        jdbc.update(sqlGroup,
-                new MapSqlParameterSource("name", group.getName()));
-
-        String sqlProfessor = "INSERT INTO professors (first_name, "
-                + "last_name) VALUES (:firstName, :lastName)";
-        jdbc.batchUpdate(sqlProfessor, SqlParameterSourceUtils
-                .createBatch(Arrays.asList(professorOriginal, professorNew)));
-
-        String sqlTemplate = "INSERT INTO schedule_templates (week_parity, day, "
-                + "period, auditorium_id, course_id, group_id, professor_id) "
-                + "VALUES (:weekParity, :day, :period, :auditoriumId, "
-                + ":courseId, :groupId, :professorId)";
-        List<SqlParameterSource> paramTemplate = new ArrayList<>();
-        for (ScheduleTemplate template : Arrays.asList(templateOne,
-                templateTwo)) {
-            paramTemplate.add(new MapSqlParameterSource()
-                    .addValue("weekParity", template.getWeekParity())
-                    .addValue("day", template.getDay().toString())
-                    .addValue("period", template.getPeriod().name())
-                    .addValue("auditoriumId", template.getAuditorium().getId())
-                    .addValue("courseId", template.getCourse().getId())
-                    .addValue("groupId", template.getGroup().getId())
-                    .addValue("professorId", template.getProfessor().getId()));
-        }
-        jdbc.batchUpdate(sqlTemplate, paramTemplate
-                .toArray(new SqlParameterSource[paramTemplate.size()]));
 
         scheduleRepository.saveAll(schedules);
 
-        String sql = "SELECT schedules.id, schedules.template_id, "
-                + "schedules.on_date, schedules.day, schedules.period, "
-                + "schedules.auditorium_id, auditoriums.name, "
-                + "schedules.course_id, courses.name, schedules.group_id, "
-                + "groups.name, schedules.professor_id, professors.first_name, "
-                + "professors.last_name FROM schedules "
-                + "LEFT JOIN auditoriums ON schedules.auditorium_id = auditoriums.id "
-                + "LEFT JOIN courses ON schedules.course_id = courses.id "
-                + "LEFT JOIN groups ON schedules.group_id = groups.id "
-                + "LEFT JOIN professors ON schedules.professor_id = professors.id";
-        List<Schedule> actual = jdbc.query(sql,
+        List<Schedule> actual = jdbc.query(findSql,
                 (ResultSet rs, int rowNum) -> new Schedule(rs.getLong(1),
                         rs.getLong(2), rs.getDate(3).toLocalDate(),
                         DayOfWeek.valueOf(rs.getString(4)),
@@ -210,9 +169,8 @@ class JdbcScheduleDaoTest {
     }
 
     @Test
+    @Sql("classpath:preload_sample_data_schedule_test.sql")
     public void rescheduleShouldUpdateSchedule() {
-
-        manuallySaveAll();
 
         ReschedulingOption option = new ReschedulingOption(1L, DayOfWeek.MONDAY,
                 Period.FIFTH, auditoriumNew);
@@ -221,19 +179,9 @@ class JdbcScheduleDaoTest {
 
         scheduleRepository.reschedule(scheduleOne, dateTwo, option);
 
-        String findSql = "SELECT schedules.id, "
-                + "schedules.template_id, schedules.on_date, schedules.day, "
-                + "schedules.period, schedules.auditorium_id, auditoriums.name, "
-                + "schedules.course_id, courses.name, schedules.group_id, groups.name, "
-                + "schedules.professor_id, professors.first_name, professors.last_name "
-                + "FROM schedules "
-                + "LEFT JOIN auditoriums ON schedules.auditorium_id = auditoriums.id "
-                + "LEFT JOIN courses ON schedules.course_id = courses.id "
-                + "LEFT JOIN groups ON schedules.group_id = groups.id "
-                + "LEFT JOIN professors ON schedules.professor_id = professors.id "
-                + " WHERE schedules.id = :id";
+        String filter = " WHERE schedules.id = :id";
 
-        Schedule actual = jdbc.queryForObject(findSql,
+        Schedule actual = jdbc.queryForObject(findSql + filter,
                 new MapSqlParameterSource("id", expected.getId()),
                 (ResultSet rs, int rowNum) -> new Schedule(rs.getLong(1),
                         rs.getLong(2), rs.getDate(3).toLocalDate(),
@@ -249,9 +197,8 @@ class JdbcScheduleDaoTest {
     }
 
     @Test
+    @Sql("classpath:preload_sample_data_schedule_test.sql")
     public void updateAllWithTemplateIdShouldUpdateCorrectSchedules() {
-
-        manuallySaveAll();
 
         ReschedulingOption option = new ReschedulingOption(1L,
                 DayOfWeek.THURSDAY, Period.FIFTH, auditoriumNew);
@@ -267,18 +214,8 @@ class JdbcScheduleDaoTest {
         scheduleRepository.updateAllWithTemplateId(templateOne.getId(), option,
                 deltaDays);
 
-        String findSql = "SELECT schedules.id, "
-                + "schedules.template_id, schedules.on_date, schedules.day, "
-                + "schedules.period, schedules.auditorium_id, auditoriums.name, "
-                + "schedules.course_id, courses.name, schedules.group_id, groups.name, "
-                + "schedules.professor_id, professors.first_name, professors.last_name "
-                + "FROM schedules "
-                + "LEFT JOIN auditoriums ON schedules.auditorium_id = auditoriums.id "
-                + "LEFT JOIN courses ON schedules.course_id = courses.id "
-                + "LEFT JOIN groups ON schedules.group_id = groups.id "
-                + "LEFT JOIN professors ON schedules.professor_id = professors.id "
-                + " WHERE schedules.template_id = :templateId";
-        List<Schedule> actual = jdbc.query(findSql,
+        String filter = " WHERE schedules.template_id = :templateId";
+        List<Schedule> actual = jdbc.query(findSql + filter,
                 new MapSqlParameterSource("templateId", templateOne.getId()),
                 (ResultSet rs, int rowNum) -> new Schedule(rs.getLong(1),
                         rs.getLong(2), rs.getDate(3).toLocalDate(),
@@ -294,9 +231,8 @@ class JdbcScheduleDaoTest {
     }
 
     @Test
+    @Sql("classpath:preload_sample_data_schedule_test.sql")
     public void substituteProfessorShouldUpdateProfessorReference() {
-
-        manuallySaveAll();
 
         Schedule expected = new Schedule(1L, templateOne.getId(), dateOne,
                 DayOfWeek.MONDAY, Period.FIRST, auditorium, course, group,
@@ -305,19 +241,9 @@ class JdbcScheduleDaoTest {
         scheduleRepository.substituteProfessor(scheduleOne.getId(),
                 professorNew.getId());
         
-        String findSql = "SELECT schedules.id, "
-                + "schedules.template_id, schedules.on_date, schedules.day, "
-                + "schedules.period, schedules.auditorium_id, auditoriums.name, "
-                + "schedules.course_id, courses.name, schedules.group_id, groups.name, "
-                + "schedules.professor_id, professors.first_name, professors.last_name "
-                + "FROM schedules "
-                + "LEFT JOIN auditoriums ON schedules.auditorium_id = auditoriums.id "
-                + "LEFT JOIN courses ON schedules.course_id = courses.id "
-                + "LEFT JOIN groups ON schedules.group_id = groups.id "
-                + "LEFT JOIN professors ON schedules.professor_id = professors.id "
-                + " WHERE schedules.id = :id";
+        String filter = " WHERE schedules.id = :id";
 
-        Schedule actual = jdbc.queryForObject(findSql,
+        Schedule actual = jdbc.queryForObject(findSql + filter,
                 new MapSqlParameterSource("id", expected.getId()),
                 (ResultSet rs, int rowNum) -> new Schedule(rs.getLong(1),
                         rs.getLong(2), rs.getDate(3).toLocalDate(),
@@ -333,62 +259,4 @@ class JdbcScheduleDaoTest {
         
     }
 
-    private void manuallySaveAll() {
-
-        String sqlAuditorium = "INSERT INTO auditoriums (name) VALUES (:name)";
-        jdbc.batchUpdate(sqlAuditorium, SqlParameterSourceUtils
-                .createBatch(Arrays.asList(auditorium, auditoriumNew)));
-
-        String sqlCourse = "INSERT INTO courses (name) VALUES (:name)";
-        jdbc.update(sqlCourse,
-                new MapSqlParameterSource("name", course.getName()));
-
-        String sqlGroup = "INSERT INTO groups (name) VALUES (:name)";
-        jdbc.update(sqlGroup,
-                new MapSqlParameterSource("name", group.getName()));
-
-        String sqlProfessor = "INSERT INTO professors (first_name, "
-                + "last_name) VALUES (:firstName, :lastName)";
-        jdbc.batchUpdate(sqlProfessor, SqlParameterSourceUtils
-                .createBatch(Arrays.asList(professorOriginal, professorNew)));
-
-        String sqlTemplate = "INSERT INTO schedule_templates (week_parity, day, "
-                + "period, auditorium_id, course_id, group_id, professor_id) "
-                + "VALUES (:weekParity, :day, :period, :auditoriumId, "
-                + ":courseId, :groupId, :professorId)";
-        List<SqlParameterSource> paramTemplate = new ArrayList<>();
-        for (ScheduleTemplate template : Arrays.asList(templateOne,
-                templateTwo)) {
-            paramTemplate.add(new MapSqlParameterSource()
-                    .addValue("weekParity", template.getWeekParity())
-                    .addValue("day", template.getDay().toString())
-                    .addValue("period", template.getPeriod().name())
-                    .addValue("auditoriumId", template.getAuditorium().getId())
-                    .addValue("courseId", template.getCourse().getId())
-                    .addValue("groupId", template.getGroup().getId())
-                    .addValue("professorId", template.getProfessor().getId()));
-        }
-        jdbc.batchUpdate(sqlTemplate, paramTemplate
-                .toArray(new SqlParameterSource[paramTemplate.size()]));
-
-        String sqlSchedule = "INSERT INTO schedules (template_id, on_date, day, "
-                + "period, auditorium_id, course_id, group_id, professor_id) "
-                + "VALUES (:templateId, :date, :day, :period, :auditoriumId, "
-                + ":courseId, :groupId, :professorId)";
-        List<SqlParameterSource> paramSchedule = new ArrayList<>();
-        for (Schedule schedule : schedules) {
-            paramSchedule.add(new MapSqlParameterSource()
-                    .addValue("templateId",
-                            schedule.getScheduleTemplate().getId())
-                    .addValue("date", schedule.getDate().toString())
-                    .addValue("day", schedule.getDay().toString())
-                    .addValue("period", schedule.getPeriod().name())
-                    .addValue("auditoriumId", schedule.getAuditorium().getId())
-                    .addValue("courseId", schedule.getCourse().getId())
-                    .addValue("groupId", schedule.getGroup().getId())
-                    .addValue("professorId", schedule.getProfessor().getId()));
-        }
-        jdbc.batchUpdate(sqlSchedule, paramSchedule
-                .toArray(new SqlParameterSource[paramSchedule.size()]));
-    }
 }

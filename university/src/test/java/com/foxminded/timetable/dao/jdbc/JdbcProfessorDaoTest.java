@@ -3,7 +3,6 @@ package com.foxminded.timetable.dao.jdbc;
 import static org.assertj.core.api.Assertions.assertThat;
 
 import java.sql.ResultSet;
-import java.time.DayOfWeek;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -15,23 +14,19 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.jdbc.JdbcTest;
 import org.springframework.context.annotation.ComponentScan;
-import org.springframework.jdbc.core.namedparam.MapSqlParameterSource;
 import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
-import org.springframework.jdbc.core.namedparam.SqlParameterSource;
-import org.springframework.jdbc.core.namedparam.SqlParameterSourceUtils;
 import org.springframework.test.context.jdbc.Sql;
+import org.springframework.test.context.jdbc.SqlMergeMode;
 
 import com.foxminded.timetable.dao.ProfessorDao;
-import com.foxminded.timetable.model.Auditorium;
 import com.foxminded.timetable.model.Course;
-import com.foxminded.timetable.model.Group;
 import com.foxminded.timetable.model.Period;
 import com.foxminded.timetable.model.Professor;
-import com.foxminded.timetable.model.ScheduleTemplate;
 
 @JdbcTest
 @ComponentScan
-@Sql(scripts = "classpath:schema.sql")
+@Sql("classpath:schema.sql")
+@SqlMergeMode(SqlMergeMode.MergeMode.MERGE)
 class JdbcProfessorDaoTest {
 
     @Autowired
@@ -49,20 +44,18 @@ class JdbcProfessorDaoTest {
     }
 
     @Test
+    @Sql("classpath:preload_sample_data_professor_test.sql")
     public void countShouldReturnCorrectAmountOfProfessors() {
 
-        manuallySaveAll();
         long expected = 3L;
-
         long actual = professorRepository.count();
 
         assertThat(actual).isEqualTo(expected);
     }
 
     @Test
+    @Sql("classpath:preload_sample_data_professor_test.sql")
     public void findAllShouldRetrieveCorrectListOfProfessors() {
-
-        manuallySaveAll();
 
         List<Professor> actual = professorRepository.findAll();
 
@@ -70,83 +63,33 @@ class JdbcProfessorDaoTest {
     }
 
     @Test
+    @Sql("classpath:preload_sample_data_professor_test.sql")
     public void findAllAvailableShouldRetrieveCorrectListOfAvailableProfessors() {
 
-        manuallySaveAll();
-
-        Course course = new Course(1L, "");
-        Group group = new Group(1L, "");
-        Auditorium auditorium = new Auditorium(1L, "");
-
-        String insertCourseSql = "INSERT INTO courses (name) VALUES (:name)";
-        jdbc.update(insertCourseSql,
-                new MapSqlParameterSource("name", course.getName()));
-
-        String insertGroupSql = "INSERT INTO groups (name) VALUES (:name)";
-        jdbc.update(insertGroupSql,
-                new MapSqlParameterSource("name", group.getName()));
-
-        String insertAuditoriumSql = "INSERT INTO auditoriums (name) "
-                + "VALUES (:name)";
-        jdbc.update(insertAuditoriumSql,
-                new MapSqlParameterSource("name", auditorium.getName()));
-
-        boolean weekParity = false;
         Professor freeProfessorOne = professors.get(0);
-        ScheduleTemplate templateProfessorOne = new ScheduleTemplate(1L,
-                weekParity, DayOfWeek.MONDAY, Period.FIRST, auditorium, course,
-                group, freeProfessorOne);
         Professor freeProfessorTwo = professors.get(1);
-        ScheduleTemplate templateProfessorTwo = new ScheduleTemplate(2L,
-                weekParity, DayOfWeek.MONDAY, Period.FIRST, auditorium, course,
-                group, freeProfessorTwo);
         Professor busyProfessor = professors.get(2);
-        ScheduleTemplate templateProfessorThree = new ScheduleTemplate(3L,
-                weekParity, DayOfWeek.MONDAY, Period.SECOND, auditorium, course,
-                group, busyProfessor);
-        List<ScheduleTemplate> templates = Arrays.asList(templateProfessorOne,
-                templateProfessorTwo, templateProfessorThree);
-
-        String insertTemplatesSql = "INSERT INTO schedule_templates "
-                + "(week_parity, day, period, auditorium_id, course_id, "
-                + "group_id, professor_id) VALUES (:weekParity, :day, :period, "
-                + ":auditoriumId, :courseId, :groupId, :professorId)";
-        List<SqlParameterSource> paramSource = new ArrayList<>();
-        for (ScheduleTemplate template : templates) {
-            paramSource.add(new MapSqlParameterSource()
-                    .addValue("weekParity", template.getWeekParity())
-                    .addValue("day", template.getDay().toString())
-                    .addValue("period", template.getPeriod().name())
-                    .addValue("auditoriumId", template.getAuditorium().getId())
-                    .addValue("courseId", template.getCourse().getId())
-                    .addValue("groupId", template.getGroup().getId())
-                    .addValue("professorId", template.getProfessor().getId()));
-        }
-        jdbc.batchUpdate(insertTemplatesSql, paramSource
-                .toArray(new SqlParameterSource[paramSource.size()]));
 
         List<Professor> actual = professorRepository.findAllAvailable(
-                weekParity, LocalDate.of(2020, 9, 7), Period.SECOND);
+                false, LocalDate.of(2020, 9, 7), Period.SECOND);
 
         assertThat(actual).containsOnly(freeProfessorOne, freeProfessorTwo)
                 .doesNotContain(busyProfessor);
     }
 
     @Test
+    @Sql("classpath:preload_sample_data_professor_test.sql")
     public void findByIdShouldReturnCorrectProfessor() {
 
-        manuallySaveAll();
         Professor expectedProfessor = new Professor(3L, "three", "three");
-
         Optional<Professor> actualProfessor = professorRepository.findById(3L);
 
         assertThat(actualProfessor).isNotEmpty().contains(expectedProfessor);
     }
 
     @Test
+    @Sql("classpath:preload_sample_data_professor_test.sql")
     public void findByIdShouldReturnEmptyOptionalGivenNonExistingId() {
-
-        manuallySaveAll();
 
         Optional<Professor> actualProfessor = professorRepository
                 .findById(999L);
@@ -169,13 +112,11 @@ class JdbcProfessorDaoTest {
     }
     
     @Test
+    @Sql("classpath:preload_sample_data_professor_test.sql")
     public void saveAllProfessorsCoursesShouldSaveAllCourseAssignments() {
         
         Course courseOne = new Course(1L, "one");
         Course courseTwo = new Course(2L, "two");
-        String sqlCourses = "INSERT INTO courses (name) VALUES (:name)";
-        jdbc.batchUpdate(sqlCourses,
-                SqlParameterSourceUtils.createBatch(courseOne, courseTwo));
 
         List<Professor> professorsWithCourses = new ArrayList<>(professors);
         professorsWithCourses.get(0).setCourses(Arrays.asList(courseOne));
@@ -183,7 +124,6 @@ class JdbcProfessorDaoTest {
                 .setCourses(Arrays.asList(courseOne, courseTwo));
         professorsWithCourses.get(2).setCourses(Arrays.asList(courseTwo));
         
-        manuallySaveAll();
         
         professorRepository.saveAllProfessorsCourses(professorsWithCourses);
         
@@ -221,13 +161,6 @@ class JdbcProfessorDaoTest {
         });
         
         assertThat(actual).hasSameElementsAs(professorsWithCourses);
-    }
-    
-    private void manuallySaveAll() {
-        
-        String sql = "INSERT INTO professors (first_name, last_name) "
-                + "VALUES (:firstName, :lastName)";
-        jdbc.batchUpdate(sql, SqlParameterSourceUtils.createBatch(professors));
     }
 
 }

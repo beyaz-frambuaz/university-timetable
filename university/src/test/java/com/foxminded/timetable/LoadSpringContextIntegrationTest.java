@@ -9,8 +9,8 @@ import org.springframework.boot.test.mock.mockito.SpyBean;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 
-import com.foxminded.timetable.model.generator.TimetableModelGenerator;
-import com.foxminded.timetable.model.generator.UniversityModelGenerator;
+import com.foxminded.timetable.service.model.generator.TimetableModelGenerator;
+import com.foxminded.timetable.service.model.generator.UniversityModelGenerator;
 
 @ExtendWith(SpringExtension.class)
 @ContextConfiguration(classes = TimetableApp.class, 
@@ -20,13 +20,13 @@ public class LoadSpringContextIntegrationTest {
     @SpyBean
     private UniversityModelGenerator universityModelGenerator;
     @SpyBean
-    private TimetableModelGenerator timatableModelGenerator;
+    private TimetableModelGenerator timetableModelGenerator;
     
     @Test
     public void contextLoadsAndDataGetsGeneratedAndSavedBeforeAppRuns() {
         
         then(universityModelGenerator).should().generateAndSave();
-        then(timatableModelGenerator).should().generateAndSave();
+        then(timetableModelGenerator).should().generateAndSave();
     }
 
 }

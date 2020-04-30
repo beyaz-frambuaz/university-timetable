@@ -3,7 +3,6 @@ package com.foxminded.timetable.dao.jdbc;
 import static org.assertj.core.api.Assertions.assertThat;
 
 import java.sql.ResultSet;
-import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;
@@ -13,11 +12,10 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.jdbc.JdbcTest;
 import org.springframework.context.annotation.ComponentScan;
-import org.springframework.jdbc.core.namedparam.MapSqlParameterSource;
 import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
-import org.springframework.jdbc.core.namedparam.SqlParameterSource;
 import org.springframework.jdbc.core.namedparam.SqlParameterSourceUtils;
 import org.springframework.test.context.jdbc.Sql;
+import org.springframework.test.context.jdbc.SqlMergeMode;
 
 import com.foxminded.timetable.dao.StudentDao;
 import com.foxminded.timetable.model.Group;
@@ -25,7 +23,8 @@ import com.foxminded.timetable.model.Student;
 
 @JdbcTest
 @ComponentScan
-@Sql(scripts = "classpath:schema.sql")
+@Sql("classpath:schema.sql")
+@SqlMergeMode(SqlMergeMode.MergeMode.MERGE)
 class JdbcStudentDaoTest {
 
     @Autowired
@@ -33,8 +32,8 @@ class JdbcStudentDaoTest {
 
     private StudentDao studentRepository;
 
-    private Group groupOne = new Group(1L, "");
-    private Group groupTwo = new Group(2L, "");
+    private Group groupOne = new Group(1L, "one");
+    private Group groupTwo = new Group(2L, "two");
     private List<Group> groups = Arrays.asList(groupOne, groupTwo);
 
     private Student studentOne = new Student(1L, "one", "one", groupOne);
@@ -49,20 +48,18 @@ class JdbcStudentDaoTest {
     }
 
     @Test
+    @Sql("classpath:preload_sample_data_student_test.sql")
     public void countShouldReturnCorrectAmountOfStudents() {
 
-        manuallySaveAll();
         long expected = 3L;
-
         long actual = studentRepository.count();
 
         assertThat(actual).isEqualTo(expected);
     }
 
     @Test
+    @Sql("classpath:preload_sample_data_student_test.sql")
     public void findAllShouldRetrieveCorrectListOfStudents() {
-
-        manuallySaveAll();
 
         List<Student> actual = studentRepository.findAll();
 
@@ -70,11 +67,10 @@ class JdbcStudentDaoTest {
     }
 
     @Test
+    @Sql("classpath:preload_sample_data_student_test.sql")
     public void findAllByGroupsShouldRetrieveCorrectListOfStudents() {
 
-        manuallySaveAll();
         List<Group> requestedGroups = Arrays.asList(groupOne);
-
         List<Student> actual = studentRepository
                 .findAllByGroups(requestedGroups);
 
@@ -83,11 +79,10 @@ class JdbcStudentDaoTest {
     }
 
     @Test
+    @Sql("classpath:preload_sample_data_student_test.sql")
     public void findByIdShouldReturnCorrectStudent() {
 
-        manuallySaveAll();
         Student expectedStudent = studentThree;
-
         Optional<Student> actualStudent = studentRepository
                 .findById(expectedStudent.getId());
 
@@ -95,9 +90,8 @@ class JdbcStudentDaoTest {
     }
 
     @Test
+    @Sql("classpath:preload_sample_data_student_test.sql")
     public void findByIdShouldReturnEmptyOptionalGivenNonExistingId() {
-
-        manuallySaveAll();
 
         Optional<Student> actualStudent = studentRepository.findById(999L);
 
@@ -121,24 +115,6 @@ class JdbcStudentDaoTest {
                         new Group(rs.getLong(4), rs.getString(5))));
 
         assertThat(actual).hasSameElementsAs(students);
-    }
-
-    private void manuallySaveAll() {
-
-        String sqlGroup = "INSERT INTO groups (name) VALUES (:name)";
-        jdbc.batchUpdate(sqlGroup, SqlParameterSourceUtils.createBatch(groups));
-
-        String sql = "INSERT INTO students (first_name, last_name, group_id) "
-                + "VALUES (:firstName, :lastName, :groupId)";
-        List<SqlParameterSource> paramSource = new ArrayList<>();
-        for (Student student : students) {
-            paramSource.add(new MapSqlParameterSource()
-                    .addValue("firstName", student.getFirstName())
-                    .addValue("lastName", student.getLastName())
-                    .addValue("groupId", student.getGroup().getId()));
-        }
-        jdbc.batchUpdate(sql, paramSource
-                .toArray(new SqlParameterSource[paramSource.size()]));
     }
 
 }
