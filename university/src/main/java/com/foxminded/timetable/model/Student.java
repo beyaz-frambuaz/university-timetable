@@ -8,11 +8,12 @@ import lombok.RequiredArgsConstructor;
 @AllArgsConstructor
 @RequiredArgsConstructor
 public class Student {
-    private long id;
+
+    private Long id;
     private final String firstName;
     private final String lastName;
     private Group group;
-    
+
     public String getFullName() {
         return firstName + " " + lastName;
     }

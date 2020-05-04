@@ -7,6 +7,10 @@ import com.foxminded.timetable.model.Student;
 
 public interface StudentDao extends GenericDao<Student> {
 
-    List<Student> findAllByGroups(List<Group> groups);
-    
+    List<Student> findAllInGroups(List<Group> groups);
+
+    Student save(Student student);
+
+    Student update(Student student);
+
 }

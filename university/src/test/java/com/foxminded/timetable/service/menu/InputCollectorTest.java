@@ -17,8 +17,6 @@ import org.junit.jupiter.api.TestInstance.Lifecycle;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.ValueSource;
 
-import com.foxminded.timetable.service.menu.InputCollector;
-
 @TestInstance(Lifecycle.PER_CLASS)
 public class InputCollectorTest {
 
@@ -80,10 +78,10 @@ public class InputCollectorTest {
     @ValueSource(strings = { "-1\n1", "foo\n02", "5\n003", "foo bar\n4", "0\n7",
             "6\n009" })
     void requestIdShouldOnlyAcceptInputMatchingIdList(String input) {
-        
+
         List<Long> ids = Arrays.asList(1L, 2L, 3L, 4L, 7L, 9L);
         long acceptedInput;
-        
+
         try (Scanner scanner = new Scanner(input)) {
             scanner.useDelimiter("\\n");
             InputCollector menuBot = new InputCollector(scanner);
@@ -104,11 +102,11 @@ public class InputCollectorTest {
             "5\n2020-02-23", "2020-02-30\n2020-02-29", "9999-99-99\n2020-02-13",
             "2020-01-31\n2020-02-02", "2020-03-02\n2020-02-18" })
     void requestDateShouldOnlyAcceptInputWithinRangeOfDates(String input) {
-        
+
         LocalDate start = LocalDate.parse("2020-02-01");
         LocalDate end = LocalDate.parse("2020-03-01");
         LocalDate acceptedInput;
-        
+
         try (Scanner scanner = new Scanner(input)) {
             scanner.useDelimiter("\\n");
             InputCollector menuBot = new InputCollector(scanner);

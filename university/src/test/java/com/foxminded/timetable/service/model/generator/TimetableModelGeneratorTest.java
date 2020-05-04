@@ -37,7 +37,6 @@ import com.foxminded.timetable.model.Period;
 import com.foxminded.timetable.model.Professor;
 import com.foxminded.timetable.model.ReschedulingOption;
 import com.foxminded.timetable.model.ScheduleTemplate;
-import com.foxminded.timetable.service.model.generator.TimetableModelGenerator;
 
 @ExtendWith(MockitoExtension.class)
 @ExtendWith(SpringExtension.class)

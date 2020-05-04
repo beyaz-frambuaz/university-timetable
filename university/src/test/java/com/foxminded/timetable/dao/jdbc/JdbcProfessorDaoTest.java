@@ -14,6 +14,7 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.jdbc.JdbcTest;
 import org.springframework.context.annotation.ComponentScan;
+import org.springframework.jdbc.core.namedparam.MapSqlParameterSource;
 import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
 import org.springframework.test.context.jdbc.Sql;
 import org.springframework.test.context.jdbc.SqlMergeMode;
@@ -34,9 +35,11 @@ class JdbcProfessorDaoTest {
 
     private ProfessorDao professorRepository;
 
-    private List<Professor> professors = Arrays.asList(
-            new Professor(1L, "one", "one"), new Professor(2L, "two", "two"),
-            new Professor(3L, "three", "three"));
+    private Professor professorOne = new Professor(1L, "one", "one");
+    private Professor professorTwo = new Professor(2L, "two", "two");
+    private Professor professorThree = new Professor(3L, "three", "three");
+    private List<Professor> professors = Arrays.asList(professorOne,
+            professorTwo, professorThree);
 
     @BeforeEach
     private void setUp() {
@@ -66,15 +69,11 @@ class JdbcProfessorDaoTest {
     @Sql("classpath:preload_sample_data_professor_test.sql")
     public void findAllAvailableShouldRetrieveCorrectListOfAvailableProfessors() {
 
-        Professor freeProfessorOne = professors.get(0);
-        Professor freeProfessorTwo = professors.get(1);
-        Professor busyProfessor = professors.get(2);
+        List<Professor> actual = professorRepository.findAllAvailable(false,
+                LocalDate.of(2020, 9, 7), Period.SECOND);
 
-        List<Professor> actual = professorRepository.findAllAvailable(
-                false, LocalDate.of(2020, 9, 7), Period.SECOND);
-
-        assertThat(actual).containsOnly(freeProfessorOne, freeProfessorTwo)
-                .doesNotContain(busyProfessor);
+        assertThat(actual).containsOnly(professorOne, professorTwo)
+                .doesNotContain(professorThree);
     }
 
     @Test
@@ -98,6 +97,21 @@ class JdbcProfessorDaoTest {
     }
 
     @Test
+    public void saveShouldAddNewProfessor() {
+
+        Professor expected = professorRepository.save(professorOne);
+
+        String sql = "SELECT professors.id, professors.first_name, "
+                + "professors.last_name FROM professors WHERE professors.id = :id";
+        Professor actual = jdbc.queryForObject(sql,
+                new MapSqlParameterSource("id", expected.getId()),
+                (ResultSet rs, int rowNum) -> new Professor(rs.getLong(1),
+                        rs.getString(2), rs.getString(3)));
+
+        assertThat(actual).isEqualTo(expected);
+    }
+
+    @Test
     public void saveAllShouldSaveAllProfessors() {
 
         professorRepository.saveAll(professors);
@@ -110,11 +124,11 @@ class JdbcProfessorDaoTest {
 
         assertThat(actual).hasSameElementsAs(professors);
     }
-    
+
     @Test
     @Sql("classpath:preload_sample_data_professor_test.sql")
     public void saveAllProfessorsCoursesShouldSaveAllCourseAssignments() {
-        
+
         Course courseOne = new Course(1L, "one");
         Course courseTwo = new Course(2L, "two");
 
@@ -123,10 +137,9 @@ class JdbcProfessorDaoTest {
         professorsWithCourses.get(1)
                 .setCourses(Arrays.asList(courseOne, courseTwo));
         professorsWithCourses.get(2).setCourses(Arrays.asList(courseTwo));
-        
-        
+
         professorRepository.saveAllProfessorsCourses(professorsWithCourses);
-        
+
         String findAllSql = "SELECT professors.id, "
                 + "professors.first_name, professors.last_name, courses.id, "
                 + "courses.name FROM professors LEFT JOIN professors_courses "
@@ -134,7 +147,7 @@ class JdbcProfessorDaoTest {
                 + "LEFT JOIN courses "
                 + "ON courses.id = professors_courses.course_id";
         List<Professor> actual = jdbc.query(findAllSql, (ResultSet rs) -> {
-            
+
             List<Professor> professors = new ArrayList<>();
             Professor current = null;
             while (rs.next()) {
@@ -159,8 +172,65 @@ class JdbcProfessorDaoTest {
 
             return professors;
         });
-        
+
         assertThat(actual).hasSameElementsAs(professorsWithCourses);
+    }
+
+    @Test
+    @Sql("classpath:preload_sample_data_professor_test.sql")
+    @Sql("classpath:save_professor_courses_professor_test.sql")
+    public void updateShouldSaveNewCourseAssignments() {
+
+        Course courseOne = new Course(1L, "one");
+        Course courseTwo = new Course(2L, "two");
+        Course courseNew = new Course(3L, "new");
+        Professor expected = new Professor(professorOne.getId(),
+                professorOne.getFirstName(), professorOne.getLastName());
+
+        expected.setCourses(Arrays.asList(courseNew));
+
+        professorRepository.update(expected);
+
+        String findAllSql = "SELECT professors.id, "
+                + "professors.first_name, professors.last_name, courses.id, "
+                + "courses.name FROM professors LEFT JOIN professors_courses "
+                + "ON professors.id = professors_courses.professor_id "
+                + "LEFT JOIN courses "
+                + "ON courses.id = professors_courses.course_id "
+                + "WHERE professors.id = :id";
+        List<Professor> actual = jdbc.query(findAllSql,
+                new MapSqlParameterSource("id", expected.getId()),
+                (ResultSet rs) -> {
+
+                    List<Professor> professors = new ArrayList<>();
+                    Professor current = null;
+                    while (rs.next()) {
+                        long currentId = rs.getLong(1);
+                        if (current == null) {
+                            current = new Professor(currentId, rs.getString(2),
+                                    rs.getString(3));
+                        } else if (current.getId() != currentId) {
+                            professors.add(current);
+                            current = new Professor(currentId, rs.getString(2),
+                                    rs.getString(3));
+                        }
+                        Long courseId = rs.getLong(4);
+                        String courseName = rs.getString(5);
+                        if (courseId != null && courseName != null) {
+                            current.addCourse(new Course(courseId, courseName));
+                        }
+                    }
+                    if (current != null) {
+                        professors.add(current);
+                    }
+
+                    return professors;
+                });
+        List<Course> actualCourses = actual.get(0).getCourses();
+
+        assertThat(actual).containsOnly(expected);
+        assertThat(actualCourses).containsOnly(courseNew)
+                .doesNotContain(courseOne, courseTwo);
     }
 
 }

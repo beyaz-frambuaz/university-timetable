@@ -28,7 +28,6 @@ import com.foxminded.timetable.model.ReschedulingOption;
 import com.foxminded.timetable.model.Schedule;
 import com.foxminded.timetable.model.ScheduleTemplate;
 import com.foxminded.timetable.model.Student;
-import com.foxminded.timetable.service.printer.Printer;
 import com.foxminded.timetable.service.printer.assembler.Assembler;
 import com.foxminded.timetable.service.printer.assembler.ColumnWriter;
 
@@ -99,7 +98,7 @@ public class PrinterTest {
                 new ColumnWriter("Group", groups),
                 new ColumnWriter("Course", courses),
                 new ColumnWriter("Professor", professors));
-        
+
         given(templateOdd.getWeekParity()).willReturn(false);
         given(templateOdd.getDay()).willReturn(day);
         given(templateOdd.getPeriod()).willReturn(period);
@@ -123,9 +122,9 @@ public class PrinterTest {
         given(course.getName()).willReturn(expected);
         given(templateEven.getProfessor()).willReturn(professor);
         given(professor.getFullName()).willReturn(expected);
-        
+
         String actual = printer.printTwoWeekSchedule(twoWeekSchedule);
-        
+
         assertThat(actual).isEqualTo(expected + expected);
         then(assembler).should().assembleTable(expectedOddColumns);
         then(assembler).should().assembleTable(expectedEvenColumns);

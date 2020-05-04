@@ -11,21 +11,26 @@ import lombok.RequiredArgsConstructor;
 @AllArgsConstructor
 @RequiredArgsConstructor
 public class Professor implements Comparable<Professor> {
-    private long id;
+
+    private Long id;
     private final String firstName;
     private final String lastName;
     private List<Course> courses = new ArrayList<>();
-    
+
     public Professor(long id, String firstName, String lastName) {
         this.id = id;
         this.firstName = firstName;
         this.lastName = lastName;
     }
-    
+
     public void addCourse(Course course) {
         courses.add(course);
     }
-    
+
+    public void removeCourse(Course course) {
+        courses.remove(course);
+    }
+
     public String getFullName() {
         return firstName + " " + lastName;
     }

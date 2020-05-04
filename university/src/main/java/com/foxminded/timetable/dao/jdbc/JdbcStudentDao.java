@@ -24,15 +24,18 @@ import lombok.extern.slf4j.Slf4j;
 @RequiredArgsConstructor
 public class JdbcStudentDao implements StudentDao {
 
+    private static final String INSERT_SQL = "INSERT INTO students "
+            + "(first_name, last_name, group_id) "
+            + "VALUES (:firstName, :lastName, :groupId)";
     private static final String FIND_ALL_SQL = "SELECT students.id, "
-            + "students.first_name, students.last_name, groups.id, groups.name " 
+            + "students.first_name, students.last_name, groups.id, groups.name "
             + "FROM students LEFT JOIN groups ON students.group_id = groups.id";
 
     private final NamedParameterJdbcTemplate jdbc;
 
     @Override
     public long count() {
-        
+
         log.debug("Counting students");
         String sql = "SELECT COUNT(*) FROM students";
         return jdbc.getJdbcOperations().queryForObject(sql, Long.class);
@@ -46,7 +49,7 @@ public class JdbcStudentDao implements StudentDao {
     }
 
     @Override
-    public List<Student> findAllByGroups(List<Group> groups) {
+    public List<Student> findAllInGroups(List<Group> groups) {
 
         log.debug("Retrieving students in groups");
         String filter = " WHERE students.group_id = :groupId";
@@ -63,7 +66,7 @@ public class JdbcStudentDao implements StudentDao {
 
     @Override
     public Optional<Student> findById(long id) {
-        
+
         try {
             String filter = " WHERE students.id = :id";
             SqlParameterSource paramSource = new MapSqlParameterSource("id",
@@ -78,10 +81,21 @@ public class JdbcStudentDao implements StudentDao {
     }
 
     @Override
+    public Student save(Student student) {
+
+        jdbc.update(INSERT_SQL,
+                new MapSqlParameterSource()
+                        .addValue("firstName", student.getFirstName())
+                        .addValue("lastName", student.getLastName())
+                        .addValue("groupId", student.getGroup().getId()));
+        log.debug("Saved {}", student);
+
+        return student;
+    }
+
+    @Override
     public List<Student> saveAll(List<Student> students) {
-        
-        String sql = "INSERT INTO students (first_name, last_name, group_id) "
-                + "VALUES (:firstName, :lastName, :groupId)";
+
         List<SqlParameterSource> paramSource = new ArrayList<>();
         for (Student student : students) {
             paramSource.add(new MapSqlParameterSource()
@@ -89,11 +103,25 @@ public class JdbcStudentDao implements StudentDao {
                     .addValue("lastName", student.getLastName())
                     .addValue("groupId", student.getGroup().getId()));
         }
-        jdbc.batchUpdate(sql, paramSource
+        jdbc.batchUpdate(INSERT_SQL, paramSource
                 .toArray(new SqlParameterSource[paramSource.size()]));
         log.debug("Students saved");
-        
+
         return students;
+    }
+
+    @Override
+    public Student update(Student student) {
+
+        String sql = "UPDATE students SET students.group_id = :groupId WHERE "
+                + "students.id = :id";
+        jdbc.update(sql,
+                new MapSqlParameterSource()
+                        .addValue("groupId", student.getGroup().getId())
+                        .addValue("id", student.getId()));
+        log.debug("Updated {}", student);
+
+        return student;
     }
 
     private Student mapRow(ResultSet rs, int rowNumber) throws SQLException {

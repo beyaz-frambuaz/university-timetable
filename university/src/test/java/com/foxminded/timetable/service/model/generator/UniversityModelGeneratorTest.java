@@ -38,8 +38,6 @@ import com.foxminded.timetable.model.Course;
 import com.foxminded.timetable.model.Group;
 import com.foxminded.timetable.model.Professor;
 import com.foxminded.timetable.model.Student;
-import com.foxminded.timetable.service.model.generator.TimetableModelGenerator;
-import com.foxminded.timetable.service.model.generator.UniversityModelGenerator;
 
 @ExtendWith(MockitoExtension.class)
 @ExtendWith(SpringExtension.class)
@@ -56,7 +54,7 @@ class UniversityModelGeneratorTest {
     private GroupDao groupRepository;
     @SpyBean
     private StudentDao studentRepository;
-    
+
     @Autowired
     private UniversityModelGenerator universityModelGenerator;
 
@@ -284,7 +282,7 @@ class UniversityModelGeneratorTest {
     public void eachCourseShouldBeAssigned() {
 
         List<Course> expected = courseRepository.findAll();
-        
+
         List<Course> actual = professorRepository.findAll().stream()
                 .flatMap(professor -> professor.getCourses().stream())
                 .distinct().collect(toList());

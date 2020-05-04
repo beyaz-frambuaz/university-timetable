@@ -10,8 +10,6 @@ import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.CsvSource;
 import org.junit.jupiter.params.provider.ValueSource;
 
-import com.foxminded.timetable.service.SemesterCalendarUtils;
-
 public class SemesterCalendarUtilsTest {
 
     private SemesterCalendarUtils semesterCalendar;
@@ -85,7 +83,7 @@ public class SemesterCalendarUtilsTest {
 
         int weekNumber = Integer.parseInt(week);
         LocalDate expected = LocalDate.parse(date);
-        
+
         LocalDate actual = semesterCalendar.getWeekMonday(weekNumber);
 
         assertThat(actual).isEqualTo(expected);
@@ -99,7 +97,7 @@ public class SemesterCalendarUtilsTest {
 
         int weekNumber = Integer.parseInt(week);
         LocalDate expected = LocalDate.parse(date);
-        
+
         LocalDate actual = semesterCalendar.getWeekFriday(weekNumber);
 
         assertThat(actual).isEqualTo(expected);
@@ -113,22 +111,22 @@ public class SemesterCalendarUtilsTest {
 
         int monthNumber = Integer.parseInt(month);
         LocalDate expected = LocalDate.parse(date);
-        
+
         LocalDate actual = semesterCalendar.getMonthStartDate(monthNumber);
 
         assertThat(actual).isEqualTo(expected);
     }
-    
+
     @ParameterizedTest
     @CsvSource(value = { "9:2020-09-30", "10:2020-10-31" }, delimiter = ':')
     public void getMonthEndDateShouldReturnLastOfMonthDateGivenMonthNumber(
             String month, String date) {
-        
+
         int monthNumber = Integer.parseInt(month);
         LocalDate expected = LocalDate.parse(date);
-        
+
         LocalDate actual = semesterCalendar.getMonthEndDate(monthNumber);
-        
+
         assertThat(actual).isEqualTo(expected);
     }
 

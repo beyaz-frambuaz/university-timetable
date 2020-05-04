@@ -4,6 +4,7 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.time.LocalDate;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;
 
@@ -27,6 +28,8 @@ import lombok.extern.slf4j.Slf4j;
 @RequiredArgsConstructor
 public class JdbcProfessorDao implements ProfessorDao {
 
+    private static final String INSERT_SQL = "INSERT INTO professors "
+            + "(first_name, last_name) VALUES (:firstName, :lastName)";
     private static final String FIND_ALL_SQL = "SELECT professors.id, "
             + "professors.first_name, professors.last_name, courses.id, "
             + "courses.name FROM professors LEFT JOIN professors_courses "
@@ -38,7 +41,7 @@ public class JdbcProfessorDao implements ProfessorDao {
 
     @Override
     public long count() {
-        
+
         log.debug("Counting professors");
         String sql = "SELECT COUNT(*) FROM professors";
         return jdbc.getJdbcOperations().queryForObject(sql, Long.class);
@@ -76,7 +79,7 @@ public class JdbcProfessorDao implements ProfessorDao {
 
     @Override
     public Optional<Professor> findById(long id) {
-        
+
         log.debug("Looking for professor by ID {}", id);
         try {
             String filter = " WHERE professors.id = :id";
@@ -89,27 +92,38 @@ public class JdbcProfessorDao implements ProfessorDao {
             }
 
             return Optional.of(professor.get(0));
-            
+
         } catch (EmptyResultDataAccessException e) {
-            log.warn("No auditorium found with ID {}", id);
+            log.warn("No professor found with ID {}", id);
             return Optional.empty();
         }
     }
 
     @Override
+    public Professor save(Professor newProfessor) {
+
+        jdbc.update(INSERT_SQL,
+                new MapSqlParameterSource()
+                        .addValue("firstName", newProfessor.getFirstName())
+                        .addValue("lastName", newProfessor.getLastName()));
+        log.debug("Saved {}", newProfessor);
+
+        return newProfessor;
+    }
+
+    @Override
     public List<Professor> saveAll(List<Professor> professors) {
-        
-        String sql = "INSERT INTO professors (first_name, "
-                + "last_name) VALUES (:firstName, :lastName)";
-        jdbc.batchUpdate(sql, SqlParameterSourceUtils.createBatch(professors));
+
+        jdbc.batchUpdate(INSERT_SQL,
+                SqlParameterSourceUtils.createBatch(professors));
         log.debug("Professors saved");
-        
+
         return professors;
     }
 
     @Override
     public void saveAllProfessorsCourses(List<Professor> professors) {
-        
+
         String sql = "INSERT INTO professors_courses (professor_id, course_id)"
                 + " VALUES (:professorId, :courseId)";
         List<SqlParameterSource> paramSource = new ArrayList<>();
@@ -125,9 +139,22 @@ public class JdbcProfessorDao implements ProfessorDao {
         log.debug("Course assignments to professors saved");
     }
 
+    @Override
+    public Professor update(Professor professor) {
+
+        String sql = "DELETE FROM professors_courses WHERE "
+                + "professors_courses.professor_id = :id";
+        jdbc.update(sql, new MapSqlParameterSource("id", professor.getId()));
+        log.debug("Deleted courses for {}", professor);
+
+        saveAllProfessorsCourses(Arrays.asList(professor));
+
+        return professor;
+    }
+
     private List<Professor> mapResultsToProfessors(ResultSet rs)
             throws SQLException {
-        
+
         List<Professor> professors = new ArrayList<>();
         Professor current = null;
         while (rs.next()) {

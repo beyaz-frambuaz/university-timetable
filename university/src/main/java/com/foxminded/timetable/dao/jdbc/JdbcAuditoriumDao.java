@@ -27,6 +27,8 @@ public class JdbcAuditoriumDao implements AuditoriumDao {
 
     private static final String FIND_ALL_SQL = "SELECT auditoriums.id, "
             + "auditoriums.name FROM auditoriums";
+    private static final String INSERT_SQL = "INSERT INTO auditoriums (name) "
+            + "VALUES (:name)";
 
     private final NamedParameterJdbcTemplate jdbc;
 
@@ -70,7 +72,7 @@ public class JdbcAuditoriumDao implements AuditoriumDao {
 
     @Override
     public Optional<Auditorium> findById(long id) {
-        
+
         log.debug("Looking for auditorium by ID {}", id);
         try {
             String filter = " WHERE auditoriums.id = :id";
@@ -79,7 +81,7 @@ public class JdbcAuditoriumDao implements AuditoriumDao {
 
             return Optional.of(jdbc.queryForObject(FIND_ALL_SQL + filter,
                     paramSource, this::mapRow));
-            
+
         } catch (EmptyResultDataAccessException e) {
             log.warn("No auditorium found with ID {}", id);
             return Optional.empty();
@@ -87,13 +89,37 @@ public class JdbcAuditoriumDao implements AuditoriumDao {
     }
 
     @Override
+    public Auditorium save(Auditorium newAuditorium) {
+
+        jdbc.update(INSERT_SQL,
+                new MapSqlParameterSource("name", newAuditorium.getName()));
+        log.debug("Saved {}", newAuditorium);
+
+        return newAuditorium;
+    }
+
+    @Override
     public List<Auditorium> saveAll(List<Auditorium> auditoriums) {
 
-        String sql = "INSERT INTO auditoriums (name) VALUES (:name)";
-        jdbc.batchUpdate(sql, SqlParameterSourceUtils.createBatch(auditoriums));
+        jdbc.batchUpdate(INSERT_SQL,
+                SqlParameterSourceUtils.createBatch(auditoriums));
         log.debug("Auditoriums saved");
-        
+
         return auditoriums;
+    }
+
+    @Override
+    public Auditorium update(Auditorium auditorium) {
+
+        String sql = "UPDATE auditoriums SET auditoriums.name = :name WHERE "
+                + "auditoriums.id = :id";
+        jdbc.update(sql,
+                new MapSqlParameterSource()
+                        .addValue("name", auditorium.getName())
+                        .addValue("id", auditorium.getId()));
+        log.debug("Updated {}", auditorium);
+
+        return auditorium;
     }
 
     private Auditorium mapRow(ResultSet rs, int rowNum) throws SQLException {

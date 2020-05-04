@@ -24,7 +24,6 @@ import com.foxminded.timetable.model.Course;
 import com.foxminded.timetable.model.Group;
 import com.foxminded.timetable.model.Period;
 import com.foxminded.timetable.model.Professor;
-import com.foxminded.timetable.model.ReschedulingOption;
 import com.foxminded.timetable.model.ScheduleTemplate;
 
 @JdbcTest
@@ -53,7 +52,7 @@ class JdbcScheduleTemplateDaoTest {
 
     private List<ScheduleTemplate> templates = Arrays.asList(templateOne,
             templateTwo);
-    
+
     private String findSql = "SELECT schedule_templates.id, "
             + "schedule_templates.week_parity, schedule_templates.day, "
             + "schedule_templates.period, schedule_templates.auditorium_id, "
@@ -125,6 +124,29 @@ class JdbcScheduleTemplateDaoTest {
 
     @Test
     @Sql("classpath:preload_sample_data_schedule_template_test_save_all.sql")
+    public void saveShouldSaveTemplate() {
+
+        templateRepository.save(templateOne);
+
+        String filter = " WHERE schedule_templates.id = :id";
+
+        ScheduleTemplate actual = jdbc.queryForObject(findSql + filter,
+                new MapSqlParameterSource("id", templateOne.getId()),
+                (ResultSet rs, int rowNum) -> new ScheduleTemplate(
+                        rs.getLong(1), rs.getBoolean(2),
+                        DayOfWeek.valueOf(rs.getString(3)),
+                        Period.valueOf(rs.getString(4)),
+                        new Auditorium(rs.getLong(5), rs.getString(6)),
+                        new Course(rs.getLong(7), rs.getString(8)),
+                        new Group(rs.getLong(9), rs.getString(10)),
+                        new Professor(rs.getLong(11), rs.getString(12),
+                                rs.getString(13))));
+
+        assertThat(actual).isEqualTo(templateOne);
+    }
+
+    @Test
+    @Sql("classpath:preload_sample_data_schedule_template_test_save_all.sql")
     public void saveAllShouldSaveAllTemplates() {
 
         templateRepository.saveAll(templates);
@@ -145,16 +167,13 @@ class JdbcScheduleTemplateDaoTest {
 
     @Test
     @Sql("classpath:preload_sample_data_schedule_template_test.sql")
-    public void rescheduleShouldUpdateTemplate() {
+    public void updateShouldUpdateTemplate() {
 
-        ReschedulingOption option = new ReschedulingOption(1L, DayOfWeek.FRIDAY,
-                Period.FIFTH, auditoriumNew);
         ScheduleTemplate expected = new ScheduleTemplate(1L, false,
                 DayOfWeek.FRIDAY, Period.FIFTH, auditoriumNew, course, group,
                 professor);
 
-        templateRepository.reschedule(templateOne.getWeekParity(),
-                templateOne.getId(), option);
+        templateRepository.update(expected);
 
         String filter = " WHERE schedule_templates.id = :id";
 

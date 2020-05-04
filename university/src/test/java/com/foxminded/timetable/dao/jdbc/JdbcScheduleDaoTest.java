@@ -16,6 +16,7 @@ import org.springframework.boot.test.autoconfigure.jdbc.JdbcTest;
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.jdbc.core.namedparam.MapSqlParameterSource;
 import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
+import org.springframework.jdbc.core.namedparam.SqlParameterSource;
 import org.springframework.test.context.jdbc.Sql;
 import org.springframework.test.context.jdbc.SqlMergeMode;
 
@@ -25,9 +26,7 @@ import com.foxminded.timetable.model.Course;
 import com.foxminded.timetable.model.Group;
 import com.foxminded.timetable.model.Period;
 import com.foxminded.timetable.model.Professor;
-import com.foxminded.timetable.model.ReschedulingOption;
 import com.foxminded.timetable.model.Schedule;
-import com.foxminded.timetable.model.ScheduleTemplate;
 
 @JdbcTest
 @ComponentScan
@@ -47,23 +46,21 @@ class JdbcScheduleDaoTest {
     private Auditorium auditoriumNew = new Auditorium(2L, "new");
     private Course course = new Course(1L, "one");
     private Group group = new Group(1L, "one");
-    private Professor professorOriginal = new Professor(1L, "one", "one");
-    private Professor professorNew = new Professor(2L, "new", "new");
+    private Professor professor = new Professor(1L, "one", "one");
 
-    private ScheduleTemplate templateOne = new ScheduleTemplate(1L, false,
+    private Schedule scheduleOne = new Schedule(1L, 1L, dateOne,
             DayOfWeek.MONDAY, Period.FIRST, auditorium, course, group,
-            professorOriginal);
-    private ScheduleTemplate templateTwo = new ScheduleTemplate(2L, true,
+            professor);
+    private Schedule scheduleTwo = new Schedule(2L, 2L, dateOne,
             DayOfWeek.MONDAY, Period.SECOND, auditorium, course, group,
-            professorOriginal);
-
-    private Schedule scheduleOne = new Schedule(1L, templateOne, dateOne);
-    private Schedule scheduleTwo = new Schedule(2L, templateTwo, dateOne);
-    private Schedule scheduleThree = new Schedule(3L, templateOne, dateTwo);
+            professor);
+    private Schedule scheduleThree = new Schedule(3L, 1L, dateTwo,
+            DayOfWeek.MONDAY, Period.FIRST, auditorium, course, group,
+            professor);
 
     private List<Schedule> schedules = Arrays.asList(scheduleOne, scheduleTwo,
             scheduleThree);
-    
+
     private String findSql = "SELECT schedules.id, "
             + "schedules.template_id, schedules.on_date, schedules.day, "
             + "schedules.period, schedules.auditorium_id, auditoriums.name, "
@@ -96,9 +93,7 @@ class JdbcScheduleDaoTest {
 
         List<Schedule> actual = scheduleRepository.findAll();
 
-        assertThat(actual)
-                .usingElementComparatorIgnoringFields("scheduleTemplate")
-                .hasSameElementsAs(schedules);
+        assertThat(actual).hasSameElementsAs(schedules);
     }
 
     @Test
@@ -107,9 +102,7 @@ class JdbcScheduleDaoTest {
 
         List<Schedule> actual = scheduleRepository.findAllByDate(dateOne);
 
-        assertThat(actual)
-                .usingElementComparatorIgnoringFields("scheduleTemplate")
-                .containsOnly(scheduleOne, scheduleTwo)
+        assertThat(actual).containsOnly(scheduleOne, scheduleTwo)
                 .doesNotContain(scheduleThree);
     }
 
@@ -119,9 +112,7 @@ class JdbcScheduleDaoTest {
 
         List<Schedule> actual = scheduleRepository.findAllByTemplateId(1L);
 
-        assertThat(actual)
-                .usingElementComparatorIgnoringFields("scheduleTemplate")
-                .containsOnly(scheduleOne, scheduleThree)
+        assertThat(actual).containsOnly(scheduleOne, scheduleThree)
                 .doesNotContain(scheduleTwo);
     }
 
@@ -148,7 +139,31 @@ class JdbcScheduleDaoTest {
 
     @Test
     @Sql("classpath:preload_sample_data_schedule_test_save_all.sql")
-    public void saveAllShouldSaveAllAuditoriums() {
+    public void saveShouldSaveSchedule() {
+
+        scheduleRepository.save(scheduleOne);
+
+        String filter = " WHERE schedules.id = :id";
+        SqlParameterSource paramSource = new MapSqlParameterSource("id",
+                scheduleOne.getId());
+
+        Schedule actual = jdbc.queryForObject(findSql + filter, paramSource,
+                (ResultSet rs, int rowNum) -> new Schedule(rs.getLong(1),
+                        rs.getLong(2), rs.getDate(3).toLocalDate(),
+                        DayOfWeek.valueOf(rs.getString(4)),
+                        Period.valueOf(rs.getString(5)),
+                        new Auditorium(rs.getLong(6), rs.getString(7)),
+                        new Course(rs.getLong(8), rs.getString(9)),
+                        new Group(rs.getLong(10), rs.getString(11)),
+                        new Professor(rs.getLong(12), rs.getString(13),
+                                rs.getString(14))));
+
+        assertThat(actual).isEqualTo(scheduleOne);
+    }
+
+    @Test
+    @Sql("classpath:preload_sample_data_schedule_test_save_all.sql")
+    public void saveAllShouldSaveAllSchedules() {
 
         scheduleRepository.saveAll(schedules);
 
@@ -163,21 +178,18 @@ class JdbcScheduleDaoTest {
                         new Professor(rs.getLong(12), rs.getString(13),
                                 rs.getString(14))));
 
-        assertThat(actual)
-                .usingElementComparatorIgnoringFields("scheduleTemplate")
-                .hasSameElementsAs(schedules);
+        assertThat(actual).hasSameElementsAs(schedules);
     }
 
     @Test
     @Sql("classpath:preload_sample_data_schedule_test.sql")
-    public void rescheduleShouldUpdateSchedule() {
+    public void updateShouldUpdateSchedule() {
 
-        ReschedulingOption option = new ReschedulingOption(1L, DayOfWeek.MONDAY,
-                Period.FIFTH, auditoriumNew);
-        Schedule expected = new Schedule(1L, 1L, dateTwo, DayOfWeek.MONDAY,
-                Period.FIFTH, auditoriumNew, course, group, professorOriginal);
+        Professor professorNew = new Professor(2L, "new", "new");
+        Schedule expected = new Schedule(1L, 1L, dateTwo, DayOfWeek.WEDNESDAY,
+                Period.FIFTH, auditoriumNew, course, group, professorNew);
 
-        scheduleRepository.reschedule(scheduleOne, dateTwo, option);
+        scheduleRepository.update(expected);
 
         String filter = " WHERE schedules.id = :id";
 
@@ -200,23 +212,20 @@ class JdbcScheduleDaoTest {
     @Sql("classpath:preload_sample_data_schedule_test.sql")
     public void updateAllWithTemplateIdShouldUpdateCorrectSchedules() {
 
-        ReschedulingOption option = new ReschedulingOption(1L,
-                DayOfWeek.THURSDAY, Period.FIFTH, auditoriumNew);
         int deltaDays = 3;
-        Schedule expectedOne = new Schedule(1L, templateOne.getId(),
-                dateOne.plusDays(3L), DayOfWeek.THURSDAY, Period.FIFTH,
-                auditoriumNew, course, group, professorOriginal);
-        Schedule expectedTwo = new Schedule(3L, templateOne.getId(),
-                dateTwo.plusDays(3L), DayOfWeek.THURSDAY, Period.FIFTH,
-                auditoriumNew, course, group, professorOriginal);
+        Schedule expectedOne = new Schedule(1L, 1L, dateOne.plusDays(3L),
+                DayOfWeek.THURSDAY, Period.FIFTH, auditoriumNew, course, group,
+                professor);
+        Schedule expectedTwo = new Schedule(3L, 1L, dateTwo.plusDays(3L),
+                DayOfWeek.THURSDAY, Period.FIFTH, auditoriumNew, course, group,
+                professor);
         List<Schedule> expected = Arrays.asList(expectedOne, expectedTwo);
 
-        scheduleRepository.updateAllWithTemplateId(templateOne.getId(), option,
-                deltaDays);
+        scheduleRepository.updateAllWithTemplateId(expectedOne, deltaDays);
 
         String filter = " WHERE schedules.template_id = :templateId";
         List<Schedule> actual = jdbc.query(findSql + filter,
-                new MapSqlParameterSource("templateId", templateOne.getId()),
+                new MapSqlParameterSource("templateId", 1L),
                 (ResultSet rs, int rowNum) -> new Schedule(rs.getLong(1),
                         rs.getLong(2), rs.getDate(3).toLocalDate(),
                         DayOfWeek.valueOf(rs.getString(4)),
@@ -228,35 +237,6 @@ class JdbcScheduleDaoTest {
                                 rs.getString(14))));
 
         assertThat(actual).hasSameElementsAs(expected);
-    }
-
-    @Test
-    @Sql("classpath:preload_sample_data_schedule_test.sql")
-    public void substituteProfessorShouldUpdateProfessorReference() {
-
-        Schedule expected = new Schedule(1L, templateOne.getId(), dateOne,
-                DayOfWeek.MONDAY, Period.FIRST, auditorium, course, group,
-                professorNew);
-
-        scheduleRepository.substituteProfessor(scheduleOne.getId(),
-                professorNew.getId());
-        
-        String filter = " WHERE schedules.id = :id";
-
-        Schedule actual = jdbc.queryForObject(findSql + filter,
-                new MapSqlParameterSource("id", expected.getId()),
-                (ResultSet rs, int rowNum) -> new Schedule(rs.getLong(1),
-                        rs.getLong(2), rs.getDate(3).toLocalDate(),
-                        DayOfWeek.valueOf(rs.getString(4)),
-                        Period.valueOf(rs.getString(5)),
-                        new Auditorium(rs.getLong(6), rs.getString(7)),
-                        new Course(rs.getLong(8), rs.getString(9)),
-                        new Group(rs.getLong(10), rs.getString(11)),
-                        new Professor(rs.getLong(12), rs.getString(13),
-                                rs.getString(14))));
-
-        assertThat(actual).isEqualTo(expected);
-        
     }
 
 }

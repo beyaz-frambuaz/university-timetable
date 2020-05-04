@@ -19,7 +19,6 @@ import com.foxminded.timetable.model.Course;
 import com.foxminded.timetable.model.Group;
 import com.foxminded.timetable.model.Period;
 import com.foxminded.timetable.model.Professor;
-import com.foxminded.timetable.model.ReschedulingOption;
 import com.foxminded.timetable.model.ScheduleTemplate;
 
 import lombok.RequiredArgsConstructor;
@@ -30,6 +29,10 @@ import lombok.extern.slf4j.Slf4j;
 @RequiredArgsConstructor
 public class JdbcScheduleTemplateDao implements ScheduleTemplateDao {
 
+    private static final String INSERT_SQL = "INSERT INTO schedule_templates "
+            + "(week_parity, day, period, auditorium_id, course_id, group_id, "
+            + "professor_id) VALUES (:weekParity, :day, :period, :auditoriumId, "
+            + ":courseId, :groupId, :professorId)";
     private static final String FIND_ALL_SQL = "SELECT schedule_templates.id, "
             + "schedule_templates.week_parity, schedule_templates.day, "
             + "schedule_templates.period, schedule_templates.auditorium_id, "
@@ -46,7 +49,7 @@ public class JdbcScheduleTemplateDao implements ScheduleTemplateDao {
 
     @Override
     public long count() {
-        
+
         log.debug("Counting schedule templates");
         String sql = "SELECT COUNT(*) FROM schedule_templates";
         return jdbc.getJdbcOperations().queryForObject(sql, Long.class);
@@ -74,7 +77,7 @@ public class JdbcScheduleTemplateDao implements ScheduleTemplateDao {
 
     @Override
     public Optional<ScheduleTemplate> findById(long id) {
-        
+
         log.debug("Looking for schedule template by ID {}", id);
         try {
             String filter = " WHERE schedule_templates.id = :id";
@@ -83,7 +86,7 @@ public class JdbcScheduleTemplateDao implements ScheduleTemplateDao {
 
             return Optional.of(jdbc.queryForObject(FIND_ALL_SQL + filter,
                     paramSource, this::mapRow));
-            
+
         } catch (EmptyResultDataAccessException e) {
             log.warn("No schedule template found with ID {}", id);
             return Optional.empty();
@@ -91,12 +94,25 @@ public class JdbcScheduleTemplateDao implements ScheduleTemplateDao {
     }
 
     @Override
+    public ScheduleTemplate save(ScheduleTemplate template) {
+
+        SqlParameterSource paramSource = new MapSqlParameterSource()
+                .addValue("weekParity", template.getWeekParity())
+                .addValue("day", template.getDay().toString())
+                .addValue("period", template.getPeriod().name())
+                .addValue("auditoriumId", template.getAuditorium().getId())
+                .addValue("courseId", template.getCourse().getId())
+                .addValue("groupId", template.getGroup().getId())
+                .addValue("professorId", template.getProfessor().getId());
+        jdbc.update(INSERT_SQL, paramSource);
+        log.debug("Schedule templates saved");
+
+        return template;
+    }
+
+    @Override
     public List<ScheduleTemplate> saveAll(List<ScheduleTemplate> templates) {
 
-        String sql = "INSERT INTO schedule_templates (week_parity, day, "
-                + "period, auditorium_id, course_id, group_id, professor_id) "
-                + "VALUES (:weekParity, :day, :period, :auditoriumId, "
-                + ":courseId, :groupId, :professorId)";
         List<SqlParameterSource> paramSource = new ArrayList<>();
         for (ScheduleTemplate template : templates) {
             paramSource.add(new MapSqlParameterSource()
@@ -108,15 +124,14 @@ public class JdbcScheduleTemplateDao implements ScheduleTemplateDao {
                     .addValue("groupId", template.getGroup().getId())
                     .addValue("professorId", template.getProfessor().getId()));
         }
-        jdbc.batchUpdate(sql, paramSource
+        jdbc.batchUpdate(INSERT_SQL, paramSource
                 .toArray(new SqlParameterSource[paramSource.size()]));
         log.debug("Schedule templates saved");
         return templates;
     }
 
     @Override
-    public void reschedule(boolean weekParity, long templateId,
-            ReschedulingOption targetOption) {
+    public ScheduleTemplate update(ScheduleTemplate template) {
 
         String update = "UPDATE schedule_templates "
                 + "SET schedule_templates.week_parity = :weekParity, "
@@ -125,14 +140,15 @@ public class JdbcScheduleTemplateDao implements ScheduleTemplateDao {
                 + "schedule_templates.auditorium_id = :auditoriumId "
                 + "WHERE schedule_templates.id = :templateId";
         SqlParameterSource paramSource = new MapSqlParameterSource()
-                .addValue("weekParity", weekParity)
-                .addValue("day", targetOption.getDay().toString())
-                .addValue("period", targetOption.getPeriod().name())
-                .addValue("auditoriumId", targetOption.getAuditorium().getId())
-                .addValue("templateId", templateId);
+                .addValue("weekParity", template.getWeekParity())
+                .addValue("day", template.getDay().toString())
+                .addValue("period", template.getPeriod().name())
+                .addValue("auditoriumId", template.getAuditorium().getId())
+                .addValue("templateId", template.getId());
         jdbc.update(update, paramSource);
-        log.debug("Updated schedule template with ID {}", templateId);
+        log.debug("Updated schedule template with ID {}", template.getId());
 
+        return template;
     }
 
     private ScheduleTemplate mapRow(ResultSet rs, int rowNumber)

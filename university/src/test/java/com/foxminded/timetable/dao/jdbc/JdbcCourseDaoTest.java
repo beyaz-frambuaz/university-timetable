@@ -12,6 +12,7 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.jdbc.JdbcTest;
 import org.springframework.context.annotation.ComponentScan;
+import org.springframework.jdbc.core.namedparam.MapSqlParameterSource;
 import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
 import org.springframework.test.context.jdbc.Sql;
 import org.springframework.test.context.jdbc.SqlMergeMode;
@@ -30,9 +31,13 @@ class JdbcCourseDaoTest {
 
     private CourseDao courseRepository;
 
-    private List<Course> courses = Arrays.asList(new Course(1L, "one"),
-            new Course(2L, "two"), new Course(3L, "three"));
-    
+    private Course courseOne = new Course(1L, "one");
+    private Course courseTwo = new Course(2L, "two");
+    private Course courseThree = new Course(3L, "three");
+
+    private List<Course> courses = Arrays.asList(courseOne, courseTwo,
+            courseThree);
+
     @BeforeEach
     private void setUp() {
         this.courseRepository = new JdbcCourseDao(jdbc);
@@ -62,8 +67,7 @@ class JdbcCourseDaoTest {
     public void findByIdShouldReturnCorrectCourse() {
 
         Course expectedCourse = new Course(3L, "three");
-        Optional<Course> actualCourse = courseRepository
-                .findById(3L);
+        Optional<Course> actualCourse = courseRepository.findById(3L);
 
         assertThat(actualCourse).isNotEmpty().contains(expectedCourse);
     }
@@ -72,10 +76,44 @@ class JdbcCourseDaoTest {
     @Sql("classpath:preload_sample_data_course_test.sql")
     public void findByIdShouldReturnEmptyOptionalGivenNonExistingId() {
 
-        Optional<Course> actualCourse = courseRepository
-                .findById(999L);
+        Optional<Course> actualCourse = courseRepository.findById(999L);
 
         assertThat(actualCourse).isEmpty();
+    }
+
+    @Test
+    public void saveShouldAddCourse() {
+
+        Course expected = courseRepository.save(courseOne);
+
+        String sql = "SELECT courses.id, courses.name FROM courses "
+                + "WHERE courses.id = :id";
+        Course actual = jdbc.queryForObject(sql,
+                new MapSqlParameterSource("id", courseOne.getId()),
+                (ResultSet rs, int rowNum) -> new Course(rs.getLong(1),
+                        rs.getString(2)));
+
+        assertThat(actual).isEqualTo(expected);
+    }
+
+    @Test
+    @Sql("classpath:preload_sample_data_course_test.sql")
+    public void udpateShouldUpdateCourseName() {
+
+        String newName = "new name";
+        Course expected = new Course(courseOne.getId(), courseOne.getName());
+        expected.setName(newName);
+
+        courseRepository.update(expected);
+
+        String sql = "SELECT courses.id, courses.name FROM courses "
+                + "WHERE courses.id = :id";
+        Optional<Course> actual = Optional.of(jdbc.queryForObject(sql,
+                new MapSqlParameterSource("id", courseOne.getId()),
+                (ResultSet rs, int rowNum) -> new Course(rs.getLong(1),
+                        rs.getString(2))));
+
+        assertThat(actual).isPresent().contains(expected);
     }
 
     @Test

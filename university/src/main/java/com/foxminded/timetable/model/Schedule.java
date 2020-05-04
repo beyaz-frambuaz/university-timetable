@@ -3,37 +3,29 @@ package com.foxminded.timetable.model;
 import java.time.DayOfWeek;
 import java.time.LocalDate;
 
+import lombok.AllArgsConstructor;
 import lombok.Data;
-import lombok.RequiredArgsConstructor;
 
 @Data
-@RequiredArgsConstructor
+@AllArgsConstructor
 public class Schedule implements Comparable<Schedule> {
 
-    private final long id;
-    private final long templateId;
-    private final LocalDate date;
-    private final DayOfWeek day;
-    private final Period period;
-    private final Auditorium auditorium;
-    private final Course course;
-    private final Group group;
-    private final Professor professor;
-    private ScheduleTemplate scheduleTemplate;
+    private final Long id;
+    private final Long templateId;
+    private LocalDate date;
+    private DayOfWeek day;
+    private Period period;
+    private Auditorium auditorium;
+    private Course course;
+    private Group group;
+    private Professor professor;
 
-    public Schedule(long id, ScheduleTemplate scheduleTemplate,
-            LocalDate date) {
+    public Schedule(ScheduleTemplate template, LocalDate date) {
 
-        this.id = id;
-        this.templateId = scheduleTemplate.getId();
-        this.scheduleTemplate = scheduleTemplate;
-        this.date = date;
-        this.day = scheduleTemplate.getDay();
-        this.period = scheduleTemplate.getPeriod();
-        this.auditorium = scheduleTemplate.getAuditorium();
-        this.course = scheduleTemplate.getCourse();
-        this.group = scheduleTemplate.getGroup();
-        this.professor = scheduleTemplate.getProfessor();
+        this(null, template.getId(), date, template.getDay(),
+                template.getPeriod(), template.getAuditorium(),
+                template.getCourse(), template.getGroup(),
+                template.getProfessor());
     }
 
     @Override

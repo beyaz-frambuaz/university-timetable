@@ -12,5 +12,9 @@ public interface ProfessorDao extends GenericDao<Professor> {
 
     List<Professor> findAllAvailable(boolean weekParity, LocalDate date,
             Period period);
-    
+
+    Professor save(Professor professor);
+
+    Professor update(Professor professor);
+
 }

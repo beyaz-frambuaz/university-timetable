@@ -20,7 +20,6 @@ import com.foxminded.timetable.model.Course;
 import com.foxminded.timetable.model.Group;
 import com.foxminded.timetable.model.Period;
 import com.foxminded.timetable.model.Professor;
-import com.foxminded.timetable.model.ReschedulingOption;
 import com.foxminded.timetable.model.Schedule;
 
 import lombok.RequiredArgsConstructor;
@@ -98,6 +97,29 @@ public class JdbcScheduleDao implements ScheduleDao {
     }
 
     @Override
+    public Schedule save(Schedule schedule) {
+
+        String sql = "INSERT INTO schedules (template_id, on_date, day, "
+                + "period, auditorium_id, course_id, group_id, professor_id) "
+                + "VALUES (:templateId, :date, :day, :period, :auditoriumId, "
+                + ":courseId, :groupId, :professorId)";
+        SqlParameterSource paramSource = new MapSqlParameterSource()
+                .addValue("templateId", schedule.getTemplateId())
+                .addValue("date", schedule.getDate().toString())
+                .addValue("day", schedule.getDay().toString())
+                .addValue("period", schedule.getPeriod().name())
+                .addValue("auditoriumId", schedule.getAuditorium().getId())
+                .addValue("courseId", schedule.getCourse().getId())
+                .addValue("groupId", schedule.getGroup().getId())
+                .addValue("professorId", schedule.getProfessor().getId());
+        jdbc.update(sql, paramSource);
+        log.debug("Schedule saved");
+
+        return schedule;
+
+    }
+
+    @Override
     public List<Schedule> saveAll(List<Schedule> schedules) {
 
         String sql = "INSERT INTO schedules (template_id, on_date, day, "
@@ -107,8 +129,7 @@ public class JdbcScheduleDao implements ScheduleDao {
         List<SqlParameterSource> paramSource = new ArrayList<>();
         for (Schedule schedule : schedules) {
             paramSource.add(new MapSqlParameterSource()
-                    .addValue("templateId",
-                            schedule.getScheduleTemplate().getId())
+                    .addValue("templateId", schedule.getTemplateId())
                     .addValue("date", schedule.getDate().toString())
                     .addValue("day", schedule.getDay().toString())
                     .addValue("period", schedule.getPeriod().name())
@@ -125,26 +146,32 @@ public class JdbcScheduleDao implements ScheduleDao {
     }
 
     @Override
-    public void reschedule(Schedule candidate, LocalDate targetDate,
-            ReschedulingOption targetOption) {
+    public Schedule update(Schedule schedule) {
 
         String update = "UPDATE schedules SET schedules.on_date = :date, "
                 + "schedules.day = :day, schedules.period = :period, "
-                + "schedules.auditorium_id = :auditoriumId "
+                + "schedules.auditorium_id = :auditoriumId, "
+                + "schedules.course_id = :courseId, "
+                + "schedules.group_id = :groupId, "
+                + "schedules.professor_id = :professorId "
                 + "WHERE schedules.id = :scheduleId";
         SqlParameterSource paramSource = new MapSqlParameterSource()
-                .addValue("date", targetDate)
-                .addValue("day", targetOption.getDay().toString())
-                .addValue("period", targetOption.getPeriod().name())
-                .addValue("auditoriumId", targetOption.getAuditorium().getId())
-                .addValue("scheduleId", candidate.getId());
+                .addValue("date", schedule.getDate().toString())
+                .addValue("day", schedule.getDay().toString())
+                .addValue("period", schedule.getPeriod().name())
+                .addValue("auditoriumId", schedule.getAuditorium().getId())
+                .addValue("courseId", schedule.getCourse().getId())
+                .addValue("groupId", schedule.getGroup().getId())
+                .addValue("professorId", schedule.getProfessor().getId())
+                .addValue("scheduleId", schedule.getId());
         jdbc.update(update, paramSource);
-        log.debug("Rescheduled schedule ID {}", candidate.getId());
+        log.debug("Updated schedule ID {}", schedule.getId());
+
+        return schedule;
     }
 
     @Override
-    public void updateAllWithTemplateId(long templateId,
-            ReschedulingOption targetOption, int deltaDays) {
+    public void updateAllWithTemplateId(Schedule schedule, int deltaDays) {
 
         String update = "UPDATE schedules "
                 + "SET schedules.on_date = schedules.on_date + CAST(:deltaDays AS INTEGER), "
@@ -153,27 +180,13 @@ public class JdbcScheduleDao implements ScheduleDao {
                 + "WHERE schedules.template_id = :templateId";
         SqlParameterSource paramSource = new MapSqlParameterSource()
                 .addValue("deltaDays", deltaDays)
-                .addValue("day", targetOption.getDay().toString())
-                .addValue("period", targetOption.getPeriod().name())
-                .addValue("auditoriumId", targetOption.getAuditorium().getId())
-                .addValue("templateId", templateId);
+                .addValue("day", schedule.getDay().toString())
+                .addValue("period", schedule.getPeriod().name())
+                .addValue("auditoriumId", schedule.getAuditorium().getId())
+                .addValue("templateId", schedule.getTemplateId());
         int rows = jdbc.update(update, paramSource);
         log.debug("Rescheduled {} schedules linked to template ID {}", rows,
-                templateId);
-    }
-
-    @Override
-    public void substituteProfessor(long scheduleId, long professorId) {
-
-        String update = "UPDATE schedules "
-                + "SET schedules.professor_id = :professorId "
-                + "WHERE schedules.id = :scheduleId";
-        SqlParameterSource paramSource = new MapSqlParameterSource()
-                .addValue("professorId", professorId)
-                .addValue("scheduleId", scheduleId);
-        jdbc.update(update, paramSource);
-        log.debug("Updated professor ID to {} for schedule ID {}", professorId,
-                scheduleId);
+                schedule.getTemplateId());
     }
 
     private Schedule mapRow(ResultSet rs, int rowNumber) throws SQLException {

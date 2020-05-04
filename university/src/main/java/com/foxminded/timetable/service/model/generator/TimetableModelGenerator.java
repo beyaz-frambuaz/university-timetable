@@ -35,7 +35,7 @@ public class TimetableModelGenerator {
     private List<ScheduleTemplate> scheduleTemplates = new ArrayList<>();
 
     public void generateAndSave() {
-        
+
         log.info("Generating timetable model");
         populateScheduleTemplates();
         repositories.getTemplateRepository().saveAll(scheduleTemplates);
@@ -61,16 +61,16 @@ public class TimetableModelGenerator {
     }
 
     private void populateScheduleTemplates() {
-        
+
         List<Group> groups = repositories.getGroupRepository().findAll();
         List<Course> courses = repositories.getCourseRepository().findAll();
         List<Professor> professors = repositories.getProfessorRepository()
                 .findAll();
         List<ReschedulingOption> options = buildReschedulingOptions();
-        
+
         for (Group group : groups) {
             for (Course course : courses) {
-                
+
                 List<Professor> courseProfessors = getCourseProfessorsSortedByLeastWorkload(
                         professors, course);
                 Optional<ScheduleTemplate> template = scheduleGroupForCourse(
@@ -79,8 +79,8 @@ public class TimetableModelGenerator {
                 if (template.isPresent()) {
                     scheduleTemplates.add(template.get());
                 } else {
-                    log.warn("Could not schedule group {} for course {}",
-                            group, course);
+                    log.warn("Could not schedule group {} for course {}", group,
+                            course);
                     System.out.println(String.format(
                             "Could not schedule group %s for course %s",
                             group.getName(), course));
@@ -92,7 +92,7 @@ public class TimetableModelGenerator {
 
     private List<Professor> getCourseProfessorsSortedByLeastWorkload(
             List<Professor> professors, Course course) {
-        
+
         List<Professor> courseProfessors = professors.stream()
                 .filter(professor -> professor.getCourses().contains(course))
                 .collect(toList());
@@ -131,7 +131,7 @@ public class TimetableModelGenerator {
                         .findAny();
 
                 if (scheduleSlot.isPresent()) {
-                    return Optional.of(new ScheduleTemplate(0L, weekParity,
+                    return Optional.of(new ScheduleTemplate(weekParity,
                             scheduleSlot.get().getDay(),
                             scheduleSlot.get().getPeriod(),
                             scheduleSlot.get().getAuditorium(), course, group,
@@ -143,7 +143,7 @@ public class TimetableModelGenerator {
     }
 
     private boolean isScheduled(ReschedulingOption option, boolean weekParity) {
-        
+
         return scheduleTemplates.isEmpty() || scheduleTemplates.stream()
                 .filter(template -> template.getWeekParity() == weekParity)
                 .noneMatch(template -> template.getDay() == option.getDay()

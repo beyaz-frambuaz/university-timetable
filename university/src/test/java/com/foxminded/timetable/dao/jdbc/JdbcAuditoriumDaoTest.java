@@ -13,6 +13,7 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.jdbc.JdbcTest;
 import org.springframework.context.annotation.ComponentScan;
+import org.springframework.jdbc.core.namedparam.MapSqlParameterSource;
 import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
 import org.springframework.test.context.jdbc.Sql;
 import org.springframework.test.context.jdbc.SqlMergeMode;
@@ -32,9 +33,12 @@ class JdbcAuditoriumDaoTest {
 
     private AuditoriumDao auditoriumRepository;
 
-    private List<Auditorium> auditoriums = Arrays.asList(
-            new Auditorium(1L, "one"), new Auditorium(2L, "two"),
-            new Auditorium(3L, "three"));
+    private Auditorium auditoriumOne = new Auditorium(1L, "one");
+    private Auditorium auditoriumTwo = new Auditorium(2L, "two");
+    private Auditorium auditoriumThree = new Auditorium(3L, "three");
+
+    private List<Auditorium> auditoriums = Arrays.asList(auditoriumOne,
+            auditoriumTwo, auditoriumThree);
 
     @BeforeEach
     private void setUp() {
@@ -64,15 +68,11 @@ class JdbcAuditoriumDaoTest {
     @Sql("classpath:preload_sample_data_auditorium_test.sql")
     public void findAllAvailableShouldRetrieveCorrectListOfAvailableAuditoriums() {
 
-        Auditorium freeAuditoriumOne = auditoriums.get(0);
-        Auditorium freeAuditoriumTwo = auditoriums.get(1);
-        Auditorium busyAuditorium = auditoriums.get(2);
+        List<Auditorium> actual = auditoriumRepository.findAllAvailable(false,
+                LocalDate.of(2020, 9, 7), Period.SECOND);
 
-        List<Auditorium> actual = auditoriumRepository.findAllAvailable(
-                false, LocalDate.of(2020, 9, 7), Period.SECOND);
-
-        assertThat(actual).containsOnly(freeAuditoriumOne, freeAuditoriumTwo)
-                .doesNotContain(busyAuditorium);
+        assertThat(actual).containsOnly(auditoriumOne, auditoriumTwo)
+                .doesNotContain(auditoriumThree);
     }
 
     @Test
@@ -94,6 +94,42 @@ class JdbcAuditoriumDaoTest {
                 .findById(999L);
 
         assertThat(actualAuditorium).isEmpty();
+    }
+
+    @Test
+    public void saveShouldAddAuditorium() {
+
+        Auditorium expected = auditoriumRepository.save(auditoriumOne);
+
+        String sql = "SELECT auditoriums.id, auditoriums.name FROM auditoriums "
+                + "WHERE auditoriums.id = :id";
+        Auditorium actual = jdbc.queryForObject(sql,
+                new MapSqlParameterSource("id", auditoriumOne.getId()),
+                (ResultSet rs, int rowNum) -> new Auditorium(rs.getLong(1),
+                        rs.getString(2)));
+
+        assertThat(actual).isEqualTo(expected);
+    }
+
+    @Test
+    @Sql("classpath:preload_sample_data_auditorium_test.sql")
+    public void udpateShouldUpdateAuditoriumName() {
+
+        String newName = "new name";
+        Auditorium expected = new Auditorium(auditoriumOne.getId(),
+                auditoriumOne.getName());
+        expected.setName(newName);
+
+        auditoriumRepository.update(expected);
+
+        String sql = "SELECT auditoriums.id, auditoriums.name FROM auditoriums "
+                + "WHERE auditoriums.id = :id";
+        Optional<Auditorium> actual = Optional.of(jdbc.queryForObject(sql,
+                new MapSqlParameterSource("id", auditoriumOne.getId()),
+                (ResultSet rs, int rowNum) -> new Auditorium(rs.getLong(1),
+                        rs.getString(2))));
+
+        assertThat(actual).isPresent().contains(expected);
     }
 
     @Test

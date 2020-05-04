@@ -169,7 +169,7 @@ public class MenuManager {
         case 4:
 
             log.debug("User chose to view schedule with no filters");
-            List<Schedule> schedules = timetable.getRangeSchedule(start, end);
+            List<Schedule> schedules = timetable.getScheduleInRange(start, end);
             System.out.println(printer.printSchedules(schedules));
             return schedules;
 
@@ -181,12 +181,16 @@ public class MenuManager {
     private List<Schedule> displayStudentSchedule(LocalDate start,
             LocalDate end) {
 
+        List<Student> students = timetable.getStudents();
+        List<Long> studentIds = students.stream().map(Student::getId)
+                .collect(toList());
         System.out.println("Pick a student ID: ");
-        Long studentId = Long.valueOf(inputCollector.requestOption(1,
-                timetable.countStudents()));
+        Long studentId = inputCollector.requestId(studentIds);
+        Student student = students.stream()
+                .filter(s -> s.getId().equals(studentId)).findFirst().get();
         log.debug("User chose to view schedule for student ID {}", studentId);
-        List<Schedule> studentSchedule = timetable
-                .findScheduleByStudentId(studentId, start, end);
+        List<Schedule> studentSchedule = timetable.getStudentSchedule(student,
+                start, end);
         System.out.println(printer.printSchedules(studentSchedule));
 
         return studentSchedule;
@@ -195,16 +199,18 @@ public class MenuManager {
     private List<Schedule> displayProfessorSchedule(LocalDate start,
             LocalDate end) {
 
-        List<Professor> professors = timetable.findProfessors();
+        List<Professor> professors = timetable.getProfessors();
         System.out.println(printer.printProfessors(professors));
         System.out.println("Pick a professor ID: ");
         List<Long> ids = professors.stream().map(Professor::getId)
                 .collect(toList());
         long professorId = inputCollector.requestId(ids);
+        Professor professor = professors.stream()
+                .filter(p -> p.getId() == professorId).findFirst().get();
         log.debug("User chose to view schedule for professor ID {}",
                 professorId);
         List<Schedule> professorSchedule = timetable
-                .findScheduleByProfessorId(professorId, start, end);
+                .getProfessorSchedule(professor, start, end);
         System.out.println(printer.printSchedules(professorSchedule));
 
         return professorSchedule;
@@ -213,16 +219,18 @@ public class MenuManager {
     private List<Schedule> displayAuditoriumSchedule(LocalDate start,
             LocalDate end) {
 
-        List<Auditorium> auditoriums = timetable.findAuditoriums();
+        List<Auditorium> auditoriums = timetable.getAuditoriums();
         System.out.println(printer.printAuditoriums(auditoriums));
         System.out.println("Pick an auditorium ID: ");
         List<Long> ids = auditoriums.stream().map(Auditorium::getId)
                 .collect(toList());
         long auditoriumId = inputCollector.requestId(ids);
+        Auditorium auditorium = auditoriums.stream()
+                .filter(a -> a.getId() == auditoriumId).findFirst().get();
         log.debug("User chose to view schedule for auditorium ID {}",
                 auditoriumId);
         List<Schedule> auditoriumSchedule = timetable
-                .findScheduleByAuditoriumId(auditoriumId, start, end);
+                .getAuditoriumSchedule(auditorium, start, end);
         System.out.println(printer.printSchedules(auditoriumSchedule));
 
         return auditoriumSchedule;
@@ -230,7 +238,7 @@ public class MenuManager {
 
     private void displayCourseAttendees() {
 
-        List<Professor> professors = timetable.findProfessors();
+        List<Professor> professors = timetable.getProfessors();
         System.out.println(printer.printProfessors(professors));
         System.out.println("Pick a professor ID: ");
         List<Long> ids = professors.stream().map(Professor::getId)
@@ -246,9 +254,11 @@ public class MenuManager {
         List<Long> courseIds = courses.stream().map(Course::getId)
                 .collect(toList());
         long courseId = inputCollector.requestId(courseIds);
+        Course course = courses.stream().filter(c -> c.getId().equals(courseId))
+                .findFirst().get();
         log.debug("User chose course ID {}", courseId);
-        List<Student> attendees = timetable.findCourseAttendees(courseId,
-                professorId);
+        List<Student> attendees = timetable.getCourseAttendees(course,
+                professor);
 
         System.out.println(printer.printStudents(attendees));
     }
@@ -263,7 +273,7 @@ public class MenuManager {
         Period period = Period.values()[periodId - 1];
         log.debug("User chose period {} on {}", period, date);
         List<Auditorium> availableAuditoriums = timetable
-                .findAvailableAuditoriums(date, period);
+                .getAvailableAuditoriums(date, period);
         System.out.println(printer.printAuditoriums(availableAuditoriums));
     }
 
@@ -277,7 +287,7 @@ public class MenuManager {
         Period period = Period.values()[periodId - 1];
         log.debug("User chose period {} on {}", period, date);
         List<Professor> availableProfessors = timetable
-                .findAvailableProfessors(date, period);
+                .getAvailableProfessors(date, period);
         System.out.println(printer.printProfessors(availableProfessors));
     }
 
@@ -387,7 +397,7 @@ public class MenuManager {
         Schedule schedule = schedules.stream()
                 .filter(s -> s.getId() == scheduleId).findFirst().get();
 
-        List<Professor> availableProfessors = timetable.findAvailableProfessors(
+        List<Professor> availableProfessors = timetable.getAvailableProfessors(
                 schedule.getDate(), schedule.getPeriod());
         System.out.println("Available professors:");
         System.out.println(printer.printProfessors(availableProfessors));
@@ -395,11 +405,13 @@ public class MenuManager {
                 .map(Professor::getId).collect(toList());
         System.out.println("Pick a professor ID: ");
         long professorId = inputCollector.requestId(professorIds);
+        Professor substitute = availableProfessors.stream()
+                .filter(p -> p.getId() == professorId).findFirst().get();
         log.debug(
                 "User chose to substitute professor ID {} with professor ID {} for schedule ID {}",
                 schedule.getProfessor().getId(), professorId, schedule.getId());
 
-        schedule = timetable.substituteProfessor(scheduleId, professorId);
+        schedule = timetable.substituteProfessor(schedule, substitute);
         System.out.println("Done!\nHere is how this schedule looks like now:");
         System.out.println(printer.printSchedules(Arrays.asList(schedule)));
     }

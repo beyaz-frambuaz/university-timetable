@@ -12,6 +12,7 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.jdbc.JdbcTest;
 import org.springframework.context.annotation.ComponentScan;
+import org.springframework.jdbc.core.namedparam.MapSqlParameterSource;
 import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
 import org.springframework.test.context.jdbc.Sql;
 import org.springframework.test.context.jdbc.SqlMergeMode;
@@ -30,8 +31,11 @@ class JdbcGroupDaoTest {
 
     private GroupDao groupRepository;
 
-    private List<Group> groups = Arrays.asList(new Group(1L, "one"),
-            new Group(2L, "two"), new Group(3L, "three"));
+    private Group groupOne = new Group(1L, "one");
+    private Group groupTwo = new Group(2L, "two");
+    private Group groupThree = new Group(3L, "three");
+
+    private List<Group> groups = Arrays.asList(groupOne, groupTwo, groupThree);
 
     @BeforeEach
     private void setUp() {
@@ -65,8 +69,8 @@ class JdbcGroupDaoTest {
         Group notExpected = groups.get(1);
         Group expectedTwo = groups.get(2);
 
-        List<Group> actual = groupRepository.findAllByProfessorAndCourse(
-                1L, 1L);
+        List<Group> actual = groupRepository.findAllByProfessorAndCourse(1L,
+                1L);
 
         assertThat(actual).containsOnly(expectedOne, expectedTwo)
                 .doesNotContain(notExpected);
@@ -92,6 +96,41 @@ class JdbcGroupDaoTest {
     }
 
     @Test
+    public void saveShouldAddGroup() {
+
+        Group expected = groupRepository.save(groupOne);
+
+        String sql = "SELECT groups.id, groups.name FROM groups "
+                + "WHERE groups.id = :id";
+        Group actual = jdbc.queryForObject(sql,
+                new MapSqlParameterSource("id", groupOne.getId()),
+                (ResultSet rs, int rowNum) -> new Group(rs.getLong(1),
+                        rs.getString(2)));
+
+        assertThat(actual).isEqualTo(expected);
+    }
+
+    @Test
+    @Sql("classpath:preload_sample_data_group_test.sql")
+    public void udpateShouldUpdateGroupName() {
+
+        String newName = "new name";
+        Group expected = new Group(groupOne.getId(), groupOne.getName());
+        expected.setName(newName);
+
+        groupRepository.update(expected);
+
+        String sql = "SELECT groups.id, groups.name FROM groups "
+                + "WHERE groups.id = :id";
+        Optional<Group> actual = Optional.of(jdbc.queryForObject(sql,
+                new MapSqlParameterSource("id", groupOne.getId()),
+                (ResultSet rs, int rowNum) -> new Group(rs.getLong(1),
+                        rs.getString(2))));
+
+        assertThat(actual).isPresent().contains(expected);
+    }
+
+    @Test
     public void saveAllShouldSaveAllGroups() {
 
         groupRepository.saveAll(groups);
@@ -102,5 +141,5 @@ class JdbcGroupDaoTest {
 
         assertThat(actual).hasSameElementsAs(groups);
     }
-    
+
 }

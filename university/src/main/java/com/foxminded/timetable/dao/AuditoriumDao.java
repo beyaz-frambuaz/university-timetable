@@ -11,4 +11,8 @@ public interface AuditoriumDao extends GenericDao<Auditorium> {
     List<Auditorium> findAllAvailable(boolean weekParity, LocalDate date,
             Period period);
 
+    Auditorium save(Auditorium newAuditorium);
+
+    Auditorium update(Auditorium auditorium);
+
 }

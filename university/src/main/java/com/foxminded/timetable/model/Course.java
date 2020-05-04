@@ -2,14 +2,17 @@ package com.foxminded.timetable.model;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;
-import lombok.RequiredArgsConstructor;
 
 @Data
 @AllArgsConstructor
-@RequiredArgsConstructor
-public class Course implements Comparable<Course>{
-    private long id;
-    private final String name;
+public class Course implements Comparable<Course> {
+
+    private Long id;
+    private String name;
+
+    public Course(String name) {
+        this.name = name;
+    }
 
     @Override
     public int compareTo(Course other) {
