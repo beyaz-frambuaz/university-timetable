@@ -1,11 +1,10 @@
 package com.foxminded.timetable.dao.jdbc;
 
-import java.sql.ResultSet;
-import java.sql.SQLException;
-import java.time.LocalDate;
-import java.util.List;
-import java.util.Optional;
-
+import com.foxminded.timetable.dao.AuditoriumDao;
+import com.foxminded.timetable.model.Auditorium;
+import com.foxminded.timetable.model.Period;
+import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.jdbc.core.namedparam.MapSqlParameterSource;
 import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
@@ -13,22 +12,21 @@ import org.springframework.jdbc.core.namedparam.SqlParameterSource;
 import org.springframework.jdbc.core.namedparam.SqlParameterSourceUtils;
 import org.springframework.stereotype.Repository;
 
-import com.foxminded.timetable.dao.AuditoriumDao;
-import com.foxminded.timetable.model.Auditorium;
-import com.foxminded.timetable.model.Period;
-
-import lombok.RequiredArgsConstructor;
-import lombok.extern.slf4j.Slf4j;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.time.LocalDate;
+import java.util.List;
+import java.util.Optional;
 
 @Slf4j
 @Repository
 @RequiredArgsConstructor
 public class JdbcAuditoriumDao implements AuditoriumDao {
 
-    private static final String FIND_ALL_SQL = "SELECT auditoriums.id, "
-            + "auditoriums.name FROM auditoriums";
-    private static final String INSERT_SQL = "INSERT INTO auditoriums (name) "
-            + "VALUES (:name)";
+    private static final String FIND_ALL_SQL =
+            "SELECT auditoriums.id, auditoriums.name FROM auditoriums";
+    private static final String INSERT_SQL   =
+            "INSERT INTO auditoriums (name) VALUES (:name)";
 
     private final NamedParameterJdbcTemplate jdbc;
 
@@ -53,17 +51,15 @@ public class JdbcAuditoriumDao implements AuditoriumDao {
 
         log.debug("Retrieving available auditoriums for {} on {}", period,
                 date);
-        String filter = " WHERE auditoriums.id "
-                + "NOT IN ( (SELECT schedule_templates.auditorium_id "
-                + "FROM schedule_templates "
-                + "WHERE schedule_templates.week_parity = :weekParity "
-                + "AND schedule_templates.day = :day "
-                + "AND schedule_templates.period = :period) "
-                + "UNION (SELECT schedules.auditorium_id FROM schedules "
-                + "WHERE schedules.on_date = :date "
-                + "AND schedules.period = :period) );";
-        SqlParameterSource paramSource = new MapSqlParameterSource()
-                .addValue("weekParity", weekParity)
+        String filter = " WHERE auditoriums.id NOT IN ( (SELECT "
+                + "schedule_templates.auditorium_id FROM schedule_templates "
+                + "WHERE schedule_templates.week_parity = :weekParity AND "
+                + "schedule_templates.day = :day AND schedule_templates"
+                + ".period = :period) UNION (SELECT schedules.auditorium_id "
+                + "FROM schedules WHERE schedules.on_date = :date AND "
+                + "schedules.period = :period) );";
+        SqlParameterSource paramSource = new MapSqlParameterSource().addValue(
+                "weekParity", weekParity)
                 .addValue("day", date.getDayOfWeek().toString())
                 .addValue("period", period.name())
                 .addValue("date", date.toString());
@@ -79,8 +75,10 @@ public class JdbcAuditoriumDao implements AuditoriumDao {
             SqlParameterSource paramSource = new MapSqlParameterSource("id",
                     id);
 
-            return Optional.of(jdbc.queryForObject(FIND_ALL_SQL + filter,
-                    paramSource, this::mapRow));
+            return Optional.ofNullable(
+
+                    jdbc.queryForObject(FIND_ALL_SQL + filter, paramSource,
+                            this::mapRow));
 
         } catch (EmptyResultDataAccessException e) {
             log.warn("No auditorium found with ID {}", id);
@@ -113,16 +111,15 @@ public class JdbcAuditoriumDao implements AuditoriumDao {
 
         String sql = "UPDATE auditoriums SET auditoriums.name = :name WHERE "
                 + "auditoriums.id = :id";
-        jdbc.update(sql,
-                new MapSqlParameterSource()
-                        .addValue("name", auditorium.getName())
-                        .addValue("id", auditorium.getId()));
+        jdbc.update(sql, new MapSqlParameterSource().addValue("name",
+                auditorium.getName()).addValue("id", auditorium.getId()));
         log.debug("Updated {}", auditorium);
 
         return auditorium;
     }
 
     private Auditorium mapRow(ResultSet rs, int rowNum) throws SQLException {
+
         return new Auditorium(rs.getLong(1), rs.getString(2));
     }
 

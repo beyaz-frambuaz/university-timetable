@@ -1,16 +1,7 @@
 package com.foxminded.timetable.dao.jdbc;
 
-import static java.util.stream.Collectors.toList;
-import static org.assertj.core.api.Assertions.assertThat;
-
-import java.sql.ResultSet;
-import java.time.DayOfWeek;
-import java.time.LocalDate;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
-import java.util.Optional;
-
+import com.foxminded.timetable.dao.ReschedulingOptionDao;
+import com.foxminded.timetable.model.*;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -21,14 +12,16 @@ import org.springframework.jdbc.core.namedparam.SqlParameterSourceUtils;
 import org.springframework.test.context.jdbc.Sql;
 import org.springframework.test.context.jdbc.SqlMergeMode;
 
-import com.foxminded.timetable.dao.ReschedulingOptionDao;
-import com.foxminded.timetable.model.Auditorium;
-import com.foxminded.timetable.model.Course;
-import com.foxminded.timetable.model.Group;
-import com.foxminded.timetable.model.Period;
-import com.foxminded.timetable.model.Professor;
-import com.foxminded.timetable.model.ReschedulingOption;
-import com.foxminded.timetable.model.Schedule;
+import java.sql.ResultSet;
+import java.time.DayOfWeek;
+import java.time.LocalDate;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
+import java.util.Optional;
+
+import static java.util.stream.Collectors.toList;
+import static org.assertj.core.api.Assertions.assertThat;
 
 @JdbcTest
 @ComponentScan
@@ -36,26 +29,30 @@ import com.foxminded.timetable.model.Schedule;
 @SqlMergeMode(SqlMergeMode.MergeMode.MERGE)
 class JdbcReschedulingOptionDaoTest {
 
+    private final LocalDate                  date          = LocalDate.of(2020,
+            9, 7);
+    private final Auditorium                 auditoriumOne = new Auditorium(1L,
+            "one");
+    private final Auditorium                 auditoriumTwo = new Auditorium(2L,
+            "two");
+    private final List<Auditorium>           auditoriums   = Arrays.asList(
+            auditoriumOne, auditoriumTwo);
+    private final Course                     course        = new Course(1L, "");
+    private final Group                      groupOne      = new Group(1L,
+            "one");
+    private final Professor                  professorOne  = new Professor(1L,
+            "one", "one");
+    private final Schedule                   schedule      = new Schedule(1L,
+            1L, date, DayOfWeek.MONDAY, Period.FIRST, auditoriumOne, course,
+            groupOne, professorOne);
     @Autowired
-    private NamedParameterJdbcTemplate jdbc;
-
-    private ReschedulingOptionDao optionRepository;
-
-    private LocalDate date = LocalDate.of(2020, 9, 7);
-    private Auditorium auditoriumOne = new Auditorium(1L, "one");
-    private Auditorium auditoriumTwo = new Auditorium(2L, "two");
-    private List<Auditorium> auditoriums = Arrays.asList(auditoriumOne,
-            auditoriumTwo);
-    private Course course = new Course(1L, "");
-    private Group groupOne = new Group(1L, "one");
-    private Professor professorOne = new Professor(1L, "one", "one");
-    private Schedule schedule = new Schedule(1L, 1L, date, DayOfWeek.MONDAY,
-            Period.FIRST, auditoriumOne, course, groupOne, professorOne);
-
-    private List<ReschedulingOption> options;
+    private       NamedParameterJdbcTemplate jdbc;
+    private       ReschedulingOptionDao      optionRepository;
+    private       List<ReschedulingOption>   options;
 
     @BeforeEach
     private void setUp() {
+
         this.optionRepository = new JdbcReschedulingOptionDao(jdbc);
 
         this.options = new ArrayList<>();
@@ -100,8 +97,9 @@ class JdbcReschedulingOptionDaoTest {
         List<ReschedulingOption> notExpected = new ArrayList<>(options);
         notExpected.removeAll(expected);
 
-        List<ReschedulingOption> actual = optionRepository
-                .findDayReschedulingOptionsForSchedule(false, date, schedule);
+        List<ReschedulingOption> actual =
+                optionRepository.findDayReschedulingOptionsForSchedule(
+                false, date, schedule);
 
         assertThat(actual).containsOnlyElementsOf(expected)
                 .doesNotContainAnyElementsOf(notExpected);
@@ -114,8 +112,8 @@ class JdbcReschedulingOptionDaoTest {
         ReschedulingOption expectedOption = new ReschedulingOption(1L,
                 DayOfWeek.MONDAY, Period.FIRST, auditoriumOne);
 
-        Optional<ReschedulingOption> actualOption = optionRepository
-                .findById(expectedOption.getId());
+        Optional<ReschedulingOption> actualOption = optionRepository.findById(
+                expectedOption.getId());
 
         assertThat(actualOption).isNotEmpty().contains(expectedOption);
     }
@@ -124,8 +122,8 @@ class JdbcReschedulingOptionDaoTest {
     @Sql("classpath:preload_sample_data_rescheduling_option_test.sql")
     public void findByIdShouldReturnEmptyOptionalGivenNonExistingId() {
 
-        Optional<ReschedulingOption> actualOption = optionRepository
-                .findById(999L);
+        Optional<ReschedulingOption> actualOption = optionRepository.findById(
+                999L);
 
         assertThat(actualOption).isEmpty();
     }

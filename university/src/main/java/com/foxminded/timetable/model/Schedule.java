@@ -1,24 +1,24 @@
 package com.foxminded.timetable.model;
 
-import java.time.DayOfWeek;
-import java.time.LocalDate;
-
 import lombok.AllArgsConstructor;
 import lombok.Data;
+
+import java.time.DayOfWeek;
+import java.time.LocalDate;
 
 @Data
 @AllArgsConstructor
 public class Schedule implements Comparable<Schedule> {
 
-    private final Long id;
-    private final Long templateId;
-    private LocalDate date;
-    private DayOfWeek day;
-    private Period period;
-    private Auditorium auditorium;
-    private Course course;
-    private Group group;
-    private Professor professor;
+    private final Long       id;
+    private final Long       templateId;
+    private       LocalDate  date;
+    private       DayOfWeek  day;
+    private       Period     period;
+    private       Auditorium auditorium;
+    private       Course     course;
+    private       Group      group;
+    private       Professor  professor;
 
     public Schedule(ScheduleTemplate template, LocalDate date) {
 
@@ -30,6 +30,7 @@ public class Schedule implements Comparable<Schedule> {
 
     @Override
     public int compareTo(Schedule other) {
+
         if (date.compareTo(other.getDate()) == 0) {
             if (period.compareTo(other.getPeriod()) == 0) {
                 if (auditorium.equals(other.getAuditorium())) {
@@ -47,4 +48,5 @@ public class Schedule implements Comparable<Schedule> {
         }
         return date.compareTo(other.getDate());
     }
+
 }

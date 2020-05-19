@@ -1,52 +1,42 @@
 package com.foxminded.timetable.service;
 
-import static org.assertj.core.api.Assertions.assertThat;
-import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.ArgumentMatchers.anyList;
-import static org.mockito.ArgumentMatchers.anyLong;
-import static org.mockito.BDDMockito.given;
-import static org.mockito.BDDMockito.then;
-
-import java.time.DayOfWeek;
-import java.util.Arrays;
-import java.util.Collections;
-import java.util.List;
-import java.util.Optional;
-
+import com.foxminded.timetable.dao.ScheduleTemplateDao;
+import com.foxminded.timetable.model.*;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 
-import com.foxminded.timetable.dao.ScheduleTemplateDao;
-import com.foxminded.timetable.model.Auditorium;
-import com.foxminded.timetable.model.Course;
-import com.foxminded.timetable.model.Group;
-import com.foxminded.timetable.model.Period;
-import com.foxminded.timetable.model.Professor;
-import com.foxminded.timetable.model.ScheduleTemplate;
+import java.time.DayOfWeek;
+import java.util.Collections;
+import java.util.List;
+import java.util.Optional;
+
+import static org.assertj.core.api.Assertions.assertThat;
+import static org.mockito.ArgumentMatchers.*;
+import static org.mockito.BDDMockito.given;
+import static org.mockito.BDDMockito.then;
 
 @ExtendWith(MockitoExtension.class)
 class ScheduleTemplateServiceTest {
 
+    private final Long                    id         = 1L;
+    private final boolean                 weekParity = false;
+    private final DayOfWeek               day        = DayOfWeek.MONDAY;
+    private final Period                  period     = Period.FIRST;
+    private final Auditorium              auditorium = new Auditorium(1L,
+            "A-01");
+    private final Course                  course     = new Course(1L, "course");
+    private final Group                   group      = new Group(1L, "G-01");
+    private final Professor               professor  = new Professor(1L, "one",
+            "one");
+    private final ScheduleTemplate        template   = new ScheduleTemplate(id,
+            weekParity, day, period, auditorium, course, group, professor);
     @Mock
-    private ScheduleTemplateDao repository;
-
+    private       ScheduleTemplateDao     repository;
     @InjectMocks
-    private ScheduleTemplateService service;
-
-    private Long id = 1L;
-    private boolean weekParity = false;
-    private DayOfWeek day = DayOfWeek.MONDAY;
-    private Period period = Period.FIRST;
-    private Auditorium auditorium = new Auditorium(1L, "A-01");
-    private Course course = new Course(1L, "course");
-    private Group group = new Group(1L, "G-01");
-    private Professor professor = new Professor(1L, "one", "one");
-
-    private ScheduleTemplate template = new ScheduleTemplate(id, weekParity,
-            day, period, auditorium, course, group, professor);
+    private       ScheduleTemplateService service;
 
     @Test
     public void countShouldDelegateToRepository() {
@@ -66,8 +56,8 @@ class ScheduleTemplateServiceTest {
 
         ScheduleTemplate expected = new ScheduleTemplate(weekParity, day,
                 period, auditorium, course, group, professor);
-        given(repository.save(any(ScheduleTemplate.class)))
-                .willReturn(expected);
+        given(repository.save(any(ScheduleTemplate.class))).willReturn(
+                expected);
 
         ScheduleTemplate actual = service.save(expected);
 
@@ -79,8 +69,8 @@ class ScheduleTemplateServiceTest {
     @Test
     public void saveShouldUpdateScheduleTemplateInRepositoryIfExisting() {
 
-        given(repository.update(any(ScheduleTemplate.class)))
-                .willReturn(template);
+        given(repository.update(any(ScheduleTemplate.class))).willReturn(
+                template);
 
         ScheduleTemplate actual = service.save(template);
 
@@ -92,7 +82,7 @@ class ScheduleTemplateServiceTest {
     @Test
     public void saveAllShouldDelegateToRepository() {
 
-        List<ScheduleTemplate> templates = Arrays.asList(template);
+        List<ScheduleTemplate> templates = Collections.singletonList(template);
         given(repository.saveAll(anyList())).willReturn(templates);
 
         List<ScheduleTemplate> actual = service.saveAll(templates);
@@ -115,7 +105,7 @@ class ScheduleTemplateServiceTest {
     @Test
     public void findAllShouldDelegateToRepository() {
 
-        List<ScheduleTemplate> templates = Arrays.asList(template);
+        List<ScheduleTemplate> templates = Collections.singletonList(template);
         given(repository.findAll()).willReturn(templates);
 
         List<ScheduleTemplate> actual = service.findAll();

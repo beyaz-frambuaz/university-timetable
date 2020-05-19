@@ -1,37 +1,38 @@
 package com.foxminded.timetable.service.printer.assembler;
 
-import static org.assertj.core.api.Assertions.assertThat;
-import static org.mockito.BDDMockito.given;
-import static org.mockito.BDDMockito.then;
-import static org.mockito.Mockito.atLeastOnce;
-
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
-
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
+
+import static org.assertj.core.api.Assertions.assertThat;
+import static org.mockito.BDDMockito.given;
+import static org.mockito.BDDMockito.then;
+import static org.mockito.Mockito.atLeastOnce;
+
 @ExtendWith(MockitoExtension.class)
 public class AssemblerTest {
 
-    private String titleOne = "Title1";
-    private String titleTwo = "Title2";
-    private String titleThree = "Title3";
-    private String cellOne = "cell1";
-    private String cellTwo = "cell2";
-    private String cellThree = "cell three";
-    private List<ColumnWriter> columns;
-    private Assembler assembler;
+    private final String             titleOne   = "Title1";
+    private final String             titleTwo   = "Title2";
+    private final String             titleThree = "Title3";
+    private final String             cellOne    = "cell1";
+    private final String             cellTwo    = "cell2";
+    private final String             cellThree  = "cell three";
+    private       List<ColumnWriter> columns;
+    private       Assembler          assembler;
 
     @Mock
     private ColumnWriter mockColumn;
 
     @BeforeEach
     private void setUp() {
+
         assembler = new Assembler();
         columns = new ArrayList<>();
     }
@@ -41,9 +42,10 @@ public class AssemblerTest {
 
         List<String> items = Arrays.asList(cellOne, cellTwo, cellThree);
         columns.add(new ColumnWriter(titleOne, items));
-        String expected = "+------------+\n" + "| Title1     |\n"
-                + "|============|\n" + "| cell1      |\n" + "| cell2      |\n"
-                + "| cell three |\n" + "+------------+\n";
+        String expected =
+                "+------------+\n" + "| Title1     |\n" + "|============|\n"
+                        + "| cell1      |\n" + "| cell2      |\n"
+                        + "| cell three |\n" + "+------------+\n";
 
         String actual = assembler.assembleTable(columns);
 
@@ -57,10 +59,12 @@ public class AssemblerTest {
         List<String> itemsTwo = Arrays.asList(cellOne, cellThree);
         columns.add(new ColumnWriter(titleOne, itemsOne));
         columns.add(new ColumnWriter(titleTwo, itemsTwo));
-        String expected = "+--------+------------+\n"
-                + "| Title1 | Title2     |\n" + "|========|============|\n"
-                + "| cell1  | cell1      |\n" + "| cell2  | cell three |\n"
-                + "+--------+------------+\n";
+        String expected =
+                "+--------+------------+\n" + "| Title1 | Title2     |\n"
+                        + "|========|============|\n"
+                        + "| cell1  | cell1      |\n"
+                        + "| cell2  | cell three |\n"
+                        + "+--------+------------+\n";
 
         String actual = assembler.assembleTable(columns);
 
@@ -142,4 +146,5 @@ public class AssemblerTest {
 
         assertThat(actual).isEqualTo(expected);
     }
+
 }

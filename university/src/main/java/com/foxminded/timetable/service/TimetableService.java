@@ -1,30 +1,16 @@
 package com.foxminded.timetable.service;
 
-import static java.util.stream.Collectors.toList;
-
-import java.time.LocalDate;
-import java.time.temporal.ChronoUnit;
-import java.util.Collections;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.Optional;
-
-import org.springframework.stereotype.Service;
-
-import com.foxminded.timetable.model.Auditorium;
-import com.foxminded.timetable.model.Course;
-import com.foxminded.timetable.model.Group;
-import com.foxminded.timetable.model.Period;
-import com.foxminded.timetable.model.Professor;
-import com.foxminded.timetable.model.ReschedulingOption;
-import com.foxminded.timetable.model.Schedule;
-import com.foxminded.timetable.model.ScheduleTemplate;
-import com.foxminded.timetable.model.Student;
-
+import com.foxminded.timetable.model.*;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.stereotype.Service;
+
+import java.time.LocalDate;
+import java.time.temporal.ChronoUnit;
+import java.util.*;
+
+import static java.util.stream.Collectors.toList;
 
 @Slf4j
 @Service
@@ -32,21 +18,23 @@ import lombok.extern.slf4j.Slf4j;
 public class TimetableService {
 
     @Getter
-    private final SemesterCalendarUtils semesterCalendar;
-    private final AuditoriumService auditoriumService;
-    private final CourseService courseService;
-    private final GroupService groupService;
-    private final ProfessorService professorService;
+    private final SemesterCalendarUtils     semesterCalendar;
+    private final AuditoriumService         auditoriumService;
+    private final CourseService             courseService;
+    private final GroupService              groupService;
+    private final ProfessorService          professorService;
     private final ReschedulingOptionService optionService;
-    private final ScheduleService scheduleService;
-    private final ScheduleTemplateService templateService;
-    private final StudentService studentService;
+    private final ScheduleService           scheduleService;
+    private final ScheduleTemplateService   templateService;
+    private final StudentService            studentService;
 
     public List<ScheduleTemplate> getTwoWeekSchedule() {
+
         return templateService.findAll();
     }
 
     public List<Student> getStudents() {
+
         return studentService.findAll();
     }
 
@@ -56,9 +44,12 @@ public class TimetableService {
         log.debug("Filtering schedules in range {}-{} by group ID {}",
                 startDate, endDate, student.getGroup().getId());
 
-        return scheduleService.findAllInRange(startDate, endDate).stream()
-                .filter(schedule -> schedule.getGroup().getId()
+        return scheduleService.findAllInRange(startDate, endDate)
+                .stream()
+                .filter(s -> s.getGroup()
+                        .getId()
                         .equals(student.getGroup().getId()))
+                .sorted()
                 .collect(toList());
     }
 
@@ -68,9 +59,10 @@ public class TimetableService {
         log.debug("Filtering schedules in range {}-{} by professor ID {}",
                 startDate, endDate, professor.getId());
 
-        return scheduleService.findAllInRange(startDate, endDate).stream()
-                .filter(schedule -> schedule.getProfessor().getId()
-                        .equals(professor.getId()))
+        return scheduleService.findAllInRange(startDate, endDate)
+                .stream()
+                .filter(s -> s.getProfessor().getId().equals(professor.getId()))
+                .sorted()
                 .collect(toList());
     }
 
@@ -80,25 +72,31 @@ public class TimetableService {
         log.debug("Filtering schedules in range {}-{} by auditorium ID {}",
                 startDate, endDate, auditorium.getId());
 
-        return scheduleService.findAllInRange(startDate, endDate).stream()
-                .filter(schedule -> schedule.getAuditorium().getId()
+        return scheduleService.findAllInRange(startDate, endDate)
+                .stream()
+                .filter(s -> s.getAuditorium()
+                        .getId()
                         .equals(auditorium.getId()))
+                .sorted()
                 .collect(toList());
     }
 
     public List<Professor> getProfessors() {
+
         return professorService.findAll();
     }
 
     public List<Auditorium> getAuditoriums() {
+
         return auditoriumService.findAll();
     }
 
     public List<Student> getCourseAttendees(Course course,
             Professor professor) {
 
-        List<Group> professorGroups = groupService
-                .findAllAttendingProfessorCourse(course, professor);
+        List<Group> professorGroups =
+                groupService.findAllAttendingProfessorCourse(
+                course, professor);
         return studentService.findAllInGroups(professorGroups);
     }
 
@@ -132,17 +130,17 @@ public class TimetableService {
     public Map<LocalDate, List<ReschedulingOption>> getReschedulingOptions(
             Schedule candidate, LocalDate startDate, LocalDate endDate) {
 
-        log.debug(
-                "Assembling rescheduling options for schedule ID {} in range {}-{}",
-                candidate.getId(), startDate, endDate);
+        log.debug("Assembling rescheduling options for schedule ID {} in range "
+                + "{}-{}", candidate.getId(), startDate, endDate);
         Map<LocalDate, List<ReschedulingOption>> results = new HashMap<>();
         long daysBetweenDates = ChronoUnit.DAYS.between(startDate, endDate) + 1;
         for (long i = 0; i < daysBetweenDates; i++) {
             LocalDate date = startDate.plusDays(i);
             if (semesterCalendar.isSemesterDate(date)) {
                 boolean weekParity = semesterCalendar.getWeekParityOf(date);
-                results.putAll(optionService.findAllDayOptionsFor(weekParity,
-                        date, candidate));
+                results.putAll(
+                        optionService.findAllDayOptionsFor(weekParity, date,
+                                candidate));
             }
         }
         return results;
@@ -163,9 +161,9 @@ public class TimetableService {
     public List<Schedule> reschedulePermanently(Schedule candidate,
             LocalDate targetDate, ReschedulingOption targetOption) {
 
-        log.debug("Getting upnerlying template to reschedule permanently");
-        Optional<ScheduleTemplate> template = templateService
-                .findById(candidate.getTemplateId());
+        log.debug("Getting underlying template to reschedule permanently");
+        Optional<ScheduleTemplate> template = templateService.findById(
+                candidate.getTemplateId());
 
         if (!template.isPresent()) {
             return Collections.emptyList();

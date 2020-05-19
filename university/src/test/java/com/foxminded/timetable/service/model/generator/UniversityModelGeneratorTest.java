@@ -1,112 +1,52 @@
 package com.foxminded.timetable.service.model.generator;
 
-import static java.util.stream.Collectors.counting;
-import static java.util.stream.Collectors.groupingBy;
-import static java.util.stream.Collectors.toList;
-import static org.assertj.core.api.Assertions.assertThat;
-import static org.assertj.core.api.Assertions.assertThatIllegalArgumentException;
-import static org.mockito.ArgumentMatchers.anyList;
-import static org.mockito.BDDMockito.then;
-import static org.mockito.Mockito.atLeastOnce;
-
-import java.util.Arrays;
-import java.util.List;
-import java.util.Map;
-import java.util.function.Function;
-
+import com.foxminded.timetable.TimetableApp;
+import com.foxminded.timetable.dao.*;
+import com.foxminded.timetable.model.*;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.ConfigFileApplicationContextInitializer;
-import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.boot.test.mock.mockito.SpyBean;
 import org.springframework.test.annotation.DirtiesContext;
 import org.springframework.test.annotation.DirtiesContext.MethodMode;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 
-import com.foxminded.timetable.TimetableApp;
-import com.foxminded.timetable.dao.AuditoriumDao;
-import com.foxminded.timetable.dao.CourseDao;
-import com.foxminded.timetable.dao.GroupDao;
-import com.foxminded.timetable.dao.ProfessorDao;
-import com.foxminded.timetable.dao.StudentDao;
-import com.foxminded.timetable.model.Auditorium;
-import com.foxminded.timetable.model.Course;
-import com.foxminded.timetable.model.Group;
-import com.foxminded.timetable.model.Professor;
-import com.foxminded.timetable.model.Student;
+import java.util.Arrays;
+import java.util.List;
+import java.util.Map;
+import java.util.function.Function;
+
+import static java.util.stream.Collectors.*;
+import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.assertThatIllegalArgumentException;
+import static org.mockito.ArgumentMatchers.anyList;
+import static org.mockito.BDDMockito.then;
+import static org.mockito.Mockito.atLeastOnce;
 
 @ExtendWith(MockitoExtension.class)
 @ExtendWith(SpringExtension.class)
-@ContextConfiguration(classes = TimetableApp.class, initializers = ConfigFileApplicationContextInitializer.class)
+@ContextConfiguration(classes = TimetableApp.class,
+                      initializers =
+                              ConfigFileApplicationContextInitializer.class)
 class UniversityModelGeneratorTest {
 
     @SpyBean
     private AuditoriumDao auditoriumRepository;
     @SpyBean
-    private CourseDao courseRepository;
+    private CourseDao     courseRepository;
     @SpyBean
-    private ProfessorDao professorRepository;
+    private ProfessorDao  professorRepository;
     @SpyBean
-    private GroupDao groupRepository;
+    private GroupDao      groupRepository;
     @SpyBean
-    private StudentDao studentRepository;
+    private StudentDao    studentRepository;
 
     @Autowired
     private UniversityModelGenerator universityModelGenerator;
-
-    @MockBean
-    private TimetableModelGenerator timatableModelGenerator;
-
-    @Nested
-    public class InputFileValidationTest {
-
-        @Test
-        public void shouldThrowIllegalArgumentExceptionGivenWrongFilePath() {
-
-            String wrongFilePath = "nonexistingFile.txt";
-            universityModelGenerator.setCoursesFilePath(wrongFilePath);
-            universityModelGenerator.setFirstNamesFilePath(wrongFilePath);
-            universityModelGenerator.setLastNamesFilePath(wrongFilePath);
-
-            assertThatIllegalArgumentException()
-                    .isThrownBy(
-                            () -> universityModelGenerator.generateAndSave())
-                    .withMessage("Unable to locate nonexistingFile.txt");
-        }
-
-        @Test
-        public void shouldThrowIllegalArgumentExceptionGivenWrongNonTxtFile() {
-
-            String wrongFile = "wrong_file.log";
-            universityModelGenerator.setCoursesFilePath(wrongFile);
-            universityModelGenerator.setFirstNamesFilePath(wrongFile);
-            universityModelGenerator.setLastNamesFilePath(wrongFile);
-
-            assertThatIllegalArgumentException()
-                    .isThrownBy(
-                            () -> universityModelGenerator.generateAndSave())
-                    .withMessage("wrong_file.log is not a *.txt file");
-        }
-
-        @Test
-        public void shouldThrowIllegalArgumentExceptionGivenEmptyFile() {
-
-            String emptyFile = "empty.txt";
-            universityModelGenerator.setCoursesFilePath(emptyFile);
-            universityModelGenerator.setFirstNamesFilePath(emptyFile);
-            universityModelGenerator.setLastNamesFilePath(emptyFile);
-
-            assertThatIllegalArgumentException()
-                    .isThrownBy(
-                            () -> universityModelGenerator.generateAndSave())
-                    .withMessage("empty.txt appears to be empty");
-        }
-
-    }
 
     @Test
     @DirtiesContext(methodMode = MethodMode.AFTER_METHOD)
@@ -138,12 +78,12 @@ class UniversityModelGeneratorTest {
         long actualNumberOfProfessors = professorRepository.count();
         long actualNumberOfStudents = studentRepository.count();
 
-        assertThat(actualNumberOfAuditoriums)
-                .isEqualTo(expectedNumberOfAuditoriums);
+        assertThat(actualNumberOfAuditoriums).isEqualTo(
+                expectedNumberOfAuditoriums);
         assertThat(actualNumberOfCourses).isEqualTo(expectedNumberOfCourses);
         assertThat(actualNumberOfGroups).isEqualTo(expectedNumberOfGroups);
-        assertThat(actualNumberOfProfessors)
-                .isEqualTo(expectedNumberOfProfessors);
+        assertThat(actualNumberOfProfessors).isEqualTo(
+                expectedNumberOfProfessors);
         assertThat(actualNumberOfStudents).isEqualTo(expectedNumberOfStudents);
     }
 
@@ -153,10 +93,10 @@ class UniversityModelGeneratorTest {
         List<String> expected = Arrays.asList("Scientology",
                 "Procrastination101", "Demagoguery", "Dark Magic",
                 "Defense Against Dark Magic",
-                "Dark Magic Against Defense Against Dark Magic",
+                "Dark Magic Against Defense " + "Against Dark Magic",
                 "Theoretical Camel Tracking", "Applied Polyandry",
-                "DB Sanitation'); DROP TABLE students; --",
-                "Modern Sand Castle Architecture");
+                "DB Sanitation'); DROP TABLE " + "students; --",
+                "Modern Sand Castle " + "Architecture");
 
         List<Course> actual = courseRepository.findAll();
 
@@ -247,12 +187,13 @@ class UniversityModelGeneratorTest {
     @Test
     public void eachGroupShouldHaveUpToThirtyStudents() {
 
-        Map<Group, Long> groupsSizes = studentRepository.findAll().stream()
+        Map<Group, Long> groupsSizes = studentRepository.findAll()
+                .stream()
                 .map(Student::getGroup)
                 .collect(groupingBy(Function.identity(), counting()));
 
-        assertThat(groupsSizes.values())
-                .allMatch(groupSize -> groupSize >= 1 && groupSize <= 30);
+        assertThat(groupsSizes.values()).allMatch(
+                groupSize -> groupSize >= 1 && groupSize <= 30);
     }
 
     @Test
@@ -262,7 +203,6 @@ class UniversityModelGeneratorTest {
 
         assertThat(actual).extracting(Professor::getCourses)
                 .allMatch(professorCourses -> !professorCourses.isEmpty()
-                        && professorCourses.size() >= 1
                         && professorCourses.size() <= 4);
     }
 
@@ -270,11 +210,12 @@ class UniversityModelGeneratorTest {
     public void eachCourseShouldHaveOneToTwoProfessors() {
 
         Map<Course, Long> coursesAssignments = professorRepository.findAll()
-                .stream().flatMap(professor -> professor.getCourses().stream())
+                .stream()
+                .flatMap(professor -> professor.getCourses().stream())
                 .collect(groupingBy(Function.identity(), counting()));
 
-        assertThat(coursesAssignments.values())
-                .allMatch(courseAssignment -> courseAssignment >= 1
+        assertThat(coursesAssignments.values()).allMatch(
+                courseAssignment -> courseAssignment >= 1
                         && courseAssignment <= 2);
     }
 
@@ -283,10 +224,58 @@ class UniversityModelGeneratorTest {
 
         List<Course> expected = courseRepository.findAll();
 
-        List<Course> actual = professorRepository.findAll().stream()
+        List<Course> actual = professorRepository.findAll()
+                .stream()
                 .flatMap(professor -> professor.getCourses().stream())
-                .distinct().collect(toList());
+                .distinct()
+                .collect(toList());
 
         assertThat(actual).hasSameElementsAs(expected);
     }
+
+    @Nested
+    public class InputFileValidationTest {
+
+        @Test
+        public void shouldThrowIllegalArgumentExceptionGivenWrongFilePath() {
+
+            String wrongFilePath = "nonexistingFile.txt";
+            universityModelGenerator.setCoursesFilePath(wrongFilePath);
+            universityModelGenerator.setFirstNamesFilePath(wrongFilePath);
+            universityModelGenerator.setLastNamesFilePath(wrongFilePath);
+
+            assertThatIllegalArgumentException().isThrownBy(
+                    () -> universityModelGenerator.generateAndSave())
+                    .withMessage("Unable to locate " + "nonexistingFile.txt");
+        }
+
+        @Test
+        public void shouldThrowIllegalArgumentExceptionGivenWrongNonTxtFile() {
+
+            String wrongFile = "wrong_file.log";
+            universityModelGenerator.setCoursesFilePath(wrongFile);
+            universityModelGenerator.setFirstNamesFilePath(wrongFile);
+            universityModelGenerator.setLastNamesFilePath(wrongFile);
+
+            assertThatIllegalArgumentException().isThrownBy(
+                    () -> universityModelGenerator.generateAndSave())
+                    .withMessage(
+                            "wrong_file.log is " + "not a *" + ".txt file");
+        }
+
+        @Test
+        public void shouldThrowIllegalArgumentExceptionGivenEmptyFile() {
+
+            String emptyFile = "empty.txt";
+            universityModelGenerator.setCoursesFilePath(emptyFile);
+            universityModelGenerator.setFirstNamesFilePath(emptyFile);
+            universityModelGenerator.setLastNamesFilePath(emptyFile);
+
+            assertThatIllegalArgumentException().isThrownBy(
+                    () -> universityModelGenerator.generateAndSave())
+                    .withMessage("empty.txt appears to" + " be empty");
+        }
+
+    }
+
 }

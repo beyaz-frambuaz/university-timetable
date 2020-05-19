@@ -1,8 +1,8 @@
 package com.foxminded.timetable.dao;
 
-import java.util.List;
-
 import com.foxminded.timetable.model.Group;
+
+import java.util.List;
 
 public interface GroupDao extends GenericDao<Group> {
 

@@ -1,32 +1,17 @@
 package com.foxminded.timetable.service.printer;
 
-import static java.util.stream.Collectors.groupingBy;
-import static java.util.stream.Collectors.joining;
-import static java.util.stream.Collectors.toList;
-
-import java.time.LocalDate;
-import java.util.Arrays;
-import java.util.Collections;
-import java.util.Comparator;
-import java.util.List;
-import java.util.Map;
-import java.util.stream.IntStream;
-
-import org.springframework.stereotype.Service;
-
-import com.foxminded.timetable.model.Auditorium;
-import com.foxminded.timetable.model.Course;
-import com.foxminded.timetable.model.Period;
-import com.foxminded.timetable.model.Professor;
-import com.foxminded.timetable.model.ReschedulingOption;
-import com.foxminded.timetable.model.Schedule;
-import com.foxminded.timetable.model.ScheduleTemplate;
-import com.foxminded.timetable.model.Student;
+import com.foxminded.timetable.model.*;
 import com.foxminded.timetable.service.printer.assembler.Assembler;
 import com.foxminded.timetable.service.printer.assembler.ColumnWriter;
-
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.stereotype.Service;
+
+import java.time.LocalDate;
+import java.util.*;
+import java.util.stream.IntStream;
+
+import static java.util.stream.Collectors.*;
 
 @Slf4j
 @Service
@@ -36,13 +21,15 @@ public class Printer {
     private final Assembler assembler;
 
     public String printTwoWeekSchedule(List<ScheduleTemplate> twoWeekSchedule) {
-        
+
         log.debug("Printing two week schedule");
         StringBuilder builder = new StringBuilder();
-        twoWeekSchedule.stream().sorted()
-                .collect(groupingBy(ScheduleTemplate::getWeekParity)).values()
-                .forEach(weekTemplates -> builder
-                        .append(printScheduleTemplates(weekTemplates)));
+        twoWeekSchedule.stream()
+                .sorted()
+                .collect(groupingBy(ScheduleTemplate::getWeekParity))
+                .values()
+                .forEach(weekTemplates -> builder.append(
+                        printScheduleTemplates(weekTemplates)));
         return builder.toString();
     }
 
@@ -107,14 +94,15 @@ public class Printer {
         List<String> professors = schedules.stream()
                 .map(schedule -> schedule.getProfessor().getFullName())
                 .collect(toList());
-        return assembler.assembleTable(Arrays.asList(
-                new ColumnWriter("ID", ids), new ColumnWriter("Date", dates),
-                new ColumnWriter("Day", days),
-                new ColumnWriter("Period", periods),
-                new ColumnWriter("Auditorium", auditoriums),
-                new ColumnWriter("Group", groups),
-                new ColumnWriter("Course", courses),
-                new ColumnWriter("Professor", professors)));
+        return assembler.assembleTable(
+                Arrays.asList(new ColumnWriter("ID", ids),
+                        new ColumnWriter("Date", dates),
+                        new ColumnWriter("Day", days),
+                        new ColumnWriter("Period", periods),
+                        new ColumnWriter("Auditorium", auditoriums),
+                        new ColumnWriter("Group", groups),
+                        new ColumnWriter("Course", courses),
+                        new ColumnWriter("Professor", professors)));
     }
 
     public String printStudents(List<Student> students) {
@@ -124,14 +112,17 @@ public class Printer {
         List<String> ids = students.stream()
                 .map(student -> Long.toString(student.getId()))
                 .collect(toList());
-        List<String> names = students.stream().map(Student::getFullName)
+        List<String> names = students.stream()
+                .map(Student::getFullName)
                 .collect(toList());
         List<String> groups = students.stream()
-                .map(student -> student.getGroup().getName()).collect(toList());
+                .map(student -> student.getGroup().getName())
+                .collect(toList());
 
-        return assembler.assembleTable(Arrays.asList(
-                new ColumnWriter("Id", ids), new ColumnWriter("Student", names),
-                new ColumnWriter("Group", groups)));
+        return assembler.assembleTable(
+                Arrays.asList(new ColumnWriter("Id", ids),
+                        new ColumnWriter("Student", names),
+                        new ColumnWriter("Group", groups)));
     }
 
     public String printCourses(List<Course> courses) {
@@ -139,12 +130,14 @@ public class Printer {
         log.debug("Printing courses");
         courses.sort(Comparator.comparingLong(Course::getId));
         List<String> ids = courses.stream()
-                .map(course -> Long.toString(course.getId())).collect(toList());
-        List<String> names = courses.stream().map(Course::getName)
+                .map(course -> Long.toString(course.getId()))
+                .collect(toList());
+        List<String> names = courses.stream()
+                .map(Course::getName)
                 .collect(toList());
 
-        return assembler
-                .assembleTable(Arrays.asList(new ColumnWriter("Id", ids),
+        return assembler.assembleTable(
+                Arrays.asList(new ColumnWriter("Id", ids),
                         new ColumnWriter("Course", names)));
     }
 
@@ -155,11 +148,12 @@ public class Printer {
         List<String> ids = auditoriums.stream()
                 .map(auditorium -> Long.toString(auditorium.getId()))
                 .collect(toList());
-        List<String> names = auditoriums.stream().map(Auditorium::getName)
+        List<String> names = auditoriums.stream()
+                .map(Auditorium::getName)
                 .collect(toList());
 
-        return assembler
-                .assembleTable(Arrays.asList(new ColumnWriter("Id", ids),
+        return assembler.assembleTable(
+                Arrays.asList(new ColumnWriter("Id", ids),
                         new ColumnWriter("Auditorium", names)));
     }
 
@@ -167,12 +161,14 @@ public class Printer {
 
         log.debug("Printing periods");
         List<String> ids = IntStream.rangeClosed(1, Period.values().length)
-                .mapToObj(Integer::toString).collect(toList());
+                .mapToObj(Integer::toString)
+                .collect(toList());
         List<String> names = Arrays.stream(Period.values())
-                .map(Period::toString).collect(toList());
+                .map(Period::toString)
+                .collect(toList());
 
-        return assembler
-                .assembleTable(Arrays.asList(new ColumnWriter("Id", ids),
+        return assembler.assembleTable(
+                Arrays.asList(new ColumnWriter("Id", ids),
                         new ColumnWriter("Period", names)));
     }
 
@@ -183,15 +179,18 @@ public class Printer {
         List<String> ids = professors.stream()
                 .map(professor -> Long.toString(professor.getId()))
                 .collect(toList());
-        List<String> names = professors.stream().map(Professor::getFullName)
+        List<String> names = professors.stream()
+                .map(Professor::getFullName)
                 .collect(toList());
         List<String> courses = professors.stream()
-                .map(professor -> professor.getCourses().stream()
-                        .map(Course::getName).collect(joining(", ")))
+                .map(professor -> professor.getCourses()
+                        .stream()
+                        .map(Course::getName)
+                        .collect(joining(", ")))
                 .collect(toList());
 
-        return assembler
-                .assembleTable(Arrays.asList(new ColumnWriter("Id", ids),
+        return assembler.assembleTable(
+                Arrays.asList(new ColumnWriter("Id", ids),
                         new ColumnWriter("Professor", names),
                         new ColumnWriter("Courses", courses)));
     }
@@ -200,26 +199,40 @@ public class Printer {
             Map<LocalDate, List<ReschedulingOption>> options) {
 
         log.debug("Printing rescheduling options");
-        List<String> dates = options.keySet().stream().sorted()
+        List<String> dates = options.keySet()
+                .stream()
+                .sorted()
                 .flatMap(date -> {
                     int size = options.get(date).size();
-                    return Collections.nCopies(size, date).stream()
+                    return Collections.nCopies(size, date)
+                            .stream()
                             .map(LocalDate::toString);
-                }).collect(toList());
-        List<String> days = options.values().stream()
-                .flatMap(dayOptions -> dayOptions.stream()).sorted()
-                .map(option -> option.getDay().toString()).collect(toList());
-        List<String> periods = options.values().stream()
-                .flatMap(dayOptions -> dayOptions.stream()).sorted()
-                .map(option -> option.getPeriod().toString()).collect(toList());
-        List<String> auditoriums = options.values().stream()
-                .flatMap(dayOptions -> dayOptions.stream()).sorted()
+                })
+                .collect(toList());
+        List<String> days = options.values()
+                .stream()
+                .flatMap(Collection::stream)
+                .sorted()
+                .map(option -> option.getDay().toString())
+                .collect(toList());
+        List<String> periods = options.values()
+                .stream()
+                .flatMap(Collection::stream)
+                .sorted()
+                .map(option -> option.getPeriod().toString())
+                .collect(toList());
+        List<String> auditoriums = options.values()
+                .stream()
+                .flatMap(Collection::stream)
+                .sorted()
                 .map(option -> option.getAuditorium().getName())
                 .collect(toList());
 
-        return assembler.assembleTable(Arrays.asList(
-                new ColumnWriter("Date", dates), new ColumnWriter("Day", days),
-                new ColumnWriter("Period", periods),
-                new ColumnWriter("Auditorium", auditoriums)));
+        return assembler.assembleTable(
+                Arrays.asList(new ColumnWriter("Date", dates),
+                        new ColumnWriter("Day", days),
+                        new ColumnWriter("Period", periods),
+                        new ColumnWriter("Auditorium", auditoriums)));
     }
+
 }

@@ -1,13 +1,11 @@
 package com.foxminded.timetable.dao.jdbc;
 
-import java.sql.ResultSet;
-import java.sql.SQLException;
-import java.time.LocalDate;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
-import java.util.Optional;
-
+import com.foxminded.timetable.dao.ProfessorDao;
+import com.foxminded.timetable.model.Course;
+import com.foxminded.timetable.model.Period;
+import com.foxminded.timetable.model.Professor;
+import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.jdbc.core.namedparam.MapSqlParameterSource;
 import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
@@ -15,27 +13,23 @@ import org.springframework.jdbc.core.namedparam.SqlParameterSource;
 import org.springframework.jdbc.core.namedparam.SqlParameterSourceUtils;
 import org.springframework.stereotype.Repository;
 
-import com.foxminded.timetable.dao.ProfessorDao;
-import com.foxminded.timetable.model.Course;
-import com.foxminded.timetable.model.Period;
-import com.foxminded.timetable.model.Professor;
-
-import lombok.RequiredArgsConstructor;
-import lombok.extern.slf4j.Slf4j;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.time.LocalDate;
+import java.util.*;
 
 @Slf4j
 @Repository
 @RequiredArgsConstructor
 public class JdbcProfessorDao implements ProfessorDao {
 
-    private static final String INSERT_SQL = "INSERT INTO professors "
+    private static final String INSERT_SQL   = "INSERT INTO professors "
             + "(first_name, last_name) VALUES (:firstName, :lastName)";
     private static final String FIND_ALL_SQL = "SELECT professors.id, "
             + "professors.first_name, professors.last_name, courses.id, "
-            + "courses.name FROM professors LEFT JOIN professors_courses "
-            + "ON professors.id = professors_courses.professor_id "
-            + "LEFT JOIN courses "
-            + "ON courses.id = professors_courses.course_id";
+            + "courses.name FROM professors LEFT JOIN professors_courses ON "
+            + "professors.id = professors_courses.professor_id LEFT JOIN "
+            + "courses ON courses.id = professors_courses.course_id";
 
     private final NamedParameterJdbcTemplate jdbc;
 
@@ -68,8 +62,8 @@ public class JdbcProfessorDao implements ProfessorDao {
                 + "UNION (SELECT schedules.professor_id FROM schedules "
                 + "WHERE schedules.on_date = :date "
                 + "AND schedules.period = :period) );";
-        SqlParameterSource paramSource = new MapSqlParameterSource()
-                .addValue("weekParity", weekParity)
+        SqlParameterSource paramSource = new MapSqlParameterSource().addValue(
+                "weekParity", weekParity)
                 .addValue("day", date.getDayOfWeek().toString())
                 .addValue("period", period.name())
                 .addValue("date", date.toString());
@@ -103,8 +97,8 @@ public class JdbcProfessorDao implements ProfessorDao {
     public Professor save(Professor newProfessor) {
 
         jdbc.update(INSERT_SQL,
-                new MapSqlParameterSource()
-                        .addValue("firstName", newProfessor.getFirstName())
+                new MapSqlParameterSource().addValue("firstName",
+                        newProfessor.getFirstName())
                         .addValue("lastName", newProfessor.getLastName()));
         log.debug("Saved {}", newProfessor);
 
@@ -129,13 +123,14 @@ public class JdbcProfessorDao implements ProfessorDao {
         List<SqlParameterSource> paramSource = new ArrayList<>();
         for (Professor professor : professors) {
             for (Course course : professor.getCourses()) {
-                paramSource.add(new MapSqlParameterSource()
-                        .addValue("professorId", professor.getId())
-                        .addValue("courseId", course.getId()));
+                paramSource.add(
+                        new MapSqlParameterSource().addValue("professorId",
+                                professor.getId())
+                                .addValue("courseId", course.getId()));
             }
         }
-        jdbc.batchUpdate(sql, paramSource
-                .toArray(new SqlParameterSource[paramSource.size()]));
+        jdbc.batchUpdate(sql, paramSource.toArray(
+                new SqlParameterSource[paramSource.size()]));
         log.debug("Course assignments to professors saved");
     }
 
@@ -147,7 +142,7 @@ public class JdbcProfessorDao implements ProfessorDao {
         jdbc.update(sql, new MapSqlParameterSource("id", professor.getId()));
         log.debug("Deleted courses for {}", professor);
 
-        saveAllProfessorsCourses(Arrays.asList(professor));
+        saveAllProfessorsCourses(Collections.singletonList(professor));
 
         return professor;
     }

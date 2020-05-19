@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head th:replace="layout :: header(~{::title})">
+	<title>Timetable: Select Student</title>
+</head>
+<body>
+
+<div th:replace="layout :: navbarStudent"></div>
+
+<div class="container">
+	<div class="row align-items-center">
+		<div class="col">
+
+			<h1>Select a student</h1>
+
+			<div class="student-select-container">
+				<div class="list-group">
+
+					<a href="#" th:each="student : ${students}" th:href="@{/students/student_home(studentId = *{student.id})}"
+					   class="list-group-item  list-group-item-action">
+						<div class="d-flex justify-content-between">
+							<div>
+								<span th:text="'ID: ' + *{student.id}" class="badge badge-pill badge-light">ID: 2</span>
+								<span th:text="*{student.firstName} + ' ' + *{student.lastName}" class="pl-2">Name Two</span>
+							</div>
+							<div>
+								<span th:text="*{student.group.name}" class="badge badge-pill badge-secondary">G-09</span>
+							</div>
+						</div>
+					</a>
+
+				</div>
+			</div>
+			<div class="my-3 text-muted">All active students</div>
+
+		</div>
+	</div>
+</div>
+
+<div th:replace="layout :: scripts"></div>
+
+</body>
+</html>

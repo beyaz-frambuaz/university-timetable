@@ -1,41 +1,30 @@
 package com.foxminded.timetable.service.model.generator;
 
-import static java.util.stream.Collectors.counting;
-import static java.util.stream.Collectors.toList;
-
-import java.time.DayOfWeek;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Collections;
-import java.util.Comparator;
-import java.util.List;
-import java.util.Optional;
-import java.util.Random;
-
-import org.springframework.stereotype.Service;
-
 import com.foxminded.timetable.dao.jdbc.Repositories;
-import com.foxminded.timetable.model.Auditorium;
-import com.foxminded.timetable.model.Course;
-import com.foxminded.timetable.model.Group;
-import com.foxminded.timetable.model.Period;
-import com.foxminded.timetable.model.Professor;
-import com.foxminded.timetable.model.ReschedulingOption;
-import com.foxminded.timetable.model.ScheduleTemplate;
-
+import com.foxminded.timetable.model.*;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.stereotype.Service;
+
+import javax.annotation.PostConstruct;
+import java.time.DayOfWeek;
+import java.util.*;
+
+import static java.util.stream.Collectors.toList;
 
 @Slf4j
 @Service
 @RequiredArgsConstructor
 public class TimetableModelGenerator {
 
-    private final Repositories repositories;
-    private List<ScheduleTemplate> scheduleTemplates = new ArrayList<>();
+    private final UniversityModelGenerator universityModelGenerator;
+    private final Repositories           repositories;
+    private final List<ScheduleTemplate> scheduleTemplates = new ArrayList<>();
 
+    @PostConstruct
     public void generateAndSave() {
 
+        universityModelGenerator.generateAndSave();
         log.info("Generating timetable model");
         populateScheduleTemplates();
         repositories.getTemplateRepository().saveAll(scheduleTemplates);
@@ -48,8 +37,8 @@ public class TimetableModelGenerator {
                 .findAll();
 
         List<ReschedulingOption> options = Arrays.stream(DayOfWeek.values())
-                .filter(day -> !day.equals(DayOfWeek.SATURDAY)
-                        && !day.equals(DayOfWeek.SUNDAY))
+                .filter(day -> !day.equals(DayOfWeek.SATURDAY) && !day.equals(
+                        DayOfWeek.SUNDAY))
                 .flatMap(day -> Arrays.stream(Period.values())
                         .flatMap(period -> auditoriums.stream()
                                 .map(auditorium -> new ReschedulingOption(0,
@@ -71,7 +60,8 @@ public class TimetableModelGenerator {
         for (Group group : groups) {
             for (Course course : courses) {
 
-                List<Professor> courseProfessors = getCourseProfessorsSortedByLeastWorkload(
+                List<Professor> courseProfessors =
+                        getCourseProfessorsSortedByLeastWorkload(
                         professors, course);
                 Optional<ScheduleTemplate> template = scheduleGroupForCourse(
                         options, courseProfessors, group, course);
@@ -99,11 +89,12 @@ public class TimetableModelGenerator {
 
         if (!scheduleTemplates.isEmpty()) {
             courseProfessors = courseProfessors.stream()
-                    .sorted(Comparator.comparing(professor -> scheduleTemplates
-                            .stream().map(ScheduleTemplate::getProfessor)
-                            .filter(professorScheduled -> professorScheduled
-                                    .equals(professor))
-                            .collect(counting())))
+                    .sorted(Comparator.comparing(
+                            professor -> (Long) scheduleTemplates.stream()
+                                    .map(ScheduleTemplate::getProfessor)
+                                    .filter(professorScheduled -> professorScheduled
+                                            .equals(professor))
+                                    .count()))
                     .collect(toList());
         }
         return courseProfessors;
@@ -149,7 +140,7 @@ public class TimetableModelGenerator {
                 .noneMatch(template -> template.getDay() == option.getDay()
                         && template.getPeriod() == option.getPeriod()
                         && template.getAuditorium()
-                                .equals(option.getAuditorium()));
+                        .equals(option.getAuditorium()));
     }
 
     private boolean isScheduledForProfessorAndGroup(ReschedulingOption option,
@@ -162,4 +153,5 @@ public class TimetableModelGenerator {
                 .noneMatch(template -> template.getDay() == option.getDay()
                         && template.getPeriod() == option.getPeriod());
     }
+
 }

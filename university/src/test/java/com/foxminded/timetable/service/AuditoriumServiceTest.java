@@ -1,39 +1,32 @@
 package com.foxminded.timetable.service;
 
-import static org.assertj.core.api.Assertions.assertThat;
-import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.ArgumentMatchers.anyBoolean;
-import static org.mockito.ArgumentMatchers.anyList;
-import static org.mockito.ArgumentMatchers.anyLong;
-import static org.mockito.BDDMockito.given;
-import static org.mockito.BDDMockito.then;
-
-import java.time.LocalDate;
-import java.util.Arrays;
-import java.util.Collections;
-import java.util.List;
-import java.util.Optional;
-
+import com.foxminded.timetable.dao.AuditoriumDao;
+import com.foxminded.timetable.model.Auditorium;
+import com.foxminded.timetable.model.Period;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 
-import com.foxminded.timetable.dao.AuditoriumDao;
-import com.foxminded.timetable.model.Auditorium;
-import com.foxminded.timetable.model.Period;
+import java.time.LocalDate;
+import java.util.Collections;
+import java.util.List;
+import java.util.Optional;
+
+import static org.assertj.core.api.Assertions.assertThat;
+import static org.mockito.ArgumentMatchers.*;
+import static org.mockito.BDDMockito.given;
+import static org.mockito.BDDMockito.then;
 
 @ExtendWith(MockitoExtension.class)
 class AuditoriumServiceTest {
 
+    private final Auditorium        auditorium = new Auditorium(1L, "A-01");
     @Mock
-    private AuditoriumDao repository;
-
+    private       AuditoriumDao     repository;
     @InjectMocks
-    private AuditoriumService service;
-
-    private Auditorium auditorium = new Auditorium(1L, "A-01");
+    private       AuditoriumService service;
 
     @Test
     public void countShouldDelegateToRepository() {
@@ -77,7 +70,7 @@ class AuditoriumServiceTest {
     @Test
     public void saveAllShouldDelegateToRepository() {
 
-        List<Auditorium> auditoriums = Arrays.asList(auditorium);
+        List<Auditorium> auditoriums = Collections.singletonList(auditorium);
         given(repository.saveAll(anyList())).willReturn(auditoriums);
 
         List<Auditorium> actual = service.saveAll(auditoriums);
@@ -100,7 +93,7 @@ class AuditoriumServiceTest {
     @Test
     public void findAllShouldDelegateToRepository() {
 
-        List<Auditorium> auditoriums = Arrays.asList(auditorium);
+        List<Auditorium> auditoriums = Collections.singletonList(auditorium);
         given(repository.findAll()).willReturn(auditoriums);
 
         List<Auditorium> actual = service.findAll();
@@ -113,8 +106,8 @@ class AuditoriumServiceTest {
     public void findByIdShouldDelegateToRepository() {
 
         long id = 1L;
-        given(repository.findById(anyLong()))
-                .willReturn(Optional.of(auditorium));
+        given(repository.findById(anyLong())).willReturn(
+                Optional.of(auditorium));
 
         Optional<Auditorium> actual = service.findById(id);
 
@@ -125,17 +118,15 @@ class AuditoriumServiceTest {
     @Test
     public void findAvailableForShouldDelegateToRepository() {
 
-        List<Auditorium> auditoriums = Arrays.asList(auditorium);
-        boolean weekParity = false;
+        List<Auditorium> auditoriums = Collections.singletonList(auditorium);
         LocalDate date = LocalDate.MAX;
         Period period = Period.FIRST;
         given(repository.findAllAvailable(anyBoolean(), any(LocalDate.class),
                 any(Period.class))).willReturn(auditoriums);
 
-        List<Auditorium> actual = service.findAvailableFor(weekParity, date,
-                period);
+        List<Auditorium> actual = service.findAvailableFor(false, date, period);
 
-        then(repository).should().findAllAvailable(weekParity, date, period);
+        then(repository).should().findAllAvailable(false, date, period);
         assertThat(actual).isEqualTo(auditoriums);
     }
 

@@ -1,0 +1,160 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head th:replace="layout :: header(~{::title})">
+	<title>Student: Schedule</title>
+</head>
+<body>
+
+<div th:replace="layout :: modal"></div>
+
+<div th:replace="layout :: navbarStudent"></div>
+
+<div class="container">
+	<div class="row align-items-center">
+		<div class="col">
+
+			<h1 th:text="${student.fullName} + ' (' + ${student.group.name} + ')'">Hello, student!</h1>
+
+			<hr class="my-4">
+
+			<h1 th:text="${weekSchedule.filtered}? 'Your schedule' : 'Entire schedule'">Schedule</h1>
+			<h6 th:text="'Week of ' + ${weekSchedule.weekDescription}">For week ...</h6>
+			<p th:text="${weekSchedule.schedules.isEmpty()}? 'No classes!' : _" class="text-warning"></p>
+			<br>
+
+			<div>
+				<!--Header-->
+				<div class="schedule-row schedule-header shadow">
+
+					<div class="col-1">Period</div>
+					<div class="col">MON <small th:text="'('+${weekSchedule.mon}+')'" class="text-muted">(09.07.20)</small></div>
+					<div class="col">TUE <small th:text="'('+${weekSchedule.tue}+')'" class="text-muted">(09.08.20)</small></div>
+					<div class="col">WED <small th:text="'('+${weekSchedule.wed}+')'" class="text-muted">(09.09.20)</small></div>
+					<div class="col">THU <small th:text="'('+${weekSchedule.thu}+')'" class="text-muted">(09.10.20)</small></div>
+					<div class="col">FRI <small th:text="'('+${weekSchedule.fri}+')'" class="text-muted">(09.11.20)</small></div>
+				</div>
+				<!--Body-->
+				<div class="schedule-container shadow rounded">
+					<div class="schedule-background">
+						<span class="col-1 d-flex justify-content-center">W</span>
+						<span class="col-1 d-flex justify-content-center">e</span>
+						<span class="col-1 d-flex justify-content-center">e</span>
+						<span class="col-1 d-flex justify-content-center">k</span>
+						<span th:text="${weekSchedule.weekNumber}"
+						      class="col-1 d-flex justify-content-center pt-2">14</span>
+					</div>
+
+					<div class="schedule-body">
+
+						<div th:each="periodSchedule : ${weekSchedule.schedules}" class="schedule-row">
+
+							<!--Period-->
+							<div class="schedule-period col-1">
+								<span th:text="*{periodSchedule.getKey().getTime()}">8:15-9:45</span>
+							</div>
+
+							<!--Monday-->
+							<div class="schedule col px-1">
+								<ul th:each="schedule : *{periodSchedule.getValue().?[day == T(java.time.DayOfWeek).MONDAY]}"
+								    class="list-group">
+									<li class="list-group-item align-items-center">
+										<div class="d-flex justify-content-between mb-1">
+											<span th:text="*{schedule.auditorium.name}" class="badge badge-pill badge-primary">A-02
+											</span>
+											<span th:text="*{schedule.group.name}" class="badge badge-pill badge-secondary">
+												G-02</span>
+										</div>
+										<p class="text-muted mb-1">
+											<small th:text="*{schedule.course.name}">Course</small>
+										</p>
+										<small th:text="*{schedule.professor.fullName}">Professor</small>
+									</li>
+								</ul>
+							</div>
+							<!--Tuesday-->
+							<div class="schedule col px-1">
+								<ul th:each="schedule : *{periodSchedule.getValue().?[day == T(java.time.DayOfWeek).TUESDAY]}"
+								    class="list-group">
+									<li class="list-group-item align-items-center">
+										<div class="d-flex justify-content-between mb-1">
+											<span th:text="*{schedule.auditorium.name}" class="badge badge-pill badge-primary">A-02
+											</span>
+											<span th:text="*{schedule.group.name}" class="badge badge-pill badge-secondary">
+												G-02</span>
+										</div>
+										<p class="text-muted mb-1">
+											<small th:text="*{schedule.course.name}">Course</small>
+										</p>
+										<small th:text="*{schedule.professor.fullName}">Professor</small>
+									</li>
+								</ul>
+							</div>
+							<!--Wednesday-->
+							<div class="schedule col px-1">
+								<ul th:each="schedule : *{periodSchedule.getValue().?[day == T(java.time.DayOfWeek).WEDNESDAY]}"
+								    class="list-group">
+									<li class="list-group-item align-items-center">
+										<div class="d-flex justify-content-between mb-1">
+											<span th:text="*{schedule.auditorium.name}" class="badge badge-pill badge-primary">A-02
+											</span>
+											<span th:text="*{schedule.group.name}" class="badge badge-pill badge-secondary">
+												G-02</span>
+										</div>
+										<p class="text-muted mb-1">
+											<small th:text="*{schedule.course.name}">Course</small>
+										</p>
+										<small th:text="*{schedule.professor.fullName}">Professor</small>
+									</li>
+								</ul>
+							</div>
+							<!--Thursday-->
+							<div class="schedule col px-1">
+								<ul th:each="schedule : *{periodSchedule.getValue().?[day == T(java.time.DayOfWeek).THURSDAY]}"
+								    class="list-group">
+									<li class="list-group-item align-items-center">
+										<div class="d-flex justify-content-between mb-1">
+											<span th:text="*{schedule.auditorium.name}" class="badge badge-pill badge-primary">A-02
+											</span>
+											<span th:text="*{schedule.group.name}" class="badge badge-pill badge-secondary">
+												G-02</span>
+										</div>
+										<p class="text-muted mb-1">
+											<small th:text="*{schedule.course.name}">Course</small>
+										</p>
+										<small th:text="*{schedule.professor.fullName}">Professor</small>
+									</li>
+								</ul>
+							</div>
+							<!--Friday-->
+							<div class="schedule col px-1">
+								<ul th:each="schedule : *{periodSchedule.getValue().?[day == T(java.time.DayOfWeek).FRIDAY]}"
+								    class="list-group">
+									<li class="list-group-item align-items-center">
+										<div class="d-flex justify-content-between mb-1">
+											<span th:text="*{schedule.auditorium.name}" class="badge badge-pill badge-primary">A-02
+											</span>
+											<span th:text="*{schedule.group.name}" class="badge badge-pill badge-secondary">
+												G-02</span>
+										</div>
+										<p class="text-muted mb-1">
+											<small th:text="*{schedule.course.name}">Course</small>
+										</p>
+										<small th:text="*{schedule.professor.fullName}">Professor</small>
+									</li>
+								</ul>
+							</div>
+						</div>
+
+					</div>
+
+				</div>
+			</div>
+
+		</div>
+	</div>
+</div>
+
+<div th:replace="layout :: scripts"></div>
+
+</body>
+</html>

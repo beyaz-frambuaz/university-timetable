@@ -1,57 +1,39 @@
 package com.foxminded.timetable.service;
 
-import static org.assertj.core.api.Assertions.assertThat;
-import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.ArgumentMatchers.anyBoolean;
-import static org.mockito.ArgumentMatchers.anyList;
-import static org.mockito.ArgumentMatchers.anyLong;
-import static org.mockito.BDDMockito.given;
-import static org.mockito.BDDMockito.then;
-import static org.mockito.Mockito.mock;
-
-import java.time.DayOfWeek;
-import java.time.LocalDate;
-import java.util.Arrays;
-import java.util.Collections;
-import java.util.List;
-import java.util.Map;
-import java.util.Optional;
-
+import com.foxminded.timetable.model.*;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 
-import com.foxminded.timetable.model.Auditorium;
-import com.foxminded.timetable.model.Course;
-import com.foxminded.timetable.model.Group;
-import com.foxminded.timetable.model.Period;
-import com.foxminded.timetable.model.Professor;
-import com.foxminded.timetable.model.ReschedulingOption;
-import com.foxminded.timetable.model.Schedule;
-import com.foxminded.timetable.model.ScheduleTemplate;
-import com.foxminded.timetable.model.Student;
+import java.time.DayOfWeek;
+import java.time.LocalDate;
+import java.util.*;
+
+import static org.assertj.core.api.Assertions.assertThat;
+import static org.mockito.ArgumentMatchers.*;
+import static org.mockito.BDDMockito.given;
+import static org.mockito.BDDMockito.then;
+import static org.mockito.Mockito.mock;
 
 @ExtendWith(MockitoExtension.class)
 public class TimetableServiceTest {
 
     @Mock
-    private SemesterCalendarUtils semesterCalendar;
+    private SemesterCalendarUtils     semesterCalendar;
     @Mock
-    private AuditoriumService auditoriumService;
+    private AuditoriumService         auditoriumService;
     @Mock
-    private CourseService courseService;
+    private ProfessorService          professorService;
     @Mock
-    private ProfessorService professorService;
+    private GroupService              groupService;
     @Mock
-    private GroupService groupService;
+    private StudentService            studentService;
     @Mock
-    private StudentService studentService;
+    private ScheduleTemplateService   templateService;
     @Mock
-    private ScheduleTemplateService templateService;
-    @Mock
-    private ScheduleService scheduleService;
+    private ScheduleService           scheduleService;
     @Mock
     private ReschedulingOptionService reschedulingOptionService;
 
@@ -199,8 +181,8 @@ public class TimetableServiceTest {
 
         List<Student> actual = timetable.getCourseAttendees(course, professor);
 
-        then(groupService).should().findAllAttendingProfessorCourse(course,
-                professor);
+        then(groupService).should()
+                .findAllAttendingProfessorCourse(course, professor);
         then(studentService).should().findAllInGroups(professorGroups);
         assertThat(actual).isEqualTo(expected);
     }
@@ -210,17 +192,15 @@ public class TimetableServiceTest {
 
         LocalDate date = LocalDate.MAX;
         Period period = Period.FIRST;
-        boolean weekParity = false;
-        given(semesterCalendar.getWeekParityOf(any(LocalDate.class)))
-                .willReturn(weekParity);
+        given(semesterCalendar.getWeekParityOf(
+                any(LocalDate.class))).willReturn(false);
         List<Professor> expected = Collections.emptyList();
         given(professorService.findAvailableFor(anyBoolean(),
                 any(LocalDate.class), any(Period.class))).willReturn(expected);
 
         List<Professor> actual = timetable.getAvailableProfessors(date, period);
 
-        then(professorService).should().findAvailableFor(weekParity, date,
-                period);
+        then(professorService).should().findAvailableFor(false, date, period);
         assertThat(actual).isEqualTo(expected);
     }
 
@@ -229,9 +209,8 @@ public class TimetableServiceTest {
 
         LocalDate date = LocalDate.MAX;
         Period period = Period.FIRST;
-        boolean weekParity = false;
-        given(semesterCalendar.getWeekParityOf(any(LocalDate.class)))
-                .willReturn(weekParity);
+        given(semesterCalendar.getWeekParityOf(
+                any(LocalDate.class))).willReturn(false);
         List<Auditorium> expected = Collections.emptyList();
         given(auditoriumService.findAvailableFor(anyBoolean(),
                 any(LocalDate.class), any(Period.class))).willReturn(expected);
@@ -239,8 +218,7 @@ public class TimetableServiceTest {
         List<Auditorium> actual = timetable.getAvailableAuditoriums(date,
                 period);
 
-        then(auditoriumService).should().findAvailableFor(weekParity, date,
-                period);
+        then(auditoriumService).should().findAvailableFor(false, date, period);
         assertThat(actual).isEqualTo(expected);
     }
 
@@ -275,36 +253,36 @@ public class TimetableServiceTest {
     @Test
     public void getReschedulingOptionsShouldRequestOptionsFromServiceForEachDateInRange() {
 
-        boolean weekParity = false;
         LocalDate from = LocalDate.of(2020, 1, 1);
         LocalDate until = LocalDate.of(2020, 1, 3);
-        given(semesterCalendar.isSemesterDate(any(LocalDate.class)))
-                .willReturn(true);
-        given(semesterCalendar.getWeekParityOf(any(LocalDate.class)))
-                .willReturn(weekParity);
+        given(semesterCalendar.isSemesterDate(any(LocalDate.class))).willReturn(
+                true);
+        given(semesterCalendar.getWeekParityOf(
+                any(LocalDate.class))).willReturn(false);
         Schedule schedule = mock(Schedule.class);
-        Map<LocalDate, List<ReschedulingOption>> optionsOne = Collections
-                .emptyMap();
-        given(reschedulingOptionService.findAllDayOptionsFor(weekParity, from,
+        Map<LocalDate, List<ReschedulingOption>> optionsOne =
+                Collections.emptyMap();
+        given(reschedulingOptionService.findAllDayOptionsFor(false, from,
                 schedule)).willReturn(optionsOne);
-        Map<LocalDate, List<ReschedulingOption>> optionsTwo = Collections
-                .emptyMap();
-        given(reschedulingOptionService.findAllDayOptionsFor(weekParity,
+        Map<LocalDate, List<ReschedulingOption>> optionsTwo =
+                Collections.emptyMap();
+        given(reschedulingOptionService.findAllDayOptionsFor(false,
                 from.plusDays(1), schedule)).willReturn(optionsTwo);
-        Map<LocalDate, List<ReschedulingOption>> optionsThree = Collections
-                .emptyMap();
-        given(reschedulingOptionService.findAllDayOptionsFor(weekParity,
+        Map<LocalDate, List<ReschedulingOption>> optionsThree =
+                Collections.emptyMap();
+        given(reschedulingOptionService.findAllDayOptionsFor(false,
                 from.plusDays(2), schedule)).willReturn(optionsThree);
 
-        Map<LocalDate, List<ReschedulingOption>> actual = timetable
-                .getReschedulingOptions(schedule, from, until);
+        Map<LocalDate, List<ReschedulingOption>> actual =
+                timetable.getReschedulingOptions(
+                schedule, from, until);
 
         then(reschedulingOptionService).should()
-                .findAllDayOptionsFor(weekParity, from, schedule);
+                .findAllDayOptionsFor(false, from, schedule);
         then(reschedulingOptionService).should()
-                .findAllDayOptionsFor(weekParity, from.plusDays(1), schedule);
+                .findAllDayOptionsFor(false, from.plusDays(1), schedule);
         then(reschedulingOptionService).should()
-                .findAllDayOptionsFor(weekParity, until, schedule);
+                .findAllDayOptionsFor(false, until, schedule);
         assertThat(actual).isEmpty();
     }
 
@@ -313,12 +291,13 @@ public class TimetableServiceTest {
 
         LocalDate from = LocalDate.of(2020, 1, 1);
         LocalDate until = LocalDate.of(2020, 1, 3);
-        given(semesterCalendar.isSemesterDate(any(LocalDate.class)))
-                .willReturn(false);
+        given(semesterCalendar.isSemesterDate(any(LocalDate.class))).willReturn(
+                false);
         Schedule schedule = mock(Schedule.class);
 
-        Map<LocalDate, List<ReschedulingOption>> actual = timetable
-                .getReschedulingOptions(schedule, from, until);
+        Map<LocalDate, List<ReschedulingOption>> actual =
+                timetable.getReschedulingOptions(
+                schedule, from, until);
 
         then(reschedulingOptionService).shouldHaveNoInteractions();
         assertThat(actual).isEmpty();
@@ -350,47 +329,48 @@ public class TimetableServiceTest {
     }
 
     /*
-     * should request template from service --> should set template attributes
-     * --> should delegate save template to service --> should set schedule
-     * attributes --> should delegate update all to service --> should request
-     * and return all affected schedules from service
+     * 1. should request template from service
+     * 2. should set template attributes
+     * 3. should delegate save template to service
+     * 4. should set schedule attributes
+     * 5. should delegate update all to service
+     * 6. should request and return all affected schedules from service
      */
     @Test
     public void reschedulePermanentlyTest() {
 
-        Long templateId = 1L;
+        long templateId = 1L;
         Schedule schedule = mock(Schedule.class);
         given(schedule.getTemplateId()).willReturn(templateId);
 
         ScheduleTemplate template = mock(ScheduleTemplate.class);
-        given(templateService.findById(anyLong()))
-                .willReturn(Optional.of(template));
+        given(templateService.findById(anyLong())).willReturn(
+                Optional.of(template));
 
-        boolean weekParity = false;
         LocalDate date = LocalDate.MAX;
         DayOfWeek day = DayOfWeek.MONDAY;
         Period period = Period.FIRST;
         Auditorium auditorium = mock(Auditorium.class);
         ReschedulingOption option = mock(ReschedulingOption.class);
 
-        given(semesterCalendar.getWeekParityOf(any(LocalDate.class)))
-                .willReturn(weekParity);
+        given(semesterCalendar.getWeekParityOf(
+                any(LocalDate.class))).willReturn(false);
         given(option.getDay()).willReturn(day);
         given(option.getPeriod()).willReturn(period);
         given(option.getAuditorium()).willReturn(auditorium);
 
-        given(templateService.save(any(ScheduleTemplate.class)))
-                .willReturn(template);
+        given(templateService.save(any(ScheduleTemplate.class))).willReturn(
+                template);
 
         List<Schedule> expected = Collections.emptyList();
-        given(scheduleService.findAllByTemplateId(anyLong()))
-                .willReturn(expected);
+        given(scheduleService.findAllByTemplateId(anyLong())).willReturn(
+                expected);
 
         List<Schedule> actual = timetable.reschedulePermanently(schedule, date,
                 option);
 
         then(templateService).should().findById(templateId);
-        then(template).should().setWeekParity(weekParity);
+        then(template).should().setWeekParity(false);
         then(template).should().setDay(day);
         then(template).should().setPeriod(period);
         then(template).should().setAuditorium(auditorium);

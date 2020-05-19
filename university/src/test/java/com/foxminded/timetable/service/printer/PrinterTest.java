@@ -1,9 +1,14 @@
 package com.foxminded.timetable.service.printer;
 
-import static org.assertj.core.api.Assertions.assertThat;
-import static org.mockito.ArgumentMatchers.anyList;
-import static org.mockito.BDDMockito.given;
-import static org.mockito.BDDMockito.then;
+import com.foxminded.timetable.model.*;
+import com.foxminded.timetable.service.printer.assembler.Assembler;
+import com.foxminded.timetable.service.printer.assembler.ColumnWriter;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
+import org.mockito.InjectMocks;
+import org.mockito.Mock;
+import org.mockito.junit.jupiter.MockitoExtension;
 
 import java.time.DayOfWeek;
 import java.time.LocalDate;
@@ -12,60 +17,47 @@ import java.util.Collections;
 import java.util.List;
 import java.util.Map;
 
-import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.api.Test;
-import org.junit.jupiter.api.extension.ExtendWith;
-import org.mockito.InjectMocks;
-import org.mockito.Mock;
-import org.mockito.junit.jupiter.MockitoExtension;
-
-import com.foxminded.timetable.model.Auditorium;
-import com.foxminded.timetable.model.Course;
-import com.foxminded.timetable.model.Group;
-import com.foxminded.timetable.model.Period;
-import com.foxminded.timetable.model.Professor;
-import com.foxminded.timetable.model.ReschedulingOption;
-import com.foxminded.timetable.model.Schedule;
-import com.foxminded.timetable.model.ScheduleTemplate;
-import com.foxminded.timetable.model.Student;
-import com.foxminded.timetable.service.printer.assembler.Assembler;
-import com.foxminded.timetable.service.printer.assembler.ColumnWriter;
+import static org.assertj.core.api.Assertions.assertThat;
+import static org.mockito.ArgumentMatchers.anyList;
+import static org.mockito.BDDMockito.given;
+import static org.mockito.BDDMockito.then;
 
 @ExtendWith(MockitoExtension.class)
 public class PrinterTest {
 
-    private String expected = "test";
-    private long id = 1L;
-    private LocalDate date = LocalDate.MIN;
-    private DayOfWeek day = DayOfWeek.MONDAY;
-    private Period period = Period.FIRST;
+    private final String    expected = "test";
+    private final long      id       = 1L;
+    private final LocalDate date     = LocalDate.MIN;
+    private final DayOfWeek day      = DayOfWeek.MONDAY;
+    private final Period    period   = Period.FIRST;
 
     @Mock
-    private Auditorium auditorium;
+    private Auditorium         auditorium;
     @Mock
-    private Assembler assembler;
+    private Assembler          assembler;
     @Mock
-    private Course course;
+    private Course             course;
     @Mock
-    private Group group;
+    private Group              group;
     @Mock
-    private Professor professor;
+    private Professor          professor;
     @Mock
     private ReschedulingOption option;
     @Mock
-    private Schedule schedule;
+    private Schedule           schedule;
     @Mock
-    private Student student;
+    private Student            student;
     @Mock
-    private ScheduleTemplate templateOdd;
+    private ScheduleTemplate   templateOdd;
     @Mock
-    private ScheduleTemplate templateEven;
+    private ScheduleTemplate   templateEven;
 
     @InjectMocks
     private Printer printer;
 
     @BeforeEach
     private void mockBehaviorSetUp() {
+
         given(assembler.assembleTable(anyList())).willReturn(expected);
     }
 
@@ -273,8 +265,9 @@ public class PrinterTest {
     public void shouldParseReschedulingOptionsAndPrintUsingAssembler() {
 
         List<ReschedulingOption> reschedulingOption = Arrays.asList(option);
-        Map<LocalDate, List<ReschedulingOption>> options = Collections
-                .singletonMap(date, reschedulingOption);
+        Map<LocalDate, List<ReschedulingOption>> options =
+                Collections.singletonMap(
+                date, reschedulingOption);
         List<String> dates = Arrays.asList(date.toString());
         List<String> days = Arrays.asList(day.toString());
         List<String> periods = Arrays.asList(period.toString());

@@ -1,10 +1,9 @@
 package com.foxminded.timetable.dao.jdbc;
 
-import java.sql.ResultSet;
-import java.sql.SQLException;
-import java.util.List;
-import java.util.Optional;
-
+import com.foxminded.timetable.dao.GroupDao;
+import com.foxminded.timetable.model.Group;
+import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.jdbc.core.namedparam.MapSqlParameterSource;
 import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
@@ -12,21 +11,20 @@ import org.springframework.jdbc.core.namedparam.SqlParameterSource;
 import org.springframework.jdbc.core.namedparam.SqlParameterSourceUtils;
 import org.springframework.stereotype.Repository;
 
-import com.foxminded.timetable.dao.GroupDao;
-import com.foxminded.timetable.model.Group;
-
-import lombok.RequiredArgsConstructor;
-import lombok.extern.slf4j.Slf4j;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.util.List;
+import java.util.Optional;
 
 @Slf4j
 @Repository
 @RequiredArgsConstructor
 public class JdbcGroupDao implements GroupDao {
 
-    private static final String INSERT_SQL = "INSERT INTO groups (name) "
-            + "VALUES (:name)";
-    private static final String FIND_ALL_SQL = "SELECT groups.id, groups.name "
-            + "FROM groups";
+    private static final String INSERT_SQL   =
+            "INSERT INTO groups (name) " + "VALUES (:name)";
+    private static final String FIND_ALL_SQL =
+            "SELECT groups.id, groups.name" + " FROM groups";
 
     private final NamedParameterJdbcTemplate jdbc;
 
@@ -51,14 +49,13 @@ public class JdbcGroupDao implements GroupDao {
 
         log.debug("Retrieving groups by professor (ID {}) and course (ID {})",
                 professorId, courseId);
-        String sql = "SELECT schedule_templates.group_id, groups.name "
-                + "FROM schedule_templates " + "RIGHT JOIN groups "
-                + "ON schedule_templates.group_id = groups.id "
-                + "WHERE schedule_templates.professor_id = :professorId "
-                + "AND schedule_templates.course_id = :courseId";
-        SqlParameterSource paramSource = new MapSqlParameterSource()
-                .addValue("professorId", professorId)
-                .addValue("courseId", courseId);
+        String sql = "SELECT schedule_templates.group_id, groups.name FROM "
+                + "schedule_templates RIGHT JOIN groups ON schedule_templates"
+                + ".group_id = groups.id WHERE schedule_templates"
+                + ".professor_id = :professorId AND schedule_templates"
+                + ".course_id = :courseId";
+        SqlParameterSource paramSource = new MapSqlParameterSource().addValue(
+                "professorId", professorId).addValue("courseId", courseId);
 
         return jdbc.query(sql, paramSource, this::mapRow);
     }
@@ -72,8 +69,9 @@ public class JdbcGroupDao implements GroupDao {
             SqlParameterSource paramSource = new MapSqlParameterSource("id",
                     id);
 
-            return Optional.of(jdbc.queryForObject(FIND_ALL_SQL + filter,
-                    paramSource, this::mapRow));
+            return Optional.ofNullable(
+                    jdbc.queryForObject(FIND_ALL_SQL + filter, paramSource,
+                            this::mapRow));
 
         } catch (EmptyResultDataAccessException e) {
             log.warn("No group found with ID {}", id);
@@ -104,8 +102,8 @@ public class JdbcGroupDao implements GroupDao {
     @Override
     public Group update(Group group) {
 
-        String sql = "UPDATE groups SET groups.name = :name WHERE "
-                + "groups.id = :id";
+        String sql = "UPDATE groups SET groups.name = :name "
+                + "WHERE groups.id = :id";
         jdbc.update(sql,
                 new MapSqlParameterSource().addValue("name", group.getName())
                         .addValue("id", group.getId()));
@@ -115,6 +113,7 @@ public class JdbcGroupDao implements GroupDao {
     }
 
     private Group mapRow(ResultSet rs, int rowNum) throws SQLException {
+
         return new Group(rs.getLong(1), rs.getString(2));
     }
 

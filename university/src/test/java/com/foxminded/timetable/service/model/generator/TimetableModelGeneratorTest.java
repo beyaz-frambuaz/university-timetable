@@ -1,19 +1,8 @@
 package com.foxminded.timetable.service.model.generator;
 
-import static java.util.stream.Collectors.counting;
-import static java.util.stream.Collectors.groupingBy;
-import static java.util.stream.Collectors.mapping;
-import static java.util.stream.Collectors.toList;
-import static org.assertj.core.api.Assertions.assertThat;
-import static org.mockito.ArgumentMatchers.anyList;
-import static org.mockito.BDDMockito.then;
-import static org.mockito.Mockito.atLeastOnce;
-
-import java.time.DayOfWeek;
-import java.util.Arrays;
-import java.util.List;
-import java.util.Map;
-
+import com.foxminded.timetable.TimetableApp;
+import com.foxminded.timetable.dao.*;
+import com.foxminded.timetable.model.*;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.junit.jupiter.MockitoExtension;
@@ -25,35 +14,35 @@ import org.springframework.test.annotation.DirtiesContext.MethodMode;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 
-import com.foxminded.timetable.TimetableApp;
-import com.foxminded.timetable.dao.CourseDao;
-import com.foxminded.timetable.dao.GroupDao;
-import com.foxminded.timetable.dao.ProfessorDao;
-import com.foxminded.timetable.dao.ReschedulingOptionDao;
-import com.foxminded.timetable.dao.ScheduleTemplateDao;
-import com.foxminded.timetable.model.Course;
-import com.foxminded.timetable.model.Group;
-import com.foxminded.timetable.model.Period;
-import com.foxminded.timetable.model.Professor;
-import com.foxminded.timetable.model.ReschedulingOption;
-import com.foxminded.timetable.model.ScheduleTemplate;
+import java.time.DayOfWeek;
+import java.util.Arrays;
+import java.util.List;
+import java.util.Map;
+
+import static java.util.stream.Collectors.*;
+import static org.assertj.core.api.Assertions.assertThat;
+import static org.mockito.ArgumentMatchers.anyList;
+import static org.mockito.BDDMockito.then;
+import static org.mockito.Mockito.atLeastOnce;
 
 @ExtendWith(MockitoExtension.class)
 @ExtendWith(SpringExtension.class)
-@ContextConfiguration(classes = TimetableApp.class, initializers = ConfigFileApplicationContextInitializer.class)
+@ContextConfiguration(classes = TimetableApp.class,
+                      initializers =
+                              ConfigFileApplicationContextInitializer.class)
 class TimetableModelGeneratorTest {
 
     @SpyBean
-    private ScheduleTemplateDao templateRepository;
+    private ScheduleTemplateDao   templateRepository;
     @SpyBean
     private ReschedulingOptionDao reschedulingOptionRepository;
 
     @Autowired
-    private GroupDao groupRepository;
+    private GroupDao                groupRepository;
     @Autowired
-    private CourseDao courseRepository;
+    private CourseDao               courseRepository;
     @Autowired
-    private ProfessorDao professorRepository;
+    private ProfessorDao            professorRepository;
     @Autowired
     private TimetableModelGenerator timetableModelGenerator;
 
@@ -81,8 +70,9 @@ class TimetableModelGeneratorTest {
     @Test
     public void repositoryShouldHaveTwentyFiveReschedulingOptionsPerDay() {
 
-        Map<DayOfWeek, Long> daysOptions = reschedulingOptionRepository
-                .findAll().stream()
+        Map<DayOfWeek, Long> daysOptions =
+                reschedulingOptionRepository.findAll()
+                .stream()
                 .collect(groupingBy(ReschedulingOption::getDay, counting()));
 
         assertThat(daysOptions.values()).containsOnly(25L);
@@ -91,11 +81,13 @@ class TimetableModelGeneratorTest {
     @Test
     public void repositoryShouldHaveFiveReschedulingOptionsPerPeriod() {
 
-        List<Long> optionsPerDayPerPeriod = reschedulingOptionRepository
-                .findAll().stream()
+        List<Long> optionsPerDayPerPeriod =
+                reschedulingOptionRepository.findAll()
+                .stream()
                 .collect(groupingBy(ReschedulingOption::getDay,
                         groupingBy(ReschedulingOption::getPeriod, counting())))
-                .values().stream()
+                .values()
+                .stream()
                 .flatMap(periodOptions -> periodOptions.values().stream())
                 .collect(toList());
 
@@ -105,11 +97,11 @@ class TimetableModelGeneratorTest {
     @Test
     public void repositoryShouldHadeReschedulingOptionsForWorkDaysOnly() {
 
-        List<ReschedulingOption> actual = reschedulingOptionRepository
-                .findAll();
+        List<ReschedulingOption> actual =
+                reschedulingOptionRepository.findAll();
 
-        assertThat(actual)
-                .noneMatch(option -> option.getDay() == DayOfWeek.SATURDAY
+        assertThat(actual).noneMatch(
+                option -> option.getDay() == DayOfWeek.SATURDAY
                         || option.getDay() == DayOfWeek.SUNDAY);
     }
 
@@ -118,8 +110,11 @@ class TimetableModelGeneratorTest {
 
         List<Group> expected = groupRepository.findAll();
 
-        List<Group> actual = templateRepository.findAll().stream()
-                .map(ScheduleTemplate::getGroup).distinct().collect(toList());
+        List<Group> actual = templateRepository.findAll()
+                .stream()
+                .map(ScheduleTemplate::getGroup)
+                .distinct()
+                .collect(toList());
 
         assertThat(actual).hasSameElementsAs(expected);
     }
@@ -129,8 +124,11 @@ class TimetableModelGeneratorTest {
 
         List<Course> expected = courseRepository.findAll();
 
-        List<Course> actual = templateRepository.findAll().stream()
-                .map(ScheduleTemplate::getCourse).distinct().collect(toList());
+        List<Course> actual = templateRepository.findAll()
+                .stream()
+                .map(ScheduleTemplate::getCourse)
+                .distinct()
+                .collect(toList());
 
         assertThat(actual).hasSameElementsAs(expected);
     }
@@ -141,7 +139,8 @@ class TimetableModelGeneratorTest {
         List<Course> expected = courseRepository.findAll();
 
         Map<Group, List<Course>> eachGroupCourses = templateRepository.findAll()
-                .stream().collect(groupingBy(ScheduleTemplate::getGroup,
+                .stream()
+                .collect(groupingBy(ScheduleTemplate::getGroup,
                         mapping(ScheduleTemplate::getCourse, toList())));
 
         for (List<Course> groupCourses : eachGroupCourses.values()) {
@@ -154,8 +153,10 @@ class TimetableModelGeneratorTest {
 
         List<Professor> expected = professorRepository.findAll();
 
-        List<Professor> actual = templateRepository.findAll().stream()
-                .map(ScheduleTemplate::getProfessor).distinct()
+        List<Professor> actual = templateRepository.findAll()
+                .stream()
+                .map(ScheduleTemplate::getProfessor)
+                .distinct()
                 .collect(toList());
 
         assertThat(actual).usingElementComparatorIgnoringFields("courses")
@@ -233,4 +234,5 @@ class TimetableModelGeneratorTest {
             }
         }
     }
+
 }

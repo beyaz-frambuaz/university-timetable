@@ -1,35 +1,33 @@
 package com.foxminded.timetable.dao.jdbc;
 
-import java.sql.ResultSet;
-import java.sql.SQLException;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Optional;
-
+import com.foxminded.timetable.dao.StudentDao;
+import com.foxminded.timetable.model.Group;
+import com.foxminded.timetable.model.Student;
+import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.jdbc.core.namedparam.MapSqlParameterSource;
 import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
 import org.springframework.jdbc.core.namedparam.SqlParameterSource;
 import org.springframework.stereotype.Repository;
 
-import com.foxminded.timetable.dao.StudentDao;
-import com.foxminded.timetable.model.Group;
-import com.foxminded.timetable.model.Student;
-
-import lombok.RequiredArgsConstructor;
-import lombok.extern.slf4j.Slf4j;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Optional;
 
 @Slf4j
 @Repository
 @RequiredArgsConstructor
 public class JdbcStudentDao implements StudentDao {
 
-    private static final String INSERT_SQL = "INSERT INTO students "
-            + "(first_name, last_name, group_id) "
-            + "VALUES (:firstName, :lastName, :groupId)";
-    private static final String FIND_ALL_SQL = "SELECT students.id, "
-            + "students.first_name, students.last_name, groups.id, groups.name "
-            + "FROM students LEFT JOIN groups ON students.group_id = groups.id";
+    private static final String INSERT_SQL   = "INSERT INTO students "
+            + "(first_name, last_name, group_id) VALUES (:firstName, "
+            + ":lastName, :groupId)";
+    private static final String FIND_ALL_SQL = "SELECT students.id, students"
+            + ".first_name, students.last_name, groups.id, groups.name FROM "
+            + "students LEFT JOIN groups ON students.group_id = groups.id";
 
     private final NamedParameterJdbcTemplate jdbc;
 
@@ -71,9 +69,9 @@ public class JdbcStudentDao implements StudentDao {
             String filter = " WHERE students.id = :id";
             SqlParameterSource paramSource = new MapSqlParameterSource("id",
                     id);
-
-            return Optional.of(jdbc.queryForObject(FIND_ALL_SQL + filter,
-                    paramSource, this::mapRow));
+            return Optional.ofNullable(
+                    jdbc.queryForObject(FIND_ALL_SQL + filter, paramSource,
+                            this::mapRow));
         } catch (EmptyResultDataAccessException e) {
             log.warn("No student found with ID {}", id);
             return Optional.empty();
@@ -84,8 +82,8 @@ public class JdbcStudentDao implements StudentDao {
     public Student save(Student student) {
 
         jdbc.update(INSERT_SQL,
-                new MapSqlParameterSource()
-                        .addValue("firstName", student.getFirstName())
+                new MapSqlParameterSource().addValue("firstName",
+                        student.getFirstName())
                         .addValue("lastName", student.getLastName())
                         .addValue("groupId", student.getGroup().getId()));
         log.debug("Saved {}", student);
@@ -98,13 +96,13 @@ public class JdbcStudentDao implements StudentDao {
 
         List<SqlParameterSource> paramSource = new ArrayList<>();
         for (Student student : students) {
-            paramSource.add(new MapSqlParameterSource()
-                    .addValue("firstName", student.getFirstName())
+            paramSource.add(new MapSqlParameterSource().addValue("firstName",
+                    student.getFirstName())
                     .addValue("lastName", student.getLastName())
                     .addValue("groupId", student.getGroup().getId()));
         }
-        jdbc.batchUpdate(INSERT_SQL, paramSource
-                .toArray(new SqlParameterSource[paramSource.size()]));
+        jdbc.batchUpdate(INSERT_SQL, paramSource.toArray(
+                new SqlParameterSource[paramSource.size()]));
         log.debug("Students saved");
 
         return students;
@@ -115,10 +113,8 @@ public class JdbcStudentDao implements StudentDao {
 
         String sql = "UPDATE students SET students.group_id = :groupId WHERE "
                 + "students.id = :id";
-        jdbc.update(sql,
-                new MapSqlParameterSource()
-                        .addValue("groupId", student.getGroup().getId())
-                        .addValue("id", student.getId()));
+        jdbc.update(sql, new MapSqlParameterSource().addValue("groupId",
+                student.getGroup().getId()).addValue("id", student.getId()));
         log.debug("Updated {}", student);
 
         return student;

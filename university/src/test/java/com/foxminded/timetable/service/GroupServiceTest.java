@@ -1,39 +1,33 @@
 package com.foxminded.timetable.service;
 
-import static org.assertj.core.api.Assertions.assertThat;
-import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.ArgumentMatchers.anyList;
-import static org.mockito.ArgumentMatchers.anyLong;
-import static org.mockito.BDDMockito.given;
-import static org.mockito.BDDMockito.then;
-import static org.mockito.Mockito.mock;
-
-import java.util.Arrays;
-import java.util.Collections;
-import java.util.List;
-import java.util.Optional;
-
+import com.foxminded.timetable.dao.GroupDao;
+import com.foxminded.timetable.model.Course;
+import com.foxminded.timetable.model.Group;
+import com.foxminded.timetable.model.Professor;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 
-import com.foxminded.timetable.dao.GroupDao;
-import com.foxminded.timetable.model.Course;
-import com.foxminded.timetable.model.Group;
-import com.foxminded.timetable.model.Professor;
+import java.util.Collections;
+import java.util.List;
+import java.util.Optional;
+
+import static org.assertj.core.api.Assertions.assertThat;
+import static org.mockito.ArgumentMatchers.*;
+import static org.mockito.BDDMockito.given;
+import static org.mockito.BDDMockito.then;
+import static org.mockito.Mockito.mock;
 
 @ExtendWith(MockitoExtension.class)
 class GroupServiceTest {
 
+    private final Group        group = new Group(1L, "A-01");
     @Mock
-    private GroupDao repository;
-
+    private       GroupDao     repository;
     @InjectMocks
-    private GroupService service;
-
-    private Group group = new Group(1L, "A-01");
+    private       GroupService service;
 
     @Test
     public void countShouldDelegateToRepository() {
@@ -77,7 +71,7 @@ class GroupServiceTest {
     @Test
     public void saveAllShouldDelegateToRepository() {
 
-        List<Group> groups = Arrays.asList(group);
+        List<Group> groups = Collections.singletonList(group);
         given(repository.saveAll(anyList())).willReturn(groups);
 
         List<Group> actual = service.saveAll(groups);
@@ -100,7 +94,7 @@ class GroupServiceTest {
     @Test
     public void findAllShouldDelegateToRepository() {
 
-        List<Group> groups = Arrays.asList(group);
+        List<Group> groups = Collections.singletonList(group);
         given(repository.findAll()).willReturn(groups);
 
         List<Group> actual = service.findAll();
@@ -112,21 +106,21 @@ class GroupServiceTest {
     @Test
     public void findAllAttendingProfessorCourseShouldDelegateToRepository() {
 
-        List<Group> groups = Arrays.asList(group);
-        Long professorId = 1L;
+        List<Group> groups = Collections.singletonList(group);
+        long professorId = 1L;
         Professor professor = mock(Professor.class);
         given(professor.getId()).willReturn(professorId);
-        Long courseId = 1L;
+        long courseId = 1L;
         Course course = mock(Course.class);
         given(course.getId()).willReturn(courseId);
-        given(repository.findAllByProfessorAndCourse(anyLong(), anyLong()))
-                .willReturn(groups);
+        given(repository.findAllByProfessorAndCourse(anyLong(),
+                anyLong())).willReturn(groups);
 
         List<Group> actual = service.findAllAttendingProfessorCourse(course,
                 professor);
 
-        then(repository).should().findAllByProfessorAndCourse(professorId,
-                courseId);
+        then(repository).should()
+                .findAllByProfessorAndCourse(professorId, courseId);
         assertThat(actual).isEqualTo(groups);
     }
 

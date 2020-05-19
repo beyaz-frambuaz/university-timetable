@@ -1,14 +1,14 @@
 package com.foxminded.timetable.service;
 
-import static org.assertj.core.api.Assertions.assertThat;
-
-import java.time.DayOfWeek;
-import java.time.LocalDate;
-
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.CsvSource;
 import org.junit.jupiter.params.provider.ValueSource;
+
+import java.time.DayOfWeek;
+import java.time.LocalDate;
+
+import static org.assertj.core.api.Assertions.assertThat;
 
 public class SemesterCalendarUtilsTest {
 
@@ -16,6 +16,7 @@ public class SemesterCalendarUtilsTest {
 
     @BeforeEach
     private void setUp() {
+
         this.semesterCalendar = new SemesterCalendarUtils("2020-09-07",
                 "2020-12-11");
     }
@@ -48,8 +49,8 @@ public class SemesterCalendarUtilsTest {
             String date) {
 
         LocalDate dateOutsideSemester = LocalDate.parse(date);
-        boolean semesterDate = semesterCalendar
-                .isSemesterDate(dateOutsideSemester);
+        boolean semesterDate = semesterCalendar.isSemesterDate(
+                dateOutsideSemester);
 
         assertThat(semesterDate).isFalse();
     }
@@ -112,7 +113,7 @@ public class SemesterCalendarUtilsTest {
         int monthNumber = Integer.parseInt(month);
         LocalDate expected = LocalDate.parse(date);
 
-        LocalDate actual = semesterCalendar.getMonthStartDate(monthNumber);
+        LocalDate actual = semesterCalendar.getFirstSemesterMondayOfMonth(monthNumber);
 
         assertThat(actual).isEqualTo(expected);
     }
@@ -125,7 +126,7 @@ public class SemesterCalendarUtilsTest {
         int monthNumber = Integer.parseInt(month);
         LocalDate expected = LocalDate.parse(date);
 
-        LocalDate actual = semesterCalendar.getMonthEndDate(monthNumber);
+        LocalDate actual = semesterCalendar.getLastSemesterFridayOfMonth(monthNumber);
 
         assertThat(actual).isEqualTo(expected);
     }

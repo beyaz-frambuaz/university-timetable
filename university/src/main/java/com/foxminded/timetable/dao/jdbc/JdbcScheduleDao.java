@@ -1,5 +1,15 @@
 package com.foxminded.timetable.dao.jdbc;
 
+import com.foxminded.timetable.dao.ScheduleDao;
+import com.foxminded.timetable.model.*;
+import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
+import org.springframework.dao.EmptyResultDataAccessException;
+import org.springframework.jdbc.core.namedparam.MapSqlParameterSource;
+import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
+import org.springframework.jdbc.core.namedparam.SqlParameterSource;
+import org.springframework.stereotype.Repository;
+
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.time.DayOfWeek;
@@ -8,38 +18,23 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
-import org.springframework.dao.EmptyResultDataAccessException;
-import org.springframework.jdbc.core.namedparam.MapSqlParameterSource;
-import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
-import org.springframework.jdbc.core.namedparam.SqlParameterSource;
-import org.springframework.stereotype.Repository;
-
-import com.foxminded.timetable.dao.ScheduleDao;
-import com.foxminded.timetable.model.Auditorium;
-import com.foxminded.timetable.model.Course;
-import com.foxminded.timetable.model.Group;
-import com.foxminded.timetable.model.Period;
-import com.foxminded.timetable.model.Professor;
-import com.foxminded.timetable.model.Schedule;
-
-import lombok.RequiredArgsConstructor;
-import lombok.extern.slf4j.Slf4j;
-
 @Slf4j
 @Repository
 @RequiredArgsConstructor
 public class JdbcScheduleDao implements ScheduleDao {
 
-    private static final String FIND_ALL_SQL = "SELECT schedules.id, "
-            + "schedules.template_id, schedules.on_date, schedules.day, "
-            + "schedules.period, schedules.auditorium_id, auditoriums.name, "
-            + "schedules.course_id, courses.name, schedules.group_id, groups.name, "
-            + "schedules.professor_id, professors.first_name, professors.last_name "
-            + "FROM schedules "
-            + "LEFT JOIN auditoriums ON schedules.auditorium_id = auditoriums.id "
-            + "LEFT JOIN courses ON schedules.course_id = courses.id "
-            + "LEFT JOIN groups ON schedules.group_id = groups.id "
-            + "LEFT JOIN professors ON schedules.professor_id = professors.id";
+    private static final String FIND_ALL_SQL =
+            "SELECT schedules.id, schedules.template_id, schedules.on_date, "
+                    + "schedules.day, schedules.period, schedules"
+                    + ".auditorium_id, auditoriums.name, schedules.course_id,"
+                    + " courses.name, schedules.group_id, groups.name, "
+                    + "schedules.professor_id, professors.first_name, "
+                    + "professors.last_name "
+                    + "FROM schedules LEFT JOIN auditoriums ON schedules"
+                    + ".auditorium_id = auditoriums.id "
+                    + "LEFT JOIN courses ON schedules.course_id = courses.id "
+                    + "LEFT JOIN groups ON schedules.group_id = groups.id "
+                    + "LEFT JOIN professors ON schedules.professor_id = professors.id";
 
     private final NamedParameterJdbcTemplate jdbc;
 
@@ -87,8 +82,9 @@ public class JdbcScheduleDao implements ScheduleDao {
             SqlParameterSource paramSource = new MapSqlParameterSource("id",
                     id);
 
-            return Optional.of(jdbc.queryForObject(FIND_ALL_SQL + filter,
-                    paramSource, this::mapRow));
+            return Optional.ofNullable(
+                    jdbc.queryForObject(FIND_ALL_SQL + filter, paramSource,
+                            this::mapRow));
 
         } catch (EmptyResultDataAccessException e) {
             log.warn("No schedule found with ID {}", id);
@@ -103,8 +99,8 @@ public class JdbcScheduleDao implements ScheduleDao {
                 + "period, auditorium_id, course_id, group_id, professor_id) "
                 + "VALUES (:templateId, :date, :day, :period, :auditoriumId, "
                 + ":courseId, :groupId, :professorId)";
-        SqlParameterSource paramSource = new MapSqlParameterSource()
-                .addValue("templateId", schedule.getTemplateId())
+        SqlParameterSource paramSource = new MapSqlParameterSource().addValue(
+                "templateId", schedule.getTemplateId())
                 .addValue("date", schedule.getDate().toString())
                 .addValue("day", schedule.getDay().toString())
                 .addValue("period", schedule.getPeriod().name())
@@ -128,8 +124,8 @@ public class JdbcScheduleDao implements ScheduleDao {
                 + ":courseId, :groupId, :professorId)";
         List<SqlParameterSource> paramSource = new ArrayList<>();
         for (Schedule schedule : schedules) {
-            paramSource.add(new MapSqlParameterSource()
-                    .addValue("templateId", schedule.getTemplateId())
+            paramSource.add(new MapSqlParameterSource().addValue("templateId",
+                    schedule.getTemplateId())
                     .addValue("date", schedule.getDate().toString())
                     .addValue("day", schedule.getDay().toString())
                     .addValue("period", schedule.getPeriod().name())
@@ -138,8 +134,8 @@ public class JdbcScheduleDao implements ScheduleDao {
                     .addValue("groupId", schedule.getGroup().getId())
                     .addValue("professorId", schedule.getProfessor().getId()));
         }
-        jdbc.batchUpdate(sql, paramSource
-                .toArray(new SqlParameterSource[paramSource.size()]));
+        jdbc.batchUpdate(sql, paramSource.toArray(
+                new SqlParameterSource[paramSource.size()]));
         log.debug("Schedules saved");
 
         return schedules;
@@ -155,8 +151,8 @@ public class JdbcScheduleDao implements ScheduleDao {
                 + "schedules.group_id = :groupId, "
                 + "schedules.professor_id = :professorId "
                 + "WHERE schedules.id = :scheduleId";
-        SqlParameterSource paramSource = new MapSqlParameterSource()
-                .addValue("date", schedule.getDate().toString())
+        SqlParameterSource paramSource = new MapSqlParameterSource().addValue(
+                "date", schedule.getDate().toString())
                 .addValue("day", schedule.getDay().toString())
                 .addValue("period", schedule.getPeriod().name())
                 .addValue("auditoriumId", schedule.getAuditorium().getId())
@@ -173,13 +169,12 @@ public class JdbcScheduleDao implements ScheduleDao {
     @Override
     public void updateAllWithTemplateId(Schedule schedule, int deltaDays) {
 
-        String update = "UPDATE schedules "
-                + "SET schedules.on_date = schedules.on_date + CAST(:deltaDays AS INTEGER), "
-                + "schedules.day = :day, schedules.period = :period, "
-                + "schedules.auditorium_id = :auditoriumId "
-                + "WHERE schedules.template_id = :templateId";
-        SqlParameterSource paramSource = new MapSqlParameterSource()
-                .addValue("deltaDays", deltaDays)
+        String update = "UPDATE schedules SET schedules.on_date = schedules"
+                + ".on_date + CAST(:deltaDays AS INTEGER), schedules.day = "
+                + ":day, schedules.period = :period, schedules.auditorium_id "
+                + "= :auditoriumId WHERE schedules.template_id = :templateId";
+        SqlParameterSource paramSource = new MapSqlParameterSource().addValue(
+                "deltaDays", deltaDays)
                 .addValue("day", schedule.getDay().toString())
                 .addValue("period", schedule.getPeriod().name())
                 .addValue("auditoriumId", schedule.getAuditorium().getId())
@@ -196,8 +191,9 @@ public class JdbcScheduleDao implements ScheduleDao {
                 Period.valueOf(rs.getString(5)),
                 new Auditorium(rs.getLong(6), rs.getString(7)),
                 new Course(rs.getLong(8), rs.getString(9)),
-                new Group(rs.getLong(10), rs.getString(11)), new Professor(
-                        rs.getLong(12), rs.getString(13), rs.getString(14)));
+                new Group(rs.getLong(10), rs.getString(11)),
+                new Professor(rs.getLong(12), rs.getString(13),
+                        rs.getString(14)));
     }
 
 }

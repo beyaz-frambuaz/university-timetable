@@ -1,38 +1,32 @@
 package com.foxminded.timetable.service;
 
-import static org.assertj.core.api.Assertions.assertThat;
-import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.ArgumentMatchers.anyList;
-import static org.mockito.ArgumentMatchers.anyLong;
-import static org.mockito.BDDMockito.given;
-import static org.mockito.BDDMockito.then;
-
-import java.util.Arrays;
-import java.util.Collections;
-import java.util.List;
-import java.util.Optional;
-
+import com.foxminded.timetable.dao.StudentDao;
+import com.foxminded.timetable.model.Group;
+import com.foxminded.timetable.model.Student;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 
-import com.foxminded.timetable.dao.StudentDao;
-import com.foxminded.timetable.model.Group;
-import com.foxminded.timetable.model.Student;
+import java.util.Collections;
+import java.util.List;
+import java.util.Optional;
+
+import static org.assertj.core.api.Assertions.assertThat;
+import static org.mockito.ArgumentMatchers.*;
+import static org.mockito.BDDMockito.given;
+import static org.mockito.BDDMockito.then;
 
 @ExtendWith(MockitoExtension.class)
 class StudentServiceTest {
 
+    private final Group          group   = new Group(1L, "group");
+    private final Student        student = new Student(1L, "one", "one", group);
     @Mock
-    private StudentDao repository;
-
+    private       StudentDao     repository;
     @InjectMocks
-    private StudentService service;
-
-    private Group group = new Group(1L, "group");
-    private Student student = new Student(1L, "one", "one", group);
+    private       StudentService service;
 
     @Test
     public void countShouldDelegateToRepository() {
@@ -87,7 +81,7 @@ class StudentServiceTest {
     @Test
     public void saveAllShouldDelegateToRepository() {
 
-        List<Student> students = Arrays.asList(student);
+        List<Student> students = Collections.singletonList(student);
         given(repository.saveAll(anyList())).willReturn(students);
 
         List<Student> actual = service.saveAll(students);
@@ -110,7 +104,7 @@ class StudentServiceTest {
     @Test
     public void findAllShouldDelegateToRepository() {
 
-        List<Student> students = Arrays.asList(student);
+        List<Student> students = Collections.singletonList(student);
         given(repository.findAll()).willReturn(students);
 
         List<Student> actual = service.findAll();
@@ -122,8 +116,8 @@ class StudentServiceTest {
     @Test
     public void findAllInGroupsShouldDelegateToRepository() {
 
-        List<Group> groups = Arrays.asList(group);
-        List<Student> students = Arrays.asList(student);
+        List<Group> groups = Collections.singletonList(group);
+        List<Student> students = Collections.singletonList(student);
         given(repository.findAllInGroups(anyList())).willReturn(students);
 
         List<Student> actual = service.findAllInGroups(groups);
