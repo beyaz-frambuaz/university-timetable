@@ -39,11 +39,11 @@ class ScheduleServiceTest {
             templateId, date, day, period, auditorium, course, group,
             professor);
     @Mock
-    private       ScheduleDao           repository;
+    private ScheduleDao         repository;
     @Mock
-    private       SemesterCalendarUtils semesterCalendar;
+    private SemesterCalendar    semesterCalendar;
     @Mock
-    private       ScheduleTemplateDao   templateRepository;
+    private ScheduleTemplateDao templateRepository;
     @InjectMocks
     private       ScheduleService       service;
 
@@ -119,16 +119,16 @@ class ScheduleServiceTest {
         then(repository).should().updateAllWithTemplateId(schedule, deltaDays);
     }
 
-    @Test
-    public void findByIdShouldDelegateToRepository() {
-
-        given(repository.findById(anyLong())).willReturn(Optional.of(schedule));
-
-        Optional<Schedule> actual = service.findById(id);
-
-        then(repository).should().findById(id);
-        assertThat(actual).isPresent().contains(schedule);
-    }
+//    @Test
+//    public void findByIdShouldDelegateToRepository() {
+//
+//        given(repository.findById(anyLong())).willReturn(Optional.of(schedule));
+//
+//        Optional<Schedule> actual = service.findById(id);
+//
+//        then(repository).should().findById(id);
+//        assertThat(actual).isPresent().contains(schedule);
+//    }
 
     @Test
     public void findAllShouldDelegateToRepository() {

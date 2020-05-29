@@ -17,6 +17,7 @@ import org.springframework.test.context.jdbc.SqlMergeMode;
 
 import java.sql.ResultSet;
 import java.util.Arrays;
+import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
 
@@ -80,7 +81,7 @@ class JdbcStudentDaoTest {
     @Sql("classpath:preload_sample_data_student_test.sql")
     public void findAllByGroupsShouldRetrieveCorrectListOfStudents() {
 
-        List<Group> requestedGroups = Arrays.asList(groupOne);
+        List<Group> requestedGroups = Collections.singletonList(groupOne);
         List<Student> actual = studentRepository.findAllInGroups(
                 requestedGroups);
 

@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head th:replace="layout :: header(~{::title})">
+	<title>No time, no table...</title>
+</head>
+<body>
+
+<div th:replace="layout :: navbar"></div>
+
+<div class="container">
+	<div class="row">
+		<div class="col">
+
+			<p th:if="${!message.isEmpty()}" th:text="${message}">message</p>
+
+			<div class="jumbotron shadow">
+
+				<div class="row align-items-end">
+					<div class="col-sm">
+						<img src="../static/images/no_time.jpg" th:src="@{/images/no_time.jpg}" class="center-image shadow"
+						     alt="Dali's The Persistence of Memory">
+					</div>
+
+					<div class="col-sm">
+						<blockquote class="blockquote text-right">
+							<p class="mb-0">No time... No table... Some things just are not</p>
+							<footer class="blockquote-footer">Yours truly, <cite title="Source Title" class="text-warning">404</cite>
+							</footer>
+						</blockquote>
+					</div>
+				</div>
+			</div>
+
+		</div>
+	</div>
+</div>
+
+<div th:replace="layout :: scripts"></div>
+
+</body>
+</html>

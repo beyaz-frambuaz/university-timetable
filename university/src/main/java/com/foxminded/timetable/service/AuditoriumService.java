@@ -3,6 +3,7 @@ package com.foxminded.timetable.service;
 import com.foxminded.timetable.dao.AuditoriumDao;
 import com.foxminded.timetable.model.Auditorium;
 import com.foxminded.timetable.model.Period;
+import com.foxminded.timetable.service.exception.ServiceException;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
@@ -52,10 +53,16 @@ public class AuditoriumService {
         return repository.findAll();
     }
 
-    public Optional<Auditorium> findById(long id) {
+    public Auditorium findById(long id) throws ServiceException {
 
         log.debug("Fetching auditorium ID{} from repository", id);
-        return repository.findById(id);
+        Optional<Auditorium> optionalAuditorium = repository.findById(id);
+        if (!optionalAuditorium.isPresent()) {
+            log.error("Auditorium with ID{} could not be found", id);
+            throw new ServiceException(
+                    "Auditorium with ID" + id + " could not be found");
+        }
+        return optionalAuditorium.get();
     }
 
     public List<Auditorium> findAvailableFor(boolean weekParity, LocalDate date,

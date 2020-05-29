@@ -29,6 +29,6 @@ public enum Period {
     @Override
     public String toString() {
 
-        return this.getTime() + " " + this.name();
+        return this.name() + " " + this.getTime();
     }
 }

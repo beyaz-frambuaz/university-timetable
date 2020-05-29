@@ -1,15 +1,10 @@
 package com.foxminded.timetable;
 
-import com.foxminded.timetable.service.model.generator.TimetableModelGenerator;
-import com.foxminded.timetable.service.model.generator.UniversityModelGenerator;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.springframework.boot.test.context.ConfigFileApplicationContextInitializer;
-import org.springframework.boot.test.mock.mockito.SpyBean;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
-
-import static org.mockito.BDDMockito.then;
 
 @ExtendWith(SpringExtension.class)
 @ContextConfiguration(classes = TimetableApp.class,
@@ -17,16 +12,9 @@ import static org.mockito.BDDMockito.then;
                               ConfigFileApplicationContextInitializer.class)
 public class LoadSpringContextIntegrationTest {
 
-    @SpyBean
-    private UniversityModelGenerator universityModelGenerator;
-    @SpyBean
-    private TimetableModelGenerator  timetableModelGenerator;
-
     @Test
-    public void contextLoadsAndDataGetsGeneratedAndSavedBeforeAppRuns() {
+    public void contextLoads() {
 
-        then(universityModelGenerator).should().generateAndSave();
-        then(timetableModelGenerator).should().generateAndSave();
     }
 
 }

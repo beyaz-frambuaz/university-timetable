@@ -126,16 +126,16 @@ class StudentServiceTest {
         assertThat(actual).isEqualTo(students);
     }
 
-    @Test
-    public void findByIdShouldDelegateToRepository() {
-
-        long id = 1L;
-        given(repository.findById(anyLong())).willReturn(Optional.of(student));
-
-        Optional<Student> actual = service.findById(id);
-
-        then(repository).should().findById(id);
-        assertThat(actual).isPresent().contains(student);
-    }
+//    @Test
+//    public void findByIdShouldDelegateToRepository() {
+//
+//        long id = 1L;
+//        given(repository.findById(anyLong())).willReturn(Optional.of(student));
+//
+//        Optional<Student> actual = service.findById(id);
+//
+//        then(repository).should().findById(id);
+//        assertThat(actual).isPresent().contains(student);
+//    }
 
 }

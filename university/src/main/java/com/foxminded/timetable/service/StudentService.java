@@ -1,8 +1,10 @@
 package com.foxminded.timetable.service;
 
 import com.foxminded.timetable.dao.StudentDao;
+import com.foxminded.timetable.model.Course;
 import com.foxminded.timetable.model.Group;
 import com.foxminded.timetable.model.Student;
+import com.foxminded.timetable.service.exception.ServiceException;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
@@ -64,10 +66,16 @@ public class StudentService {
         return repository.findAllInGroups(groups);
     }
 
-    public Optional<Student> findById(long id) {
+    public Student findById(long id) throws ServiceException {
 
         log.debug("Fetching student ID{} from repository", id);
-        return repository.findById(id);
+        Optional<Student> optionalStudent = repository.findById(id);
+        if (!optionalStudent.isPresent()) {
+            log.error("Student with ID{} could not be found", id);
+            throw new ServiceException(
+                    "Student with ID" + id + " could not be found");
+        }
+        return optionalStudent.get();
     }
 
 }

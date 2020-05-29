@@ -78,16 +78,80 @@ body {
 
 /*custom*/
 
+.schedule-options {
+    position: relative;
+}
+
+.schedule-options li {
+    opacity: 1;
+    transition: 0.5s ease-in-out;
+}
+
+.options {
+    top: 0;
+    width: 100%;
+    height: 100%;
+    position: absolute;
+    transition: 0.5s ease-in-out;
+    opacity: 0;
+    background-color: rgba(28, 30, 34, .8);
+}
+
+.schedule-options:hover li {
+    filter: blur(1px) grayscale(80%) brightness(95%) opacity(50%);
+}
+
+.schedule-options:hover .options {
+    opacity: 1;
+}
+
+.toggle-button {
+    display: none !important;
+}
+
+.schedule-row:hover > button {
+    display: block !important;
+}
+
+.schedule-row:hover > a {
+    display: block !important;
+}
+
+.glowing-logo {
+    box-shadow: 0px 0px 10px 0px #f19433;
+}
+
 .student-select-container {
-    height: 70vh;
+    max-height: 60vh;
     overflow-y: auto;
     -webkit-overflow-scrolling: touch;
     width: 100%;
     margin-bottom: 1rem;
 }
 
-.student-select-container button {
+/*.student-select-container button {*/
+/*    width: 100%;*/
+/*}*/
+
+.icon-hover:hover {
+    color: #17191b;
+}
+
+/*.student-select-container a {*/
+/*    color: rgba(255, 255, 255, 0.5);*/
+/*}*/
+
+.student-select-container label {
+    cursor: pointer;
+    line-height: 1;
+}
+
+.course-attendees-container {
+    max-height: 40vh;
+    overflow-y: auto;
+    -webkit-overflow-scrolling: touch;
     width: 100%;
+    margin-bottom: 1rem;
 }
 
 .schedule-container {
@@ -110,6 +174,10 @@ body {
     overflow-y: auto;
     -webkit-overflow-scrolling: touch;
     background-color: hsl(210, 8%, 25%);
+}
+
+.schedule-row.no-border {
+    border-bottom: none !important;
 }
 
 .schedule-row {
@@ -168,7 +236,6 @@ body {
     height: auto;
     margin-left: auto;
     margin-right: auto;
-    box-shadow: 0 0 20px 0.5rem rgb(13, 51, 78);
 }
 
 hr {
@@ -3686,6 +3753,14 @@ fieldset:disabled a.btn {
     border-radius: 0.2rem;
 }
 
+/*custom*/
+.btn-tiny, .btn-group-sm > .btn {
+    padding: 0.25rem 0.5rem;
+    font-size: 0.7rem;
+    line-height: 1.5;
+    border-radius: 0.2rem;
+}
+
 .btn-block {
     display: block;
     width: 100%;
@@ -3721,13 +3796,13 @@ input[type="button"].btn-block {
     display: none;
 }
 
-.collapsing {
-    position: relative;
-    height: 0;
-    overflow: hidden;
-    -webkit-transition: height 0.35s ease;
-    transition: height 0.35s ease;
-}
+/*.collapsing {*/
+/*    position: relative;*/
+/*    height: 0;*/
+/*    overflow: hidden;*/
+/*    -webkit-transition: height 0.35s ease;*/
+/*    transition: height 0.35s ease;*/
+/*}*/
 
 @media (prefers-reduced-motion: reduce) {
     .collapsing {
@@ -4351,9 +4426,8 @@ input[type="button"].btn-block {
 
 .custom-control-input:checked ~ .custom-control-label::before {
     color: #fff;
-    border-color: #3A3F44;
-    background-color: #3A3F44;
-
+    border-color: #1a1a1a;
+    background-color: #1a1a1a;
 }
 
 .custom-control-input:focus ~ .custom-control-label::before {
@@ -4440,7 +4514,7 @@ input[type="button"].btn-block {
 
 .custom-radio .custom-control-input:checked ~ .custom-control-label::after {
     background-image: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='-4 -4 8 8'%3e%3ccircle r='3' fill='%23fff'/%3e%3c/svg%3e");
-    box-shadow: 0px 0px 4px 4px rgba(155, 155, 255, 0.2);
+    box-shadow: 0px 0px 4px 4px rgba(0, 0, 0, 0.2);
     border-radius: 100%;
 }
 
@@ -4457,7 +4531,7 @@ input[type="button"].btn-block {
     width: 1.75rem;
     pointer-events: all;
     border-radius: 0.5rem;
-    box-shadow: 0px 0px 4px 4px rgba(155, 155, 255, 0.2);
+    box-shadow: 0px 0px 4px 4px rgba(0, 0, 0, 0.2);
 }
 
 .custom-switch .custom-control-label::after {

@@ -9,12 +9,15 @@ import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.jdbc.core.namedparam.MapSqlParameterSource;
 import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
 import org.springframework.jdbc.core.namedparam.SqlParameterSource;
+import org.springframework.jdbc.support.GeneratedKeyHolder;
+import org.springframework.jdbc.support.KeyHolder;
 import org.springframework.stereotype.Repository;
 
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 import java.util.Optional;
 
 @Slf4j
@@ -81,11 +84,17 @@ public class JdbcStudentDao implements StudentDao {
     @Override
     public Student save(Student student) {
 
+        KeyHolder keyHolder = new GeneratedKeyHolder();
+
         jdbc.update(INSERT_SQL,
                 new MapSqlParameterSource().addValue("firstName",
                         student.getFirstName())
                         .addValue("lastName", student.getLastName())
-                        .addValue("groupId", student.getGroup().getId()));
+                        .addValue("groupId", student.getGroup().getId()),
+                keyHolder);
+
+        Long id = Objects.requireNonNull(keyHolder.getKey()).longValue();
+        student.setId(id);
         log.debug("Saved {}", student);
 
         return student;

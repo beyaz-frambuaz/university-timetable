@@ -1,11 +1,12 @@
 <!DOCTYPE html>
 <html lang="en" xmlns:th="http://www.thymeleaf.org">
+
 <head th:fragment="header(title)">
 	<meta charset="UTF-8">
 	<meta name="viewport"
 	      content="width=device-width, initial-scale=1, shrink-to-fit=no">
 
-	<link th:href="@{/favicon.ico}" rel="icon">
+	<link th:href="@{/images/favicon.ico}" rel="icon">
 	<!--credit to https://bootswatch.com/slate/-->
 	<link th:href="@{/bootstrap.css}" rel="stylesheet">
 	<link th:href="@{/bootstrap-datepicker.css}" rel="stylesheet">
@@ -14,62 +15,63 @@
 	<script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.0/dist/umd/popper.min.js"></script>
 	<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/js/bootstrap.min.js"></script>
 	<script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-datepicker/1.9.0/js/bootstrap-datepicker.js"></script>
+	<script src='https://kit.fontawesome.com/a076d05399.js'></script>
 
 	<title th:replace="${title}">Title</title>
 </head>
+
 <body>
 
-<!--management Modal schedule viewing options-->
-<div th:fragment="modalManagement" class="modal fade" id="scheduleModal" tabindex="-1" role="dialog"
-     aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
+<!-- Find rescheduling options form modal -->
+<div th:fragment="findReschedulingOptions" class="modal fade" id="find-rescheduling-options-modal"
+     tabindex="-1" role="dialog"
+     aria-labelledby="find-rescheduling-options-label" aria-hidden="true">
 	<div class="modal-dialog modal-dialog-centered" role="document">
 		<div class="modal-content">
 
 			<!--Header-->
 			<div class="modal-header">
-				<h5 class="modal-title" id="exampleModalCenterTitle">Schedule
-					viewing options
+				<h5 class="modal-title" id="find-rescheduling-options-label">
+					<i class="fas fa-search"></i>
+					Find rescheduling options
 				</h5>
-				<button type="button" class="close" data-dismiss="modal"
-				        aria-label="Close">
+				<button type="button" class="close" data-dismiss="modal" aria-label="Close">
 					<span aria-hidden="true">&times;</span>
 				</button>
 			</div>
 
 			<!--Body-->
 			<div class="modal-body">
-				<h4>Fall Semester</h4>
-				<p>September 7 - December 11, 2020</p>
+				<p>Look up rescheduling options for specific time-frame to reschedule once or permanently</p>
+				<br>
 
-				<form class="needs-validation" id="form" action="" novalidate>
+				<form class="needs-validation" action="#"
+				      th:action="@{/timetable/management/schedule/options}"
+				      th:object="${findReschedulingOptionsForm}" method="post" novalidate>
+
 					<div class="container">
 
-						<div class="row align-items-center">
+						<div class="row">
 							<div class="form-group col-sm-4">
 								Range:
 							</div>
 
-							<div class="form-group has-danger col-sm-6">
+							<div class="form-group col-sm-6">
 								<div class="custom-control custom-radio">
-									<input type="radio" id="Radio1" name="scheduleOption" class="custom-control-input"
-									       value="date"
-									       checked required>
-									<label class="custom-control-label" for="Radio1">Specific date</label>
+									<input type="radio" id="options-radio1" name="scheduleOption"
+									       class="custom-control-input"
+									       value="date" th:value="${T(com.foxminded.timetable.web.forms.ScheduleOption).DAY}"
+									       th:field="*{scheduleOption}" checked required>
+									<label class="custom-control-label" for="options-radio1">Specific date</label>
 								</div>
 								<br>
 								<div class="custom-control custom-radio">
-									<input type="radio" id="Radio2" name="scheduleOption" class="custom-control-input"
-									       value="week"
-									       required>
-									<label class="custom-control-label" for="Radio2">Semester week</label>
+									<input type="radio" id="options-radio2" name="scheduleOption" class="custom-control-input"
+									       value="week" th:value="${T(com.foxminded.timetable.web.forms.ScheduleOption).WEEK}"
+									       th:field="*{scheduleOption}" required>
+									<label class="custom-control-label" for="options-radio2">Semester week</label>
 								</div>
 								<br>
-								<div class="custom-control custom-radio">
-									<input type="radio" id="Radio3" name="scheduleOption" class="custom-control-input"
-									       value="month"
-									       required>
-									<label class="custom-control-label" for="Radio3">Entire month</label>
-								</div>
 							</div>
 						</div>
 
@@ -78,44 +80,173 @@
 								Date in range:
 							</div>
 
-							<div class="form-group has-danger col-sm-6">
-								<input type="text" class="form-control invalid" id="datepickerDay" name="date"
-								       placeholder="Select a date" autocomplete="off"
-								       required>
+							<div class="form-group col-sm-6">
+								<input type="text" class="form-control" id="options-datepicker" name="date"
+								       placeholder="Select a date" autocomplete="off" th:field="*{date}" required>
 								<div class="invalid-feedback">
 									Please choose a date
 								</div>
 							</div>
 						</div>
 
+						<!-- Hidden input for filtering predicate in service, gets filled in by jquery script -->
+						<input type="hidden" id="schedule-id" name="scheduleId" value="">
 					</div>
+
 
 					<!--Submit-->
 
 					<div class="modal-footer">
-						<button type="submit" class="btn btn-outline-primary" id="submitSchedule">Allons-y!</button>
+						<button type="submit" class="btn btn-outline-primary">Find options</button>
 					</div>
 
 				</form>
 
 			</div>
+
 		</div>
 	</div>
 </div>
 
-<!--student/professor Modal schedule viewing options-->
-<div th:fragment="modal" class="modal fade" id="scheduleModal" tabindex="-1" role="dialog"
-     aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
+<!-- Rename auditorium/group/course form modal -->
+<div th:fragment="renameModal" class="modal fade" id="rename-modal" tabindex="-1" role="dialog"
+     aria-labelledby="rename-label" aria-hidden="true">
 	<div class="modal-dialog modal-dialog-centered" role="document">
 		<div class="modal-content">
 
 			<!--Header-->
 			<div class="modal-header">
-				<h5 class="modal-title" id="exampleModalCenterTitle">Schedule
-					viewing options
+				<h5 id="rename-label" class="modal-title">
+					<i class="fas fa-edit"></i>
+					Rename
+					<span th:if="${#httpServletRequest.requestURI.contains('university/auditoriums')}">auditorium</span>
+					<span th:if="${#httpServletRequest.requestURI.contains('university/groups')}">group</span>
+					<span th:if="${#httpServletRequest.requestURI.contains('university/courses')}">course</span>
 				</h5>
-				<button type="button" class="close" data-dismiss="modal"
-				        aria-label="Close">
+				<button type="button" class="close" data-dismiss="modal" aria-label="Close">
+					<span aria-hidden="true">&times;</span>
+				</button>
+			</div>
+
+			<!--Body-->
+			<div class="modal-body">
+				<h4 id="rename-title">Current name</h4>
+				<p>
+					<span th:if="${#httpServletRequest.requestURI.contains('university/auditoriums')}">
+						General naming convention: A-##
+					</span>
+					<span th:if="${#httpServletRequest.requestURI.contains('university/groups')}">
+						General naming convention: G-##
+					</span>
+				</p>
+				<br>
+
+				<form class="needs-validation" action="#" th:action="@{|${#httpServletRequest.requestURI}/rename|}"
+				      th:object="${renameForm}" method="post" novalidate>
+
+					<div class="container">
+
+						<div class="form-group row align-items-center">
+							<label class="form-control-label col-sm-4" for="new-name">New name:</label>
+							<div class="col-sm-8">
+								<input type="text" placeholder="Enter new name..." class="form-control"
+								       id="new-name" th:field="*{newName}" required>
+								<div class="invalid-feedback">New name required</div>
+							</div>
+						</div>
+
+						<input type="hidden" id="rename-id" name="renameId" value="">
+
+						<!--Submit-->
+
+						<div class="modal-footer">
+							<button type="submit" class="btn btn-outline-primary">Submit</button>
+						</div>
+
+					</div>
+				</form>
+			</div>
+
+		</div>
+	</div>
+</div>
+
+<!-- New auditorium/group/course form modal -->
+<div th:fragment="newItemModal" class="modal fade" id="new-item-modal" tabindex="-1" role="dialog"
+     aria-labelledby="new-item-label" aria-hidden="true">
+	<div class="modal-dialog modal-dialog-centered" role="document">
+		<div class="modal-content">
+
+			<!--Header-->
+			<div class="modal-header">
+				<h5 id="new-item-label" class="modal-title">
+					<i class="fas fa-plus-circle"></i>
+					Add new
+					<span th:if="${#httpServletRequest.requestURI.contains('university/auditoriums')}">auditorium</span>
+					<span th:if="${#httpServletRequest.requestURI.contains('university/groups')}">group</span>
+					<span th:if="${#httpServletRequest.requestURI.contains('university/courses')}">course</span>
+				</h5>
+				<button type="button" class="close" data-dismiss="modal" aria-label="Close">
+					<span aria-hidden="true">&times;</span>
+				</button>
+			</div>
+
+			<!--Body-->
+			<div class="modal-body">
+
+				<form class="needs-validation" action="" th:action="@{|${#httpServletRequest.requestURI}/new|}"
+				      th:object="${newItemForm}" method="post" novalidate>
+
+					<div class="container">
+
+						<p>
+							<span th:if="${#httpServletRequest.requestURI.contains('university/auditoriums')}">
+								General naming convention: A-##
+							</span>
+							<span th:if="${#httpServletRequest.requestURI.contains('university/groups')}">
+								General naming convention: G-##
+							</span>
+						</p>
+
+						<div class="form-group row align-items-center">
+							<label class="form-control-label col-sm-4" for="name">Name:</label>
+							<div class="col-sm-8">
+								<input type="text" placeholder="Enter name..." class="form-control" th:field="*{name}" required>
+								<div class="invalid-feedback">Name required</div>
+							</div>
+						</div>
+
+						<!--Submit-->
+
+						<div class="modal-footer">
+							<button type="submit" class="btn btn-outline-primary">Join the club!</button>
+						</div>
+
+					</div>
+				</form>
+			</div>
+
+		</div>
+	</div>
+</div>
+
+<!-- Filtered schedule (students + faculty) form modal -->
+<div th:fragment="scheduleFormFilter" class="modal fade" id="filtered-schedule-modal" tabindex="-1" role="dialog"
+     aria-labelledby="filtered-schedule-label" aria-hidden="true">
+	<div class="modal-dialog modal-dialog-centered" role="document">
+		<div class="modal-content">
+
+			<!--Header-->
+			<div class="modal-header">
+				<h5 class="modal-title" id="filtered-schedule-label">
+					<i class="fas fa-calendar-alt"></i>
+					<span th:if="${#httpServletRequest.requestURI.contains('timetable/students')}"
+					      th:text="${session.student.fullName} + ' (' + ${session.student.group.name} + ')'">Student</span>
+					<span th:if="${#httpServletRequest.requestURI.contains('timetable/faculty')}"
+					      th:text="${session.professor.fullName}">Professor</span>
+					schedule
+				</h5>
+				<button type="button" class="close" data-dismiss="modal" aria-label="Close">
 					<span aria-hidden="true">&times;</span>
 				</button>
 			</div>
@@ -123,10 +254,14 @@
 			<!--Body-->
 			<div class="modal-body">
 				<h4>Fall Semester</h4>
-				<p th:text="${@semesterCalendarUtils.getSemesterDescription()}">description</p>
+				<p th:text="${@semesterCalendar.getSemesterDescription()}">description</p>
 
-				<form class="needs-validation" id="form" action="#"
-				      th:action="@{/students/schedule(studentId = ${param.studentId})}" method="post" novalidate>
+				<form class="needs-validation" action="#"
+				      th:action="@{${#httpServletRequest.requestURI.contains('timetable/students')
+				      ? '/timetable/students/student/schedule'
+				      : '/timetable/faculty/professor/schedule'}}"
+				      th:object="${scheduleForm}" method="post" novalidate>
+
 					<div class="container">
 
 						<div class="row align-items-center">
@@ -134,26 +269,26 @@
 								Range:
 							</div>
 
-							<div class="form-group has-danger col-sm-6">
+							<div class="form-group col-sm-6">
 								<div class="custom-control custom-radio">
-									<input type="radio" id="Radio1" name="scheduleOption" class="custom-control-input"
-									       value="date"
-									       checked required>
-									<label class="custom-control-label" for="Radio1">Specific date</label>
+									<input type="radio" id="filtered-schedule-radio1" name="scheduleOption" class="custom-control-input"
+									       value="date" th:value="${T(com.foxminded.timetable.web.forms.ScheduleOption).DAY}"
+									       th:field="*{scheduleOption}" checked required>
+									<label class="custom-control-label" for="filtered-schedule-radio1">Specific date</label>
 								</div>
 								<br>
 								<div class="custom-control custom-radio">
-									<input type="radio" id="Radio2" name="scheduleOption" class="custom-control-input"
-									       value="week"
-									       required>
-									<label class="custom-control-label" for="Radio2">Semester week</label>
+									<input type="radio" id="filtered-schedule-radio2" name="scheduleOption" class="custom-control-input"
+									       value="week" th:value="${T(com.foxminded.timetable.web.forms.ScheduleOption).WEEK}"
+									       th:field="*{scheduleOption}" required>
+									<label class="custom-control-label" for="filtered-schedule-radio2">Semester week</label>
 								</div>
 								<br>
 								<div class="custom-control custom-radio">
-									<input type="radio" id="Radio3" name="scheduleOption" class="custom-control-input"
-									       value="month"
-									       required>
-									<label class="custom-control-label" for="Radio3">Entire month</label>
+									<input type="radio" id="filtered-schedule-radio3" name="scheduleOption" class="custom-control-input"
+									       value="month" th:value="${T(com.foxminded.timetable.web.forms.ScheduleOption).MONTH}"
+									       th:field="*{scheduleOption}" required>
+									<label class="custom-control-label" for="filtered-schedule-radio3">Entire month</label>
 								</div>
 							</div>
 						</div>
@@ -163,22 +298,207 @@
 								Date in range:
 							</div>
 
-							<div class="form-group has-danger col-sm-6">
-								<input type="text" class="form-control invalid" id="datepickerDay" name="date"
-								       placeholder="Select a date" autocomplete="off"
-								       required>
+							<div class="form-group col-sm-6">
+								<input type="text" class="form-control" id="filter-schedule-datepicker" name="date"
+								       placeholder="Select a date" autocomplete="off" th:field="*{date}" required>
 								<div class="invalid-feedback">
 									Please choose a date
 								</div>
 							</div>
 						</div>
+
 
 						<br>
 						<div class="form-group">
 							<div class="custom-control custom-switch">
-								<input type="checkbox" class="custom-control-input" name="filterSchedule" id="filterSchedule"
-								       checked="">
-								<label class="custom-control-label" for="filterSchedule">Show only my schedule</label>
+								<input type="checkbox" class="custom-control-input" name="filterSchedule" id="filter-schedule"
+								       th:field="*{filtered}" checked="">
+								<label class="custom-control-label" for="filter-schedule">Show only my schedule</label>
+							</div>
+						</div>
+
+						<!-- Hidden input for filtering predicate in service, gets filled in by jquery script -->
+						<input th:if="${#httpServletRequest.requestURI.contains('timetable/students')}" type="hidden"
+						       id="id" name="id" th:value="${session.student.group.id}">
+						<input th:if="${#httpServletRequest.requestURI.contains('timetable/faculty')}" type="hidden"
+						       id="id" name="id" th:value="${session.professor.id}">
+					</div>
+
+
+					<!--Submit-->
+
+					<div class="modal-footer">
+						<button type="submit" class="btn btn-outline-primary">Allons-y!</button>
+					</div>
+
+				</form>
+
+			</div>
+
+		</div>
+	</div>
+</div>
+
+<!-- Filtered schedule management (for university entities) form modal -->
+<div th:fragment="scheduleFormFilterManagement" class="modal fade" id="filtered-schedule-modal"
+     tabindex="-1" role="dialog"
+     aria-labelledby="filtered-schedule-label" aria-hidden="true">
+	<div class="modal-dialog modal-dialog-centered" role="document">
+		<div class="modal-content">
+
+			<!--Header-->
+			<div class="modal-header">
+				<h5 class="modal-title" id="filtered-schedule-label">
+					<i class="fas fa-calendar-alt"></i>
+					<span id="filter-schedule-title">Student</span>
+					schedule
+				</h5>
+				<button type="button" class="close" data-dismiss="modal" aria-label="Close">
+					<span aria-hidden="true">&times;</span>
+				</button>
+			</div>
+
+			<!--Body-->
+			<div class="modal-body">
+				<h4>Fall Semester</h4>
+				<p th:text="${@semesterCalendar.getSemesterDescription()}">description</p>
+
+				<form class="needs-validation" action="#"
+				      th:action="@{|${#httpServletRequest.requestURI}/schedule|}"
+				      th:object="${scheduleForm}" method="post" novalidate>
+
+					<div class="container">
+
+						<div class="row align-items-center">
+							<div class="form-group col-sm-4">
+								Range:
+							</div>
+
+							<div class="form-group col-sm-6">
+								<div class="custom-control custom-radio">
+									<input type="radio" id="filtered-schedule-radio1" name="scheduleOption"
+									       class="custom-control-input"
+									       value="date" th:value="${T(com.foxminded.timetable.web.forms.ScheduleOption).DAY}"
+									       th:field="*{scheduleOption}" checked required>
+									<label class="custom-control-label" for="filtered-schedule-radio1">Specific date</label>
+								</div>
+								<br>
+								<div class="custom-control custom-radio">
+									<input type="radio" id="filtered-schedule-radio2" name="scheduleOption" class="custom-control-input"
+									       value="week" th:value="${T(com.foxminded.timetable.web.forms.ScheduleOption).WEEK}"
+									       th:field="*{scheduleOption}" required>
+									<label class="custom-control-label" for="filtered-schedule-radio2">Semester week</label>
+								</div>
+								<br>
+								<div class="custom-control custom-radio">
+									<input type="radio" id="filtered-schedule-radio3" name="scheduleOption" class="custom-control-input"
+									       value="month" th:value="${T(com.foxminded.timetable.web.forms.ScheduleOption).MONTH}"
+									       th:field="*{scheduleOption}" required>
+									<label class="custom-control-label" for="filtered-schedule-radio3">Entire month</label>
+								</div>
+							</div>
+						</div>
+
+						<div class="row align-items-center">
+							<div class="form-group col-sm-4">
+								Date in range:
+							</div>
+
+							<div class="form-group col-sm-6">
+								<input type="text" class="form-control" id="filter-schedule-datepicker" name="date"
+								       placeholder="Select a date" autocomplete="off" th:field="*{date}" required>
+								<div class="invalid-feedback">
+									Please choose a date
+								</div>
+							</div>
+						</div>
+
+						<!-- Hidden input for filtering predicate in service, gets filled in by jquery script -->
+						<input type="hidden" id="filtered-schedule-hidden-id" name="id" value="">
+					</div>
+
+
+					<!--Submit-->
+
+					<div class="modal-footer">
+						<button type="submit" class="btn btn-outline-primary">Allons-y!</button>
+					</div>
+
+				</form>
+
+			</div>
+
+		</div>
+	</div>
+</div>
+
+<!-- Management schedule form modal -->
+<div th:fragment="scheduleFormManagement" class="modal fade" id="management-schedule-modal" tabindex="-1" role="dialog"
+     aria-labelledby="management-schedule-label" aria-hidden="true">
+	<div class="modal-dialog modal-dialog-centered" role="document">
+		<div class="modal-content">
+
+			<!--Header-->
+			<div class="modal-header">
+				<h5 id="management-schedule-label" class="modal-title">
+					<i class="fas fa-calendar-alt"></i>
+					Entire schedule viewing options
+				</h5>
+				<button type="button" class="close" data-dismiss="modal" aria-label="Close">
+					<span aria-hidden="true">&times;</span>
+				</button>
+			</div>
+
+			<!--Body-->
+			<div class="modal-body">
+				<h4>Fall Semester</h4>
+				<p th:text="${@semesterCalendar.getSemesterDescription()}">description</p>
+
+				<form class="needs-validation" action="#" th:action="@{/timetable/management/schedule}"
+				      th:object="${scheduleForm}" method="post" novalidate>
+
+					<div class="container">
+
+						<div class="row align-items-center">
+							<div class="form-group col-sm-4">
+								Range:
+							</div>
+
+							<div class="form-group col-sm-6">
+								<div class="custom-control custom-radio">
+									<input type="radio" id="management-schedule-radio1" name="scheduleOption" class="custom-control-input"
+									       value="date" th:value="${T(com.foxminded.timetable.web.forms.ScheduleOption).DAY}"
+									       th:field="*{scheduleOption}" checked required>
+									<label class="custom-control-label" for="management-schedule-radio1">Specific date</label>
+								</div>
+								<br>
+								<div class="custom-control custom-radio">
+									<input type="radio" id="management-schedule-radio2" name="scheduleOption" class="custom-control-input"
+									       value="week" th:value="${T(com.foxminded.timetable.web.forms.ScheduleOption).WEEK}"
+									       th:field="*{scheduleOption}" required>
+									<label class="custom-control-label" for="management-schedule-radio2">Semester week</label>
+								</div>
+								<br>
+								<div class="custom-control custom-radio">
+									<input type="radio" id="management-schedule-radio3" name="scheduleOption" class="custom-control-input"
+									       value="month" th:value="${T(com.foxminded.timetable.web.forms.ScheduleOption).MONTH}"
+									       th:field="*{scheduleOption}" required>
+									<label class="custom-control-label" for="management-schedule-radio3">Entire month</label>
+								</div>
+							</div>
+						</div>
+
+						<div class="row align-items-center">
+							<div class="form-group col-sm-4">
+								Any date in range:
+							</div>
+
+							<div class="form-group col-sm-6">
+								<input type="text" class="form-control" id="management-schedule-datepicker" name="date"
+								       placeholder="Select a date" autocomplete="off" th:field="*{date}" required>
+								<div class="invalid-feedback">
+									Please choose a date
+								</div>
 							</div>
 						</div>
 
@@ -187,35 +507,39 @@
 					<!--Submit-->
 
 					<div class="modal-footer">
-						<button type="submit" class="btn btn-outline-primary" id="submitSchedule">Allons-y!</button>
+						<button type="submit" class="btn btn-outline-primary">Allons-y!</button>
 					</div>
 
 				</form>
 
 			</div>
+
 		</div>
 	</div>
 </div>
 
-<!--no role TOP navigation bar-->
-<nav th:fragment="navbarNoRole" class="navbar fixed-top navbar-expand-md navbar-dark bg-primary">
+<!-- Navigation bar -->
+<nav th:fragment="navbar" class="navbar shadow fixed-top navbar-expand-md navbar-dark bg-primary">
 
 	<!--Role dropdown-->
 	<div class="dropdown">
 		<a class="dropdown-toggle" data-toggle="dropdown" href="#"
 		   role="button" aria-haspopup="true" aria-expanded="false">
-			<img src="/favicon-32x32.png" width="30" height="30"
-			     class="d-inline-block align-top" alt="logo" style="box-shadow: 0px 0px 10px 0px #f19433"></a>
+			<img src="/images/favicon-32x32.png" th:src="@{/images/favicon-32x32.png}" width="30" height="30"
+			     class="d-inline-block align-top" alt="logo"
+			     th:classappend="${!#httpServletRequest.requestURI.contains('timetable/students')
+			     and !#httpServletRequest.requestURI.contains('timetable/faculty')
+			     and !#httpServletRequest.requestURI.contains('timetable/management')}? 'glowing-logo'"></a>
 		<div class="dropdown-menu">
 			<a class="dropdown-item disabled" href="#">Tools for</a>
 			<div class="dropdown-divider"></div>
-			<a class="dropdown-item" th:href="@{/students/student_select}" data-toggle="tooltip"
+			<a class="dropdown-item" th:href="@{/timetable/students/list}" data-toggle="tooltip"
 			   data-placement="right" data-container="body"
 			   title="Student-specific schedule viewing options">Students</a>
-			<a class="dropdown-item" href="#" data-toggle="tooltip"
+			<a class="dropdown-item" th:href="@{/timetable/faculty/list}" data-toggle="tooltip"
 			   data-placement="right" data-container="body"
 			   title="Schedule and course viewing options for faculty">Faculty</a>
-			<a class="dropdown-item" href="#" data-toggle="tooltip"
+			<a class="dropdown-item" th:href="@{/timetable/management/home}" href="#" data-toggle="tooltip"
 			   data-placement="right" data-container="body"
 			   title="Full rage of university and timetable management tools">Management</a>
 		</div>
@@ -224,207 +548,138 @@
 	<!--Brand-->
 	<a class="navbar-brand" th:href="@{/}">Timetable</a>
 	<!--Role-->
-	<span class="navbar-text flex-grow-1" id="role"></span>
+	<span th:if="${#httpServletRequest.requestURI.contains('timetable/students')}" class="navbar-text flex-grow-1">for
+		Students</span>
+	<span th:if="${#httpServletRequest.requestURI.contains('timetable/faculty')}" class="navbar-text flex-grow-1">for
+		Faculty</span>
+	<span th:if="${#httpServletRequest.requestURI.contains('timetable/management')}" class="navbar-text flex-grow-1">for
+		Management</span>
 
-	</div>
-</nav>
-
-<!--student TOP navigation bar-->
-<nav th:fragment="navbarStudent" class="navbar fixed-top navbar-expand-md navbar-dark bg-primary">
-
-	<!--Role dropdown-->
-	<div class="dropdown">
-		<a class="dropdown-toggle" data-toggle="dropdown" href="#"
-		   role="button" aria-haspopup="true" aria-expanded="false">
-			<img src="/favicon-32x32.png" width="30" height="30"
-			     class="d-inline-block align-top" alt=""></a>
-		<div class="dropdown-menu">
-			<a class="dropdown-item disabled" href="#">Tools for</a>
-			<div class="dropdown-divider"></div>
-			<a class="dropdown-item" href="#" th:href="@{/students/student_select}" data-toggle="tooltip"
-			   data-placement="right" data-container="body"
-			   title="Student-specific schedule viewing options">Students</a>
-			<a class="dropdown-item" href="#" data-toggle="tooltip"
-			   data-placement="right" data-container="body"
-			   title="Schedule and course viewing options for faculty">Faculty</a>
-			<a class="dropdown-item" href="#" data-toggle="tooltip"
-			   data-placement="right" data-container="body"
-			   title="Full rage of university and timetable management tools">Management</a>
-		</div>
-	</div>
-
-	<!--Brand-->
-	<a class="navbar-brand" th:href="@{/}">Timetable</a>
-	<!--Role-->
-	<span class="navbar-text flex-grow-1">for Students</span>
-	<button class="navbar-toggler" type="button" data-toggle="collapse"
-	        data-target="#navbarColor01" aria-controls="navbarColor01"
-	        aria-expanded="false" aria-label="Toggle navigation">
+	<!--Collapse toggler for smaller screens-->
+	<button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbar"
+	        aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
 		<span class="navbar-toggler-icon"></span>
 	</button>
 
-	<!--Menu Items-->
-	<div class="collapse navbar-collapse navbar-nav mr-auto justify-content-end"
-	     id="navbarColor01">
+	<!--Student Menu Items-->
+	<div th:if="${#httpServletRequest.requestURI.contains('timetable/students')}"
+	     class="collapse navbar-collapse navbar-nav mr-auto justify-content-end"
+	     id="navbar">
 
-		<div class="nav-item">
-			<a class="nav-link" href="#" data-toggle="modal"
-			   data-target="#scheduleModal" th:classappend="${param.studentId == null}? 'disabled'">
-				Schedule for...</a>
-		</div>
-
-		<div class="nav-item">
+		<div class="nav-item" th:classappend="${#httpServletRequest.requestURI.contains('home')}? 'active'">
 			<a class="nav-link" href="#"
-			   th:href="@{/students/student_two_week(${param.studentId == null}? _ : studentId = ${param.studentId})}"
-			   th:classappend="${param.studentId == null}? 'disabled'">
-				Two-week schedule</a>
+			   th:href="@{/timetable/students/student/home}"
+			   th:classappend="${session.student == null}? 'disabled'">
+				Home
+			</a>
 		</div>
-	</div>
-</nav>
 
-<!--faculty TOP navigation bar-->
-<nav th:fragment="navbarFaculty" class="navbar fixed-top navbar-expand-md navbar-dark bg-primary">
+		<div class="nav-item" th:classappend="${#httpServletRequest.requestURI.contains('schedule')}? 'active'">
+			<a class="nav-link" href="#" data-toggle="modal" data-target="#filtered-schedule-modal"
+			   th:classappend="${session.student == null}? 'disabled'">
+				Schedule for...
+			</a>
+		</div>
 
-	<!--Role dropdown-->
-	<div class="dropdown">
-		<a class="dropdown-toggle" data-toggle="dropdown" href="#"
-		   role="button" aria-haspopup="true" aria-expanded="false">
-			<img src="/favicon-32x32.png" width="30" height="30"
-			     class="d-inline-block align-top" alt=""></a>
-		<div class="dropdown-menu">
-			<a class="dropdown-item disabled" href="#">Tools for</a>
-			<div class="dropdown-divider"></div>
-			<a class="dropdown-item" href="#" data-toggle="tooltip"
-			   data-placement="right" data-container="body"
-			   title="Student-specific schedule viewing options">Students</a>
-			<a class="dropdown-item" href="#" data-toggle="tooltip"
-			   data-placement="right" data-container="body"
-			   title="Schedule and course viewing options for faculty">Faculty</a>
-			<a class="dropdown-item" href="#" data-toggle="tooltip"
-			   data-placement="right" data-container="body"
-			   title="Full rage of university and timetable management tools">Management</a>
+		<div class="nav-item" th:classappend="${#httpServletRequest.requestURI.contains('two_week')}? 'active'">
+			<a class="nav-link" href="#" th:href="@{/timetable/students/student/two_week}"
+			   th:classappend="${session.student == null}? 'disabled'">
+				Two-week schedule
+			</a>
 		</div>
 	</div>
 
-	<!--Brand-->
-	<a class="navbar-brand" th:href="@{/}">Timetable</a>
-	<!--Role-->
-	<span class="navbar-text flex-grow-1">
-      for Faculty
-    </span>
-	<button class="navbar-toggler" type="button" data-toggle="collapse"
-	        data-target="#navbarColor01" aria-controls="navbarColor01"
-	        aria-expanded="false" aria-label="Toggle navigation">
-		<span class="navbar-toggler-icon"></span>
-	</button>
+	<!--Faculty Menu Items-->
+	<div th:if="${#httpServletRequest.requestURI.contains('timetable/faculty')}"
+	     class="collapse navbar-collapse navbar-nav mr-auto justify-content-end" id="navbar">
 
-	<!--Menu Items-->
-	<div class="collapse navbar-collapse navbar-nav mr-auto justify-content-end"
-	     id="navbarColor01">
-
-		<div class="nav-item">
-			<a class="nav-link" href="#" data-toggle="modal"
-			   data-target="#scheduleModal">Schedule for...</a>
+		<div class="nav-item" th:classappend="${#httpServletRequest.requestURI.contains('home')}? 'active'">
+			<a class="nav-link" href="#" th:href="@{/timetable/faculty/professor/home}"
+			   th:classappend="${session.professor == null}? 'disabled'">
+				Home
+			</a>
 		</div>
 
-		<div class="nav-item"><a class="nav-link" href="#">Two-week
-			schedule</a>
+		<div class="nav-item" th:classappend="${#httpServletRequest.requestURI.contains('courses')}? 'active'">
+			<a class="nav-link" href="#" th:href="@{/timetable/faculty/professor/courses}"
+			   th:classappend="${session.professor == null}? 'disabled'">
+				Courses
+			</a>
 		</div>
-	</div>
-</nav>
 
-<!--management TOP navigation bar-->
-<nav th:fragment="navbarManagement" class="navbar fixed-top navbar-expand-md navbar-dark bg-primary">
+		<div class="nav-item" th:classappend="${#httpServletRequest.requestURI.contains('schedule')}? 'active'">
+			<a class="nav-link" href="#" data-toggle="modal" data-target="#filtered-schedule-modal"
+			   th:classappend="${session.professor == null}? 'disabled'">
+				Schedule for...
+			</a>
+		</div>
 
-	<!--Role dropdown-->
-	<div class="dropdown">
-		<a class="dropdown-toggle" data-toggle="dropdown" href="#"
-		   role="button" aria-haspopup="true" aria-expanded="false">
-			<img src="/favicon-32x32.png" width="30" height="30"
-			     class="d-inline-block align-top" alt=""></a>
-		<div class="dropdown-menu">
-			<a class="dropdown-item disabled" href="#">Tools for</a>
-			<div class="dropdown-divider"></div>
-			<a class="dropdown-item" href="#" data-toggle="tooltip"
-			   data-placement="right" data-container="body"
-			   title="Student-specific schedule viewing options">Students</a>
-			<a class="dropdown-item" href="#" data-toggle="tooltip"
-			   data-placement="right" data-container="body"
-			   title="Schedule and course viewing options for faculty">Faculty</a>
-			<a class="dropdown-item" href="#" data-toggle="tooltip"
-			   data-placement="right" data-container="body"
-			   title="Full rage of university and timetable management tools">Management</a>
+		<div class="nav-item" th:classappend="${#httpServletRequest.requestURI.contains('two_week')}? 'active'">
+			<a class="nav-link" href="#" th:href="@{/timetable/faculty/professor/two_week}"
+			   th:classappend="${session.professor == null}? 'disabled'">
+				Two-week schedule
+			</a>
 		</div>
 	</div>
 
-	<!--Brand-->
-	<a class="navbar-brand" th:href="@{/}">Timetable</a>
-	<!--Role-->
-	<span class="navbar-text flex-grow-1">
-      for Management
-    </span>
-	<button class="navbar-toggler" type="button" data-toggle="collapse"
-	        data-target="#navbarColor01" aria-controls="navbarColor01"
-	        aria-expanded="false" aria-label="Toggle navigation">
-		<span class="navbar-toggler-icon"></span>
-	</button>
+	<!--Management Menu Items-->
+	<div th:if="${#httpServletRequest.requestURI.contains('timetable/management')}"
+	     class="collapse navbar-collapse navbar-nav mr-auto justify-content-end" id="navbar">
 
-	<!--Menu Items-->
-	<div class="collapse navbar-collapse navbar-nav mr-auto justify-content-end"
-	     id="navbarColor01">
+		<div class="nav-item" th:classappend="${#httpServletRequest.requestURI.contains('home')}? 'active'">
+			<a class="nav-link" href="#" th:href="@{/timetable/management/home}">
+				Home
+			</a>
+		</div>
 
-
-		<div class="nav-item dropdown">
-			<a class="nav-link dropdown-toggle" data-toggle="dropdown" href="#"
-			   role="button" aria-haspopup="true" aria-expanded="false">
-				University</a>
-			<div class="dropdown-menu" style="">
-				<a class="dropdown-item" href="#">Students</a>
-				<a class="dropdown-item" href="#">Faculty</a>
-				<a class="dropdown-item" href="#">Auditoriums</a>
-				<a class="dropdown-item" href="#">Courses</a>
-				<a class="dropdown-item" href="#">Groups</a>
+		<div class="nav-item dropdown" th:classappend="${#httpServletRequest.requestURI.contains('university')}? 'active'">
+			<a class="nav-link dropdown-toggle" data-toggle="dropdown" href="#" role="button" aria-haspopup="true"
+			   aria-expanded="false">
+				University
+			</a>
+			<div class="dropdown-menu">
+				<a class="dropdown-item" href="#" th:href="@{/timetable/management/university/students}"
+				   th:classappend="${#httpServletRequest.requestURI.contains('university/students')}? 'active'">
+					Students
+				</a>
+				<a class="dropdown-item" href="#" th:href="@{/timetable/management/university/faculty}"
+				   th:classappend="${#httpServletRequest.requestURI.contains('university/faculty')}? 'active'">
+					Faculty
+				</a>
+				<a class="dropdown-item" href="#" th:href="@{/timetable/management/university/auditoriums}"
+				   th:classappend="${#httpServletRequest.requestURI.contains('university/auditoriums')}? 'active'">
+					Auditoriums
+				</a>
+				<a class="dropdown-item" href="#" th:href="@{/timetable/management/university/courses}"
+				   th:classappend="${#httpServletRequest.requestURI.contains('university/courses')}? 'active'">
+					Courses
+				</a>
+				<a class="dropdown-item" href="#" th:href="@{/timetable/management/university/groups}"
+				   th:classappend="${#httpServletRequest.requestURI.contains('university/groups')}? 'active'">
+					Groups
+				</a>
 			</div>
 		</div>
 
-		<div class="nav-item">
-			<a class="nav-link" href="#" data-toggle="modal"
-			   data-target="#scheduleModal">Schedule for...</a>
+		<div class="nav-item" th:classappend="${#httpServletRequest.requestURI.contains('management/schedule')}? 'active'">
+			<a class="nav-link" href="#" data-toggle="modal" data-target="#management-schedule-modal">
+				Schedule for...
+			</a>
 		</div>
 
-		<div class="nav-item"><a class="nav-link" href="#">Two-week
-			schedule</a>
+		<div class="nav-item" th:classappend="${#httpServletRequest.requestURI.contains('two_week')}? 'active'">
+			<a class="nav-link" href="#" th:href="@{/timetable/management/two_week}">
+				Two-week schedule
+			</a>
 		</div>
 	</div>
+
 </nav>
 
-<!--Day schedule-->
-<div th:fragment="daySchedule" th:style="${daySchedule.isEmpty()}? 'display:none'" class="day-schedule-container">
-	<div th:each="periodSchedule : ${daySchedule}" class="row align-items-center">
-		<div class="col-2">
-			<span th:text="*{periodSchedule.getKey().getTime()}" class="pl-4">8:15-9:45</span>
-		</div>
-		<div class="col-10">
-			<ul class="list-group">
-				<li th:each="schedule : *{periodSchedule.getValue()}" class="list-group-item align-items-center">
-					<div class="d-flex justify-content-between mb-1">
-						<span th:text="*{schedule.auditorium.name}" class="badge badge-pill badge-primary">A-05</span>
-						<span th:text="*{schedule.group.name}" class="badge badge-pill badge-secondary">G-08</span>
-					</div>
-					<p class="text-muted mb-1">
-						<small th:text="*{schedule.course.name}" >Defense Against Dark Magic</small>
-					</p>
-					<small th:text="*{schedule.professor.fullName}">Nabonassar the Sneaky</small>
-				</li>
-			</ul>
-		</div>
-	</div>
-</div>
-
-<!--Two Week Schedule-->
+<!-- Two Week Schedule -->
 <div th:fragment="twoWeek">
 	<h1>Two-week schedule</h1>
-	<h6 th:text="'Fall Semester (' + ${@semesterCalendarUtils.getSemesterDescription()} + ')'">Fall Semester</h6>
+	<h6 th:text="|Fall Semester (${@semesterCalendar.getSemesterDescription()})|">Fall Semester</h6>
 	<br>
 	<!--Header-->
 	<div class="schedule-row schedule-header shadow">
@@ -446,7 +701,7 @@
 
 		<div class="schedule-body">
 
-			<div th:each="periodTemplates : ${oddWeek}" class="schedule-row">
+			<div th:each="periodTemplates : ${twoWeekSchedule.oddWeek}" class="schedule-row">
 
 				<!--Period-->
 				<div class="schedule-period col-1">
@@ -559,7 +814,7 @@
 
 		<div class="schedule-body">
 
-			<div th:each="periodTemplates : ${evenWeek}" class="schedule-row">
+			<div th:each="periodTemplates : ${twoWeekSchedule.evenWeek}" class="schedule-row">
 
 				<!--Period-->
 				<div class="schedule-period col-1">
@@ -663,11 +918,228 @@
 	</div>
 </div>
 
+<!-- Day schedule -->
+<div th:fragment="daySchedule" th:unless="${daySchedule.periodSchedules.isEmpty()}"
+     class="day-schedule-container">
+	<div th:if="${#httpServletRequest.requestURI.contains('management')}" class="mb-1">
+		<small class="text-muted">Hover over schedule items for additional options</small>
+	</div>
+	<div th:each="periodSchedule : ${daySchedule.periodSchedules}"
+	     class="schedule-row no-border align-items-center py-2">
+		<div class="col-2">
+			<span th:text="*{periodSchedule.key.getTime()}" class="pl-4">8:15-9:45</span>
+		</div>
+		<div class="col-10">
+			<ul class="list-group">
+				<div th:each="schedule : *{periodSchedule.value}">
+					<div class="schedule-options" th:class="${#httpServletRequest.requestURI.contains('management')
+							? 'schedule-options' : _ }">
+
+						<li class="list-group-item align-items-center">
+							<div class="d-flex justify-content-between mb-1">
+								<span th:text="*{schedule.auditorium.name}" class="badge badge-pill badge-primary">A-05</span>
+								<span th:text="*{schedule.group.name}" class="badge badge-pill badge-secondary">G-08</span>
+							</div>
+							<p class="text-muted mb-1">
+								<small th:text="*{schedule.course.name}">Defense Against Dark Magic</small>
+							</p>
+							<small th:text="*{schedule.professor.fullName}">Nabonassar the Sneaky</small>
+						</li>
+
+						<div th:if="${#httpServletRequest.requestURI.contains('management')}"
+						     class="align-content-center justify-content-center no-border options schedule-row">
+							<div class="col-auto">
+								<a href="#" class="btn btn-outline-warning" data-toggle="tooltip" data-placement="left"
+								   data-container="body"
+								   title="Find available professors and auditoriums, change either or both for this schedule item"
+								   th:href="@{/timetable/management/schedule/available(scheduleId=*{schedule.id})}">
+									Available...
+								</a>
+							</div>
+							<div class="col-auto">
+								<button type="button" class="btn btn-outline-danger" data-toggle="modal"
+								        data-target="#find-rescheduling-options-modal" data-schedule-id="1"
+								        th:attr="data-schedule-id=*{schedule.id}">
+									Reschedule
+								</button>
+							</div>
+						</div>
+					</div>
+				</div>
+			</ul>
+		</div>
+	</div>
+</div>
+
+<!-- Week schedule -->
+<div th:fragment="weekSchedule">
+	<!--Header-->
+	<div class="schedule-row schedule-header shadow">
+
+		<div class="col-1">Period</div>
+		<div class="col" th:each="daySchedule : ${weekSchedule.daySchedules}">
+			<span th:text="*{daySchedule.dayShortDescription[0]}">MON</span>
+			<small th:text="'(' + *{daySchedule.dayShortDescription[1]} + ')'" class="text-muted">(09.07.20)</small>
+		</div>
+	</div>
+	<!--Body-->
+	<div class="schedule-container shadow rounded">
+
+		<!--Background week #-->
+		<div class="schedule-background">
+			<span class="col-1 d-flex justify-content-center">W</span>
+			<span class="col-1 d-flex justify-content-center">e</span>
+			<span class="col-1 d-flex justify-content-center">e</span>
+			<span class="col-1 d-flex justify-content-center">k</span>
+			<span th:text="${weekSchedule.weekNumber}"
+			      class="col-1 d-flex justify-content-center pt-2">14</span>
+		</div>
+
+		<!--Schedules-->
+		<div class="schedule-body">
+
+			<div th:each="period : ${T(com.foxminded.timetable.model.Period).values()}" class="schedule-row">
+
+				<!--Period-->
+				<div class="schedule-period col-1">
+					<span th:text="*{period.getTime()}">8:15-9:45</span>
+				</div>
+
+				<!--Day-->
+				<div th:each="daySchedule : ${weekSchedule.daySchedules}" class="schedule col px-1">
+					<ul th:each="dayPeriodSchedule : *{daySchedule.periodSchedules.get(period)}"
+					    class="list-group">
+						<div class="schedule-options" th:class="${#httpServletRequest.requestURI.contains('management')
+										? 'schedule-options' : _ }">
+
+							<li class="list-group-item align-items-center">
+								<div class="d-flex justify-content-between mb-1">
+											<span th:text="*{dayPeriodSchedule.auditorium.name}" class="badge badge-pill badge-primary">A-02
+											</span>
+									<span th:text="*{dayPeriodSchedule.group.name}" class="badge badge-pill badge-secondary">
+												G-02</span>
+								</div>
+								<p class="text-muted mb-1">
+									<small th:text="*{dayPeriodSchedule.course.name}">Course</small>
+								</p>
+								<small th:text="*{dayPeriodSchedule.professor.fullName}">Professor</small>
+							</li>
+
+							<div th:if="${#httpServletRequest.requestURI.contains('management')}"
+							     class="justify-content-center no-border options schedule-row">
+								<div class="col-auto my-auto">
+									<a href="#" class="btn btn-outline-warning btn-sm" data-toggle="tooltip" data-placement="right"
+									   data-container="body"
+									   title="Find available professors and auditoriums, change either or both for this schedule item"
+									   th:href="@{/timetable/management/schedule/available(scheduleId=*{dayPeriodSchedule.id})}">
+										Available...
+									</a>
+								</div>
+								<div class="col-auto my-auto">
+									<button type="button" class="btn btn-outline-danger btn-sm" data-toggle="modal"
+									        data-target="#find-rescheduling-options-modal"
+									        data-schedule-id="1" th:attr="data-schedule-id=*{dayPeriodSchedule.id}">
+										Reschedule
+									</button>
+								</div>
+							</div>
+						</div>
+					</ul>
+				</div>
+
+			</div>
+
+		</div>
+
+	</div>
+</div>
+
+<!-- Month schedule -->
+<div th:fragment="monthSchedule">
+	<div th:if="${#httpServletRequest.requestURI.contains('management')}" class="mb-1">
+		<small class="text-muted">Hover over schedule items for additional options</small>
+	</div>
+	<div th:each="weekSchedule : ${monthSchedule.weekSchedules}">
+		<div th:replace="layout :: weekSchedule"></div>
+	</div>
+</div>
+
 <script th:fragment="scripts" type="text/javascript">
+
+    // reschedule form injection
+    $('#reschedule-modal').on('show.bs.modal', function (e) {
+
+        let title = $(e.relatedTarget).data('title');
+        let optionId = $(e.relatedTarget).data('option-id');
+        let date = $(e.relatedTarget).data('date');
+
+        $(e.currentTarget).find('#reschedule-form-title').text(title);
+        $(e.currentTarget).find('#option-id').val(optionId);
+        $(e.currentTarget).find('#date').val(date);
+    });
+
+    // find rescheduling options injection
+    $('#find-rescheduling-options-modal').on('shown.bs.modal', function (e) {
+
+        let scheduleId = $(e.relatedTarget).data('schedule-id');
+        $(e.currentTarget).find('#schedule-id').val(scheduleId);
+    });
+
+    // rename modal data injection
+    $('#rename-modal').on('show.bs.modal', function (e) {
+        let title = $(e.relatedTarget).data('title');
+        let renameId = $(e.relatedTarget).data('rename-id');
+
+        $(e.currentTarget).find('#rename-title').text(title);
+
+        $(e.currentTarget).find('#rename-id').val(renameId);
+    });
+
+    // drop course modal data injection
+    $('#drop-course-modal').on('show.bs.modal', function (e) {
+        let title = $(e.relatedTarget).data('title');
+        let professorId = $(e.relatedTarget).data('professor-id');
+        let courseId = $(e.relatedTarget).data('course-id');
+
+        $(e.currentTarget).find('#drop-course-title').text(title);
+
+        $(e.currentTarget).find('#drop-course-professor-id').val(professorId);
+        $(e.currentTarget).find('#drop-course-course-id').val(courseId);
+    });
+
+    // filtered schedule modal data injection
+    $('#filtered-schedule-modal').on('shown.bs.modal', function (e) {
+        let title = $(e.relatedTarget).data('title');
+        let id = $(e.relatedTarget).data('id');
+
+        $(e.currentTarget).find('#filter-schedule-title').text(title);
+
+        $(e.currentTarget).find('#filtered-schedule-hidden-id').val(id);
+    });
+
+    // change group modal data injection
+    $('#change-group-modal').on('show.bs.modal', function (e) {
+        let title = $(e.relatedTarget).data('title');
+        $(e.currentTarget).find('#change-group-title').text(title);
+
+        let studentId = $(e.relatedTarget).data('student-id');
+        $(e.currentTarget).find('#change-group-student-id').val(studentId);
+
+        let groupId = $(e.relatedTarget).data('group-id');
+        $(e.currentTarget).find("select option").each(function () {
+            let $thisOption = $(this);
+
+            if ($thisOption.val() == groupId) {
+                $thisOption.attr("disabled", "disabled");
+            } else {
+                $thisOption.removeAttr("disabled");
+            }
+        });
+    });
 
     // datepicker
     $(document).ready(function () {
-        $('#datepickerDay').datepicker({
+        $('#filter-schedule-datepicker, #management-schedule-datepicker, #options-datepicker').datepicker({
             autoclose: true,
             weekStart: '1',
             format: 'yyyy-mm-dd',

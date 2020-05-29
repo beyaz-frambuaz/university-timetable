@@ -1,0 +1,221 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head th:replace="layout :: header(~{::title})">
+	<title>University: Students</title>
+</head>
+<body>
+
+<!-- Change group form modal -->
+<div class="modal fade" id="change-group-modal" tabindex="-1" role="dialog"
+     aria-labelledby="change-group-label" aria-hidden="true">
+	<div class="modal-dialog modal-dialog-centered" role="document">
+		<div class="modal-content">
+
+			<!--Header-->
+			<div class="modal-header">
+				<h5 id="change-group-label" class="modal-title">
+					<i class="fas fa-edit"></i>
+					Change group
+				</h5>
+				<button type="button" class="close" data-dismiss="modal" aria-label="Close">
+					<span aria-hidden="true">&times;</span>
+				</button>
+			</div>
+
+			<!--Body-->
+			<div class="modal-body">
+				<h4 id="change-group-title">Student</h4>
+				<br>
+
+				<form class="needs-validation" action="#" th:action="@{/timetable/management/university/students/change/group}"
+				      th:object="${changeGroupForm}" method="post" novalidate>
+
+					<div class="container">
+
+						<div class="form-group row align-items-center">
+							<label class="form-control-label col-sm-4" for="new-group">New group:</label>
+							<div class="col-sm-8">
+								<select class="custom-select" id="new-group" name="newGroupId" required>
+									<option value="" hidden disabled selected>Select new group...</option>
+									<option th:each="group : *{groups}" value="1" th:value="${group.id}" th:text="${group.name}">G-01
+									</option>
+								</select>
+								<div class="invalid-feedback">Group required</div>
+							</div>
+						</div>
+
+						<input type="hidden" id="change-group-student-id" name="studentId" value="">
+
+						<!--Submit-->
+
+						<div class="modal-footer">
+							<button type="submit" class="btn btn-outline-primary">Submit</button>
+						</div>
+
+					</div>
+				</form>
+			</div>
+
+		</div>
+	</div>
+</div>
+
+<!-- New student form modal -->
+<div class="modal fade" id="new-student-modal" tabindex="-1" role="dialog"
+     aria-labelledby="new-student-label" aria-hidden="true">
+	<div class="modal-dialog modal-dialog-centered" role="document">
+		<div class="modal-content">
+
+			<!--Header-->
+			<div class="modal-header">
+				<h5 id="new-student-label" class="modal-title">
+					<i class="fas fa-plus-circle"></i>
+					Add new student
+				</h5>
+				<button type="button" class="close" data-dismiss="modal" aria-label="Close">
+					<span aria-hidden="true">&times;</span>
+				</button>
+			</div>
+
+			<!--Body-->
+			<div class="modal-body">
+
+				<form class="needs-validation" action="" th:action="@{/timetable/management/university/students/new}"
+				      th:object="${newStudentForm}" method="post" novalidate>
+
+					<div class="container">
+
+						<div class="form-group row align-items-center">
+							<label class="form-control-label col-sm-4" for="first-name">First name:</label>
+							<div class="col-sm-8">
+								<input type="text" placeholder="Enter first name..." name="firstName" class="form-control"
+								       id="first-name" th:field="*{firstName}" required>
+								<div class="invalid-feedback">First name required</div>
+							</div>
+						</div>
+
+						<div class="form-group row align-items-center">
+							<label class="form-control-label col-sm-4" for="last-name">Last name:</label>
+							<div class="col-sm-8">
+								<input type="text" placeholder="Enter last name..." name="lastName" class="form-control" id="last-name"
+								       th:field="*{lastName}" required>
+								<div class="invalid-feedback">Last name required</div>
+							</div>
+						</div>
+
+						<div class="form-group row align-items-center">
+							<label class="form-control-label col-sm-4" for="group-id-new-student">Group:</label>
+							<div class="col-sm-8">
+								<select class="custom-select" id="group-id-new-student" name="groupId" required>
+									<option value="" disabled selected hidden>Select group...</option>
+									<option th:each="group : *{groups}" th:value="${group.id}" th:text="${group.name}">
+										G-01
+									</option>
+								</select>
+								<div class="invalid-feedback">Group required</div>
+							</div>
+						</div>
+
+						<!--Submit-->
+
+						<div class="modal-footer">
+							<button type="submit" class="btn btn-outline-primary">Join the club!</button>
+						</div>
+
+					</div>
+				</form>
+			</div>
+
+		</div>
+	</div>
+</div>
+
+<div th:replace="layout :: scheduleFormFilterManagement"></div>
+
+<div th:replace="layout :: scheduleFormManagement"></div>
+
+<div th:replace="layout :: navbar"></div>
+
+<div class="container">
+	<div class="row align-items-center">
+		<div class="col">
+
+			<!-- Alert Success -->
+			<div th:if="${!successAlert.isEmpty()}" class="alert alert-dismissible alert-success">
+				<button type="button" class="close" data-dismiss="alert">&times;</button>
+				<h4 class="alert-heading">
+					<i class="fas fa-check-circle"></i>
+					Done!
+				</h4>
+				<p th:text="${successAlert}" class="mb-0">Message</p>
+			</div>
+
+			<!-- Alert Error -->
+			<div th:if="${!errorAlert.isEmpty()}" class="alert alert-dismissible alert-danger">
+				<button type="button" class="close" data-dismiss="alert">&times;</button>
+				<h4 class="alert-heading">
+					<i class="fas fa-exclamation-circle"></i>
+					Error!
+				</h4>
+				<p th:text="${errorAlert}" class="mb-0">Message</p>
+			</div>
+
+			<h1>Students
+				<span type="button" class="text-body ml-4" data-toggle="modal" data-target="#new-student-modal">
+					<h3 class="fas fa-plus-circle icon-hover" data-toggle="tooltip" data-placement="right" data-container="body"
+					    title="Add new student"></h3>
+				</span>
+			</h1>
+			<p class="text-muted">Hover over each student to see additional options</p>
+
+			<!-- List of students -->
+			<div class="student-select-container shadow">
+				<div class="list-group">
+
+					<!-- Each student	-->
+					<div th:each="student : ${students}" class="schedule-row no-border">
+
+						<div class="col list-group-item d-flex justify-content-between"
+						     th:classappend="${student.id.toString() == editedId}? 'btn-success'">
+
+							<div>
+								<span th:text="'ID: ' + *{student.id}" class="badge badge-pill badge-light">ID: 1</span>
+								<span th:text="*{student.fullName}" class="pl-2">Name One</span>
+							</div>
+							<div>
+								<span th:text="*{student.group.name}" class="badge badge-pill badge-secondary">G-01
+								</span>
+							</div>
+						</div>
+
+						<button type="button" class="btn btn-outline-secondary toggle-button" data-toggle="modal"
+						        data-target="#filtered-schedule-modal" data-title="Name One (G-01)" data-id="1"
+						        th:attr="data-title=${student.fullName} + ' (' + ${student.group.name} + ')',
+						        data-id=${student.group.id}">
+							View schedule
+						</button>
+
+						<button type="button" class="btn btn-outline-warning toggle-button" data-toggle="modal"
+						        data-target="#change-group-modal" data-title="Name One (G-01)" data-student-id="1"
+						        data-group-id="1"
+						        th:attr="data-title=${student.fullName} + ' (' + ${student.group.name} + ')',
+						        data-student-id=${student.id},
+						        data-group-id=${student.group.id}">
+							Change group
+						</button>
+
+					</div>
+
+				</div>
+			</div>
+
+			<div class="my-3 text-muted">All active students</div>
+
+		</div>
+	</div>
+</div>
+
+<div th:replace="layout :: scripts"></div>
+
+</body>
+</html>

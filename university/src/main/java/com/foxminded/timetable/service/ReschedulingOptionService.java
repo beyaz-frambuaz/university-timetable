@@ -3,6 +3,7 @@ package com.foxminded.timetable.service;
 import com.foxminded.timetable.dao.ReschedulingOptionDao;
 import com.foxminded.timetable.model.ReschedulingOption;
 import com.foxminded.timetable.model.Schedule;
+import com.foxminded.timetable.service.exception.ServiceException;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
@@ -26,16 +27,23 @@ public class ReschedulingOptionService {
         return repository.count();
     }
 
+    public ReschedulingOption findById(long id) throws ServiceException {
+
+        log.debug("Fetching option ID({}) from repository", id);
+        Optional<ReschedulingOption> optionalOption = repository.findById(id);
+        if (!optionalOption.isPresent()) {
+            log.error("Option with ID({}) could not be found", id);
+            throw new ServiceException(
+                    "Option with ID" + id + " could not be found");
+        }
+
+        return optionalOption.get();
+    }
+
     public List<ReschedulingOption> findAll() {
 
         log.debug("Fetching options from repository");
         return repository.findAll();
-    }
-
-    public Optional<ReschedulingOption> findById(long id) {
-
-        log.debug("Fetching option ID{} from repository", id);
-        return repository.findById(id);
     }
 
     public List<ReschedulingOption> saveAll(List<ReschedulingOption> options) {

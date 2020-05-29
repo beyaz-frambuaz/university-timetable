@@ -1,7 +1,9 @@
 package com.foxminded.timetable.service;
 
 import com.foxminded.timetable.dao.CourseDao;
+import com.foxminded.timetable.model.Auditorium;
 import com.foxminded.timetable.model.Course;
+import com.foxminded.timetable.service.exception.ServiceException;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
@@ -50,10 +52,16 @@ public class CourseService {
         return repository.findAll();
     }
 
-    public Optional<Course> findById(long id) {
+    public Course findById(long id) throws ServiceException {
 
         log.debug("Fetching course ID{} from repository", id);
-        return repository.findById(id);
+        Optional<Course> optionalCourse = repository.findById(id);
+        if (!optionalCourse.isPresent()) {
+            log.error("Course with ID{} could not be found", id);
+            throw new ServiceException(
+                    "Course with ID" + id + " could not be found");
+        }
+        return optionalCourse.get();
     }
 
 }

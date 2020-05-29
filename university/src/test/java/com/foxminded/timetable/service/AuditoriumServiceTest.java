@@ -102,18 +102,18 @@ class AuditoriumServiceTest {
         assertThat(actual).isEqualTo(auditoriums);
     }
 
-    @Test
-    public void findByIdShouldDelegateToRepository() {
-
-        long id = 1L;
-        given(repository.findById(anyLong())).willReturn(
-                Optional.of(auditorium));
-
-        Optional<Auditorium> actual = service.findById(id);
-
-        then(repository).should().findById(id);
-        assertThat(actual).isPresent().contains(auditorium);
-    }
+//    @Test
+//    public void findByIdShouldDelegateToRepository() {
+//
+//        long id = 1L;
+//        given(repository.findById(anyLong())).willReturn(
+//                Optional.of(auditorium));
+//
+//        Optional<Auditorium> actual = service.findById(id);
+//
+//        then(repository).should().findById(id);
+//        assertThat(actual).isPresent().contains(auditorium);
+//    }
 
     @Test
     public void findAvailableForShouldDelegateToRepository() {

@@ -4,6 +4,7 @@ import com.foxminded.timetable.dao.ScheduleDao;
 import com.foxminded.timetable.dao.ScheduleTemplateDao;
 import com.foxminded.timetable.model.Schedule;
 import com.foxminded.timetable.model.ScheduleTemplate;
+import com.foxminded.timetable.service.exception.ServiceException;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
@@ -22,15 +23,9 @@ import static java.util.stream.Collectors.toList;
 @RequiredArgsConstructor
 public class ScheduleService {
 
-    private final SemesterCalendarUtils semesterCalendar;
-    private final ScheduleTemplateDao   templateRepository;
-    private final ScheduleDao           repository;
-
-    public long count() {
-
-        log.debug("Fetching schedule count from repository");
-        return repository.count();
-    }
+    private final SemesterCalendar    semesterCalendar;
+    private final ScheduleTemplateDao templateRepository;
+    private final ScheduleDao         repository;
 
     public Schedule save(Schedule schedule) {
 
@@ -46,7 +41,7 @@ public class ScheduleService {
     public List<Schedule> saveAll(List<Schedule> schedules) {
 
         if (schedules.isEmpty()) {
-            log.debug("Recieved empty list, not saving");
+            log.debug("Received empty list, not saving");
             return schedules;
         }
 
@@ -57,16 +52,23 @@ public class ScheduleService {
     public void updateAll(Schedule candidate, LocalDate targetDate) {
 
         log.debug("Calling repository to update all schedules linked to "
-                + "template ID {}", candidate.getTemplateId());
+                + "template ID({})", candidate.getTemplateId());
         int deltaDays = (int) ChronoUnit.DAYS.between(candidate.getDate(),
                 targetDate);
         repository.updateAllWithTemplateId(candidate, deltaDays);
     }
 
-    public Optional<Schedule> findById(long id) {
+    public Schedule findById(long id) throws ServiceException {
 
-        log.debug("Fetching schedule ID{} from repository", id);
-        return repository.findById(id);
+        log.debug("Fetching schedule ID({}) from repository", id);
+        Optional<Schedule> optionalSchedule = repository.findById(id);
+        if (!optionalSchedule.isPresent()) {
+            log.error("Schedule with ID({}) could not be found", id);
+            throw new ServiceException(
+                    "Schedule with ID" + id + " could not be found");
+        }
+
+        return optionalSchedule.get();
     }
 
     public List<Schedule> findAll() {
@@ -77,7 +79,7 @@ public class ScheduleService {
 
     public List<Schedule> findAllByTemplateId(long templateId) {
 
-        log.debug("Fetching all schedules linked to template ID{} from "
+        log.debug("Fetching all schedules linked to template ID({}) from "
                 + "repository", templateId);
         return repository.findAllByTemplateId(templateId);
     }

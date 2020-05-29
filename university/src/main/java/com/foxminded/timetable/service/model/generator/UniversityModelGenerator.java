@@ -1,14 +1,13 @@
 package com.foxminded.timetable.service.model.generator;
 
-import com.foxminded.timetable.dao.jdbc.Repositories;
 import com.foxminded.timetable.model.*;
+import com.foxminded.timetable.service.TimetableService;
 import lombok.RequiredArgsConstructor;
 import lombok.Setter;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.stereotype.Service;
+import org.springframework.stereotype.Component;
 
-import javax.annotation.PostConstruct;
 import java.io.IOException;
 import java.net.URISyntaxException;
 import java.net.URL;
@@ -20,25 +19,26 @@ import java.util.stream.Stream;
 
 @Slf4j
 @Setter
-@Service
+@Component
 @RequiredArgsConstructor
 public class UniversityModelGenerator {
 
-    private final Repositories repositories;
+    private final TimetableService timetableService;
     @Value("${university.total.students}")
-    private       int          totalStudents;
+    private       int              totalStudents;
     @Value("${university.total.professors}")
-    private       int          totalProfessors;
+    private       int              totalProfessors;
     @Value("${university.total.auditoriums}")
-    private       int          totalAuditoriums;
+    private       int              totalAuditoriums;
     @Value("${university.group.size}")
-    private       int          groupSize;
+    private       int              groupSize;
     @Value("${file.first.names}")
-    private       String       firstNamesFilePath;
+    private       String           firstNamesFilePath;
     @Value("${file.last.names}")
-    private       String       lastNamesFilePath;
+    private       String           lastNamesFilePath;
     @Value("${file.courses}")
-    private       String       coursesFilePath;
+    private       String           coursesFilePath;
+    private       Random           random = new Random();
 
     public void generateAndSave() {
 
@@ -62,7 +62,6 @@ public class UniversityModelGenerator {
     private void assignCoursesToProfessors(List<Course> courses,
             List<Professor> professors) {
 
-        Random random = new Random();
         int maxCourses = 4;
         int maxProfessors = 2;
 
@@ -78,8 +77,7 @@ public class UniversityModelGenerator {
             }
         }
         log.debug("Courses assigned to professors");
-        repositories.getProfessorRepository()
-                .saveAllProfessorsCourses(professors);
+        professors.forEach(timetableService::saveProfessor);
     }
 
     /*
@@ -91,7 +89,6 @@ public class UniversityModelGenerator {
 
         List<String> firstNames = readFile(firstNamesFilePath);
         List<String> lastNames = readFile(lastNamesFilePath);
-        Random random = new Random();
         List<Student> students = new ArrayList<>(totalStudents);
 
         for (int i = 0; i < totalStudents; i++) {
@@ -114,7 +111,6 @@ public class UniversityModelGenerator {
 
         List<String> firstNames = readFile(firstNamesFilePath);
         List<String> lastNames = readFile(lastNamesFilePath);
-        Random random = new Random();
         List<Professor> professors = new ArrayList<>(totalProfessors);
 
         for (int i = 0; i < totalProfessors; i++) {
@@ -125,9 +121,9 @@ public class UniversityModelGenerator {
             professors.add(new Professor(firstName, lastName));
         }
         log.debug("Professors generated");
-        repositories.getProfessorRepository().saveAll(professors);
+        timetableService.saveProfessors(professors);
 
-        return repositories.getProfessorRepository().findAll();
+        return timetableService.getProfessors();
     }
 
     /*
@@ -143,7 +139,7 @@ public class UniversityModelGenerator {
                 .forEach(student -> student.setGroup(group)));
         log.debug("Students grouped");
 
-        repositories.getStudentRepository().saveAll(students);
+        timetableService.saveStudents(students);
     }
 
     private List<Course> buildCourses(String filePath) {
@@ -152,8 +148,8 @@ public class UniversityModelGenerator {
                 .map(Course::new)
                 .collect(Collectors.toList());
         log.debug("Courses generated");
-        repositories.getCourseRepository().saveAll(courses);
-        return repositories.getCourseRepository().findAll();
+        timetableService.saveCourses(courses);
+        return timetableService.getCourses();
     }
 
     /*
@@ -172,9 +168,9 @@ public class UniversityModelGenerator {
             groups.add(new Group(groupName));
         }
         log.debug("Groups generated");
-        repositories.getGroupRepository().saveAll(groups);
+        timetableService.saveGroups(groups);
 
-        return repositories.getGroupRepository().findAll();
+        return timetableService.getGroups();
     }
 
     /*
@@ -188,7 +184,7 @@ public class UniversityModelGenerator {
             auditoriums.add(new Auditorium(name));
         }
         log.debug("Auditoriums generated");
-        repositories.getAuditoriumRepository().saveAll(auditoriums);
+        timetableService.saveAuditoriums(auditoriums);
     }
 
     private List<String> readFile(String filePath) {

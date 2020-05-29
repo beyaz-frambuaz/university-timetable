@@ -9,11 +9,14 @@ import org.springframework.jdbc.core.namedparam.MapSqlParameterSource;
 import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
 import org.springframework.jdbc.core.namedparam.SqlParameterSource;
 import org.springframework.jdbc.core.namedparam.SqlParameterSourceUtils;
+import org.springframework.jdbc.support.GeneratedKeyHolder;
+import org.springframework.jdbc.support.KeyHolder;
 import org.springframework.stereotype.Repository;
 
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.List;
+import java.util.Objects;
 import java.util.Optional;
 
 @Slf4j
@@ -21,10 +24,10 @@ import java.util.Optional;
 @RequiredArgsConstructor
 public class JdbcCourseDao implements CourseDao {
 
-    private static final String INSERT_SQL   = "INSERT INTO courses (name) "
-            + "VALUES (:name)";
-    private static final String FIND_ALL_SQL = "SELECT courses.id, courses"
-            + ".name FROM courses";
+    private static final String INSERT_SQL   =
+            "INSERT INTO courses (name) " + "VALUES (:name)";
+    private static final String FIND_ALL_SQL =
+            "SELECT courses.id, courses" + ".name FROM courses";
 
     private final NamedParameterJdbcTemplate jdbc;
 
@@ -65,8 +68,11 @@ public class JdbcCourseDao implements CourseDao {
     @Override
     public Course save(Course course) {
 
+        KeyHolder keyHolder = new GeneratedKeyHolder();
         jdbc.update(INSERT_SQL,
-                new MapSqlParameterSource("name", course.getName()));
+                new MapSqlParameterSource("name", course.getName()), keyHolder);
+        Long id = Objects.requireNonNull(keyHolder.getKey()).longValue();
+        course.setId(id);
         log.debug("Saved {}", course);
 
         return course;

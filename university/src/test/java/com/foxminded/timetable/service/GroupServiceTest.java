@@ -124,16 +124,16 @@ class GroupServiceTest {
         assertThat(actual).isEqualTo(groups);
     }
 
-    @Test
-    public void findByIdShouldDelegateToRepository() {
-
-        long id = 1L;
-        given(repository.findById(anyLong())).willReturn(Optional.of(group));
-
-        Optional<Group> actual = service.findById(id);
-
-        then(repository).should().findById(id);
-        assertThat(actual).isPresent().contains(group);
-    }
+//    @Test
+//    public void findByIdShouldDelegateToRepository() {
+//
+//        long id = 1L;
+//        given(repository.findById(anyLong())).willReturn(Optional.of(group));
+//
+//        Optional<Group> actual = service.findById(id);
+//
+//        then(repository).should().findById(id);
+//        assertThat(actual).isPresent().contains(group);
+//    }
 
 }

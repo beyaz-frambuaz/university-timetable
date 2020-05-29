@@ -1,23 +1,31 @@
 package com.foxminded.timetable.model;
 
 import lombok.Data;
-import lombok.RequiredArgsConstructor;
 
 @Data
-@RequiredArgsConstructor
 public class Student {
 
-    private final String firstName;
-    private final String lastName;
-    private       Long   id;
-    private       Group  group;
+    private String firstName;
+    private String lastName;
+    private Long   id;
+    private Group  group;
 
-    public Student(Long id, String firstName, String lastName, Group group) {
+    public Student(String firstName, String lastName) {
 
         this.firstName = firstName;
         this.lastName = lastName;
-        this.id = id;
+    }
+
+    public Student(String firstName, String lastName, Group group) {
+
+        this(firstName, lastName);
         this.group = group;
+    }
+
+    public Student(Long id, String firstName, String lastName, Group group) {
+
+        this(firstName, lastName, group);
+        this.id = id;
     }
 
     public String getFullName() {

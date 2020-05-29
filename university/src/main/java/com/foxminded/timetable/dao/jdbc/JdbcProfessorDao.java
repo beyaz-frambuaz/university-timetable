@@ -11,6 +11,8 @@ import org.springframework.jdbc.core.namedparam.MapSqlParameterSource;
 import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
 import org.springframework.jdbc.core.namedparam.SqlParameterSource;
 import org.springframework.jdbc.core.namedparam.SqlParameterSourceUtils;
+import org.springframework.jdbc.support.GeneratedKeyHolder;
+import org.springframework.jdbc.support.KeyHolder;
 import org.springframework.stereotype.Repository;
 
 import java.sql.ResultSet;
@@ -67,8 +69,10 @@ public class JdbcProfessorDao implements ProfessorDao {
                 .addValue("day", date.getDayOfWeek().toString())
                 .addValue("period", period.name())
                 .addValue("date", date.toString());
-        return jdbc.query(FIND_ALL_SQL + filter, paramSource,
+        List<Professor> professors = jdbc.query(FIND_ALL_SQL + filter, paramSource,
                 this::mapResultsToProfessors);
+        log.debug("Found available professors: {}", professors);
+        return professors;
     }
 
     @Override
@@ -96,10 +100,15 @@ public class JdbcProfessorDao implements ProfessorDao {
     @Override
     public Professor save(Professor newProfessor) {
 
+        KeyHolder keyHolder = new GeneratedKeyHolder();
+
         jdbc.update(INSERT_SQL,
                 new MapSqlParameterSource().addValue("firstName",
                         newProfessor.getFirstName())
-                        .addValue("lastName", newProfessor.getLastName()));
+                        .addValue("lastName", newProfessor.getLastName()),
+                keyHolder);
+        Long id = Objects.requireNonNull(keyHolder.getKey()).longValue();
+        newProfessor.setId(id);
         log.debug("Saved {}", newProfessor);
 
         return newProfessor;

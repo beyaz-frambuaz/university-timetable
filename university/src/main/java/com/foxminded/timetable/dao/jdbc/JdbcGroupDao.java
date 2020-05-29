@@ -9,11 +9,14 @@ import org.springframework.jdbc.core.namedparam.MapSqlParameterSource;
 import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
 import org.springframework.jdbc.core.namedparam.SqlParameterSource;
 import org.springframework.jdbc.core.namedparam.SqlParameterSourceUtils;
+import org.springframework.jdbc.support.GeneratedKeyHolder;
+import org.springframework.jdbc.support.KeyHolder;
 import org.springframework.stereotype.Repository;
 
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.List;
+import java.util.Objects;
 import java.util.Optional;
 
 @Slf4j
@@ -82,8 +85,11 @@ public class JdbcGroupDao implements GroupDao {
     @Override
     public Group save(Group group) {
 
+        KeyHolder keyHolder = new GeneratedKeyHolder();
         jdbc.update(INSERT_SQL,
-                new MapSqlParameterSource("name", group.getName()));
+                new MapSqlParameterSource("name", group.getName()), keyHolder);
+        Long id = Objects.requireNonNull(keyHolder.getKey()).longValue();
+        group.setId(id);
         log.debug("Saved {}", group);
 
         return group;

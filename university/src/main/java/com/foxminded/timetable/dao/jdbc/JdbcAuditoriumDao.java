@@ -10,12 +10,15 @@ import org.springframework.jdbc.core.namedparam.MapSqlParameterSource;
 import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
 import org.springframework.jdbc.core.namedparam.SqlParameterSource;
 import org.springframework.jdbc.core.namedparam.SqlParameterSourceUtils;
+import org.springframework.jdbc.support.GeneratedKeyHolder;
+import org.springframework.jdbc.support.KeyHolder;
 import org.springframework.stereotype.Repository;
 
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.time.LocalDate;
 import java.util.List;
+import java.util.Objects;
 import java.util.Optional;
 
 @Slf4j
@@ -23,10 +26,10 @@ import java.util.Optional;
 @RequiredArgsConstructor
 public class JdbcAuditoriumDao implements AuditoriumDao {
 
-    private static final String FIND_ALL_SQL =
-            "SELECT auditoriums.id, auditoriums.name FROM auditoriums";
-    private static final String INSERT_SQL   =
-            "INSERT INTO auditoriums (name) VALUES (:name)";
+    private static final String FIND_ALL_SQL = "SELECT auditoriums.id, "
+            + "auditoriums.name FROM auditoriums";
+    private static final String INSERT_SQL   = "INSERT INTO auditoriums "
+            + "(name) VALUES (:name)";
 
     private final NamedParameterJdbcTemplate jdbc;
 
@@ -63,7 +66,10 @@ public class JdbcAuditoriumDao implements AuditoriumDao {
                 .addValue("day", date.getDayOfWeek().toString())
                 .addValue("period", period.name())
                 .addValue("date", date.toString());
-        return jdbc.query(FIND_ALL_SQL + filter, paramSource, this::mapRow);
+        List<Auditorium> auditoriums = jdbc.query(FIND_ALL_SQL + filter, paramSource,
+                this::mapRow);
+        log.debug("Found available auditoriums: {}", auditoriums);
+        return auditoriums;
     }
 
     @Override
@@ -89,8 +95,12 @@ public class JdbcAuditoriumDao implements AuditoriumDao {
     @Override
     public Auditorium save(Auditorium newAuditorium) {
 
+        KeyHolder keyHolder = new GeneratedKeyHolder();
         jdbc.update(INSERT_SQL,
-                new MapSqlParameterSource("name", newAuditorium.getName()));
+                new MapSqlParameterSource("name", newAuditorium.getName()),
+                keyHolder);
+        Long id = Objects.requireNonNull(keyHolder.getKey()).longValue();
+        newAuditorium.setId(id);
         log.debug("Saved {}", newAuditorium);
 
         return newAuditorium;

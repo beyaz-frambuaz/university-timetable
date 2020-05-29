@@ -28,6 +28,13 @@ public class Schedule implements Comparable<Schedule> {
                 template.getProfessor());
     }
 
+    public Schedule(Schedule other) {
+
+        this(other.id, other.templateId, other.date, other.day,
+                other.period, other.auditorium, other.course,
+                other.group, other.professor);
+    }
+
     @Override
     public int compareTo(Schedule other) {
 

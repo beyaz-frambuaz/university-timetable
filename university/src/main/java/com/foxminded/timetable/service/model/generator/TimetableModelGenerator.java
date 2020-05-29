@@ -1,40 +1,37 @@
 package com.foxminded.timetable.service.model.generator;
 
-import com.foxminded.timetable.dao.jdbc.Repositories;
 import com.foxminded.timetable.model.*;
+import com.foxminded.timetable.service.TimetableService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.stereotype.Service;
+import org.springframework.stereotype.Component;
 
-import javax.annotation.PostConstruct;
 import java.time.DayOfWeek;
 import java.util.*;
 
 import static java.util.stream.Collectors.toList;
 
 @Slf4j
-@Service
+@Component
 @RequiredArgsConstructor
 public class TimetableModelGenerator {
 
-    private final UniversityModelGenerator universityModelGenerator;
-    private final Repositories           repositories;
-    private final List<ScheduleTemplate> scheduleTemplates = new ArrayList<>();
+    private final TimetableService       timetableService;
+    private final Random                 random = new Random();
+    private       List<ScheduleTemplate> scheduleTemplates;
 
-    @PostConstruct
     public void generateAndSave() {
 
-        universityModelGenerator.generateAndSave();
         log.info("Generating timetable model");
+        this.scheduleTemplates = new ArrayList<>();
         populateScheduleTemplates();
-        repositories.getTemplateRepository().saveAll(scheduleTemplates);
+        timetableService.saveTemplates(scheduleTemplates);
         log.info("Timetable model generated");
     }
 
     private List<ReschedulingOption> buildReschedulingOptions() {
 
-        List<Auditorium> auditoriums = repositories.getAuditoriumRepository()
-                .findAll();
+        List<Auditorium> auditoriums = timetableService.getAuditoriums();
 
         List<ReschedulingOption> options = Arrays.stream(DayOfWeek.values())
                 .filter(day -> !day.equals(DayOfWeek.SATURDAY) && !day.equals(
@@ -46,15 +43,14 @@ public class TimetableModelGenerator {
                 .collect(toList());
         log.debug("Rescheduling options generated");
 
-        return repositories.getReschedulingOptionRepository().saveAll(options);
+        return timetableService.saveReschedulingOptions(options);
     }
 
     private void populateScheduleTemplates() {
 
-        List<Group> groups = repositories.getGroupRepository().findAll();
-        List<Course> courses = repositories.getCourseRepository().findAll();
-        List<Professor> professors = repositories.getProfessorRepository()
-                .findAll();
+        List<Group> groups = timetableService.getGroups();
+        List<Course> courses = timetableService.getCourses();
+        List<Professor> professors = timetableService.getProfessors();
         List<ReschedulingOption> options = buildReschedulingOptions();
 
         for (Group group : groups) {
@@ -87,13 +83,14 @@ public class TimetableModelGenerator {
                 .filter(professor -> professor.getCourses().contains(course))
                 .collect(toList());
 
-        if (!scheduleTemplates.isEmpty()) {
+        if (!scheduleTemplates.isEmpty() && courseProfessors.size() > 1) {
             courseProfessors = courseProfessors.stream()
                     .sorted(Comparator.comparing(
                             professor -> (Long) scheduleTemplates.stream()
-                                    .map(ScheduleTemplate::getProfessor)
-                                    .filter(professorScheduled -> professorScheduled
-                                            .equals(professor))
+                                    .filter(template -> template.getProfessor()
+                                            .equals(professor)
+                                            && template.getCourse()
+                                            .equals(course))
                                     .count()))
                     .collect(toList());
         }
@@ -105,13 +102,12 @@ public class TimetableModelGenerator {
             Group group, Course course) {
 
         Optional<ScheduleTemplate> template = Optional.empty();
-        Optional<ReschedulingOption> scheduleSlot = Optional.empty();
+        Optional<ReschedulingOption> scheduleSlot;
 
         for (Professor professor : professors) {
             boolean[][] weekParityOptions = new boolean[][] {
                     new boolean[] { false, true },
                     new boolean[] { true, false } };
-            Random random = new Random();
             int randomParity = random.nextInt(2);
             for (boolean weekParity : weekParityOptions[randomParity]) {
                 Collections.shuffle(options);

@@ -1,6 +1,8 @@
 package com.foxminded.timetable.service;
 
 import com.foxminded.timetable.model.*;
+import com.foxminded.timetable.service.exception.ServiceException;
+import com.foxminded.timetable.service.filter.SchedulePredicate;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -8,7 +10,10 @@ import org.springframework.stereotype.Service;
 
 import java.time.LocalDate;
 import java.time.temporal.ChronoUnit;
-import java.util.*;
+import java.util.Collections;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 import static java.util.stream.Collectors.toList;
 
@@ -18,7 +23,7 @@ import static java.util.stream.Collectors.toList;
 public class TimetableService {
 
     @Getter
-    private final SemesterCalendarUtils     semesterCalendar;
+    private final SemesterCalendar          semesterCalendar;
     private final AuditoriumService         auditoriumService;
     private final CourseService             courseService;
     private final GroupService              groupService;
@@ -28,76 +33,29 @@ public class TimetableService {
     private final ScheduleTemplateService   templateService;
     private final StudentService            studentService;
 
-    public List<ScheduleTemplate> getTwoWeekSchedule() {
+    public long countAuditoriums() {
 
-        return templateService.findAll();
+        return auditoriumService.count();
     }
 
-    public List<Student> getStudents() {
+    public Auditorium saveAuditorium(Auditorium auditorium) {
 
-        return studentService.findAll();
+        return auditoriumService.save(auditorium);
     }
 
-    public List<Schedule> getStudentSchedule(Student student,
-            LocalDate startDate, LocalDate endDate) {
+    public List<Auditorium> saveAuditoriums(List<Auditorium> auditoriums) {
 
-        log.debug("Filtering schedules in range {}-{} by group ID {}",
-                startDate, endDate, student.getGroup().getId());
-
-        return scheduleService.findAllInRange(startDate, endDate)
-                .stream()
-                .filter(s -> s.getGroup()
-                        .getId()
-                        .equals(student.getGroup().getId()))
-                .sorted()
-                .collect(toList());
+        return auditoriumService.saveAll(auditoriums);
     }
 
-    public List<Schedule> getProfessorSchedule(Professor professor,
-            LocalDate startDate, LocalDate endDate) {
+    public Auditorium getAuditorium(long id) throws ServiceException {
 
-        log.debug("Filtering schedules in range {}-{} by professor ID {}",
-                startDate, endDate, professor.getId());
-
-        return scheduleService.findAllInRange(startDate, endDate)
-                .stream()
-                .filter(s -> s.getProfessor().getId().equals(professor.getId()))
-                .sorted()
-                .collect(toList());
-    }
-
-    public List<Schedule> getAuditoriumSchedule(Auditorium auditorium,
-            LocalDate startDate, LocalDate endDate) {
-
-        log.debug("Filtering schedules in range {}-{} by auditorium ID {}",
-                startDate, endDate, auditorium.getId());
-
-        return scheduleService.findAllInRange(startDate, endDate)
-                .stream()
-                .filter(s -> s.getAuditorium()
-                        .getId()
-                        .equals(auditorium.getId()))
-                .sorted()
-                .collect(toList());
-    }
-
-    public List<Professor> getProfessors() {
-
-        return professorService.findAll();
+        return auditoriumService.findById(id);
     }
 
     public List<Auditorium> getAuditoriums() {
 
         return auditoriumService.findAll();
-    }
-
-    public List<Student> getCourseAttendees(Course course,
-            Professor professor) {
-
-        List<Group> professorGroups =
-                groupService.findAllAttendingProfessorCourse(
-                course, professor);
-        return studentService.findAllInGroups(professorGroups);
     }
 
     public List<Auditorium> getAvailableAuditoriums(LocalDate date,
@@ -107,6 +65,81 @@ public class TimetableService {
         return auditoriumService.findAvailableFor(weekParity, date, period);
     }
 
+    public long countCourses() {
+
+        return courseService.count();
+    }
+
+    public Course saveCourse(Course course) {
+
+        return courseService.save(course);
+    }
+
+    public List<Course> saveCourses(List<Course> courses) {
+
+        return courseService.saveAll(courses);
+    }
+
+    public Course getCourse(long id) throws ServiceException {
+
+        return courseService.findById(id);
+    }
+
+    public List<Course> getCourses() {
+
+        return courseService.findAll();
+    }
+
+    public long countGroups() {
+
+        return groupService.count();
+    }
+
+    public Group saveGroup(Group group) {
+
+        return groupService.save(group);
+    }
+
+    public List<Group> saveGroups(List<Group> groups) {
+
+        return groupService.saveAll(groups);
+    }
+
+    public Group getGroup(long id) throws ServiceException {
+
+        return groupService.findById(id);
+    }
+
+    public List<Group> getGroups() {
+
+        return groupService.findAll();
+    }
+
+    public long countProfessors() {
+
+        return professorService.count();
+    }
+
+    public Professor saveProfessor(Professor professor) {
+
+        return professorService.save(professor);
+    }
+
+    public List<Professor> saveProfessors(List<Professor> professors) {
+
+        return professorService.saveAll(professors);
+    }
+
+    public Professor getProfessor(long id) throws ServiceException {
+
+        return professorService.findById(id);
+    }
+
+    public List<Professor> getProfessors() {
+
+        return professorService.findAll();
+    }
+
     public List<Professor> getAvailableProfessors(LocalDate date,
             Period period) {
 
@@ -114,20 +147,29 @@ public class TimetableService {
         return professorService.findAvailableFor(weekParity, date, period);
     }
 
-    public List<Schedule> getScheduleInRange(LocalDate startDate,
-            LocalDate endDate) {
+    public long countReschedulingOptions() {
 
-        return scheduleService.findAllInRange(startDate, endDate);
+        return optionService.count();
     }
 
-    public Schedule substituteProfessor(Schedule schedule,
-            Professor substitute) {
+    public List<ReschedulingOption> saveReschedulingOptions(
+            List<ReschedulingOption> reschedulingOptions) {
 
-        schedule.setProfessor(substitute);
-        return scheduleService.save(schedule);
+        return optionService.saveAll(reschedulingOptions);
     }
 
-    public Map<LocalDate, List<ReschedulingOption>> getReschedulingOptions(
+    public List<ReschedulingOption> getReschedulingOptions() {
+
+        return optionService.findAll();
+    }
+
+    public ReschedulingOption getReschedulingOption(long id)
+            throws ServiceException {
+
+        return optionService.findById(id);
+    }
+
+    public Map<LocalDate, List<ReschedulingOption>> getReschedulingOptionsFor(
             Schedule candidate, LocalDate startDate, LocalDate endDate) {
 
         log.debug("Assembling rescheduling options for schedule ID {} in range "
@@ -146,6 +188,112 @@ public class TimetableService {
         return results;
     }
 
+    public Schedule saveSchedule(Schedule schedule) {
+
+        return scheduleService.save(schedule);
+    }
+
+    public List<Schedule> saveSchedules(List<Schedule> schedules) {
+
+        return scheduleService.saveAll(schedules);
+    }
+
+    public Schedule getSchedule(long id) throws ServiceException {
+
+        return scheduleService.findById(id);
+    }
+
+    public List<Schedule> getSchedules() {
+
+        return scheduleService.findAll();
+    }
+
+    public List<Schedule> getScheduleFor(SchedulePredicate predicate,
+            LocalDate startDate, LocalDate endDate) {
+
+        log.debug("Filtering schedules in range {}-{} by {}", startDate,
+                endDate, predicate.getCriteria());
+
+        return scheduleService.findAllInRange(startDate, endDate)
+                .stream()
+                .filter(predicate)
+                .sorted()
+                .collect(toList());
+    }
+
+    public List<Schedule> getScheduleInRange(LocalDate startDate,
+            LocalDate endDate) {
+
+        return scheduleService.findAllInRange(startDate, endDate);
+    }
+
+    public long countTemplates() {
+
+        return templateService.count();
+    }
+
+    public ScheduleTemplate saveTemplate(ScheduleTemplate template) {
+
+        return templateService.save(template);
+    }
+
+    public List<ScheduleTemplate> saveTemplates(
+            List<ScheduleTemplate> templates) {
+
+        return templateService.saveAll(templates);
+    }
+
+    public ScheduleTemplate getTemplate(long id) throws ServiceException {
+
+        return templateService.findById(id);
+    }
+
+    public List<ScheduleTemplate> getTwoWeekSchedule() {
+
+        return templateService.findAll();
+    }
+
+    public long countStudents() {
+
+        return studentService.count();
+    }
+
+    public Student saveStudent(Student student) {
+
+        return studentService.save(student);
+    }
+
+    public List<Student> saveStudents(List<Student> students) {
+
+        return studentService.saveAll(students);
+    }
+
+    public Student getStudent(long id) throws ServiceException {
+
+        return studentService.findById(id);
+    }
+
+    public List<Student> getStudents() {
+
+        return studentService.findAll();
+    }
+
+    public List<Student> getCourseAttendees(Course course,
+            Professor professor) {
+
+        List<Group> professorGroups =
+                groupService.findAllAttendingProfessorCourse(
+                course, professor);
+        return studentService.findAllInGroups(professorGroups);
+    }
+
+    public Schedule substituteProfessor(Schedule schedule,
+            Professor substitute) {
+
+        schedule.setProfessor(substitute);
+        return scheduleService.save(schedule);
+    }
+
     public Schedule rescheduleOnce(Schedule candidate, LocalDate targetDate,
             ReschedulingOption targetOption) {
 
@@ -159,23 +307,21 @@ public class TimetableService {
     }
 
     public List<Schedule> reschedulePermanently(Schedule candidate,
-            LocalDate targetDate, ReschedulingOption targetOption) {
+            LocalDate targetDate, ReschedulingOption targetOption)
+            throws ServiceException {
 
         log.debug("Getting underlying template to reschedule permanently");
-        Optional<ScheduleTemplate> template = templateService.findById(
+        ScheduleTemplate template = templateService.findById(
                 candidate.getTemplateId());
 
-        if (!template.isPresent()) {
-            return Collections.emptyList();
-        }
         boolean weekParity = semesterCalendar.getWeekParityOf(targetDate);
-        template.get().setWeekParity(weekParity);
-        template.get().setDay(targetOption.getDay());
-        template.get().setPeriod(targetOption.getPeriod());
-        template.get().setAuditorium(targetOption.getAuditorium());
+        template.setWeekParity(weekParity);
+        template.setDay(targetOption.getDay());
+        template.setPeriod(targetOption.getPeriod());
+        template.setAuditorium(targetOption.getAuditorium());
 
         log.debug("Saving updated template");
-        templateService.save(template.get());
+        templateService.save(template);
 
         log.debug("Updating related schedules");
         candidate.setDay(targetOption.getDay());

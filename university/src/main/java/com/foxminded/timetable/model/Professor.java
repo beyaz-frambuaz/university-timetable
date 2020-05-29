@@ -4,18 +4,19 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.RequiredArgsConstructor;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 
 @Data
 @AllArgsConstructor
 @RequiredArgsConstructor
-public class Professor implements Comparable<Professor> {
+public class Professor implements Comparable<Professor>, Serializable {
 
-    private final String       firstName;
-    private final String       lastName;
-    private       Long         id;
-    private       List<Course> courses = new ArrayList<>();
+    private final     String       firstName;
+    private final     String       lastName;
+    private           Long         id;
+    private transient List<Course> courses = new ArrayList<>();
 
     public Professor(long id, String firstName, String lastName) {
 
@@ -27,6 +28,11 @@ public class Professor implements Comparable<Professor> {
     public void addCourse(Course course) {
 
         courses.add(course);
+    }
+
+    public void removeCourse(Course course) {
+
+        courses.remove(course);
     }
 
     public String getFullName() {

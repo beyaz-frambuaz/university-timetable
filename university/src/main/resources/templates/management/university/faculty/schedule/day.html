@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head th:replace="layout :: header(~{::title})">
+	<title>Management: Faculty</title>
+</head>
+<body>
+
+<div th:replace="layout :: findReschedulingOptions"></div>
+
+<div th:replace="layout :: scheduleFormManagement"></div>
+
+<div th:replace="layout :: navbar"></div>
+
+<div class="container">
+	<div class="row align-items-center">
+		<div class="col">
+
+			<a href="#" th:href="@{/timetable/management/university/faculty}" class="btn btn-outline-secondary btn-sm mb-3">
+				<i class="fas fa-angle-left"></i>
+				Back
+			</a>
+
+			<h1 th:text="|Professor ${professor.fullName} schedule|">Professor schedule</h1>
+			<h6 th:text="'For ' + ${scheduleForm.getDateDescription()}">For date</h6>
+			<p th:text="${daySchedule.periodSchedules.isEmpty()}? 'No classes!' : _" class="text-warning"></p>
+
+			<div th:replace="layout :: daySchedule"></div>
+
+		</div>
+	</div>
+</div>
+
+<div th:replace="layout :: scripts"></div>
+
+</body>
+</html>

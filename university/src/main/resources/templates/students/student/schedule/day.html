@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head th:replace="layout :: header(~{::title})">
+	<title>Student: Schedule</title>
+</head>
+<body>
+
+<div th:replace="layout :: scheduleFormFilter"></div>
+
+<div th:replace="layout :: navbar"></div>
+
+<div class="container">
+	<div class="row align-items-center">
+		<div class="col">
+
+			<h1 th:text="${session.student.fullName} + ' (' + ${session.student.group.name} + ')'">Hello, student!</h1>
+
+			<hr class="my-4">
+
+			<h1 th:text="${scheduleForm.filtered}? 'Your schedule' : 'Entire schedule'">Schedule</h1>
+			<h6 th:text="'For ' + ${scheduleForm.getDateDescription()}">For date</h6>
+			<p th:text="${daySchedule.periodSchedules.isEmpty()}? 'No classes!' : _" class="text-warning"></p>
+
+			<div th:replace="layout :: daySchedule"></div>
+
+		</div>
+	</div>
+</div>
+
+<div th:replace="layout :: scripts"></div>
+
+</body>
+</html>

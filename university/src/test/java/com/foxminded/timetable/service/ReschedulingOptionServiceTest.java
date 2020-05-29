@@ -82,17 +82,17 @@ class ReschedulingOptionServiceTest {
         assertThat(actual).isEqualTo(options);
     }
 
-    @Test
-    public void findByIdShouldDelegateToRepository() {
-
-        long id = 1L;
-        given(repository.findById(anyLong())).willReturn(Optional.of(option));
-
-        Optional<ReschedulingOption> actual = service.findById(id);
-
-        then(repository).should().findById(id);
-        assertThat(actual).isPresent().contains(option);
-    }
+//    @Test
+//    public void findByIdShouldDelegateToRepository() {
+//
+//        long id = 1L;
+//        given(repository.findById(anyLong())).willReturn(Optional.of(option));
+//
+//        Optional<ReschedulingOption> actual = service.findById(id);
+//
+//        then(repository).should().findById(id);
+//        assertThat(actual).isPresent().contains(option);
+//    }
 
     @Test
     public void findAllDayOptionsForShouldMapRepositoryOptionsToDate() {

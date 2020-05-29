@@ -18,7 +18,7 @@ public class Group implements Comparable<Group> {
     @Override
     public int compareTo(Group other) {
 
-        return name.compareTo(other.getName());
+        return id.compareTo(other.getId());
     }
 
 }

@@ -16,10 +16,7 @@ import org.springframework.test.context.jdbc.SqlMergeMode;
 
 import java.sql.ResultSet;
 import java.time.LocalDate;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
-import java.util.Optional;
+import java.util.*;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
@@ -135,10 +132,12 @@ class JdbcProfessorDaoTest {
         Course courseTwo = new Course(2L, "two");
 
         List<Professor> professorsWithCourses = new ArrayList<>(professors);
-        professorsWithCourses.get(0).setCourses(Arrays.asList(courseOne));
+        professorsWithCourses.get(0).setCourses(
+                Collections.singletonList(courseOne));
         professorsWithCourses.get(1)
                 .setCourses(Arrays.asList(courseOne, courseTwo));
-        professorsWithCourses.get(2).setCourses(Arrays.asList(courseTwo));
+        professorsWithCourses.get(2).setCourses(
+                Collections.singletonList(courseTwo));
 
         professorRepository.saveAllProfessorsCourses(professorsWithCourses);
 
@@ -189,7 +188,7 @@ class JdbcProfessorDaoTest {
         Professor expected = new Professor(professorOne.getId(),
                 professorOne.getFirstName(), professorOne.getLastName());
 
-        expected.setCourses(Arrays.asList(courseNew));
+        expected.setCourses(Collections.singletonList(courseNew));
 
         professorRepository.update(expected);
 

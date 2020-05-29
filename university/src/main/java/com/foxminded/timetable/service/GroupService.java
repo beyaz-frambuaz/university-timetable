@@ -4,6 +4,7 @@ import com.foxminded.timetable.dao.GroupDao;
 import com.foxminded.timetable.model.Course;
 import com.foxminded.timetable.model.Group;
 import com.foxminded.timetable.model.Professor;
+import com.foxminded.timetable.service.exception.ServiceException;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
@@ -61,10 +62,17 @@ public class GroupService {
         return repository.findAll();
     }
 
-    public Optional<Group> findById(long id) {
+    public Group findById(long id) throws ServiceException {
 
         log.debug("Fetching group ID{} from repository", id);
-        return repository.findById(id);
+        Optional<Group> optionalGroup = repository.findById(id);
+        if (!optionalGroup.isPresent()) {
+            log.error("Group with ID{} could not be found", id);
+            throw new ServiceException(
+                    "Group with ID" + id + " could not be found");
+        }
+
+        return optionalGroup.get();
     }
 
 }
