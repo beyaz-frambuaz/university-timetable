@@ -4,7 +4,8 @@ import com.foxminded.timetable.dao.ScheduleDao;
 import com.foxminded.timetable.dao.ScheduleTemplateDao;
 import com.foxminded.timetable.model.Schedule;
 import com.foxminded.timetable.model.ScheduleTemplate;
-import com.foxminded.timetable.service.exception.ServiceException;
+import com.foxminded.timetable.service.utility.predicates.SchedulePredicate;
+import com.foxminded.timetable.service.utility.SemesterCalendar;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
@@ -53,22 +54,15 @@ public class ScheduleService {
 
         log.debug("Calling repository to update all schedules linked to "
                 + "template ID({})", candidate.getTemplateId());
-        int deltaDays = (int) ChronoUnit.DAYS.between(candidate.getDate(),
-                targetDate);
+        int deltaDays =
+                (int) ChronoUnit.DAYS.between(candidate.getDate(), targetDate);
         repository.updateAllWithTemplateId(candidate, deltaDays);
     }
 
-    public Schedule findById(long id) throws ServiceException {
+    public Optional<Schedule> findById(long id) {
 
         log.debug("Fetching schedule ID({}) from repository", id);
-        Optional<Schedule> optionalSchedule = repository.findById(id);
-        if (!optionalSchedule.isPresent()) {
-            log.error("Schedule with ID({}) could not be found", id);
-            throw new ServiceException(
-                    "Schedule with ID" + id + " could not be found");
-        }
-
-        return optionalSchedule.get();
+        return repository.findById(id);
     }
 
     public List<Schedule> findAll() {
@@ -82,6 +76,18 @@ public class ScheduleService {
         log.debug("Fetching all schedules linked to template ID({}) from "
                 + "repository", templateId);
         return repository.findAllByTemplateId(templateId);
+    }
+
+    public List<Schedule> findAllFor(SchedulePredicate predicate,
+            LocalDate startDate, LocalDate endDate) {
+
+        log.debug("Filtering schedules in range {}-{} by {}", startDate,
+                endDate, predicate.getCriteria());
+
+        return findAllInRange(startDate, endDate).stream()
+                .filter(predicate)
+                .sorted()
+                .collect(toList());
     }
 
     public List<Schedule> findAllInRange(LocalDate startDate,
@@ -116,8 +122,8 @@ public class ScheduleService {
 
         boolean weekParity = semesterCalendar.getWeekParityOf(date);
         DayOfWeek day = date.getDayOfWeek();
-        List<ScheduleTemplate> dateTemplates = templateRepository.findAllByDate(
-                weekParity, day);
+        List<ScheduleTemplate> dateTemplates =
+                templateRepository.findAllByDate(weekParity, day);
         List<Schedule> dateSchedules = dateTemplates.stream()
                 .map(template -> new Schedule(template, date))
                 .collect(toList());

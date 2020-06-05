@@ -111,7 +111,7 @@ class JdbcGroupDaoTest {
 
     @Test
     @Sql("classpath:preload_sample_data_group_test.sql")
-    public void udpateShouldUpdateGroupName() {
+    public void updateShouldUpdateGroupName() {
 
         String newName = "new name";
         Group expected = new Group(groupOne.getId(), groupOne.getName());

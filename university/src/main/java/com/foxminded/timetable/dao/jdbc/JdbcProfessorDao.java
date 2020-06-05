@@ -51,26 +51,20 @@ public class JdbcProfessorDao implements ProfessorDao {
     }
 
     @Override
-    public List<Professor> findAllAvailable(boolean weekParity, LocalDate date,
-            Period period) {
+    public List<Professor> findAllAvailable(LocalDate date, Period period) {
 
         log.debug("Retrieving available professors for {} on {}", period, date);
         String filter = " WHERE professors.id "
-                + "NOT IN ( (SELECT schedule_templates.professor_id "
-                + "FROM schedule_templates "
-                + "WHERE schedule_templates.week_parity = :weekParity "
-                + "AND schedule_templates.day = :day "
-                + "AND schedule_templates.period = :period) "
-                + "UNION (SELECT schedules.professor_id FROM schedules "
+                + "NOT IN (SELECT schedules.professor_id FROM schedules "
                 + "WHERE schedules.on_date = :date "
-                + "AND schedules.period = :period) );";
-        SqlParameterSource paramSource = new MapSqlParameterSource().addValue(
-                "weekParity", weekParity)
-                .addValue("day", date.getDayOfWeek().toString())
-                .addValue("period", period.name())
-                .addValue("date", date.toString());
-        List<Professor> professors = jdbc.query(FIND_ALL_SQL + filter, paramSource,
-                this::mapResultsToProfessors);
+                + "AND schedules.period = :period);";
+        SqlParameterSource paramSource =
+                new MapSqlParameterSource()
+                        .addValue("date", date.toString())
+                        .addValue("period", period.name());
+        List<Professor> professors =
+                jdbc.query(FIND_ALL_SQL + filter, paramSource,
+                        this::mapResultsToProfessors);
         log.debug("Found available professors: {}", professors);
         return professors;
     }
@@ -81,10 +75,11 @@ public class JdbcProfessorDao implements ProfessorDao {
         log.debug("Looking for professor by ID {}", id);
         try {
             String filter = " WHERE professors.id = :id";
-            SqlParameterSource paramSource = new MapSqlParameterSource("id",
-                    id);
-            List<Professor> professor = jdbc.query(FIND_ALL_SQL + filter,
-                    paramSource, this::mapResultsToProfessors);
+            SqlParameterSource paramSource =
+                    new MapSqlParameterSource("id", id);
+            List<Professor> professor =
+                    jdbc.query(FIND_ALL_SQL + filter, paramSource,
+                            this::mapResultsToProfessors);
             if (professor.isEmpty()) {
                 return Optional.empty();
             }

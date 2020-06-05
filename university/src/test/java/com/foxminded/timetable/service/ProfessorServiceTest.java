@@ -71,7 +71,7 @@ class ProfessorServiceTest {
     }
 
     @Test
-    public void saveShouldUpdateProfessorInRepositoryIfExistingWithCourses() {
+    public void saveShouldUpdateProfessorInRepositoryIfExisting() {
 
         Course course = new Course(1L, "course");
         Professor expected = new Professor(1L, "one", "one");
@@ -83,15 +83,6 @@ class ProfessorServiceTest {
         then(repository).should().update(expected);
         then(repository).shouldHaveNoMoreInteractions();
         assertThat(actual).isEqualTo(expected);
-    }
-
-    @Test
-    public void saveShouldReturnWithoutUpdateIfExistingWithNoCourses() {
-
-        Professor actual = service.save(professor);
-
-        then(repository).shouldHaveNoMoreInteractions();
-        assertThat(actual).isEqualTo(professor);
     }
 
     @Test
@@ -129,18 +120,18 @@ class ProfessorServiceTest {
         assertThat(actual).isEqualTo(professors);
     }
 
-//    @Test
-//    public void findByIdShouldDelegateToRepository() {
-//
-//        long id = 1L;
-//        given(repository.findById(anyLong())).willReturn(
-//                Optional.of(professor));
-//
-//        Optional<Professor> actual = service.findById(id);
-//
-//        then(repository).should().findById(id);
-//        assertThat(actual).isPresent().contains(professor);
-//    }
+    @Test
+    public void findByIdShouldDelegateToRepository() {
+
+        long id = 1L;
+        Optional<Professor> expected = Optional.of(professor);
+        given(repository.findById(anyLong())).willReturn(expected);
+
+        Optional<Professor> actual = service.findById(id);
+
+        then(repository).should().findById(id);
+        assertThat(actual).isEqualTo(expected);
+    }
 
     @Test
     public void findAvailableForShouldDelegateToRepository() {
@@ -148,12 +139,12 @@ class ProfessorServiceTest {
         List<Professor> professors = Collections.singletonList(professor);
         LocalDate date = LocalDate.MAX;
         Period period = Period.FIRST;
-        given(repository.findAllAvailable(anyBoolean(), any(LocalDate.class),
+        given(repository.findAllAvailable(any(LocalDate.class),
                 any(Period.class))).willReturn(professors);
 
-        List<Professor> actual = service.findAvailableFor(false, date, period);
+        List<Professor> actual = service.findAvailableFor(date, period);
 
-        then(repository).should().findAllAvailable(false, date, period);
+        then(repository).should().findAllAvailable(date, period);
         assertThat(actual).isEqualTo(professors);
     }
 

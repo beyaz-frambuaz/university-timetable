@@ -2,7 +2,6 @@ package com.foxminded.timetable.service;
 
 import com.foxminded.timetable.dao.ScheduleTemplateDao;
 import com.foxminded.timetable.model.ScheduleTemplate;
-import com.foxminded.timetable.service.exception.ServiceException;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
@@ -51,19 +50,10 @@ public class ScheduleTemplateService {
         return repository.findAll();
     }
 
-    public ScheduleTemplate findById(long id) throws ServiceException {
+    public Optional<ScheduleTemplate> findById(long id) {
 
         log.debug("Fetching template ID{} from repository", id);
-        Optional<ScheduleTemplate> optionalScheduleTemplate =
-                repository.findById(
-                id);
-        if (!optionalScheduleTemplate.isPresent()) {
-            log.error("Template with ID{} could not be found", id);
-            throw new ServiceException(
-                    "Template with ID" + id + " could not be found");
-        }
-
-        return optionalScheduleTemplate.get();
+        return repository.findById(id);
     }
 
 }

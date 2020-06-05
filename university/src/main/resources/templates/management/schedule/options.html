@@ -41,7 +41,7 @@
 						<div class="form-group">
 							<div class="custom-control custom-radio">
 								<input type="radio" id="management-schedule-radio1" name="scheduleOption" class="custom-control-input"
-								       value="date" th:value="${T(com.foxminded.timetable.web.forms.RescheduleFormOption).ONCE}"
+								       value="date" th:value="${T(com.foxminded.timetable.forms.RescheduleFormOption).ONCE}"
 								       th:field="*{rescheduleFormOption}" checked required>
 								<label class="custom-control-label" for="management-schedule-radio1">Once</label>
 							</div>
@@ -50,7 +50,7 @@
 						<div class="form-group">
 							<div class="custom-control custom-radio">
 								<input type="radio" id="management-schedule-radio2" name="scheduleOption" class="custom-control-input"
-								       value="week" th:value="${T(com.foxminded.timetable.web.forms.RescheduleFormOption).PERMANENTLY}"
+								       value="week" th:value="${T(com.foxminded.timetable.forms.RescheduleFormOption).PERMANENTLY}"
 								       th:field="*{rescheduleFormOption}" required>
 								<label class="custom-control-label" for="management-schedule-radio2">Permanently</label>
 							</div>

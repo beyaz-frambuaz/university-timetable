@@ -1,15 +1,9 @@
 package com.foxminded.timetable;
 
 import org.junit.jupiter.api.Test;
-import org.junit.jupiter.api.extension.ExtendWith;
-import org.springframework.boot.test.context.ConfigFileApplicationContextInitializer;
-import org.springframework.test.context.ContextConfiguration;
-import org.springframework.test.context.junit.jupiter.SpringExtension;
+import org.springframework.boot.test.context.SpringBootTest;
 
-@ExtendWith(SpringExtension.class)
-@ContextConfiguration(classes = TimetableApp.class,
-                      initializers =
-                              ConfigFileApplicationContextInitializer.class)
+@SpringBootTest
 public class LoadSpringContextIntegrationTest {
 
     @Test

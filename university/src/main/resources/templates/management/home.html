@@ -144,6 +144,17 @@
 				<p th:text="${successAlert}" class="mb-0">Message</p>
 			</div>
 
+			<!-- Alert Error -->
+			<div th:if="${!errorAlert.isEmpty()}" class="alert alert-dismissible alert-danger">
+				<button type="button" class="close" data-dismiss="alert">&times;</button>
+				<h4 class="alert-heading">
+					<i class="fas fa-exclamation-circle"></i>
+					Error!
+				</h4>
+				<p th:text="${errorAlert}" class="mb-0">Message</p>
+				<p>We've logged the error and will resolve it ASAP. In the meantime, please try to submit the form again.</p>
+			</div>
+
 			<h1>Welcome!
 				<span type="button" data-toggle="modal" data-target="#infoAlert">
 					<h3 class="fas fa-info-circle icon-hover ml-2" data-toggle="tooltip" data-placement="right"

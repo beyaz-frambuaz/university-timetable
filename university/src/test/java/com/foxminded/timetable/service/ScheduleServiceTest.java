@@ -3,6 +3,9 @@ package com.foxminded.timetable.service;
 import com.foxminded.timetable.dao.ScheduleDao;
 import com.foxminded.timetable.dao.ScheduleTemplateDao;
 import com.foxminded.timetable.model.*;
+import com.foxminded.timetable.service.utility.predicates.SchedulePredicate;
+import com.foxminded.timetable.service.utility.predicates.SchedulePredicateGroupId;
+import com.foxminded.timetable.service.utility.SemesterCalendar;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
@@ -11,6 +14,7 @@ import org.mockito.junit.jupiter.MockitoExtension;
 
 import java.time.DayOfWeek;
 import java.time.LocalDate;
+import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
@@ -119,16 +123,17 @@ class ScheduleServiceTest {
         then(repository).should().updateAllWithTemplateId(schedule, deltaDays);
     }
 
-//    @Test
-//    public void findByIdShouldDelegateToRepository() {
-//
-//        given(repository.findById(anyLong())).willReturn(Optional.of(schedule));
-//
-//        Optional<Schedule> actual = service.findById(id);
-//
-//        then(repository).should().findById(id);
-//        assertThat(actual).isPresent().contains(schedule);
-//    }
+    @Test
+    public void findByIdShouldDelegateToRepository() {
+
+        Optional<Schedule> expected = Optional.of(schedule);
+        given(repository.findById(anyLong())).willReturn(expected);
+
+        Optional<Schedule> actual = service.findById(id);
+
+        then(repository).should().findById(id);
+        assertThat(actual).isEqualTo(expected);
+    }
 
     @Test
     public void findAllShouldDelegateToRepository() {
@@ -143,15 +148,21 @@ class ScheduleServiceTest {
     }
 
     @Test
-    public void findAllByTemplateIdShouldDelegateToRepository() {
+    public void findAllForShouldFindAllInRangeAndFilterByGivenPredicate() {
 
-        List<Schedule> schedules = Collections.singletonList(schedule);
-        given(repository.findAllByTemplateId(anyLong())).willReturn(schedules);
+        Schedule expected = mock(Schedule.class);
+        SchedulePredicate predicate = mock(SchedulePredicateGroupId.class);
+        given(predicate.test(expected)).willReturn(true);
+        given(predicate.test(schedule)).willReturn(false);
+        given(semesterCalendar.isSemesterDate(any(LocalDate.class))).willReturn(
+                true);
+        List<Schedule> unfiltered = Arrays.asList(schedule, expected);
+        given(repository.findAllByDate(any(LocalDate.class))).willReturn(
+                unfiltered);
 
-        List<Schedule> actual = service.findAllByTemplateId(templateId);
+        List<Schedule> actual = service.findAllFor(predicate, date, date);
 
-        then(repository).should().findAllByTemplateId(templateId);
-        assertThat(actual).isEqualTo(schedules);
+        assertThat(actual).containsOnly(expected).doesNotContain(schedule);
     }
 
     @Test
@@ -180,6 +191,18 @@ class ScheduleServiceTest {
         then(repository).should().findAllByDate(endDate);
         then(repository).shouldHaveNoMoreInteractions();
         assertThat(actual).containsExactly(dateSchedule, endDateSchedule);
+    }
+
+    @Test
+    public void findAllByTemplateIdShouldDelegateToRepository() {
+
+        List<Schedule> schedules = Collections.singletonList(schedule);
+        given(repository.findAllByTemplateId(anyLong())).willReturn(schedules);
+
+        List<Schedule> actual = service.findAllByTemplateId(templateId);
+
+        then(repository).should().findAllByTemplateId(templateId);
+        assertThat(actual).isEqualTo(schedules);
     }
 
     @Test

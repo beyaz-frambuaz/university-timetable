@@ -3,7 +3,6 @@ package com.foxminded.timetable.service;
 import com.foxminded.timetable.dao.ProfessorDao;
 import com.foxminded.timetable.model.Period;
 import com.foxminded.timetable.model.Professor;
-import com.foxminded.timetable.service.exception.ServiceException;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
@@ -62,23 +61,16 @@ public class ProfessorService {
         return repository.findAll();
     }
 
-    public Professor findById(long id) throws ServiceException {
+    public Optional<Professor> findById(long id) {
 
         log.debug("Fetching professor ID{} from repository", id);
-        Optional<Professor> optionalProfessor = repository.findById(id);
-        if (!optionalProfessor.isPresent()) {
-            log.error("Professor with ID{} could not be found", id);
-            throw new ServiceException(
-                    "Professor with ID" + id + " could not be found");
-        }
-        return optionalProfessor.get();
+        return repository.findById(id);
     }
 
-    public List<Professor> findAvailableFor(boolean weekParity, LocalDate date,
-            Period period) {
+    public List<Professor> findAvailableFor(LocalDate date, Period period) {
 
         log.debug("Fetching available professors from repository");
-        return repository.findAllAvailable(weekParity, date, period);
+        return repository.findAllAvailable(date, period);
     }
 
 }

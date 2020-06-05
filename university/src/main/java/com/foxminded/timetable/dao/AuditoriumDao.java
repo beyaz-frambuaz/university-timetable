@@ -8,8 +8,7 @@ import java.util.List;
 
 public interface AuditoriumDao extends GenericDao<Auditorium> {
 
-    List<Auditorium> findAllAvailable(boolean weekParity, LocalDate date,
-            Period period);
+    List<Auditorium> findAllAvailable(LocalDate date, Period period);
 
     Auditorium save(Auditorium newAuditorium);
 

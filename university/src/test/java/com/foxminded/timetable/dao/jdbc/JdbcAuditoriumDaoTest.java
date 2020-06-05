@@ -68,7 +68,7 @@ class JdbcAuditoriumDaoTest {
     @Sql("classpath:preload_sample_data_auditorium_test.sql")
     public void findAllAvailableShouldRetrieveCorrectListOfAvailableAuditoriums() {
 
-        List<Auditorium> actual = auditoriumRepository.findAllAvailable(false,
+        List<Auditorium> actual = auditoriumRepository.findAllAvailable(
                 LocalDate.of(2020, 9, 7), Period.SECOND);
 
         assertThat(actual).containsOnly(auditoriumOne, auditoriumTwo)
@@ -113,7 +113,7 @@ class JdbcAuditoriumDaoTest {
 
     @Test
     @Sql("classpath:preload_sample_data_auditorium_test.sql")
-    public void udpateShouldUpdateAuditoriumName() {
+    public void updateShouldUpdateAuditoriumName() {
 
         String newName = "new name";
         Auditorium expected = new Auditorium(auditoriumOne.getId(),

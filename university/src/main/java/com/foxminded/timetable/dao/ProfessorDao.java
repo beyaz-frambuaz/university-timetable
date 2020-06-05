@@ -10,8 +10,7 @@ public interface ProfessorDao extends GenericDao<Professor> {
 
     void saveAllProfessorsCourses(List<Professor> professors);
 
-    List<Professor> findAllAvailable(boolean weekParity, LocalDate date,
-            Period period);
+    List<Professor> findAllAvailable(LocalDate date, Period period);
 
     Professor save(Professor professor);
 

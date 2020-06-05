@@ -102,18 +102,18 @@ class AuditoriumServiceTest {
         assertThat(actual).isEqualTo(auditoriums);
     }
 
-//    @Test
-//    public void findByIdShouldDelegateToRepository() {
-//
-//        long id = 1L;
-//        given(repository.findById(anyLong())).willReturn(
-//                Optional.of(auditorium));
-//
-//        Optional<Auditorium> actual = service.findById(id);
-//
-//        then(repository).should().findById(id);
-//        assertThat(actual).isPresent().contains(auditorium);
-//    }
+    @Test
+    public void findByIdShouldDelegateToRepository() {
+
+        long id = 1L;
+        Optional<Auditorium> expected = Optional.of(auditorium);
+        given(repository.findById(anyLong())).willReturn(expected);
+
+        Optional<Auditorium> actual = service.findById(id);
+
+        then(repository).should().findById(id);
+        assertThat(actual).isEqualTo(expected);
+    }
 
     @Test
     public void findAvailableForShouldDelegateToRepository() {
@@ -121,12 +121,12 @@ class AuditoriumServiceTest {
         List<Auditorium> auditoriums = Collections.singletonList(auditorium);
         LocalDate date = LocalDate.MAX;
         Period period = Period.FIRST;
-        given(repository.findAllAvailable(anyBoolean(), any(LocalDate.class),
+        given(repository.findAllAvailable(any(LocalDate.class),
                 any(Period.class))).willReturn(auditoriums);
 
-        List<Auditorium> actual = service.findAvailableFor(false, date, period);
+        List<Auditorium> actual = service.findAvailableFor(date, period);
 
-        then(repository).should().findAllAvailable(false, date, period);
+        then(repository).should().findAllAvailable(date, period);
         assertThat(actual).isEqualTo(auditoriums);
     }
 

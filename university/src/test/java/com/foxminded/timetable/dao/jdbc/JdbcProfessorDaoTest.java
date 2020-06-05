@@ -67,7 +67,7 @@ class JdbcProfessorDaoTest {
     @Sql("classpath:preload_sample_data_professor_test.sql")
     public void findAllAvailableShouldRetrieveCorrectListOfAvailableProfessors() {
 
-        List<Professor> actual = professorRepository.findAllAvailable(false,
+        List<Professor> actual = professorRepository.findAllAvailable(
                 LocalDate.of(2020, 9, 7), Period.SECOND);
 
         assertThat(actual).containsOnly(professorOne, professorTwo)

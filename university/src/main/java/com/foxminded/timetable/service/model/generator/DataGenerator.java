@@ -15,7 +15,7 @@ public class DataGenerator {
     private final JdbcDataRefreshDao       jdbcDataRefreshDao;
 
     @PostConstruct
-    public void init() {
+    public void generateInitialDataSet() {
 
         universityModelGenerator.generateAndSave();
         timetableModelGenerator.generateAndSave();

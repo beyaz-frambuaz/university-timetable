@@ -1,7 +1,7 @@
 package com.foxminded.timetable.service.model.generator;
 
 import com.foxminded.timetable.model.*;
-import com.foxminded.timetable.service.TimetableService;
+import com.foxminded.timetable.service.TimetableFacade;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Component;
@@ -16,8 +16,8 @@ import static java.util.stream.Collectors.toList;
 @RequiredArgsConstructor
 public class TimetableModelGenerator {
 
-    private final TimetableService       timetableService;
-    private final Random                 random = new Random();
+    private final TimetableFacade timetableFacade;
+    private final Random          random = new Random();
     private       List<ScheduleTemplate> scheduleTemplates;
 
     public void generateAndSave() {
@@ -25,13 +25,13 @@ public class TimetableModelGenerator {
         log.info("Generating timetable model");
         this.scheduleTemplates = new ArrayList<>();
         populateScheduleTemplates();
-        timetableService.saveTemplates(scheduleTemplates);
+        timetableFacade.saveTemplates(scheduleTemplates);
         log.info("Timetable model generated");
     }
 
     private List<ReschedulingOption> buildReschedulingOptions() {
 
-        List<Auditorium> auditoriums = timetableService.getAuditoriums();
+        List<Auditorium> auditoriums = timetableFacade.getAuditoriums();
 
         List<ReschedulingOption> options = Arrays.stream(DayOfWeek.values())
                 .filter(day -> !day.equals(DayOfWeek.SATURDAY) && !day.equals(
@@ -43,14 +43,14 @@ public class TimetableModelGenerator {
                 .collect(toList());
         log.debug("Rescheduling options generated");
 
-        return timetableService.saveReschedulingOptions(options);
+        return timetableFacade.saveOptions(options);
     }
 
     private void populateScheduleTemplates() {
 
-        List<Group> groups = timetableService.getGroups();
-        List<Course> courses = timetableService.getCourses();
-        List<Professor> professors = timetableService.getProfessors();
+        List<Group> groups = timetableFacade.getGroups();
+        List<Course> courses = timetableFacade.getCourses();
+        List<Professor> professors = timetableFacade.getProfessors();
         List<ReschedulingOption> options = buildReschedulingOptions();
 
         for (Group group : groups) {

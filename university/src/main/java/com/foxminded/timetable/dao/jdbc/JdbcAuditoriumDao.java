@@ -49,23 +49,17 @@ public class JdbcAuditoriumDao implements AuditoriumDao {
     }
 
     @Override
-    public List<Auditorium> findAllAvailable(boolean weekParity, LocalDate date,
+    public List<Auditorium> findAllAvailable(LocalDate date,
             Period period) {
 
         log.debug("Retrieving available auditoriums for {} on {}", period,
                 date);
-        String filter = " WHERE auditoriums.id NOT IN ( (SELECT "
-                + "schedule_templates.auditorium_id FROM schedule_templates "
-                + "WHERE schedule_templates.week_parity = :weekParity AND "
-                + "schedule_templates.day = :day AND schedule_templates"
-                + ".period = :period) UNION (SELECT schedules.auditorium_id "
+        String filter = " WHERE auditoriums.id NOT IN (SELECT schedules.auditorium_id "
                 + "FROM schedules WHERE schedules.on_date = :date AND "
-                + "schedules.period = :period) );";
-        SqlParameterSource paramSource = new MapSqlParameterSource().addValue(
-                "weekParity", weekParity)
-                .addValue("day", date.getDayOfWeek().toString())
-                .addValue("period", period.name())
-                .addValue("date", date.toString());
+                + "schedules.period = :period);";
+        SqlParameterSource paramSource = new MapSqlParameterSource()
+                .addValue("date", date.toString())
+                .addValue("period", period.name());
         List<Auditorium> auditoriums = jdbc.query(FIND_ALL_SQL + filter, paramSource,
                 this::mapRow);
         log.debug("Found available auditoriums: {}", auditoriums);

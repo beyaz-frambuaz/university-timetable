@@ -98,7 +98,7 @@ class JdbcCourseDaoTest {
 
     @Test
     @Sql("classpath:preload_sample_data_course_test.sql")
-    public void udpateShouldUpdateCourseName() {
+    public void updateShouldUpdateCourseName() {
 
         String newName = "new name";
         Course expected = new Course(courseOne.getId(), courseOne.getName());

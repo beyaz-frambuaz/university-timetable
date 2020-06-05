@@ -1,7 +1,7 @@
 package com.foxminded.timetable.service.model.generator;
 
 import com.foxminded.timetable.model.*;
-import com.foxminded.timetable.service.TimetableService;
+import com.foxminded.timetable.service.TimetableFacade;
 import lombok.RequiredArgsConstructor;
 import lombok.Setter;
 import lombok.extern.slf4j.Slf4j;
@@ -23,9 +23,9 @@ import java.util.stream.Stream;
 @RequiredArgsConstructor
 public class UniversityModelGenerator {
 
-    private final TimetableService timetableService;
+    private final TimetableFacade timetableFacade;
     @Value("${university.total.students}")
-    private       int              totalStudents;
+    private       int             totalStudents;
     @Value("${university.total.professors}")
     private       int              totalProfessors;
     @Value("${university.total.auditoriums}")
@@ -77,7 +77,7 @@ public class UniversityModelGenerator {
             }
         }
         log.debug("Courses assigned to professors");
-        professors.forEach(timetableService::saveProfessor);
+        professors.forEach(timetableFacade::saveProfessor);
     }
 
     /*
@@ -121,9 +121,9 @@ public class UniversityModelGenerator {
             professors.add(new Professor(firstName, lastName));
         }
         log.debug("Professors generated");
-        timetableService.saveProfessors(professors);
+        timetableFacade.saveProfessors(professors);
 
-        return timetableService.getProfessors();
+        return timetableFacade.getProfessors();
     }
 
     /*
@@ -139,7 +139,7 @@ public class UniversityModelGenerator {
                 .forEach(student -> student.setGroup(group)));
         log.debug("Students grouped");
 
-        timetableService.saveStudents(students);
+        timetableFacade.saveStudents(students);
     }
 
     private List<Course> buildCourses(String filePath) {
@@ -148,8 +148,8 @@ public class UniversityModelGenerator {
                 .map(Course::new)
                 .collect(Collectors.toList());
         log.debug("Courses generated");
-        timetableService.saveCourses(courses);
-        return timetableService.getCourses();
+        timetableFacade.saveCourses(courses);
+        return timetableFacade.getCourses();
     }
 
     /*
@@ -168,9 +168,9 @@ public class UniversityModelGenerator {
             groups.add(new Group(groupName));
         }
         log.debug("Groups generated");
-        timetableService.saveGroups(groups);
+        timetableFacade.saveGroups(groups);
 
-        return timetableService.getGroups();
+        return timetableFacade.getGroups();
     }
 
     /*
@@ -184,7 +184,7 @@ public class UniversityModelGenerator {
             auditoriums.add(new Auditorium(name));
         }
         log.debug("Auditoriums generated");
-        timetableService.saveAuditoriums(auditoriums);
+        timetableFacade.saveAuditoriums(auditoriums);
     }
 
     private List<String> readFile(String filePath) {

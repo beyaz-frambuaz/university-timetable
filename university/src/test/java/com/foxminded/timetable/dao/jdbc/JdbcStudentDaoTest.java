@@ -129,7 +129,7 @@ class JdbcStudentDaoTest {
 
     @Test
     @Sql("classpath:preload_sample_data_student_test.sql")
-    public void udpateShouldUpdateStudentGroup() {
+    public void updateShouldUpdateStudentGroup() {
 
         Student expected = new Student(studentOne.getId(),
                 studentOne.getFirstName(), studentOne.getLastName(), groupTwo);

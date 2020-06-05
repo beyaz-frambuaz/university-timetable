@@ -3,12 +3,13 @@ package com.foxminded.timetable.service;
 import com.foxminded.timetable.dao.ReschedulingOptionDao;
 import com.foxminded.timetable.model.ReschedulingOption;
 import com.foxminded.timetable.model.Schedule;
-import com.foxminded.timetable.service.exception.ServiceException;
+import com.foxminded.timetable.service.utility.SemesterCalendar;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDate;
+import java.time.temporal.ChronoUnit;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -20,6 +21,7 @@ import java.util.Optional;
 public class ReschedulingOptionService {
 
     private final ReschedulingOptionDao repository;
+    private final SemesterCalendar      semesterCalendar;
 
     public long count() {
 
@@ -27,17 +29,10 @@ public class ReschedulingOptionService {
         return repository.count();
     }
 
-    public ReschedulingOption findById(long id) throws ServiceException {
+    public Optional<ReschedulingOption> findById(long id) {
 
         log.debug("Fetching option ID({}) from repository", id);
-        Optional<ReschedulingOption> optionalOption = repository.findById(id);
-        if (!optionalOption.isPresent()) {
-            log.error("Option with ID({}) could not be found", id);
-            throw new ServiceException(
-                    "Option with ID" + id + " could not be found");
-        }
-
-        return optionalOption.get();
+        return repository.findById(id);
     }
 
     public List<ReschedulingOption> findAll() {
@@ -49,7 +44,7 @@ public class ReschedulingOptionService {
     public List<ReschedulingOption> saveAll(List<ReschedulingOption> options) {
 
         if (options.isEmpty()) {
-            log.debug("Recieved empty list, not saving");
+            log.debug("Received empty list, not saving");
             return options;
         }
 
@@ -57,14 +52,32 @@ public class ReschedulingOptionService {
         return repository.saveAll(options);
     }
 
-    public Map<LocalDate, List<ReschedulingOption>> findAllDayOptionsFor(
+    public Map<LocalDate, List<ReschedulingOption>> findAllFor(
+            Schedule candidate, LocalDate startDate, LocalDate endDate) {
+
+        log.debug("Assembling rescheduling options for schedule ID {} in range "
+                + "{}-{}", candidate.getId(), startDate, endDate);
+        Map<LocalDate, List<ReschedulingOption>> results = new HashMap<>();
+        long daysBetweenDates = ChronoUnit.DAYS.between(startDate, endDate) + 1;
+        for (long i = 0; i < daysBetweenDates; i++) {
+            LocalDate date = startDate.plusDays(i);
+            if (semesterCalendar.isSemesterDate(date)) {
+                boolean weekParity = semesterCalendar.getWeekParityOf(date);
+                results.putAll(
+                        findAllDayOptionsFor(weekParity, date, candidate));
+            }
+        }
+        return results;
+    }
+
+    private Map<LocalDate, List<ReschedulingOption>> findAllDayOptionsFor(
             boolean weekParity, LocalDate targetDate, Schedule candidate) {
 
         log.debug("Putting together rescheduling options for {}", targetDate);
         Map<LocalDate, List<ReschedulingOption>> dayOptions = new HashMap<>();
         List<ReschedulingOption> options =
-                repository.findDayReschedulingOptionsForSchedule(
-                weekParity, targetDate, candidate);
+                repository.findDayReschedulingOptionsForSchedule(weekParity,
+                        targetDate, candidate);
         dayOptions.put(targetDate, options);
         return dayOptions;
     }

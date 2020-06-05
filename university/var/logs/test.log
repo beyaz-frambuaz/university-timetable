@@ -1,0 +1,238 @@
+2020-06-05 16:52:18.222 DEBUG 82730 --- [main] o.s.w.c.s.GenericWebApplicationContext   : Refreshing org.springframework.web.context.support.GenericWebApplicationContext@31fc658f
+2020-06-05 16:52:19.112 DEBUG 82730 --- [main] s.w.s.m.m.a.RequestMappingHandlerAdapter : ControllerAdvice beans: 1 @ModelAttribute, 0 @InitBinder, 1 RequestBodyAdvice, 1 ResponseBodyAdvice
+2020-06-05 16:52:19.148 DEBUG 82730 --- [main] s.w.s.m.m.a.RequestMappingHandlerMapping : 53 mappings in 'requestMappingHandlerMapping'
+2020-06-05 16:52:19.206 DEBUG 82730 --- [main] o.s.w.s.handler.SimpleUrlHandlerMapping  : Patterns [/webjars/**, /**] in 'resourceHandlerMapping'
+2020-06-05 16:52:19.221 DEBUG 82730 --- [main] .m.m.a.ExceptionHandlerExceptionResolver : ControllerAdvice beans: 1 @ExceptionHandler, 1 ResponseBodyAdvice
+2020-06-05 16:52:20.693 DEBUG 82730 --- [main] o.s.w.c.s.GenericWebApplicationContext   : Refreshing org.springframework.web.context.support.GenericWebApplicationContext@1e5e2e06
+2020-06-05 16:52:21.040 DEBUG 82730 --- [main] s.w.s.m.m.a.RequestMappingHandlerAdapter : ControllerAdvice beans: 1 @ModelAttribute, 0 @InitBinder, 1 RequestBodyAdvice, 1 ResponseBodyAdvice
+2020-06-05 16:52:21.064 DEBUG 82730 --- [main] s.w.s.m.m.a.RequestMappingHandlerMapping : 9 mappings in 'requestMappingHandlerMapping'
+2020-06-05 16:52:21.111 DEBUG 82730 --- [main] o.s.w.s.handler.SimpleUrlHandlerMapping  : Patterns [/webjars/**, /**] in 'resourceHandlerMapping'
+2020-06-05 16:52:21.122 DEBUG 82730 --- [main] .m.m.a.ExceptionHandlerExceptionResolver : ControllerAdvice beans: 1 @ExceptionHandler, 1 ResponseBodyAdvice
+2020-06-05 16:52:21.212 DEBUG 82730 --- [main] o.s.b.w.s.ServletContextInitializerBeans : Mapping filters: formContentFilter urls=[/*] order=-9900, requestContextFilter urls=[/*] order=-105
+2020-06-05 16:52:21.213 DEBUG 82730 --- [main] o.s.b.w.s.ServletContextInitializerBeans : Mapping servlets: 
+2020-06-05 16:52:21.282 DEBUG 82730 --- [main] s.w.s.m.m.a.RequestMappingHandlerMapping : Mapped to com.foxminded.timetable.controllers.FacultyController#courses(Model, HttpSession)
+2020-06-05 16:52:21.289 DEBUG 82730 --- [main] o.s.w.s.v.ContentNegotiatingViewResolver : Selected '*/*' given [*/*]
+2020-06-05 16:52:21.376 DEBUG 82730 --- [main] s.w.s.m.m.a.RequestMappingHandlerMapping : Mapped to com.foxminded.timetable.controllers.FacultyController#processForm(Model, HttpSession, ScheduleForm)
+2020-06-05 16:52:21.378 DEBUG 82730 --- [main] .m.m.a.ExceptionHandlerExceptionResolver : Using @ExceptionHandler com.foxminded.timetable.controllers.advice.GlobalExceptionHandlingControllerAdvice#handleSessionExpired(SessionExpiredException, RedirectAttributes)
+2020-06-05 16:52:21.379 DEBUG 82730 --- [main] .m.m.a.ExceptionHandlerExceptionResolver : Resolved [com.foxminded.timetable.exceptions.SessionExpiredException] to ModelAndView [view="redirect:/timetable/faculty/list"; model={}]
+2020-06-05 16:52:21.379 DEBUG 82730 --- [main] o.s.web.servlet.view.RedirectView        : View name 'redirect:/timetable/faculty/list', model {}
+2020-06-05 16:52:21.388 DEBUG 82730 --- [main] s.w.s.m.m.a.RequestMappingHandlerMapping : Mapped to com.foxminded.timetable.controllers.FacultyController#listProfessors(Model, HttpSession, String, String)
+2020-06-05 16:52:21.391 DEBUG 82730 --- [main] o.s.w.s.v.ContentNegotiatingViewResolver : Selected '*/*' given [*/*]
+2020-06-05 16:52:21.417 DEBUG 82730 --- [main] s.w.s.m.m.a.RequestMappingHandlerMapping : Mapped to com.foxminded.timetable.controllers.FacultyController#listProfessors(Model, HttpSession, String, String)
+2020-06-05 16:52:21.419 DEBUG 82730 --- [main] o.s.w.s.v.ContentNegotiatingViewResolver : Selected '*/*' given [*/*]
+2020-06-05 16:52:21.455 DEBUG 82730 --- [main] s.w.s.m.m.a.RequestMappingHandlerMapping : Mapped to com.foxminded.timetable.controllers.FacultyController#selectProfessor(long, HttpSession, RedirectAttributes)
+2020-06-05 16:52:21.456 DEBUG 82730 --- [main] o.s.web.servlet.view.RedirectView        : View name 'redirect:/timetable/faculty/list', model {}
+2020-06-05 16:52:21.469 DEBUG 82730 --- [main] s.w.s.m.m.a.RequestMappingHandlerMapping : Mapped to com.foxminded.timetable.controllers.FacultyController#processForm(Model, HttpSession, ScheduleForm)
+2020-06-05 16:52:21.471 DEBUG 82730 --- [main] o.s.w.s.v.ContentNegotiatingViewResolver : Selected '*/*' given [*/*]
+2020-06-05 16:52:21.520 DEBUG 82730 --- [main] s.w.s.m.m.a.RequestMappingHandlerMapping : Mapped to com.foxminded.timetable.controllers.FacultyController#processForm(Model, HttpSession, ScheduleForm)
+2020-06-05 16:52:21.522 DEBUG 82730 --- [main] o.s.w.s.v.ContentNegotiatingViewResolver : Selected '*/*' given [*/*]
+2020-06-05 16:52:21.563 DEBUG 82730 --- [main] s.w.s.m.m.a.RequestMappingHandlerMapping : Mapped to com.foxminded.timetable.controllers.FacultyController#listProfessors(Model, HttpSession, String, String)
+2020-06-05 16:52:21.566 DEBUG 82730 --- [main] o.s.w.s.v.ContentNegotiatingViewResolver : Selected '*/*' given [*/*]
+2020-06-05 16:52:21.605 DEBUG 82730 --- [main] s.w.s.m.m.a.RequestMappingHandlerMapping : Mapped to com.foxminded.timetable.controllers.FacultyController#home(HttpSession, Model)
+2020-06-05 16:52:21.607 DEBUG 82730 --- [main] o.s.w.s.v.ContentNegotiatingViewResolver : Selected '*/*' given [*/*]
+2020-06-05 16:52:21.649 DEBUG 82730 --- [main] s.w.s.m.m.a.RequestMappingHandlerMapping : Mapped to com.foxminded.timetable.controllers.FacultyController#redirectHome()
+2020-06-05 16:52:21.650 DEBUG 82730 --- [main] o.s.web.servlet.view.RedirectView        : View name 'redirect:/timetable/faculty/professor/home', model {}
+2020-06-05 16:52:21.661 DEBUG 82730 --- [main] s.w.s.m.m.a.RequestMappingHandlerMapping : Mapped to com.foxminded.timetable.controllers.FacultyController#twoWeekSchedule(Model, HttpSession)
+2020-06-05 16:52:21.664 DEBUG 82730 --- [main] o.s.w.s.v.ContentNegotiatingViewResolver : Selected '*/*' given [*/*]
+2020-06-05 16:52:21.707 DEBUG 82730 --- [main] s.w.s.m.m.a.RequestMappingHandlerMapping : Mapped to com.foxminded.timetable.controllers.FacultyController#processForm(Model, HttpSession, ScheduleForm)
+2020-06-05 16:52:21.709 DEBUG 82730 --- [main] o.s.w.s.v.ContentNegotiatingViewResolver : Selected '*/*' given [*/*]
+2020-06-05 16:52:21.755 DEBUG 82730 --- [main] s.w.s.m.m.a.RequestMappingHandlerMapping : Mapped to com.foxminded.timetable.controllers.FacultyController#home(HttpSession, Model)
+2020-06-05 16:52:21.756 DEBUG 82730 --- [main] .m.m.a.ExceptionHandlerExceptionResolver : Using @ExceptionHandler com.foxminded.timetable.controllers.advice.GlobalExceptionHandlingControllerAdvice#handleSessionExpired(SessionExpiredException, RedirectAttributes)
+2020-06-05 16:52:21.756 DEBUG 82730 --- [main] .m.m.a.ExceptionHandlerExceptionResolver : Resolved [com.foxminded.timetable.exceptions.SessionExpiredException] to ModelAndView [view="redirect:/timetable/faculty/list"; model={}]
+2020-06-05 16:52:21.756 DEBUG 82730 --- [main] o.s.web.servlet.view.RedirectView        : View name 'redirect:/timetable/faculty/list', model {}
+2020-06-05 16:52:21.767 DEBUG 82730 --- [main] s.w.s.m.m.a.RequestMappingHandlerMapping : Mapped to com.foxminded.timetable.controllers.FacultyController#twoWeekSchedule(Model, HttpSession)
+2020-06-05 16:52:21.767 DEBUG 82730 --- [main] .m.m.a.ExceptionHandlerExceptionResolver : Using @ExceptionHandler com.foxminded.timetable.controllers.advice.GlobalExceptionHandlingControllerAdvice#handleSessionExpired(SessionExpiredException, RedirectAttributes)
+2020-06-05 16:52:21.768 DEBUG 82730 --- [main] .m.m.a.ExceptionHandlerExceptionResolver : Resolved [com.foxminded.timetable.exceptions.SessionExpiredException] to ModelAndView [view="redirect:/timetable/faculty/list"; model={}]
+2020-06-05 16:52:21.768 DEBUG 82730 --- [main] o.s.web.servlet.view.RedirectView        : View name 'redirect:/timetable/faculty/list', model {}
+2020-06-05 16:52:21.776 DEBUG 82730 --- [main] s.w.s.m.m.a.RequestMappingHandlerMapping : Mapped to com.foxminded.timetable.controllers.FacultyController#courses(Model, HttpSession)
+2020-06-05 16:52:21.778 DEBUG 82730 --- [main] .m.m.a.ExceptionHandlerExceptionResolver : Using @ExceptionHandler com.foxminded.timetable.controllers.advice.GlobalExceptionHandlingControllerAdvice#handleSessionExpired(SessionExpiredException, RedirectAttributes)
+2020-06-05 16:52:21.779 DEBUG 82730 --- [main] .m.m.a.ExceptionHandlerExceptionResolver : Resolved [com.foxminded.timetable.exceptions.SessionExpiredException] to ModelAndView [view="redirect:/timetable/faculty/list"; model={}]
+2020-06-05 16:52:21.779 DEBUG 82730 --- [main] o.s.web.servlet.view.RedirectView        : View name 'redirect:/timetable/faculty/list', model {}
+2020-06-05 16:52:21.788 DEBUG 82730 --- [main] s.w.s.m.m.a.RequestMappingHandlerMapping : Mapped to com.foxminded.timetable.controllers.FacultyController#selectProfessor(long, HttpSession, RedirectAttributes)
+2020-06-05 16:52:21.791 DEBUG 82730 --- [main] o.s.web.servlet.view.RedirectView        : View name 'redirect:/timetable/faculty/professor/home', model {}
+2020-06-05 16:52:21.874 DEBUG 82730 --- [main] o.s.w.c.s.GenericWebApplicationContext   : Refreshing org.springframework.web.context.support.GenericWebApplicationContext@29f114e0
+2020-06-05 16:52:22.591 DEBUG 82730 --- [main] s.w.s.m.m.a.RequestMappingHandlerAdapter : ControllerAdvice beans: 1 @ModelAttribute, 0 @InitBinder, 1 RequestBodyAdvice, 1 ResponseBodyAdvice
+2020-06-05 16:52:22.617 DEBUG 82730 --- [main] s.w.s.m.m.a.RequestMappingHandlerMapping : 53 mappings in 'requestMappingHandlerMapping'
+2020-06-05 16:52:22.681 DEBUG 82730 --- [main] o.s.w.s.handler.SimpleUrlHandlerMapping  : Patterns [/webjars/**, /**] in 'resourceHandlerMapping'
+2020-06-05 16:52:22.698 DEBUG 82730 --- [main] .m.m.a.ExceptionHandlerExceptionResolver : ControllerAdvice beans: 1 @ExceptionHandler, 1 ResponseBodyAdvice
+2020-06-05 16:52:23.167 DEBUG 82730 --- [main] o.s.w.c.s.GenericWebApplicationContext   : Refreshing org.springframework.web.context.support.GenericWebApplicationContext@7fb28ed
+2020-06-05 16:52:23.513 DEBUG 82730 --- [main] s.w.s.m.m.a.RequestMappingHandlerAdapter : ControllerAdvice beans: 1 @ModelAttribute, 0 @InitBinder, 1 RequestBodyAdvice, 1 ResponseBodyAdvice
+2020-06-05 16:52:23.531 DEBUG 82730 --- [main] s.w.s.m.m.a.RequestMappingHandlerMapping : 7 mappings in 'requestMappingHandlerMapping'
+2020-06-05 16:52:23.589 DEBUG 82730 --- [main] o.s.w.s.handler.SimpleUrlHandlerMapping  : Patterns [/webjars/**, /**] in 'resourceHandlerMapping'
+2020-06-05 16:52:23.603 DEBUG 82730 --- [main] .m.m.a.ExceptionHandlerExceptionResolver : ControllerAdvice beans: 1 @ExceptionHandler, 1 ResponseBodyAdvice
+2020-06-05 16:52:23.696 DEBUG 82730 --- [main] o.s.b.w.s.ServletContextInitializerBeans : Mapping filters: formContentFilter urls=[/*] order=-9900, requestContextFilter urls=[/*] order=-105
+2020-06-05 16:52:23.696 DEBUG 82730 --- [main] o.s.b.w.s.ServletContextInitializerBeans : Mapping servlets: 
+2020-06-05 16:52:23.738 DEBUG 82730 --- [main] s.w.s.m.m.a.RequestMappingHandlerMapping : Mapped to com.foxminded.timetable.controllers.ManagementUniversityAuditoriumsController#redirectAuditoriums()
+2020-06-05 16:52:23.740 DEBUG 82730 --- [main] o.s.web.servlet.view.RedirectView        : View name 'redirect:/timetable/management/university/auditoriums', model {}
+2020-06-05 16:52:23.751 DEBUG 82730 --- [main] s.w.s.m.m.a.RequestMappingHandlerMapping : Mapped to com.foxminded.timetable.controllers.ManagementUniversityAuditoriumsController#addNewAuditorium(RedirectAttributes, NewItemForm)
+2020-06-05 16:52:23.753 DEBUG 82730 --- [main] o.s.web.servlet.view.RedirectView        : View name 'redirect:/timetable/management/university/auditoriums', model {}
+2020-06-05 16:52:23.764 DEBUG 82730 --- [main] s.w.s.m.m.a.RequestMappingHandlerMapping : Mapped to com.foxminded.timetable.controllers.ManagementUniversityAuditoriumsController#rename(RedirectAttributes, RenameForm)
+2020-06-05 16:52:23.767 DEBUG 82730 --- [main] o.s.web.servlet.view.RedirectView        : View name 'redirect:/timetable/management/university/auditoriums', model {}
+2020-06-05 16:52:23.777 DEBUG 82730 --- [main] s.w.s.m.m.a.RequestMappingHandlerMapping : Mapped to com.foxminded.timetable.controllers.ManagementUniversityAuditoriumsController#auditoriumSchedule(Model, ScheduleForm, RedirectAttributes)
+2020-06-05 16:52:23.790 DEBUG 82730 --- [main] o.s.w.s.v.ContentNegotiatingViewResolver : Selected '*/*' given [*/*]
+2020-06-05 16:52:23.876 DEBUG 82730 --- [main] s.w.s.m.m.a.RequestMappingHandlerMapping : Mapped to com.foxminded.timetable.controllers.ManagementUniversityAuditoriumsController#auditoriumSchedule(Model, ScheduleForm, RedirectAttributes)
+2020-06-05 16:52:23.877 DEBUG 82730 --- [main] o.s.w.s.v.ContentNegotiatingViewResolver : Selected '*/*' given [*/*]
+2020-06-05 16:52:23.922 DEBUG 82730 --- [main] s.w.s.m.m.a.RequestMappingHandlerMapping : Mapped to com.foxminded.timetable.controllers.ManagementUniversityAuditoriumsController#auditoriums(Model, String, String, String)
+2020-06-05 16:52:23.924 DEBUG 82730 --- [main] o.s.w.s.v.ContentNegotiatingViewResolver : Selected '*/*' given [*/*]
+2020-06-05 16:52:23.985 DEBUG 82730 --- [main] s.w.s.m.m.a.RequestMappingHandlerMapping : Mapped to com.foxminded.timetable.controllers.ManagementUniversityAuditoriumsController#auditoriumSchedule(Model, ScheduleForm, RedirectAttributes)
+2020-06-05 16:52:23.989 DEBUG 82730 --- [main] o.s.w.s.v.ContentNegotiatingViewResolver : Selected '*/*' given [*/*]
+2020-06-05 16:52:24.032 DEBUG 82730 --- [main] s.w.s.m.m.a.RequestMappingHandlerMapping : Mapped to com.foxminded.timetable.controllers.ManagementUniversityAuditoriumsController#rename(RedirectAttributes, RenameForm)
+2020-06-05 16:52:24.035 DEBUG 82730 --- [main] o.s.web.servlet.view.RedirectView        : View name 'redirect:/timetable/management/university/auditoriums', model {}
+2020-06-05 16:52:24.046 DEBUG 82730 --- [main] s.w.s.m.m.a.RequestMappingHandlerMapping : Mapped to com.foxminded.timetable.controllers.ManagementUniversityAuditoriumsController#auditoriumSchedule(Model, ScheduleForm, RedirectAttributes)
+2020-06-05 16:52:24.048 DEBUG 82730 --- [main] o.s.web.servlet.view.RedirectView        : View name 'redirect:/timetable/management/university/auditoriums', model {}
+2020-06-05 16:52:24.108 DEBUG 82730 --- [main] o.s.w.c.s.GenericWebApplicationContext   : Refreshing org.springframework.web.context.support.GenericWebApplicationContext@72f91c91
+2020-06-05 16:52:24.441 DEBUG 82730 --- [main] s.w.s.m.m.a.RequestMappingHandlerAdapter : ControllerAdvice beans: 1 @ModelAttribute, 0 @InitBinder, 1 RequestBodyAdvice, 1 ResponseBodyAdvice
+2020-06-05 16:52:24.463 DEBUG 82730 --- [main] s.w.s.m.m.a.RequestMappingHandlerMapping : 7 mappings in 'requestMappingHandlerMapping'
+2020-06-05 16:52:24.506 DEBUG 82730 --- [main] o.s.w.s.handler.SimpleUrlHandlerMapping  : Patterns [/webjars/**, /**] in 'resourceHandlerMapping'
+2020-06-05 16:52:24.521 DEBUG 82730 --- [main] .m.m.a.ExceptionHandlerExceptionResolver : ControllerAdvice beans: 1 @ExceptionHandler, 1 ResponseBodyAdvice
+2020-06-05 16:52:24.599 DEBUG 82730 --- [main] o.s.b.w.s.ServletContextInitializerBeans : Mapping filters: formContentFilter urls=[/*] order=-9900, requestContextFilter urls=[/*] order=-105
+2020-06-05 16:52:24.599 DEBUG 82730 --- [main] o.s.b.w.s.ServletContextInitializerBeans : Mapping servlets: 
+2020-06-05 16:52:24.636 DEBUG 82730 --- [main] s.w.s.m.m.a.RequestMappingHandlerMapping : Mapped to com.foxminded.timetable.controllers.ManagementUniversityCoursesController#addNewCourse(RedirectAttributes, NewItemForm)
+2020-06-05 16:52:24.638 DEBUG 82730 --- [main] o.s.web.servlet.view.RedirectView        : View name 'redirect:/timetable/management/university/courses', model {}
+2020-06-05 16:52:24.646 DEBUG 82730 --- [main] s.w.s.m.m.a.RequestMappingHandlerMapping : Mapped to com.foxminded.timetable.controllers.ManagementUniversityCoursesController#courses(Model, String, String, String)
+2020-06-05 16:52:24.661 DEBUG 82730 --- [main] o.s.w.s.v.ContentNegotiatingViewResolver : Selected '*/*' given [*/*]
+2020-06-05 16:52:24.738 DEBUG 82730 --- [main] s.w.s.m.m.a.RequestMappingHandlerMapping : Mapped to com.foxminded.timetable.controllers.ManagementUniversityCoursesController#courseSchedule(Model, ScheduleForm, RedirectAttributes)
+2020-06-05 16:52:24.742 DEBUG 82730 --- [main] o.s.w.s.v.ContentNegotiatingViewResolver : Selected '*/*' given [*/*]
+2020-06-05 16:52:24.796 DEBUG 82730 --- [main] s.w.s.m.m.a.RequestMappingHandlerMapping : Mapped to com.foxminded.timetable.controllers.ManagementUniversityCoursesController#courseSchedule(Model, ScheduleForm, RedirectAttributes)
+2020-06-05 16:52:24.797 DEBUG 82730 --- [main] o.s.web.servlet.view.RedirectView        : View name 'redirect:/timetable/management/university/courses', model {}
+2020-06-05 16:52:24.806 DEBUG 82730 --- [main] s.w.s.m.m.a.RequestMappingHandlerMapping : Mapped to com.foxminded.timetable.controllers.ManagementUniversityCoursesController#courseSchedule(Model, ScheduleForm, RedirectAttributes)
+2020-06-05 16:52:24.809 DEBUG 82730 --- [main] o.s.w.s.v.ContentNegotiatingViewResolver : Selected '*/*' given [*/*]
+2020-06-05 16:52:24.850 DEBUG 82730 --- [main] s.w.s.m.m.a.RequestMappingHandlerMapping : Mapped to com.foxminded.timetable.controllers.ManagementUniversityCoursesController#rename(RedirectAttributes, RenameForm)
+2020-06-05 16:52:24.852 DEBUG 82730 --- [main] o.s.web.servlet.view.RedirectView        : View name 'redirect:/timetable/management/university/courses', model {}
+2020-06-05 16:52:24.861 DEBUG 82730 --- [main] s.w.s.m.m.a.RequestMappingHandlerMapping : Mapped to com.foxminded.timetable.controllers.ManagementUniversityCoursesController#redirectCourses()
+2020-06-05 16:52:24.862 DEBUG 82730 --- [main] o.s.web.servlet.view.RedirectView        : View name 'redirect:/timetable/management/university/courses', model {}
+2020-06-05 16:52:24.875 DEBUG 82730 --- [main] s.w.s.m.m.a.RequestMappingHandlerMapping : Mapped to com.foxminded.timetable.controllers.ManagementUniversityCoursesController#courseSchedule(Model, ScheduleForm, RedirectAttributes)
+2020-06-05 16:52:24.878 DEBUG 82730 --- [main] o.s.w.s.v.ContentNegotiatingViewResolver : Selected '*/*' given [*/*]
+2020-06-05 16:52:24.921 DEBUG 82730 --- [main] s.w.s.m.m.a.RequestMappingHandlerMapping : Mapped to com.foxminded.timetable.controllers.ManagementUniversityCoursesController#rename(RedirectAttributes, RenameForm)
+2020-06-05 16:52:24.922 DEBUG 82730 --- [main] o.s.web.servlet.view.RedirectView        : View name 'redirect:/timetable/management/university/courses', model {}
+2020-06-05 16:52:24.984 DEBUG 82730 --- [main] o.s.w.c.s.GenericWebApplicationContext   : Refreshing org.springframework.web.context.support.GenericWebApplicationContext@72499396
+2020-06-05 16:52:25.394 DEBUG 82730 --- [main] s.w.s.m.m.a.RequestMappingHandlerAdapter : ControllerAdvice beans: 1 @ModelAttribute, 0 @InitBinder, 1 RequestBodyAdvice, 1 ResponseBodyAdvice
+2020-06-05 16:52:25.414 DEBUG 82730 --- [main] s.w.s.m.m.a.RequestMappingHandlerMapping : 7 mappings in 'requestMappingHandlerMapping'
+2020-06-05 16:52:25.471 DEBUG 82730 --- [main] o.s.w.s.handler.SimpleUrlHandlerMapping  : Patterns [/webjars/**, /**] in 'resourceHandlerMapping'
+2020-06-05 16:52:25.480 DEBUG 82730 --- [main] .m.m.a.ExceptionHandlerExceptionResolver : ControllerAdvice beans: 1 @ExceptionHandler, 1 ResponseBodyAdvice
+2020-06-05 16:52:25.570 DEBUG 82730 --- [main] o.s.b.w.s.ServletContextInitializerBeans : Mapping filters: formContentFilter urls=[/*] order=-9900, requestContextFilter urls=[/*] order=-105
+2020-06-05 16:52:25.570 DEBUG 82730 --- [main] o.s.b.w.s.ServletContextInitializerBeans : Mapping servlets: 
+2020-06-05 16:52:25.631 DEBUG 82730 --- [main] s.w.s.m.m.a.RequestMappingHandlerMapping : Mapped to com.foxminded.timetable.controllers.ManagementUniversityStudentsController#addNewStudent(RedirectAttributes, NewStudentForm)
+2020-06-05 16:52:25.633 DEBUG 82730 --- [main] o.s.web.servlet.view.RedirectView        : View name 'redirect:/timetable/management/university/students', model {}
+2020-06-05 16:52:25.643 DEBUG 82730 --- [main] s.w.s.m.m.a.RequestMappingHandlerMapping : Mapped to com.foxminded.timetable.controllers.ManagementUniversityStudentsController#addNewStudent(RedirectAttributes, NewStudentForm)
+2020-06-05 16:52:25.645 DEBUG 82730 --- [main] o.s.web.servlet.view.RedirectView        : View name 'redirect:/timetable/management/university/students', model {}
+2020-06-05 16:52:25.681 DEBUG 82730 --- [main] s.w.s.m.m.a.RequestMappingHandlerMapping : Mapped to com.foxminded.timetable.controllers.ManagementUniversityStudentsController#changeGroup(RedirectAttributes, ChangeGroupForm)
+2020-06-05 16:52:25.683 DEBUG 82730 --- [main] o.s.web.servlet.view.RedirectView        : View name 'redirect:/timetable/management/university/students', model {}
+2020-06-05 16:52:25.693 DEBUG 82730 --- [main] s.w.s.m.m.a.RequestMappingHandlerMapping : Mapped to com.foxminded.timetable.controllers.ManagementUniversityStudentsController#studentSchedule(Model, ScheduleForm, RedirectAttributes)
+2020-06-05 16:52:25.701 DEBUG 82730 --- [main] o.s.w.s.v.ContentNegotiatingViewResolver : Selected '*/*' given [*/*]
+2020-06-05 16:52:25.769 DEBUG 82730 --- [main] s.w.s.m.m.a.RequestMappingHandlerMapping : Mapped to com.foxminded.timetable.controllers.ManagementUniversityStudentsController#studentSchedule(Model, ScheduleForm, RedirectAttributes)
+2020-06-05 16:52:25.773 DEBUG 82730 --- [main] o.s.w.s.v.ContentNegotiatingViewResolver : Selected '*/*' given [*/*]
+2020-06-05 16:52:25.816 DEBUG 82730 --- [main] s.w.s.m.m.a.RequestMappingHandlerMapping : Mapped to com.foxminded.timetable.controllers.ManagementUniversityStudentsController#students(Model, String, String, String)
+2020-06-05 16:52:25.819 DEBUG 82730 --- [main] o.s.w.s.v.ContentNegotiatingViewResolver : Selected '*/*' given [*/*]
+2020-06-05 16:52:25.866 DEBUG 82730 --- [main] s.w.s.m.m.a.RequestMappingHandlerMapping : Mapped to com.foxminded.timetable.controllers.ManagementUniversityStudentsController#changeGroup(RedirectAttributes, ChangeGroupForm)
+2020-06-05 16:52:25.868 DEBUG 82730 --- [main] o.s.web.servlet.view.RedirectView        : View name 'redirect:/timetable/management/university/students', model {}
+2020-06-05 16:52:25.879 DEBUG 82730 --- [main] s.w.s.m.m.a.RequestMappingHandlerMapping : Mapped to com.foxminded.timetable.controllers.ManagementUniversityStudentsController#studentSchedule(Model, ScheduleForm, RedirectAttributes)
+2020-06-05 16:52:25.880 DEBUG 82730 --- [main] o.s.web.servlet.view.RedirectView        : View name 'redirect:/timetable/management/university/students', model {}
+2020-06-05 16:52:25.891 DEBUG 82730 --- [main] s.w.s.m.m.a.RequestMappingHandlerMapping : Mapped to com.foxminded.timetable.controllers.ManagementUniversityStudentsController#redirectStudents()
+2020-06-05 16:52:25.892 DEBUG 82730 --- [main] o.s.web.servlet.view.RedirectView        : View name 'redirect:/timetable/management/university/students', model {}
+2020-06-05 16:52:25.901 DEBUG 82730 --- [main] s.w.s.m.m.a.RequestMappingHandlerMapping : Mapped to com.foxminded.timetable.controllers.ManagementUniversityStudentsController#studentSchedule(Model, ScheduleForm, RedirectAttributes)
+2020-06-05 16:52:25.903 DEBUG 82730 --- [main] o.s.w.s.v.ContentNegotiatingViewResolver : Selected '*/*' given [*/*]
+2020-06-05 16:52:25.953 DEBUG 82730 --- [main] s.w.s.m.m.a.RequestMappingHandlerMapping : Mapped to com.foxminded.timetable.controllers.ManagementUniversityStudentsController#changeGroup(RedirectAttributes, ChangeGroupForm)
+2020-06-05 16:52:25.957 DEBUG 82730 --- [main] o.s.web.servlet.view.RedirectView        : View name 'redirect:/timetable/management/university/students', model {}
+2020-06-05 16:52:26.098 DEBUG 82730 --- [main] o.s.w.c.s.GenericWebApplicationContext   : Refreshing org.springframework.web.context.support.GenericWebApplicationContext@11f81488
+2020-06-05 16:52:26.430 DEBUG 82730 --- [main] s.w.s.m.m.a.RequestMappingHandlerAdapter : ControllerAdvice beans: 1 @ModelAttribute, 0 @InitBinder, 1 RequestBodyAdvice, 1 ResponseBodyAdvice
+2020-06-05 16:52:26.446 DEBUG 82730 --- [main] s.w.s.m.m.a.RequestMappingHandlerMapping : 8 mappings in 'requestMappingHandlerMapping'
+2020-06-05 16:52:26.498 DEBUG 82730 --- [main] o.s.w.s.handler.SimpleUrlHandlerMapping  : Patterns [/webjars/**, /**] in 'resourceHandlerMapping'
+2020-06-05 16:52:26.513 DEBUG 82730 --- [main] .m.m.a.ExceptionHandlerExceptionResolver : ControllerAdvice beans: 1 @ExceptionHandler, 1 ResponseBodyAdvice
+2020-06-05 16:52:26.598 DEBUG 82730 --- [main] o.s.b.w.s.ServletContextInitializerBeans : Mapping filters: formContentFilter urls=[/*] order=-9900, requestContextFilter urls=[/*] order=-105
+2020-06-05 16:52:26.598 DEBUG 82730 --- [main] o.s.b.w.s.ServletContextInitializerBeans : Mapping servlets: 
+2020-06-05 16:52:26.633 DEBUG 82730 --- [main] s.w.s.m.m.a.RequestMappingHandlerMapping : Mapped to com.foxminded.timetable.controllers.StudentController#listStudents(Model, HttpSession, String, String)
+2020-06-05 16:52:26.645 DEBUG 82730 --- [main] o.s.w.s.v.ContentNegotiatingViewResolver : Selected '*/*' given [*/*]
+2020-06-05 16:52:26.692 DEBUG 82730 --- [main] s.w.s.m.m.a.RequestMappingHandlerMapping : Mapped to com.foxminded.timetable.controllers.StudentController#home(Model, HttpSession)
+2020-06-05 16:52:26.694 DEBUG 82730 --- [main] .m.m.a.ExceptionHandlerExceptionResolver : Using @ExceptionHandler com.foxminded.timetable.controllers.advice.GlobalExceptionHandlingControllerAdvice#handleSessionExpired(SessionExpiredException, RedirectAttributes)
+2020-06-05 16:52:26.694 DEBUG 82730 --- [main] .m.m.a.ExceptionHandlerExceptionResolver : Resolved [com.foxminded.timetable.exceptions.SessionExpiredException] to ModelAndView [view="redirect:/timetable/students/list"; model={}]
+2020-06-05 16:52:26.695 DEBUG 82730 --- [main] o.s.web.servlet.view.RedirectView        : View name 'redirect:/timetable/students/list', model {}
+2020-06-05 16:52:26.704 DEBUG 82730 --- [main] s.w.s.m.m.a.RequestMappingHandlerMapping : Mapped to com.foxminded.timetable.controllers.StudentController#twoWeekSchedule(Model, HttpSession)
+2020-06-05 16:52:26.704 DEBUG 82730 --- [main] .m.m.a.ExceptionHandlerExceptionResolver : Using @ExceptionHandler com.foxminded.timetable.controllers.advice.GlobalExceptionHandlingControllerAdvice#handleSessionExpired(SessionExpiredException, RedirectAttributes)
+2020-06-05 16:52:26.705 DEBUG 82730 --- [main] .m.m.a.ExceptionHandlerExceptionResolver : Resolved [com.foxminded.timetable.exceptions.SessionExpiredException] to ModelAndView [view="redirect:/timetable/students/list"; model={}]
+2020-06-05 16:52:26.705 DEBUG 82730 --- [main] o.s.web.servlet.view.RedirectView        : View name 'redirect:/timetable/students/list', model {}
+2020-06-05 16:52:26.715 DEBUG 82730 --- [main] s.w.s.m.m.a.RequestMappingHandlerMapping : Mapped to com.foxminded.timetable.controllers.StudentController#listStudents(Model, HttpSession, String, String)
+2020-06-05 16:52:26.716 DEBUG 82730 --- [main] o.s.w.s.v.ContentNegotiatingViewResolver : Selected '*/*' given [*/*]
+2020-06-05 16:52:26.744 DEBUG 82730 --- [main] s.w.s.m.m.a.RequestMappingHandlerMapping : Mapped to com.foxminded.timetable.controllers.StudentController#selectStudent(long, HttpSession, RedirectAttributes)
+2020-06-05 16:52:26.747 DEBUG 82730 --- [main] o.s.web.servlet.view.RedirectView        : View name 'redirect:/timetable/students/list', model {}
+2020-06-05 16:52:26.759 DEBUG 82730 --- [main] s.w.s.m.m.a.RequestMappingHandlerMapping : Mapped to com.foxminded.timetable.controllers.StudentController#processForm(Model, HttpSession, ScheduleForm)
+2020-06-05 16:52:26.761 DEBUG 82730 --- [main] .m.m.a.ExceptionHandlerExceptionResolver : Using @ExceptionHandler com.foxminded.timetable.controllers.advice.GlobalExceptionHandlingControllerAdvice#handleSessionExpired(SessionExpiredException, RedirectAttributes)
+2020-06-05 16:52:26.761 DEBUG 82730 --- [main] .m.m.a.ExceptionHandlerExceptionResolver : Resolved [com.foxminded.timetable.exceptions.SessionExpiredException] to ModelAndView [view="redirect:/timetable/students/list"; model={}]
+2020-06-05 16:52:26.761 DEBUG 82730 --- [main] o.s.web.servlet.view.RedirectView        : View name 'redirect:/timetable/students/list', model {}
+2020-06-05 16:52:26.770 DEBUG 82730 --- [main] s.w.s.m.m.a.RequestMappingHandlerMapping : Mapped to com.foxminded.timetable.controllers.StudentController#processForm(Model, HttpSession, ScheduleForm)
+2020-06-05 16:52:26.776 DEBUG 82730 --- [main] o.s.w.s.v.ContentNegotiatingViewResolver : Selected '*/*' given [*/*]
+2020-06-05 16:52:26.828 DEBUG 82730 --- [main] s.w.s.m.m.a.RequestMappingHandlerMapping : Mapped to com.foxminded.timetable.controllers.StudentController#processForm(Model, HttpSession, ScheduleForm)
+2020-06-05 16:52:26.831 DEBUG 82730 --- [main] o.s.w.s.v.ContentNegotiatingViewResolver : Selected '*/*' given [*/*]
+2020-06-05 16:52:26.869 DEBUG 82730 --- [main] s.w.s.m.m.a.RequestMappingHandlerMapping : Mapped to com.foxminded.timetable.controllers.StudentController#listStudents(Model, HttpSession, String, String)
+2020-06-05 16:52:26.872 DEBUG 82730 --- [main] o.s.w.s.v.ContentNegotiatingViewResolver : Selected '*/*' given [*/*]
+2020-06-05 16:52:26.898 DEBUG 82730 --- [main] s.w.s.m.m.a.RequestMappingHandlerMapping : Mapped to com.foxminded.timetable.controllers.StudentController#home(Model, HttpSession)
+2020-06-05 16:52:26.900 DEBUG 82730 --- [main] o.s.w.s.v.ContentNegotiatingViewResolver : Selected '*/*' given [*/*]
+2020-06-05 16:52:26.937 DEBUG 82730 --- [main] s.w.s.m.m.a.RequestMappingHandlerMapping : Mapped to com.foxminded.timetable.controllers.StudentController#redirectHome()
+2020-06-05 16:52:26.940 DEBUG 82730 --- [main] o.s.web.servlet.view.RedirectView        : View name 'redirect:/timetable/students/student/home', model {}
+2020-06-05 16:52:26.950 DEBUG 82730 --- [main] s.w.s.m.m.a.RequestMappingHandlerMapping : Mapped to com.foxminded.timetable.controllers.StudentController#twoWeekSchedule(Model, HttpSession)
+2020-06-05 16:52:26.952 DEBUG 82730 --- [main] o.s.w.s.v.ContentNegotiatingViewResolver : Selected '*/*' given [*/*]
+2020-06-05 16:52:26.992 DEBUG 82730 --- [main] s.w.s.m.m.a.RequestMappingHandlerMapping : Mapped to com.foxminded.timetable.controllers.StudentController#processForm(Model, HttpSession, ScheduleForm)
+2020-06-05 16:52:26.994 DEBUG 82730 --- [main] o.s.w.s.v.ContentNegotiatingViewResolver : Selected '*/*' given [*/*]
+2020-06-05 16:52:27.032 DEBUG 82730 --- [main] s.w.s.m.m.a.RequestMappingHandlerMapping : Mapped to com.foxminded.timetable.controllers.StudentController#selectStudent(long, HttpSession, RedirectAttributes)
+2020-06-05 16:52:27.033 DEBUG 82730 --- [main] o.s.web.servlet.view.RedirectView        : View name 'redirect:/timetable/students/student/home', model {}
+2020-06-05 16:52:27.076 DEBUG 82730 --- [main] o.s.w.c.s.GenericWebApplicationContext   : Refreshing org.springframework.web.context.support.GenericWebApplicationContext@240a9052
+2020-06-05 16:52:27.417 DEBUG 82730 --- [main] s.w.s.m.m.a.RequestMappingHandlerAdapter : ControllerAdvice beans: 1 @ModelAttribute, 0 @InitBinder, 1 RequestBodyAdvice, 1 ResponseBodyAdvice
+2020-06-05 16:52:27.439 DEBUG 82730 --- [main] s.w.s.m.m.a.RequestMappingHandlerMapping : 9 mappings in 'requestMappingHandlerMapping'
+2020-06-05 16:52:27.486 DEBUG 82730 --- [main] o.s.w.s.handler.SimpleUrlHandlerMapping  : Patterns [/webjars/**, /**] in 'resourceHandlerMapping'
+2020-06-05 16:52:27.496 DEBUG 82730 --- [main] .m.m.a.ExceptionHandlerExceptionResolver : ControllerAdvice beans: 1 @ExceptionHandler, 1 ResponseBodyAdvice
+2020-06-05 16:52:27.582 DEBUG 82730 --- [main] o.s.b.w.s.ServletContextInitializerBeans : Mapping filters: formContentFilter urls=[/*] order=-9900, requestContextFilter urls=[/*] order=-105
+2020-06-05 16:52:27.583 DEBUG 82730 --- [main] o.s.b.w.s.ServletContextInitializerBeans : Mapping servlets: 
+2020-06-05 16:52:27.621 DEBUG 82730 --- [main] s.w.s.m.m.a.RequestMappingHandlerMapping : Mapped to com.foxminded.timetable.controllers.ManagementUniversityFacultyController#professors(Model, String, String, String)
+2020-06-05 16:52:27.633 DEBUG 82730 --- [main] o.s.w.s.v.ContentNegotiatingViewResolver : Selected '*/*' given [*/*]
+2020-06-05 16:52:27.734 DEBUG 82730 --- [main] s.w.s.m.m.a.RequestMappingHandlerMapping : Mapped to com.foxminded.timetable.controllers.ManagementUniversityFacultyController#dropCourse(RedirectAttributes, DropCourseForm)
+2020-06-05 16:52:27.735 DEBUG 82730 --- [main] o.s.web.servlet.view.RedirectView        : View name 'redirect:/timetable/management/university/faculty/courses?professorId=1', model {}
+2020-06-05 16:52:27.774 DEBUG 82730 --- [main] s.w.s.m.m.a.RequestMappingHandlerMapping : Mapped to com.foxminded.timetable.controllers.ManagementUniversityFacultyController#addCourse(RedirectAttributes, AddCourseForm)
+2020-06-05 16:52:27.778 DEBUG 82730 --- [main] o.s.web.servlet.view.RedirectView        : View name 'redirect:/timetable/management/university/faculty/courses?professorId=1', model {}
+2020-06-05 16:52:27.788 DEBUG 82730 --- [main] s.w.s.m.m.a.RequestMappingHandlerMapping : Mapped to com.foxminded.timetable.controllers.ManagementUniversityFacultyController#courses(long, String, String, String, Model, RedirectAttributes)
+2020-06-05 16:52:27.791 DEBUG 82730 --- [main] o.s.web.servlet.view.RedirectView        : View name 'redirect:/timetable/management/university/faculty', model {}
+2020-06-05 16:52:27.802 DEBUG 82730 --- [main] s.w.s.m.m.a.RequestMappingHandlerMapping : Mapped to com.foxminded.timetable.controllers.ManagementUniversityFacultyController#redirectProfessors()
+2020-06-05 16:52:27.804 DEBUG 82730 --- [main] o.s.web.servlet.view.RedirectView        : View name 'redirect:/timetable/management/university/faculty', model {}
+2020-06-05 16:52:27.813 DEBUG 82730 --- [main] s.w.s.m.m.a.RequestMappingHandlerMapping : Mapped to com.foxminded.timetable.controllers.ManagementUniversityFacultyController#addCourse(RedirectAttributes, AddCourseForm)
+2020-06-05 16:52:27.814 DEBUG 82730 --- [main] o.s.web.servlet.view.RedirectView        : View name 'redirect:/timetable/management/university/faculty', model {}
+2020-06-05 16:52:27.823 DEBUG 82730 --- [main] s.w.s.m.m.a.RequestMappingHandlerMapping : Mapped to com.foxminded.timetable.controllers.ManagementUniversityFacultyController#professorSchedule(Model, ScheduleForm, RedirectAttributes)
+2020-06-05 16:52:27.824 DEBUG 82730 --- [main] o.s.web.servlet.view.RedirectView        : View name 'redirect:/timetable/management/university/faculty', model {}
+2020-06-05 16:52:27.837 DEBUG 82730 --- [main] s.w.s.m.m.a.RequestMappingHandlerMapping : Mapped to com.foxminded.timetable.controllers.ManagementUniversityFacultyController#addCourse(RedirectAttributes, AddCourseForm)
+2020-06-05 16:52:27.839 DEBUG 82730 --- [main] o.s.web.servlet.view.RedirectView        : View name 'redirect:/timetable/management/university/faculty/courses?professorId=1', model {}
+2020-06-05 16:52:27.852 DEBUG 82730 --- [main] s.w.s.m.m.a.RequestMappingHandlerMapping : Mapped to com.foxminded.timetable.controllers.ManagementUniversityFacultyController#courses(long, String, String, String, Model, RedirectAttributes)
+2020-06-05 16:52:27.855 DEBUG 82730 --- [main] o.s.w.s.v.ContentNegotiatingViewResolver : Selected '*/*' given [*/*]
+2020-06-05 16:52:27.894 DEBUG 82730 --- [main] s.w.s.m.m.a.RequestMappingHandlerMapping : Mapped to com.foxminded.timetable.controllers.ManagementUniversityFacultyController#dropCourse(RedirectAttributes, DropCourseForm)
+2020-06-05 16:52:27.897 DEBUG 82730 --- [main] o.s.web.servlet.view.RedirectView        : View name 'redirect:/timetable/management/university/faculty', model {}
+2020-06-05 16:52:27.906 DEBUG 82730 --- [main] s.w.s.m.m.a.RequestMappingHandlerMapping : Mapped to com.foxminded.timetable.controllers.ManagementUniversityFacultyController#professorSchedule(Model, ScheduleForm, RedirectAttributes)
+2020-06-05 16:52:27.910 DEBUG 82730 --- [main] o.s.w.s.v.ContentNegotiatingViewResolver : Selected '*/*' given [*/*]
+2020-06-05 16:52:27.970 DEBUG 82730 --- [main] s.w.s.m.m.a.RequestMappingHandlerMapping : Mapped to com.foxminded.timetable.controllers.ManagementUniversityFacultyController#professorSchedule(Model, ScheduleForm, RedirectAttributes)
+2020-06-05 16:52:27.975 DEBUG 82730 --- [main] o.s.w.s.v.ContentNegotiatingViewResolver : Selected '*/*' given [*/*]
+2020-06-05 16:52:28.019 DEBUG 82730 --- [main] s.w.s.m.m.a.RequestMappingHandlerMapping : Mapped to com.foxminded.timetable.controllers.ManagementUniversityFacultyController#dropCourse(RedirectAttributes, DropCourseForm)
+2020-06-05 16:52:28.020 DEBUG 82730 --- [main] o.s.web.servlet.view.RedirectView        : View name 'redirect:/timetable/management/university/faculty/courses?professorId=1', model {}
+2020-06-05 16:52:28.053 DEBUG 82730 --- [main] s.w.s.m.m.a.RequestMappingHandlerMapping : Mapped to com.foxminded.timetable.controllers.ManagementUniversityFacultyController#addNewProfessor(RedirectAttributes, NewProfessorForm)
+2020-06-05 16:52:28.054 DEBUG 82730 --- [main] o.s.web.servlet.view.RedirectView        : View name 'redirect:/timetable/management/university/faculty', model {}
+2020-06-05 16:52:28.064 DEBUG 82730 --- [main] s.w.s.m.m.a.RequestMappingHandlerMapping : Mapped to com.foxminded.timetable.controllers.ManagementUniversityFacultyController#professorSchedule(Model, ScheduleForm, RedirectAttributes)
+2020-06-05 16:52:28.067 DEBUG 82730 --- [main] o.s.w.s.v.ContentNegotiatingViewResolver : Selected '*/*' given [*/*]
+2020-06-05 16:52:28.902 DEBUG 82730 --- [main] o.s.w.c.s.GenericWebApplicationContext   : Refreshing org.springframework.web.context.support.GenericWebApplicationContext@323a47fe
+2020-06-05 16:52:29.224 DEBUG 82730 --- [main] s.w.s.m.m.a.RequestMappingHandlerAdapter : ControllerAdvice beans: 1 @ModelAttribute, 0 @InitBinder, 1 RequestBodyAdvice, 1 ResponseBodyAdvice
+2020-06-05 16:52:29.246 DEBUG 82730 --- [main] s.w.s.m.m.a.RequestMappingHandlerMapping : 3 mappings in 'requestMappingHandlerMapping'
+2020-06-05 16:52:29.305 DEBUG 82730 --- [main] o.s.w.s.handler.SimpleUrlHandlerMapping  : Patterns [/webjars/**, /**] in 'resourceHandlerMapping'
+2020-06-05 16:52:29.322 DEBUG 82730 --- [main] .m.m.a.ExceptionHandlerExceptionResolver : ControllerAdvice beans: 1 @ExceptionHandler, 1 ResponseBodyAdvice
+2020-06-05 16:52:29.426 DEBUG 82730 --- [main] o.s.b.w.s.ServletContextInitializerBeans : Mapping filters: formContentFilter urls=[/*] order=-9900, requestContextFilter urls=[/*] order=-105
+2020-06-05 16:52:29.426 DEBUG 82730 --- [main] o.s.b.w.s.ServletContextInitializerBeans : Mapping servlets: 
+2020-06-05 16:52:29.457 DEBUG 82730 --- [main] s.w.s.m.m.a.RequestMappingHandlerMapping : Mapped to com.foxminded.timetable.controllers.IndexController#index(HttpSession)
+2020-06-05 16:52:29.471 DEBUG 82730 --- [main] o.s.w.s.v.ContentNegotiatingViewResolver : Selected '*/*' given [*/*]
+2020-06-05 16:52:29.510 DEBUG 82730 --- [main] s.w.s.m.m.a.RequestMappingHandlerMapping : Mapped to com.foxminded.timetable.controllers.IndexController#index(HttpSession)
+2020-06-05 16:52:29.512 DEBUG 82730 --- [main] o.s.w.s.v.ContentNegotiatingViewResolver : Selected '*/*' given [*/*]
+2020-06-05 16:52:29.537 DEBUG 82730 --- [main] s.w.s.m.m.a.RequestMappingHandlerMapping : Mapped to com.foxminded.timetable.controllers.IndexController#index(HttpSession)
+2020-06-05 16:52:29.538 DEBUG 82730 --- [main] o.s.w.s.v.ContentNegotiatingViewResolver : Selected '*/*' given [*/*]
+2020-06-05 16:52:29.619 DEBUG 82730 --- [SpringContextShutdownHook] o.s.w.c.s.GenericWebApplicationContext   : Closing org.springframework.web.context.support.GenericWebApplicationContext@6fbb4061, started on Fri Jun 05 16:52:07 EEST 2020
+2020-06-05 16:52:29.625 DEBUG 82730 --- [SpringContextShutdownHook] o.s.w.c.s.GenericWebApplicationContext   : Closing org.springframework.web.context.support.GenericWebApplicationContext@323a47fe, started on Fri Jun 05 16:52:28 EEST 2020
+2020-06-05 16:52:29.628 DEBUG 82730 --- [SpringContextShutdownHook] o.s.w.c.s.GenericWebApplicationContext   : Closing org.springframework.web.context.support.GenericWebApplicationContext@31fc658f, started on Fri Jun 05 16:52:18 EEST 2020
+2020-06-05 16:52:29.628 DEBUG 82730 --- [SpringContextShutdownHook] o.s.w.c.s.GenericWebApplicationContext   : Closing org.springframework.web.context.support.GenericWebApplicationContext@72f91c91, started on Fri Jun 05 16:52:24 EEST 2020
+2020-06-05 16:52:29.630 DEBUG 82730 --- [SpringContextShutdownHook] o.s.w.c.s.GenericWebApplicationContext   : Closing org.springframework.web.context.support.GenericWebApplicationContext@240a9052, started on Fri Jun 05 16:52:27 EEST 2020
+2020-06-05 16:52:29.631 DEBUG 82730 --- [SpringContextShutdownHook] o.s.w.c.s.GenericWebApplicationContext   : Closing org.springframework.web.context.support.GenericWebApplicationContext@11f81488, started on Fri Jun 05 16:52:26 EEST 2020
+2020-06-05 16:52:29.631 DEBUG 82730 --- [SpringContextShutdownHook] o.s.w.c.s.GenericWebApplicationContext   : Closing org.springframework.web.context.support.GenericWebApplicationContext@1e5e2e06, started on Fri Jun 05 16:52:20 EEST 2020
+2020-06-05 16:52:29.634 DEBUG 82730 --- [SpringContextShutdownHook] o.s.w.c.s.GenericWebApplicationContext   : Closing org.springframework.web.context.support.GenericWebApplicationContext@29f114e0, started on Fri Jun 05 16:52:21 EEST 2020
+2020-06-05 16:52:29.634 DEBUG 82730 --- [SpringContextShutdownHook] o.s.w.c.s.GenericWebApplicationContext   : Closing org.springframework.web.context.support.GenericWebApplicationContext@7fb28ed, started on Fri Jun 05 16:52:23 EEST 2020
+2020-06-05 16:52:29.639 DEBUG 82730 --- [SpringContextShutdownHook] o.s.w.c.s.GenericWebApplicationContext   : Closing org.springframework.web.context.support.GenericWebApplicationContext@25c6ab3f, started on Fri Jun 05 16:52:16 EEST 2020
+2020-06-05 16:52:29.640 DEBUG 82730 --- [SpringContextShutdownHook] o.s.w.c.s.GenericWebApplicationContext   : Closing org.springframework.web.context.support.GenericWebApplicationContext@72499396, started on Fri Jun 05 16:52:24 EEST 2020

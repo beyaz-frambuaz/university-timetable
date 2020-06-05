@@ -114,16 +114,17 @@ class ScheduleTemplateServiceTest {
         assertThat(actual).isEqualTo(templates);
     }
 
-//    @Test
-//    public void findByIdShouldDelegateToRepository() {
-//
-//        long id = 1L;
-//        given(repository.findById(anyLong())).willReturn(Optional.of(template));
-//
-//        Optional<ScheduleTemplate> actual = service.findById(id);
-//
-//        then(repository).should().findById(id);
-//        assertThat(actual).isPresent().contains(template);
-//    }
+    @Test
+    public void findByIdShouldDelegateToRepository() {
+
+        long id = 1L;
+        Optional<ScheduleTemplate> expected = Optional.of(template);
+        given(repository.findById(anyLong())).willReturn(expected);
+
+        Optional<ScheduleTemplate> actual = service.findById(id);
+
+        then(repository).should().findById(id);
+        assertThat(actual).isEqualTo(expected);
+    }
 
 }
