@@ -1,4 +1,4 @@
-2020-06-04 08:51:05.230  INFO 50935 --- [restartedMain] o.s.boot.SpringApplication               : 
+2020-06-08 19:41:41.776  INFO 13491 --- [restartedMain] o.s.boot.SpringApplication               : 
   .   ____          _            __ _ _
  /\\ / ___'_ __ _ _(_)_ __  __ _ \ \ \ \
 ( ( )\___ | '_ | '_| | '_ \/ _` | \ \ \ \
@@ -8,112 +8,112 @@
 [32m :: Spring Boot :: [39m      [2m (v2.2.6.RELEASE)[0;39m
 
 
-2020-06-04 08:51:05.391  INFO 50935 --- [restartedMain] com.foxminded.timetable.TimetableApp     : Starting TimetableApp on Tarass-MacBook-Air.local with PID 50935 (/Users/tarasshablii/Desktop/java/foxminded/workspace/university/university/target/classes started by tarasshablii in /Users/tarasshablii/Desktop/java/foxminded/workspace/university/university)
-2020-06-04 08:51:05.391 DEBUG 50935 --- [restartedMain] com.foxminded.timetable.TimetableApp     : Running with Spring Boot v2.2.6.RELEASE, Spring v5.2.5.RELEASE
-2020-06-04 08:51:05.392  INFO 50935 --- [restartedMain] com.foxminded.timetable.TimetableApp     : No active profile set, falling back to default profiles: default
-2020-06-04 08:51:05.602  INFO 50935 --- [restartedMain] .e.DevToolsPropertyDefaultsPostProcessor : Devtools property defaults active! Set 'spring.devtools.add-properties' to 'false' to disable
-2020-06-04 08:51:07.099  INFO 50935 --- [restartedMain] o.s.b.w.embedded.tomcat.TomcatWebServer  : Tomcat initialized with port(s): 8080 (http)
-2020-06-04 08:51:07.108  INFO 50935 --- [restartedMain] o.apache.catalina.core.StandardService   : Starting service [Tomcat]
-2020-06-04 08:51:07.108  INFO 50935 --- [restartedMain] org.apache.catalina.core.StandardEngine  : Starting Servlet engine: [Apache Tomcat/9.0.33]
-2020-06-04 08:51:07.199  INFO 50935 --- [restartedMain] o.a.c.c.C.[Tomcat].[localhost].[/]       : Initializing Spring embedded WebApplicationContext
-2020-06-04 08:51:07.199 DEBUG 50935 --- [restartedMain] o.s.web.context.ContextLoader            : Published root WebApplicationContext as ServletContext attribute with name [org.springframework.web.context.WebApplicationContext.ROOT]
-2020-06-04 08:51:07.200  INFO 50935 --- [restartedMain] o.s.web.context.ContextLoader            : Root WebApplicationContext: initialization completed in 1596 ms
-2020-06-04 08:51:07.242  INFO 50935 --- [restartedMain] com.zaxxer.hikari.HikariDataSource       : HikariPool-1 - Starting...
-2020-06-04 08:51:07.412  INFO 50935 --- [restartedMain] com.zaxxer.hikari.HikariDataSource       : HikariPool-1 - Start completed.
-2020-06-04 08:51:07.467  INFO 50935 --- [restartedMain] o.s.b.a.h2.H2ConsoleAutoConfiguration    : H2 console available at '/h2-console'. Database available at 'jdbc:h2:~/temp/data'
-2020-06-04 08:51:07.482 DEBUG 50935 --- [restartedMain] o.s.b.w.s.ServletContextInitializerBeans : Mapping filters: characterEncodingFilter urls=[/*] order=-2147483648, formContentFilter urls=[/*] order=-9900, requestContextFilter urls=[/*] order=-105
-2020-06-04 08:51:07.482 DEBUG 50935 --- [restartedMain] o.s.b.w.s.ServletContextInitializerBeans : Mapping servlets: dispatcherServlet urls=[/], webServlet urls=[/h2-console/*]
-2020-06-04 08:51:07.540  INFO 50935 --- [restartedMain] o.s.b.d.a.OptionalLiveReloadServer       : LiveReload server is running on port 35729
-2020-06-04 08:51:07.760  INFO 50935 --- [restartedMain] c.f.t.s.m.g.UniversityModelGenerator     : Generating university model
-2020-06-04 08:51:07.760 DEBUG 50935 --- [restartedMain] c.f.t.s.m.g.UniversityModelGenerator     : Auditoriums generated
-2020-06-04 08:51:07.760 DEBUG 50935 --- [restartedMain] c.f.timetable.service.AuditoriumService  : Saving auditoriums to repository
-2020-06-04 08:51:07.794 DEBUG 50935 --- [restartedMain] c.f.t.dao.jdbc.JdbcAuditoriumDao         : Auditoriums saved
-2020-06-04 08:51:07.798 DEBUG 50935 --- [restartedMain] c.f.t.s.m.g.UniversityModelGenerator     : Courses generated
-2020-06-04 08:51:07.798 DEBUG 50935 --- [restartedMain] c.f.timetable.service.CourseService      : Saving courses to repository
-2020-06-04 08:51:07.807 DEBUG 50935 --- [restartedMain] c.f.timetable.dao.jdbc.JdbcCourseDao     : Courses saved
-2020-06-04 08:51:07.808 DEBUG 50935 --- [restartedMain] c.f.timetable.service.CourseService      : Fetching courses from repository
-2020-06-04 08:51:07.808 DEBUG 50935 --- [restartedMain] c.f.timetable.dao.jdbc.JdbcCourseDao     : Retrieving courses
-2020-06-04 08:51:07.820 DEBUG 50935 --- [restartedMain] c.f.t.s.m.g.UniversityModelGenerator     : Professors generated
-2020-06-04 08:51:07.821 DEBUG 50935 --- [restartedMain] c.f.timetable.service.ProfessorService   : Saving professors to repository
-2020-06-04 08:51:07.828 DEBUG 50935 --- [restartedMain] c.f.timetable.dao.jdbc.JdbcProfessorDao  : Professors saved
-2020-06-04 08:51:07.828 DEBUG 50935 --- [restartedMain] c.f.timetable.service.ProfessorService   : Fetching professors from repository
-2020-06-04 08:51:07.828 DEBUG 50935 --- [restartedMain] c.f.timetable.dao.jdbc.JdbcProfessorDao  : Retrieving professors
-2020-06-04 08:51:07.836 DEBUG 50935 --- [restartedMain] c.f.t.s.m.g.UniversityModelGenerator     : Courses assigned to professors
-2020-06-04 08:51:07.836 DEBUG 50935 --- [restartedMain] c.f.timetable.service.ProfessorService   : Updating professor Professor(firstName=Sinsharishkun, lastName=the Wise, id=1, courses=[Course(id=1, name=Scientology), Course(id=5, name=Defense Against Dark Magic), Course(id=8, name=Applied Polyandry), Course(id=10, name=Modern Sand Castle Architecture)])
-2020-06-04 08:51:07.839 DEBUG 50935 --- [restartedMain] c.f.timetable.dao.jdbc.JdbcProfessorDao  : Deleted courses for Professor(firstName=Sinsharishkun, lastName=the Wise, id=1, courses=[Course(id=1, name=Scientology), Course(id=5, name=Defense Against Dark Magic), Course(id=8, name=Applied Polyandry), Course(id=10, name=Modern Sand Castle Architecture)])
-2020-06-04 08:51:07.841 DEBUG 50935 --- [restartedMain] c.f.timetable.dao.jdbc.JdbcProfessorDao  : Course assignments to professors saved
-2020-06-04 08:51:07.842 DEBUG 50935 --- [restartedMain] c.f.timetable.service.ProfessorService   : Updating professor Professor(firstName=Sumu-abum, lastName=the II, id=2, courses=[Course(id=2, name=Procrastination101), Course(id=5, name=Defense Against Dark Magic), Course(id=8, name=Applied Polyandry)])
-2020-06-04 08:51:07.842 DEBUG 50935 --- [restartedMain] c.f.timetable.dao.jdbc.JdbcProfessorDao  : Deleted courses for Professor(firstName=Sumu-abum, lastName=the II, id=2, courses=[Course(id=2, name=Procrastination101), Course(id=5, name=Defense Against Dark Magic), Course(id=8, name=Applied Polyandry)])
-2020-06-04 08:51:07.844 DEBUG 50935 --- [restartedMain] c.f.timetable.dao.jdbc.JdbcProfessorDao  : Course assignments to professors saved
-2020-06-04 08:51:07.844 DEBUG 50935 --- [restartedMain] c.f.timetable.service.ProfessorService   : Updating professor Professor(firstName=Ashurbanipal, lastName=Footsticker, id=3, courses=[Course(id=3, name=Demagoguery), Course(id=6, name=Dark Magic Against Defense Against Dark Magic), Course(id=9, name=DB Sanitation'); DROP TABLE students; --)])
-2020-06-04 08:51:07.845 DEBUG 50935 --- [restartedMain] c.f.timetable.dao.jdbc.JdbcProfessorDao  : Deleted courses for Professor(firstName=Ashurbanipal, lastName=Footsticker, id=3, courses=[Course(id=3, name=Demagoguery), Course(id=6, name=Dark Magic Against Defense Against Dark Magic), Course(id=9, name=DB Sanitation'); DROP TABLE students; --)])
-2020-06-04 08:51:07.847 DEBUG 50935 --- [restartedMain] c.f.timetable.dao.jdbc.JdbcProfessorDao  : Course assignments to professors saved
-2020-06-04 08:51:07.847 DEBUG 50935 --- [restartedMain] c.f.timetable.service.ProfessorService   : Updating professor Professor(firstName=Nabonassar, lastName=the Fast, id=4, courses=[Course(id=3, name=Demagoguery), Course(id=6, name=Dark Magic Against Defense Against Dark Magic), Course(id=9, name=DB Sanitation'); DROP TABLE students; --)])
-2020-06-04 08:51:07.847 DEBUG 50935 --- [restartedMain] c.f.timetable.dao.jdbc.JdbcProfessorDao  : Deleted courses for Professor(firstName=Nabonassar, lastName=the Fast, id=4, courses=[Course(id=3, name=Demagoguery), Course(id=6, name=Dark Magic Against Defense Against Dark Magic), Course(id=9, name=DB Sanitation'); DROP TABLE students; --)])
-2020-06-04 08:51:07.848 DEBUG 50935 --- [restartedMain] c.f.timetable.dao.jdbc.JdbcProfessorDao  : Course assignments to professors saved
-2020-06-04 08:51:07.849 DEBUG 50935 --- [restartedMain] c.f.timetable.service.ProfessorService   : Updating professor Professor(firstName=Sumu-abum, lastName=the Kind, id=5, courses=[Course(id=4, name=Dark Magic), Course(id=7, name=Theoretical Camel Tracking), Course(id=10, name=Modern Sand Castle Architecture)])
-2020-06-04 08:51:07.849 DEBUG 50935 --- [restartedMain] c.f.timetable.dao.jdbc.JdbcProfessorDao  : Deleted courses for Professor(firstName=Sumu-abum, lastName=the Kind, id=5, courses=[Course(id=4, name=Dark Magic), Course(id=7, name=Theoretical Camel Tracking), Course(id=10, name=Modern Sand Castle Architecture)])
-2020-06-04 08:51:07.851 DEBUG 50935 --- [restartedMain] c.f.timetable.dao.jdbc.JdbcProfessorDao  : Course assignments to professors saved
-2020-06-04 08:51:07.852 DEBUG 50935 --- [restartedMain] c.f.t.s.m.g.UniversityModelGenerator     : Groups generated
-2020-06-04 08:51:07.852 DEBUG 50935 --- [restartedMain] c.f.timetable.service.GroupService       : Saving groups to repository
-2020-06-04 08:51:07.859 DEBUG 50935 --- [restartedMain] c.f.timetable.dao.jdbc.JdbcGroupDao      : Groups saved
-2020-06-04 08:51:07.859 DEBUG 50935 --- [restartedMain] c.f.timetable.service.GroupService       : Fetching groups from repository
-2020-06-04 08:51:07.860 DEBUG 50935 --- [restartedMain] c.f.timetable.dao.jdbc.JdbcGroupDao      : Retrieving groups
-2020-06-04 08:51:07.862 DEBUG 50935 --- [restartedMain] c.f.t.s.m.g.UniversityModelGenerator     : Students generated
-2020-06-04 08:51:07.868 DEBUG 50935 --- [restartedMain] c.f.t.s.m.g.UniversityModelGenerator     : Students grouped
-2020-06-04 08:51:07.868 DEBUG 50935 --- [restartedMain] c.f.timetable.service.StudentService     : Saving students to repository
-2020-06-04 08:51:07.932 DEBUG 50935 --- [restartedMain] c.f.timetable.dao.jdbc.JdbcStudentDao    : Students saved
-2020-06-04 08:51:07.933  INFO 50935 --- [restartedMain] c.f.t.s.m.g.UniversityModelGenerator     : University model generated
-2020-06-04 08:51:07.933  INFO 50935 --- [restartedMain] c.f.t.s.m.g.TimetableModelGenerator      : Generating timetable model
-2020-06-04 08:51:07.933 DEBUG 50935 --- [restartedMain] c.f.timetable.service.GroupService       : Fetching groups from repository
-2020-06-04 08:51:07.933 DEBUG 50935 --- [restartedMain] c.f.timetable.dao.jdbc.JdbcGroupDao      : Retrieving groups
-2020-06-04 08:51:07.934 DEBUG 50935 --- [restartedMain] c.f.timetable.service.CourseService      : Fetching courses from repository
-2020-06-04 08:51:07.934 DEBUG 50935 --- [restartedMain] c.f.timetable.dao.jdbc.JdbcCourseDao     : Retrieving courses
-2020-06-04 08:51:07.934 DEBUG 50935 --- [restartedMain] c.f.timetable.service.ProfessorService   : Fetching professors from repository
-2020-06-04 08:51:07.935 DEBUG 50935 --- [restartedMain] c.f.timetable.dao.jdbc.JdbcProfessorDao  : Retrieving professors
-2020-06-04 08:51:07.936 DEBUG 50935 --- [restartedMain] c.f.timetable.service.AuditoriumService  : Fetching auditoriums from repository
-2020-06-04 08:51:07.937 DEBUG 50935 --- [restartedMain] c.f.t.dao.jdbc.JdbcAuditoriumDao         : Retrieving auditoriums
-2020-06-04 08:51:07.940 DEBUG 50935 --- [restartedMain] c.f.t.s.m.g.TimetableModelGenerator      : Rescheduling options generated
-2020-06-04 08:51:07.941 DEBUG 50935 --- [restartedMain] c.f.t.service.ReschedulingOptionService  : Saving options to repository
-2020-06-04 08:51:07.960 DEBUG 50935 --- [restartedMain] c.f.t.d.jdbc.JdbcReschedulingOptionDao   : Rescheduling options saved
-2020-06-04 08:51:07.983 DEBUG 50935 --- [restartedMain] c.f.t.s.m.g.TimetableModelGenerator      : Schedule templates generated
-2020-06-04 08:51:07.984 DEBUG 50935 --- [restartedMain] c.f.t.service.ScheduleTemplateService    : Saving templates to repository
-2020-06-04 08:51:08.009 DEBUG 50935 --- [restartedMain] c.f.t.dao.jdbc.JdbcScheduleTemplateDao   : Schedule templates saved
-2020-06-04 08:51:08.009  INFO 50935 --- [restartedMain] c.f.t.s.m.g.TimetableModelGenerator      : Timetable model generated
-2020-06-04 08:51:08.032 DEBUG 50935 --- [restartedMain] o.h.v.i.e.resolver.TraversableResolvers  : Cannot find javax.persistence.Persistence on classpath. Assuming non JPA 2 environment. All properties will per default be traversable.
-2020-06-04 08:51:08.032 DEBUG 50935 --- [restartedMain] .h.v.m.ResourceBundleMessageInterpolator : Loaded expression factory via original TCCL
-2020-06-04 08:51:08.037 DEBUG 50935 --- [restartedMain] o.h.v.i.e.resolver.TraversableResolvers  : Cannot find javax.persistence.Persistence on classpath. Assuming non JPA 2 environment. All properties will per default be traversable.
-2020-06-04 08:51:08.039 DEBUG 50935 --- [restartedMain] o.h.v.internal.engine.ConfigurationImpl  : Setting custom MessageInterpolator of type org.springframework.validation.beanvalidation.LocaleContextMessageInterpolator
-2020-06-04 08:51:08.039 DEBUG 50935 --- [restartedMain] o.h.v.internal.engine.ConfigurationImpl  : Setting custom ConstraintValidatorFactory of type org.springframework.validation.beanvalidation.SpringConstraintValidatorFactory
-2020-06-04 08:51:08.040 DEBUG 50935 --- [restartedMain] o.h.v.internal.engine.ConfigurationImpl  : Setting custom ParameterNameProvider of type org.springframework.validation.beanvalidation.LocalValidatorFactoryBean$1
-2020-06-04 08:51:08.043 DEBUG 50935 --- [restartedMain] o.h.v.i.xml.config.ValidationXmlParser   : Trying to load META-INF/validation.xml for XML based Validator configuration.
-2020-06-04 08:51:08.043 DEBUG 50935 --- [restartedMain] o.h.v.i.xml.config.ResourceLoaderHelper  : Trying to load META-INF/validation.xml via user class loader
-2020-06-04 08:51:08.044 DEBUG 50935 --- [restartedMain] o.h.v.i.xml.config.ResourceLoaderHelper  : Trying to load META-INF/validation.xml via TCCL
-2020-06-04 08:51:08.044 DEBUG 50935 --- [restartedMain] o.h.v.i.xml.config.ResourceLoaderHelper  : Trying to load META-INF/validation.xml via Hibernate Validator's class loader
-2020-06-04 08:51:08.044 DEBUG 50935 --- [restartedMain] o.h.v.i.xml.config.ValidationXmlParser   : No META-INF/validation.xml found. Using annotation based configuration only.
-2020-06-04 08:51:08.051 DEBUG 50935 --- [restartedMain] o.h.v.i.engine.ValidatorFactoryImpl      : HV000234: Using org.springframework.validation.beanvalidation.LocaleContextMessageInterpolator as ValidatorFactory-scoped message interpolator.
-2020-06-04 08:51:08.052 DEBUG 50935 --- [restartedMain] o.h.v.i.engine.ValidatorFactoryImpl      : HV000234: Using org.hibernate.validator.internal.engine.resolver.TraverseAllTraversableResolver as ValidatorFactory-scoped traversable resolver.
-2020-06-04 08:51:08.052 DEBUG 50935 --- [restartedMain] o.h.v.i.engine.ValidatorFactoryImpl      : HV000234: Using org.hibernate.validator.internal.util.ExecutableParameterNameProvider as ValidatorFactory-scoped parameter name provider.
-2020-06-04 08:51:08.052 DEBUG 50935 --- [restartedMain] o.h.v.i.engine.ValidatorFactoryImpl      : HV000234: Using org.hibernate.validator.internal.engine.DefaultClockProvider as ValidatorFactory-scoped clock provider.
-2020-06-04 08:51:08.052 DEBUG 50935 --- [restartedMain] o.h.v.i.engine.ValidatorFactoryImpl      : HV000234: Using org.hibernate.validator.internal.engine.scripting.DefaultScriptEvaluatorFactory as ValidatorFactory-scoped script evaluator factory.
-2020-06-04 08:51:08.173  INFO 50935 --- [restartedMain] o.s.s.concurrent.ThreadPoolTaskExecutor  : Initializing ExecutorService 'applicationTaskExecutor'
-2020-06-04 08:51:08.199 DEBUG 50935 --- [restartedMain] s.w.s.m.m.a.RequestMappingHandlerAdapter : ControllerAdvice beans: 1 @ModelAttribute, 0 @InitBinder, 1 RequestBodyAdvice, 1 ResponseBodyAdvice
-2020-06-04 08:51:08.293 DEBUG 50935 --- [restartedMain] s.w.s.m.m.a.RequestMappingHandlerMapping : 53 mappings in 'requestMappingHandlerMapping'
-2020-06-04 08:51:08.300  INFO 50935 --- [restartedMain] o.s.b.a.w.s.WelcomePageHandlerMapping    : Adding welcome page template: index
-2020-06-04 08:51:08.326 DEBUG 50935 --- [restartedMain] o.s.w.s.handler.SimpleUrlHandlerMapping  : Patterns [/webjars/**, /**] in 'resourceHandlerMapping'
-2020-06-04 08:51:08.336 DEBUG 50935 --- [restartedMain] .m.m.a.ExceptionHandlerExceptionResolver : ControllerAdvice beans: 1 @ExceptionHandler, 1 ResponseBodyAdvice
-2020-06-04 08:51:08.490  INFO 50935 --- [restartedMain] o.s.b.w.embedded.tomcat.TomcatWebServer  : Tomcat started on port(s): 8080 (http) with context path ''
-2020-06-04 08:51:08.495  INFO 50935 --- [restartedMain] com.foxminded.timetable.TimetableApp     : Started TimetableApp in 3.983 seconds (JVM running for 5.376)
-2020-06-04 08:51:13.159  INFO 50935 --- [http-nio-8080-exec-1] o.a.c.c.C.[Tomcat].[localhost].[/]       : Initializing Spring DispatcherServlet 'dispatcherServlet'
-2020-06-04 08:51:13.161  INFO 50935 --- [http-nio-8080-exec-1] o.s.web.servlet.DispatcherServlet        : Initializing Servlet 'dispatcherServlet'
-2020-06-04 08:51:13.162 DEBUG 50935 --- [http-nio-8080-exec-1] o.s.web.servlet.DispatcherServlet        : Detected StandardServletMultipartResolver
-2020-06-04 08:51:13.182 DEBUG 50935 --- [http-nio-8080-exec-1] o.s.web.servlet.DispatcherServlet        : enableLoggingRequestDetails='false': request parameters and headers will be masked to prevent unsafe logging of potentially sensitive data
-2020-06-04 08:51:13.183  INFO 50935 --- [http-nio-8080-exec-1] o.s.web.servlet.DispatcherServlet        : Completed initialization in 22 ms
-2020-06-04 08:51:13.202 DEBUG 50935 --- [http-nio-8080-exec-1] o.s.web.servlet.DispatcherServlet        : GET "/", parameters={}
-2020-06-04 08:51:13.208 DEBUG 50935 --- [http-nio-8080-exec-1] s.w.s.m.m.a.RequestMappingHandlerMapping : Mapped to com.foxminded.timetable.controllers.IndexController#index(HttpSession)
-2020-06-04 08:51:13.362 DEBUG 50935 --- [http-nio-8080-exec-1] o.s.w.s.v.ContentNegotiatingViewResolver : Selected 'text/html' given [text/html, application/xhtml+xml, image/webp, image/apng, application/xml;q=0.9, application/signed-exchange;v=b3;q=0.9, */*;q=0.8]
-2020-06-04 08:51:13.375 DEBUG 50935 --- [http-nio-8080-exec-1] org.thymeleaf.TemplateEngine             : [THYMELEAF] INITIALIZING TEMPLATE ENGINE
-2020-06-04 08:51:13.748 DEBUG 50935 --- [http-nio-8080-exec-1] org.thymeleaf.TemplateEngine.CONFIG      : Initializing Thymeleaf Template engine configuration...
+2020-06-08 19:41:41.908  INFO 13491 --- [restartedMain] com.foxminded.timetable.TimetableApp     : Starting TimetableApp on Tarass-Air.mshome.net with PID 13491 (/Users/tarasshablii/Desktop/java/foxminded/workspace/university/university/target/classes started by tarasshablii in /Users/tarasshablii/Desktop/java/foxminded/workspace/university/university)
+2020-06-08 19:41:41.911 DEBUG 13491 --- [restartedMain] com.foxminded.timetable.TimetableApp     : Running with Spring Boot v2.2.6.RELEASE, Spring v5.2.5.RELEASE
+2020-06-08 19:41:41.912  INFO 13491 --- [restartedMain] com.foxminded.timetable.TimetableApp     : No active profile set, falling back to default profiles: default
+2020-06-08 19:41:42.137  INFO 13491 --- [restartedMain] .e.DevToolsPropertyDefaultsPostProcessor : Devtools property defaults active! Set 'spring.devtools.add-properties' to 'false' to disable
+2020-06-08 19:41:43.939  INFO 13491 --- [restartedMain] o.s.b.w.embedded.tomcat.TomcatWebServer  : Tomcat initialized with port(s): 8080 (http)
+2020-06-08 19:41:43.949  INFO 13491 --- [restartedMain] o.apache.catalina.core.StandardService   : Starting service [Tomcat]
+2020-06-08 19:41:43.950  INFO 13491 --- [restartedMain] org.apache.catalina.core.StandardEngine  : Starting Servlet engine: [Apache Tomcat/9.0.33]
+2020-06-08 19:41:44.037  INFO 13491 --- [restartedMain] o.a.c.c.C.[Tomcat].[localhost].[/]       : Initializing Spring embedded WebApplicationContext
+2020-06-08 19:41:44.038 DEBUG 13491 --- [restartedMain] o.s.web.context.ContextLoader            : Published root WebApplicationContext as ServletContext attribute with name [org.springframework.web.context.WebApplicationContext.ROOT]
+2020-06-08 19:41:44.038  INFO 13491 --- [restartedMain] o.s.web.context.ContextLoader            : Root WebApplicationContext: initialization completed in 1896 ms
+2020-06-08 19:41:44.082  INFO 13491 --- [restartedMain] com.zaxxer.hikari.HikariDataSource       : HikariPool-1 - Starting...
+2020-06-08 19:41:44.257  INFO 13491 --- [restartedMain] com.zaxxer.hikari.HikariDataSource       : HikariPool-1 - Start completed.
+2020-06-08 19:41:44.329  INFO 13491 --- [restartedMain] o.s.b.a.h2.H2ConsoleAutoConfiguration    : H2 console available at '/h2-console'. Database available at 'jdbc:h2:~/temp/data'
+2020-06-08 19:41:44.344 DEBUG 13491 --- [restartedMain] o.s.b.w.s.ServletContextInitializerBeans : Mapping filters: characterEncodingFilter urls=[/*] order=-2147483648, formContentFilter urls=[/*] order=-9900, requestContextFilter urls=[/*] order=-105
+2020-06-08 19:41:44.345 DEBUG 13491 --- [restartedMain] o.s.b.w.s.ServletContextInitializerBeans : Mapping servlets: dispatcherServlet urls=[/], webServlet urls=[/h2-console/*]
+2020-06-08 19:41:44.397  INFO 13491 --- [restartedMain] o.s.b.d.a.OptionalLiveReloadServer       : LiveReload server is running on port 35729
+2020-06-08 19:41:44.616  INFO 13491 --- [restartedMain] c.f.t.s.m.g.UniversityModelGenerator     : Generating university model
+2020-06-08 19:41:44.617 DEBUG 13491 --- [restartedMain] c.f.t.s.m.g.UniversityModelGenerator     : Auditoriums generated
+2020-06-08 19:41:44.617 DEBUG 13491 --- [restartedMain] c.f.timetable.service.AuditoriumService  : Saving auditoriums to repository
+2020-06-08 19:41:44.645 DEBUG 13491 --- [restartedMain] c.f.t.dao.jdbc.JdbcAuditoriumDao         : Auditoriums saved
+2020-06-08 19:41:44.647 DEBUG 13491 --- [restartedMain] c.f.t.s.m.g.UniversityModelGenerator     : Courses generated
+2020-06-08 19:41:44.648 DEBUG 13491 --- [restartedMain] c.f.timetable.service.CourseService      : Saving courses to repository
+2020-06-08 19:41:44.657 DEBUG 13491 --- [restartedMain] c.f.timetable.dao.jdbc.JdbcCourseDao     : Courses saved
+2020-06-08 19:41:44.658 DEBUG 13491 --- [restartedMain] c.f.timetable.service.CourseService      : Fetching courses from repository
+2020-06-08 19:41:44.658 DEBUG 13491 --- [restartedMain] c.f.timetable.dao.jdbc.JdbcCourseDao     : Retrieving courses
+2020-06-08 19:41:44.670 DEBUG 13491 --- [restartedMain] c.f.t.s.m.g.UniversityModelGenerator     : Professors generated
+2020-06-08 19:41:44.670 DEBUG 13491 --- [restartedMain] c.f.timetable.service.ProfessorService   : Saving professors to repository
+2020-06-08 19:41:44.678 DEBUG 13491 --- [restartedMain] c.f.timetable.dao.jdbc.JdbcProfessorDao  : Professors saved
+2020-06-08 19:41:44.678 DEBUG 13491 --- [restartedMain] c.f.timetable.service.ProfessorService   : Fetching professors from repository
+2020-06-08 19:41:44.678 DEBUG 13491 --- [restartedMain] c.f.timetable.dao.jdbc.JdbcProfessorDao  : Retrieving professors
+2020-06-08 19:41:44.686 DEBUG 13491 --- [restartedMain] c.f.t.s.m.g.UniversityModelGenerator     : Courses assigned to professors
+2020-06-08 19:41:44.687 DEBUG 13491 --- [restartedMain] c.f.timetable.service.ProfessorService   : Updating professor Professor(firstName=Karaindash, lastName=the Wisdomous, id=1, courses=[Course(id=1, name=Scientology), Course(id=4, name=Dark Magic), Course(id=8, name=Applied Polyandry)])
+2020-06-08 19:41:44.690 DEBUG 13491 --- [restartedMain] c.f.timetable.dao.jdbc.JdbcProfessorDao  : Deleted courses for Professor(firstName=Karaindash, lastName=the Wisdomous, id=1, courses=[Course(id=1, name=Scientology), Course(id=4, name=Dark Magic), Course(id=8, name=Applied Polyandry)])
+2020-06-08 19:41:44.692 DEBUG 13491 --- [restartedMain] c.f.timetable.dao.jdbc.JdbcProfessorDao  : Course assignments to professors saved
+2020-06-08 19:41:44.693 DEBUG 13491 --- [restartedMain] c.f.timetable.service.ProfessorService   : Updating professor Professor(firstName=Esarhaddon, lastName=the Great, id=2, courses=[Course(id=1, name=Scientology), Course(id=4, name=Dark Magic), Course(id=9, name=DB Sanitation'); DROP TABLE students; --)])
+2020-06-08 19:41:44.693 DEBUG 13491 --- [restartedMain] c.f.timetable.dao.jdbc.JdbcProfessorDao  : Deleted courses for Professor(firstName=Esarhaddon, lastName=the Great, id=2, courses=[Course(id=1, name=Scientology), Course(id=4, name=Dark Magic), Course(id=9, name=DB Sanitation'); DROP TABLE students; --)])
+2020-06-08 19:41:44.694 DEBUG 13491 --- [restartedMain] c.f.timetable.dao.jdbc.JdbcProfessorDao  : Course assignments to professors saved
+2020-06-08 19:41:44.695 DEBUG 13491 --- [restartedMain] c.f.timetable.service.ProfessorService   : Updating professor Professor(firstName=Marduk-apla-iddina, lastName=the I, id=3, courses=[Course(id=2, name=Procrastination101), Course(id=5, name=Defense Against Dark Magic), Course(id=10, name=Modern Sand Castle Architecture)])
+2020-06-08 19:41:44.695 DEBUG 13491 --- [restartedMain] c.f.timetable.dao.jdbc.JdbcProfessorDao  : Deleted courses for Professor(firstName=Marduk-apla-iddina, lastName=the I, id=3, courses=[Course(id=2, name=Procrastination101), Course(id=5, name=Defense Against Dark Magic), Course(id=10, name=Modern Sand Castle Architecture)])
+2020-06-08 19:41:44.696 DEBUG 13491 --- [restartedMain] c.f.timetable.dao.jdbc.JdbcProfessorDao  : Course assignments to professors saved
+2020-06-08 19:41:44.696 DEBUG 13491 --- [restartedMain] c.f.timetable.service.ProfessorService   : Updating professor Professor(firstName=Ayadaragalama, lastName=the Wisdomous, id=4, courses=[Course(id=2, name=Procrastination101), Course(id=6, name=Dark Magic Against Defense Against Dark Magic)])
+2020-06-08 19:41:44.697 DEBUG 13491 --- [restartedMain] c.f.timetable.dao.jdbc.JdbcProfessorDao  : Deleted courses for Professor(firstName=Ayadaragalama, lastName=the Wisdomous, id=4, courses=[Course(id=2, name=Procrastination101), Course(id=6, name=Dark Magic Against Defense Against Dark Magic)])
+2020-06-08 19:41:44.698 DEBUG 13491 --- [restartedMain] c.f.timetable.dao.jdbc.JdbcProfessorDao  : Course assignments to professors saved
+2020-06-08 19:41:44.699 DEBUG 13491 --- [restartedMain] c.f.timetable.service.ProfessorService   : Updating professor Professor(firstName=Ashurbanipal, lastName=Sandlicker, id=5, courses=[Course(id=3, name=Demagoguery), Course(id=7, name=Theoretical Camel Tracking)])
+2020-06-08 19:41:44.700 DEBUG 13491 --- [restartedMain] c.f.timetable.dao.jdbc.JdbcProfessorDao  : Deleted courses for Professor(firstName=Ashurbanipal, lastName=Sandlicker, id=5, courses=[Course(id=3, name=Demagoguery), Course(id=7, name=Theoretical Camel Tracking)])
+2020-06-08 19:41:44.702 DEBUG 13491 --- [restartedMain] c.f.timetable.dao.jdbc.JdbcProfessorDao  : Course assignments to professors saved
+2020-06-08 19:41:44.704 DEBUG 13491 --- [restartedMain] c.f.t.s.m.g.UniversityModelGenerator     : Groups generated
+2020-06-08 19:41:44.705 DEBUG 13491 --- [restartedMain] c.f.timetable.service.GroupService       : Saving groups to repository
+2020-06-08 19:41:44.714 DEBUG 13491 --- [restartedMain] c.f.timetable.dao.jdbc.JdbcGroupDao      : Groups saved
+2020-06-08 19:41:44.714 DEBUG 13491 --- [restartedMain] c.f.timetable.service.GroupService       : Fetching groups from repository
+2020-06-08 19:41:44.715 DEBUG 13491 --- [restartedMain] c.f.timetable.dao.jdbc.JdbcGroupDao      : Retrieving groups
+2020-06-08 19:41:44.717 DEBUG 13491 --- [restartedMain] c.f.t.s.m.g.UniversityModelGenerator     : Students generated
+2020-06-08 19:41:44.735 DEBUG 13491 --- [restartedMain] c.f.t.s.m.g.UniversityModelGenerator     : Students grouped
+2020-06-08 19:41:44.735 DEBUG 13491 --- [restartedMain] c.f.timetable.service.StudentService     : Saving students to repository
+2020-06-08 19:41:44.799 DEBUG 13491 --- [restartedMain] c.f.timetable.dao.jdbc.JdbcStudentDao    : Students saved
+2020-06-08 19:41:44.799  INFO 13491 --- [restartedMain] c.f.t.s.m.g.UniversityModelGenerator     : University model generated
+2020-06-08 19:41:44.799  INFO 13491 --- [restartedMain] c.f.t.s.m.g.TimetableModelGenerator      : Generating timetable model
+2020-06-08 19:41:44.799 DEBUG 13491 --- [restartedMain] c.f.timetable.service.GroupService       : Fetching groups from repository
+2020-06-08 19:41:44.799 DEBUG 13491 --- [restartedMain] c.f.timetable.dao.jdbc.JdbcGroupDao      : Retrieving groups
+2020-06-08 19:41:44.800 DEBUG 13491 --- [restartedMain] c.f.timetable.service.CourseService      : Fetching courses from repository
+2020-06-08 19:41:44.801 DEBUG 13491 --- [restartedMain] c.f.timetable.dao.jdbc.JdbcCourseDao     : Retrieving courses
+2020-06-08 19:41:44.802 DEBUG 13491 --- [restartedMain] c.f.timetable.service.ProfessorService   : Fetching professors from repository
+2020-06-08 19:41:44.802 DEBUG 13491 --- [restartedMain] c.f.timetable.dao.jdbc.JdbcProfessorDao  : Retrieving professors
+2020-06-08 19:41:44.804 DEBUG 13491 --- [restartedMain] c.f.timetable.service.AuditoriumService  : Fetching auditoriums from repository
+2020-06-08 19:41:44.804 DEBUG 13491 --- [restartedMain] c.f.t.dao.jdbc.JdbcAuditoriumDao         : Retrieving auditoriums
+2020-06-08 19:41:44.807 DEBUG 13491 --- [restartedMain] c.f.t.s.m.g.TimetableModelGenerator      : Rescheduling options generated
+2020-06-08 19:41:44.810 DEBUG 13491 --- [restartedMain] c.f.t.service.ReschedulingOptionService  : Saving options to repository
+2020-06-08 19:41:44.842 DEBUG 13491 --- [restartedMain] c.f.t.d.jdbc.JdbcReschedulingOptionDao   : Rescheduling options saved
+2020-06-08 19:41:44.873 DEBUG 13491 --- [restartedMain] c.f.t.s.m.g.TimetableModelGenerator      : Schedule templates generated
+2020-06-08 19:41:44.873 DEBUG 13491 --- [restartedMain] c.f.t.service.ScheduleTemplateService    : Saving templates to repository
+2020-06-08 19:41:44.898 DEBUG 13491 --- [restartedMain] c.f.t.dao.jdbc.JdbcScheduleTemplateDao   : Schedule templates saved
+2020-06-08 19:41:44.898  INFO 13491 --- [restartedMain] c.f.t.s.m.g.TimetableModelGenerator      : Timetable model generated
+2020-06-08 19:41:44.924 DEBUG 13491 --- [restartedMain] o.h.v.i.e.resolver.TraversableResolvers  : Cannot find javax.persistence.Persistence on classpath. Assuming non JPA 2 environment. All properties will per default be traversable.
+2020-06-08 19:41:44.925 DEBUG 13491 --- [restartedMain] .h.v.m.ResourceBundleMessageInterpolator : Loaded expression factory via original TCCL
+2020-06-08 19:41:44.929 DEBUG 13491 --- [restartedMain] o.h.v.i.e.resolver.TraversableResolvers  : Cannot find javax.persistence.Persistence on classpath. Assuming non JPA 2 environment. All properties will per default be traversable.
+2020-06-08 19:41:44.931 DEBUG 13491 --- [restartedMain] o.h.v.internal.engine.ConfigurationImpl  : Setting custom MessageInterpolator of type org.springframework.validation.beanvalidation.LocaleContextMessageInterpolator
+2020-06-08 19:41:44.931 DEBUG 13491 --- [restartedMain] o.h.v.internal.engine.ConfigurationImpl  : Setting custom ConstraintValidatorFactory of type org.springframework.validation.beanvalidation.SpringConstraintValidatorFactory
+2020-06-08 19:41:44.933 DEBUG 13491 --- [restartedMain] o.h.v.internal.engine.ConfigurationImpl  : Setting custom ParameterNameProvider of type org.springframework.validation.beanvalidation.LocalValidatorFactoryBean$1
+2020-06-08 19:41:44.935 DEBUG 13491 --- [restartedMain] o.h.v.i.xml.config.ValidationXmlParser   : Trying to load META-INF/validation.xml for XML based Validator configuration.
+2020-06-08 19:41:44.935 DEBUG 13491 --- [restartedMain] o.h.v.i.xml.config.ResourceLoaderHelper  : Trying to load META-INF/validation.xml via user class loader
+2020-06-08 19:41:44.936 DEBUG 13491 --- [restartedMain] o.h.v.i.xml.config.ResourceLoaderHelper  : Trying to load META-INF/validation.xml via TCCL
+2020-06-08 19:41:44.936 DEBUG 13491 --- [restartedMain] o.h.v.i.xml.config.ResourceLoaderHelper  : Trying to load META-INF/validation.xml via Hibernate Validator's class loader
+2020-06-08 19:41:44.936 DEBUG 13491 --- [restartedMain] o.h.v.i.xml.config.ValidationXmlParser   : No META-INF/validation.xml found. Using annotation based configuration only.
+2020-06-08 19:41:44.943 DEBUG 13491 --- [restartedMain] o.h.v.i.engine.ValidatorFactoryImpl      : HV000234: Using org.springframework.validation.beanvalidation.LocaleContextMessageInterpolator as ValidatorFactory-scoped message interpolator.
+2020-06-08 19:41:44.944 DEBUG 13491 --- [restartedMain] o.h.v.i.engine.ValidatorFactoryImpl      : HV000234: Using org.hibernate.validator.internal.engine.resolver.TraverseAllTraversableResolver as ValidatorFactory-scoped traversable resolver.
+2020-06-08 19:41:44.944 DEBUG 13491 --- [restartedMain] o.h.v.i.engine.ValidatorFactoryImpl      : HV000234: Using org.hibernate.validator.internal.util.ExecutableParameterNameProvider as ValidatorFactory-scoped parameter name provider.
+2020-06-08 19:41:44.944 DEBUG 13491 --- [restartedMain] o.h.v.i.engine.ValidatorFactoryImpl      : HV000234: Using org.hibernate.validator.internal.engine.DefaultClockProvider as ValidatorFactory-scoped clock provider.
+2020-06-08 19:41:44.945 DEBUG 13491 --- [restartedMain] o.h.v.i.engine.ValidatorFactoryImpl      : HV000234: Using org.hibernate.validator.internal.engine.scripting.DefaultScriptEvaluatorFactory as ValidatorFactory-scoped script evaluator factory.
+2020-06-08 19:41:45.066  INFO 13491 --- [restartedMain] o.s.s.concurrent.ThreadPoolTaskExecutor  : Initializing ExecutorService 'applicationTaskExecutor'
+2020-06-08 19:41:45.090 DEBUG 13491 --- [restartedMain] s.w.s.m.m.a.RequestMappingHandlerAdapter : ControllerAdvice beans: 1 @ModelAttribute, 0 @InitBinder, 1 RequestBodyAdvice, 1 ResponseBodyAdvice
+2020-06-08 19:41:45.177 DEBUG 13491 --- [restartedMain] s.w.s.m.m.a.RequestMappingHandlerMapping : 53 mappings in 'requestMappingHandlerMapping'
+2020-06-08 19:41:45.182  INFO 13491 --- [restartedMain] o.s.b.a.w.s.WelcomePageHandlerMapping    : Adding welcome page template: index
+2020-06-08 19:41:45.207 DEBUG 13491 --- [restartedMain] o.s.w.s.handler.SimpleUrlHandlerMapping  : Patterns [/webjars/**, /**] in 'resourceHandlerMapping'
+2020-06-08 19:41:45.218 DEBUG 13491 --- [restartedMain] .m.m.a.ExceptionHandlerExceptionResolver : ControllerAdvice beans: 1 @ExceptionHandler, 1 ResponseBodyAdvice
+2020-06-08 19:41:45.377  INFO 13491 --- [restartedMain] o.s.b.w.embedded.tomcat.TomcatWebServer  : Tomcat started on port(s): 8080 (http) with context path ''
+2020-06-08 19:41:45.381  INFO 13491 --- [restartedMain] com.foxminded.timetable.TimetableApp     : Started TimetableApp in 4.329 seconds (JVM running for 5.397)
+2020-06-08 19:41:49.602  INFO 13491 --- [http-nio-8080-exec-1] o.a.c.c.C.[Tomcat].[localhost].[/]       : Initializing Spring DispatcherServlet 'dispatcherServlet'
+2020-06-08 19:41:49.603  INFO 13491 --- [http-nio-8080-exec-1] o.s.web.servlet.DispatcherServlet        : Initializing Servlet 'dispatcherServlet'
+2020-06-08 19:41:49.603 DEBUG 13491 --- [http-nio-8080-exec-1] o.s.web.servlet.DispatcherServlet        : Detected StandardServletMultipartResolver
+2020-06-08 19:41:49.625 DEBUG 13491 --- [http-nio-8080-exec-1] o.s.web.servlet.DispatcherServlet        : enableLoggingRequestDetails='false': request parameters and headers will be masked to prevent unsafe logging of potentially sensitive data
+2020-06-08 19:41:49.626  INFO 13491 --- [http-nio-8080-exec-1] o.s.web.servlet.DispatcherServlet        : Completed initialization in 23 ms
+2020-06-08 19:41:49.644 DEBUG 13491 --- [http-nio-8080-exec-1] o.s.web.servlet.DispatcherServlet        : GET "/", parameters={}
+2020-06-08 19:41:49.650 DEBUG 13491 --- [http-nio-8080-exec-1] s.w.s.m.m.a.RequestMappingHandlerMapping : Mapped to com.foxminded.timetable.controllers.IndexController#index(HttpSession)
+2020-06-08 19:41:49.721 DEBUG 13491 --- [http-nio-8080-exec-1] o.s.w.s.v.ContentNegotiatingViewResolver : Selected 'text/html' given [text/html, application/xhtml+xml, image/webp, image/apng, application/xml;q=0.9, application/signed-exchange;v=b3;q=0.9, */*;q=0.8]
+2020-06-08 19:41:49.724 DEBUG 13491 --- [http-nio-8080-exec-1] org.thymeleaf.TemplateEngine             : [THYMELEAF] INITIALIZING TEMPLATE ENGINE
+2020-06-08 19:41:50.045 DEBUG 13491 --- [http-nio-8080-exec-1] org.thymeleaf.TemplateEngine.CONFIG      : Initializing Thymeleaf Template engine configuration...
 [THYMELEAF] TEMPLATE ENGINE CONFIGURATION:
 [THYMELEAF] * Thymeleaf version: 3.0.11.RELEASE (built 2018-10-28T22:35:28+0000)
 [THYMELEAF] * Cache Manager implementation: org.thymeleaf.cache.StandardCacheManager
@@ -147,198 +147,198 @@
 [THYMELEAF]             * [* {th:action,data-th-action}] [1000]: org.thymeleaf.spring5.processor.SpringActionTagProcessor
 [THYMELEAF]             * [* {th:href,data-th-href}] [1000]: org.thymeleaf.spring5.processor.SpringHrefTagProcessor
 [THYMELEAF]             * [* {th:src,data-th-src}] [1000]: org.thymeleaf.spring5.processor.SpringSrcTagProcessor
-[THYMELEAF]             * [* {th:disabled,data-th-disabled}] [1000]: org.thymeleaf.standard.processor.StandardConditionalFixedValueTagProcessor
-[THYMELEAF]             * [* {th:async,data-th-async}] [1000]: org.thymeleaf.standard.processor.StandardConditionalFixedValueTagProcessor
-[THYMELEAF]             * [* {th:novalidate,data-th-novalidate}] [1000]: org.thymeleaf.standard.processor.StandardConditionalFixedValueTagProcessor
-[THYMELEAF]             * [* {th:reversed,data-th-reversed}] [1000]: org.thymeleaf.standard.processor.StandardConditionalFixedValueTagProcessor
-[THYMELEAF]             * [* {th:open,data-th-open}] [1000]: org.thymeleaf.standard.processor.StandardConditionalFixedValueTagProcessor
-[THYMELEAF]             * [* {th:checked,data-th-checked}] [1000]: org.thymeleaf.standard.processor.StandardConditionalFixedValueTagProcessor
-[THYMELEAF]             * [* {th:required,data-th-required}] [1000]: org.thymeleaf.standard.processor.StandardConditionalFixedValueTagProcessor
-[THYMELEAF]             * [* {th:nowrap,data-th-nowrap}] [1000]: org.thymeleaf.standard.processor.StandardConditionalFixedValueTagProcessor
 [THYMELEAF]             * [* {th:autoplay,data-th-autoplay}] [1000]: org.thymeleaf.standard.processor.StandardConditionalFixedValueTagProcessor
-[THYMELEAF]             * [* {th:scoped,data-th-scoped}] [1000]: org.thymeleaf.standard.processor.StandardConditionalFixedValueTagProcessor
-[THYMELEAF]             * [* {th:selected,data-th-selected}] [1000]: org.thymeleaf.standard.processor.StandardConditionalFixedValueTagProcessor
-[THYMELEAF]             * [* {th:loop,data-th-loop}] [1000]: org.thymeleaf.standard.processor.StandardConditionalFixedValueTagProcessor
-[THYMELEAF]             * [* {th:seamless,data-th-seamless}] [1000]: org.thymeleaf.standard.processor.StandardConditionalFixedValueTagProcessor
-[THYMELEAF]             * [* {th:ismap,data-th-ismap}] [1000]: org.thymeleaf.standard.processor.StandardConditionalFixedValueTagProcessor
-[THYMELEAF]             * [* {th:formnovalidate,data-th-formnovalidate}] [1000]: org.thymeleaf.standard.processor.StandardConditionalFixedValueTagProcessor
-[THYMELEAF]             * [* {th:controls,data-th-controls}] [1000]: org.thymeleaf.standard.processor.StandardConditionalFixedValueTagProcessor
-[THYMELEAF]             * [* {th:hidden,data-th-hidden}] [1000]: org.thymeleaf.standard.processor.StandardConditionalFixedValueTagProcessor
-[THYMELEAF]             * [* {th:autofocus,data-th-autofocus}] [1000]: org.thymeleaf.standard.processor.StandardConditionalFixedValueTagProcessor
-[THYMELEAF]             * [* {th:defer,data-th-defer}] [1000]: org.thymeleaf.standard.processor.StandardConditionalFixedValueTagProcessor
-[THYMELEAF]             * [* {th:multiple,data-th-multiple}] [1000]: org.thymeleaf.standard.processor.StandardConditionalFixedValueTagProcessor
 [THYMELEAF]             * [* {th:readonly,data-th-readonly}] [1000]: org.thymeleaf.standard.processor.StandardConditionalFixedValueTagProcessor
-[THYMELEAF]             * [* {th:declare,data-th-declare}] [1000]: org.thymeleaf.standard.processor.StandardConditionalFixedValueTagProcessor
-[THYMELEAF]             * [* {th:pubdate,data-th-pubdate}] [1000]: org.thymeleaf.standard.processor.StandardConditionalFixedValueTagProcessor
+[THYMELEAF]             * [* {th:controls,data-th-controls}] [1000]: org.thymeleaf.standard.processor.StandardConditionalFixedValueTagProcessor
+[THYMELEAF]             * [* {th:formnovalidate,data-th-formnovalidate}] [1000]: org.thymeleaf.standard.processor.StandardConditionalFixedValueTagProcessor
+[THYMELEAF]             * [* {th:nowrap,data-th-nowrap}] [1000]: org.thymeleaf.standard.processor.StandardConditionalFixedValueTagProcessor
 [THYMELEAF]             * [* {th:default,data-th-default}] [1000]: org.thymeleaf.standard.processor.StandardConditionalFixedValueTagProcessor
-[THYMELEAF]             * [* {th:onprogress,data-th-onprogress}] [1000]: org.thymeleaf.standard.processor.StandardDOMEventAttributeTagProcessor
-[THYMELEAF]             * [* {th:onmouseout,data-th-onmouseout}] [1000]: org.thymeleaf.standard.processor.StandardDOMEventAttributeTagProcessor
-[THYMELEAF]             * [* {th:onmousemove,data-th-onmousemove}] [1000]: org.thymeleaf.standard.processor.StandardDOMEventAttributeTagProcessor
-[THYMELEAF]             * [* {th:onbeforeunload,data-th-onbeforeunload}] [1000]: org.thymeleaf.standard.processor.StandardDOMEventAttributeTagProcessor
-[THYMELEAF]             * [* {th:onsubmit,data-th-onsubmit}] [1000]: org.thymeleaf.standard.processor.StandardDOMEventAttributeTagProcessor
-[THYMELEAF]             * [* {th:onselect,data-th-onselect}] [1000]: org.thymeleaf.standard.processor.StandardDOMEventAttributeTagProcessor
-[THYMELEAF]             * [* {th:onresize,data-th-onresize}] [1000]: org.thymeleaf.standard.processor.StandardDOMEventAttributeTagProcessor
-[THYMELEAF]             * [* {th:onmousedown,data-th-onmousedown}] [1000]: org.thymeleaf.standard.processor.StandardDOMEventAttributeTagProcessor
-[THYMELEAF]             * [* {th:onratechange,data-th-onratechange}] [1000]: org.thymeleaf.standard.processor.StandardDOMEventAttributeTagProcessor
-[THYMELEAF]             * [* {th:onunload,data-th-onunload}] [1000]: org.thymeleaf.standard.processor.StandardDOMEventAttributeTagProcessor
-[THYMELEAF]             * [* {th:onmouseover,data-th-onmouseover}] [1000]: org.thymeleaf.standard.processor.StandardDOMEventAttributeTagProcessor
-[THYMELEAF]             * [* {th:onmousewheel,data-th-onmousewheel}] [1000]: org.thymeleaf.standard.processor.StandardDOMEventAttributeTagProcessor
-[THYMELEAF]             * [* {th:oncanplay,data-th-oncanplay}] [1000]: org.thymeleaf.standard.processor.StandardDOMEventAttributeTagProcessor
-[THYMELEAF]             * [* {th:onstorage,data-th-onstorage}] [1000]: org.thymeleaf.standard.processor.StandardDOMEventAttributeTagProcessor
-[THYMELEAF]             * [* {th:onwaiting,data-th-onwaiting}] [1000]: org.thymeleaf.standard.processor.StandardDOMEventAttributeTagProcessor
-[THYMELEAF]             * [* {th:onplay,data-th-onplay}] [1000]: org.thymeleaf.standard.processor.StandardDOMEventAttributeTagProcessor
-[THYMELEAF]             * [* {th:onstalled,data-th-onstalled}] [1000]: org.thymeleaf.standard.processor.StandardDOMEventAttributeTagProcessor
-[THYMELEAF]             * [* {th:onloadstart,data-th-onloadstart}] [1000]: org.thymeleaf.standard.processor.StandardDOMEventAttributeTagProcessor
-[THYMELEAF]             * [* {th:onmessage,data-th-onmessage}] [1000]: org.thymeleaf.standard.processor.StandardDOMEventAttributeTagProcessor
-[THYMELEAF]             * [* {th:ondrag,data-th-ondrag}] [1000]: org.thymeleaf.standard.processor.StandardDOMEventAttributeTagProcessor
-[THYMELEAF]             * [* {th:onshow,data-th-onshow}] [1000]: org.thymeleaf.standard.processor.StandardDOMEventAttributeTagProcessor
-[THYMELEAF]             * [* {th:onsuspend,data-th-onsuspend}] [1000]: org.thymeleaf.standard.processor.StandardDOMEventAttributeTagProcessor
-[THYMELEAF]             * [* {th:onformchange,data-th-onformchange}] [1000]: org.thymeleaf.standard.processor.StandardDOMEventAttributeTagProcessor
-[THYMELEAF]             * [* {th:ondurationchange,data-th-ondurationchange}] [1000]: org.thymeleaf.standard.processor.StandardDOMEventAttributeTagProcessor
-[THYMELEAF]             * [* {th:ondragover,data-th-ondragover}] [1000]: org.thymeleaf.standard.processor.StandardDOMEventAttributeTagProcessor
-[THYMELEAF]             * [* {th:onseeking,data-th-onseeking}] [1000]: org.thymeleaf.standard.processor.StandardDOMEventAttributeTagProcessor
-[THYMELEAF]             * [* {th:onbeforeprint,data-th-onbeforeprint}] [1000]: org.thymeleaf.standard.processor.StandardDOMEventAttributeTagProcessor
-[THYMELEAF]             * [* {th:ontimeupdate,data-th-ontimeupdate}] [1000]: org.thymeleaf.standard.processor.StandardDOMEventAttributeTagProcessor
-[THYMELEAF]             * [* {th:ondragenter,data-th-ondragenter}] [1000]: org.thymeleaf.standard.processor.StandardDOMEventAttributeTagProcessor
-[THYMELEAF]             * [* {th:onpopstate,data-th-onpopstate}] [1000]: org.thymeleaf.standard.processor.StandardDOMEventAttributeTagProcessor
-[THYMELEAF]             * [* {th:onscroll,data-th-onscroll}] [1000]: org.thymeleaf.standard.processor.StandardDOMEventAttributeTagProcessor
+[THYMELEAF]             * [* {th:open,data-th-open}] [1000]: org.thymeleaf.standard.processor.StandardConditionalFixedValueTagProcessor
+[THYMELEAF]             * [* {th:novalidate,data-th-novalidate}] [1000]: org.thymeleaf.standard.processor.StandardConditionalFixedValueTagProcessor
+[THYMELEAF]             * [* {th:required,data-th-required}] [1000]: org.thymeleaf.standard.processor.StandardConditionalFixedValueTagProcessor
+[THYMELEAF]             * [* {th:loop,data-th-loop}] [1000]: org.thymeleaf.standard.processor.StandardConditionalFixedValueTagProcessor
+[THYMELEAF]             * [* {th:hidden,data-th-hidden}] [1000]: org.thymeleaf.standard.processor.StandardConditionalFixedValueTagProcessor
+[THYMELEAF]             * [* {th:reversed,data-th-reversed}] [1000]: org.thymeleaf.standard.processor.StandardConditionalFixedValueTagProcessor
+[THYMELEAF]             * [* {th:checked,data-th-checked}] [1000]: org.thymeleaf.standard.processor.StandardConditionalFixedValueTagProcessor
+[THYMELEAF]             * [* {th:defer,data-th-defer}] [1000]: org.thymeleaf.standard.processor.StandardConditionalFixedValueTagProcessor
+[THYMELEAF]             * [* {th:ismap,data-th-ismap}] [1000]: org.thymeleaf.standard.processor.StandardConditionalFixedValueTagProcessor
+[THYMELEAF]             * [* {th:seamless,data-th-seamless}] [1000]: org.thymeleaf.standard.processor.StandardConditionalFixedValueTagProcessor
+[THYMELEAF]             * [* {th:selected,data-th-selected}] [1000]: org.thymeleaf.standard.processor.StandardConditionalFixedValueTagProcessor
+[THYMELEAF]             * [* {th:autofocus,data-th-autofocus}] [1000]: org.thymeleaf.standard.processor.StandardConditionalFixedValueTagProcessor
+[THYMELEAF]             * [* {th:scoped,data-th-scoped}] [1000]: org.thymeleaf.standard.processor.StandardConditionalFixedValueTagProcessor
+[THYMELEAF]             * [* {th:pubdate,data-th-pubdate}] [1000]: org.thymeleaf.standard.processor.StandardConditionalFixedValueTagProcessor
+[THYMELEAF]             * [* {th:disabled,data-th-disabled}] [1000]: org.thymeleaf.standard.processor.StandardConditionalFixedValueTagProcessor
+[THYMELEAF]             * [* {th:multiple,data-th-multiple}] [1000]: org.thymeleaf.standard.processor.StandardConditionalFixedValueTagProcessor
+[THYMELEAF]             * [* {th:declare,data-th-declare}] [1000]: org.thymeleaf.standard.processor.StandardConditionalFixedValueTagProcessor
+[THYMELEAF]             * [* {th:async,data-th-async}] [1000]: org.thymeleaf.standard.processor.StandardConditionalFixedValueTagProcessor
+[THYMELEAF]             * [* {th:ondragend,data-th-ondragend}] [1000]: org.thymeleaf.standard.processor.StandardDOMEventAttributeTagProcessor
 [THYMELEAF]             * [* {th:onvolumechange,data-th-onvolumechange}] [1000]: org.thymeleaf.standard.processor.StandardDOMEventAttributeTagProcessor
-[THYMELEAF]             * [* {th:onhashchange,data-th-onhashchange}] [1000]: org.thymeleaf.standard.processor.StandardDOMEventAttributeTagProcessor
-[THYMELEAF]             * [* {th:oncontextmenu,data-th-oncontextmenu}] [1000]: org.thymeleaf.standard.processor.StandardDOMEventAttributeTagProcessor
-[THYMELEAF]             * [* {th:onpause,data-th-onpause}] [1000]: org.thymeleaf.standard.processor.StandardDOMEventAttributeTagProcessor
-[THYMELEAF]             * [* {th:onmouseup,data-th-onmouseup}] [1000]: org.thymeleaf.standard.processor.StandardDOMEventAttributeTagProcessor
-[THYMELEAF]             * [* {th:onclick,data-th-onclick}] [1000]: org.thymeleaf.standard.processor.StandardDOMEventAttributeTagProcessor
-[THYMELEAF]             * [* {th:onseeked,data-th-onseeked}] [1000]: org.thymeleaf.standard.processor.StandardDOMEventAttributeTagProcessor
-[THYMELEAF]             * [* {th:oninvalid,data-th-oninvalid}] [1000]: org.thymeleaf.standard.processor.StandardDOMEventAttributeTagProcessor
+[THYMELEAF]             * [* {th:ondragenter,data-th-ondragenter}] [1000]: org.thymeleaf.standard.processor.StandardDOMEventAttributeTagProcessor
 [THYMELEAF]             * [* {th:onkeydown,data-th-onkeydown}] [1000]: org.thymeleaf.standard.processor.StandardDOMEventAttributeTagProcessor
-[THYMELEAF]             * [* {th:onkeyup,data-th-onkeyup}] [1000]: org.thymeleaf.standard.processor.StandardDOMEventAttributeTagProcessor
-[THYMELEAF]             * [* {th:ondragstart,data-th-ondragstart}] [1000]: org.thymeleaf.standard.processor.StandardDOMEventAttributeTagProcessor
-[THYMELEAF]             * [* {th:onerror,data-th-onerror}] [1000]: org.thymeleaf.standard.processor.StandardDOMEventAttributeTagProcessor
-[THYMELEAF]             * [* {th:onemptied,data-th-onemptied}] [1000]: org.thymeleaf.standard.processor.StandardDOMEventAttributeTagProcessor
-[THYMELEAF]             * [* {th:ondrop,data-th-ondrop}] [1000]: org.thymeleaf.standard.processor.StandardDOMEventAttributeTagProcessor
-[THYMELEAF]             * [* {th:ondblclick,data-th-ondblclick}] [1000]: org.thymeleaf.standard.processor.StandardDOMEventAttributeTagProcessor
-[THYMELEAF]             * [* {th:onfocus,data-th-onfocus}] [1000]: org.thymeleaf.standard.processor.StandardDOMEventAttributeTagProcessor
-[THYMELEAF]             * [* {th:onforminput,data-th-onforminput}] [1000]: org.thymeleaf.standard.processor.StandardDOMEventAttributeTagProcessor
-[THYMELEAF]             * [* {th:onreadystatechange,data-th-onreadystatechange}] [1000]: org.thymeleaf.standard.processor.StandardDOMEventAttributeTagProcessor
-[THYMELEAF]             * [* {th:onoffline,data-th-onoffline}] [1000]: org.thymeleaf.standard.processor.StandardDOMEventAttributeTagProcessor
-[THYMELEAF]             * [* {th:onafterprint,data-th-onafterprint}] [1000]: org.thymeleaf.standard.processor.StandardDOMEventAttributeTagProcessor
-[THYMELEAF]             * [* {th:onload,data-th-onload}] [1000]: org.thymeleaf.standard.processor.StandardDOMEventAttributeTagProcessor
-[THYMELEAF]             * [* {th:ondragleave,data-th-ondragleave}] [1000]: org.thymeleaf.standard.processor.StandardDOMEventAttributeTagProcessor
-[THYMELEAF]             * [* {th:ononline,data-th-ononline}] [1000]: org.thymeleaf.standard.processor.StandardDOMEventAttributeTagProcessor
-[THYMELEAF]             * [* {th:onabort,data-th-onabort}] [1000]: org.thymeleaf.standard.processor.StandardDOMEventAttributeTagProcessor
-[THYMELEAF]             * [* {th:onended,data-th-onended}] [1000]: org.thymeleaf.standard.processor.StandardDOMEventAttributeTagProcessor
+[THYMELEAF]             * [* {th:onpopstate,data-th-onpopstate}] [1000]: org.thymeleaf.standard.processor.StandardDOMEventAttributeTagProcessor
+[THYMELEAF]             * [* {th:onplaying,data-th-onplaying}] [1000]: org.thymeleaf.standard.processor.StandardDOMEventAttributeTagProcessor
+[THYMELEAF]             * [* {th:oncanplaythrough,data-th-oncanplaythrough}] [1000]: org.thymeleaf.standard.processor.StandardDOMEventAttributeTagProcessor
+[THYMELEAF]             * [* {th:onmouseup,data-th-onmouseup}] [1000]: org.thymeleaf.standard.processor.StandardDOMEventAttributeTagProcessor
+[THYMELEAF]             * [* {th:onloadeddata,data-th-onloadeddata}] [1000]: org.thymeleaf.standard.processor.StandardDOMEventAttributeTagProcessor
 [THYMELEAF]             * [* {th:onundo,data-th-onundo}] [1000]: org.thymeleaf.standard.processor.StandardDOMEventAttributeTagProcessor
 [THYMELEAF]             * [* {th:onkeypress,data-th-onkeypress}] [1000]: org.thymeleaf.standard.processor.StandardDOMEventAttributeTagProcessor
-[THYMELEAF]             * [* {th:onloadeddata,data-th-onloadeddata}] [1000]: org.thymeleaf.standard.processor.StandardDOMEventAttributeTagProcessor
-[THYMELEAF]             * [* {th:ondragend,data-th-ondragend}] [1000]: org.thymeleaf.standard.processor.StandardDOMEventAttributeTagProcessor
-[THYMELEAF]             * [* {th:onplaying,data-th-onplaying}] [1000]: org.thymeleaf.standard.processor.StandardDOMEventAttributeTagProcessor
-[THYMELEAF]             * [* {th:onloadedmetadata,data-th-onloadedmetadata}] [1000]: org.thymeleaf.standard.processor.StandardDOMEventAttributeTagProcessor
-[THYMELEAF]             * [* {th:oninput,data-th-oninput}] [1000]: org.thymeleaf.standard.processor.StandardDOMEventAttributeTagProcessor
-[THYMELEAF]             * [* {th:onreset,data-th-onreset}] [1000]: org.thymeleaf.standard.processor.StandardDOMEventAttributeTagProcessor
-[THYMELEAF]             * [* {th:onredo,data-th-onredo}] [1000]: org.thymeleaf.standard.processor.StandardDOMEventAttributeTagProcessor
-[THYMELEAF]             * [* {th:oncanplaythrough,data-th-oncanplaythrough}] [1000]: org.thymeleaf.standard.processor.StandardDOMEventAttributeTagProcessor
-[THYMELEAF]             * [* {th:onblur,data-th-onblur}] [1000]: org.thymeleaf.standard.processor.StandardDOMEventAttributeTagProcessor
+[THYMELEAF]             * [* {th:onloadstart,data-th-onloadstart}] [1000]: org.thymeleaf.standard.processor.StandardDOMEventAttributeTagProcessor
+[THYMELEAF]             * [* {th:onmousemove,data-th-onmousemove}] [1000]: org.thymeleaf.standard.processor.StandardDOMEventAttributeTagProcessor
+[THYMELEAF]             * [* {th:onmessage,data-th-onmessage}] [1000]: org.thymeleaf.standard.processor.StandardDOMEventAttributeTagProcessor
+[THYMELEAF]             * [* {th:oncontextmenu,data-th-oncontextmenu}] [1000]: org.thymeleaf.standard.processor.StandardDOMEventAttributeTagProcessor
 [THYMELEAF]             * [* {th:onchange,data-th-onchange}] [1000]: org.thymeleaf.standard.processor.StandardDOMEventAttributeTagProcessor
+[THYMELEAF]             * [* {th:onscroll,data-th-onscroll}] [1000]: org.thymeleaf.standard.processor.StandardDOMEventAttributeTagProcessor
+[THYMELEAF]             * [* {th:onratechange,data-th-onratechange}] [1000]: org.thymeleaf.standard.processor.StandardDOMEventAttributeTagProcessor
+[THYMELEAF]             * [* {th:onprogress,data-th-onprogress}] [1000]: org.thymeleaf.standard.processor.StandardDOMEventAttributeTagProcessor
+[THYMELEAF]             * [* {th:ondrag,data-th-ondrag}] [1000]: org.thymeleaf.standard.processor.StandardDOMEventAttributeTagProcessor
+[THYMELEAF]             * [* {th:onseeking,data-th-onseeking}] [1000]: org.thymeleaf.standard.processor.StandardDOMEventAttributeTagProcessor
+[THYMELEAF]             * [* {th:onoffline,data-th-onoffline}] [1000]: org.thymeleaf.standard.processor.StandardDOMEventAttributeTagProcessor
+[THYMELEAF]             * [* {th:ondragstart,data-th-ondragstart}] [1000]: org.thymeleaf.standard.processor.StandardDOMEventAttributeTagProcessor
+[THYMELEAF]             * [* {th:onsubmit,data-th-onsubmit}] [1000]: org.thymeleaf.standard.processor.StandardDOMEventAttributeTagProcessor
+[THYMELEAF]             * [* {th:ondragover,data-th-ondragover}] [1000]: org.thymeleaf.standard.processor.StandardDOMEventAttributeTagProcessor
+[THYMELEAF]             * [* {th:onfocus,data-th-onfocus}] [1000]: org.thymeleaf.standard.processor.StandardDOMEventAttributeTagProcessor
+[THYMELEAF]             * [* {th:onunload,data-th-onunload}] [1000]: org.thymeleaf.standard.processor.StandardDOMEventAttributeTagProcessor
+[THYMELEAF]             * [* {th:ondurationchange,data-th-ondurationchange}] [1000]: org.thymeleaf.standard.processor.StandardDOMEventAttributeTagProcessor
+[THYMELEAF]             * [* {th:onclick,data-th-onclick}] [1000]: org.thymeleaf.standard.processor.StandardDOMEventAttributeTagProcessor
+[THYMELEAF]             * [* {th:onplay,data-th-onplay}] [1000]: org.thymeleaf.standard.processor.StandardDOMEventAttributeTagProcessor
+[THYMELEAF]             * [* {th:onblur,data-th-onblur}] [1000]: org.thymeleaf.standard.processor.StandardDOMEventAttributeTagProcessor
+[THYMELEAF]             * [* {th:onstalled,data-th-onstalled}] [1000]: org.thymeleaf.standard.processor.StandardDOMEventAttributeTagProcessor
+[THYMELEAF]             * [* {th:onhashchange,data-th-onhashchange}] [1000]: org.thymeleaf.standard.processor.StandardDOMEventAttributeTagProcessor
+[THYMELEAF]             * [* {th:onshow,data-th-onshow}] [1000]: org.thymeleaf.standard.processor.StandardDOMEventAttributeTagProcessor
+[THYMELEAF]             * [* {th:onforminput,data-th-onforminput}] [1000]: org.thymeleaf.standard.processor.StandardDOMEventAttributeTagProcessor
+[THYMELEAF]             * [* {th:onformchange,data-th-onformchange}] [1000]: org.thymeleaf.standard.processor.StandardDOMEventAttributeTagProcessor
+[THYMELEAF]             * [* {th:onpause,data-th-onpause}] [1000]: org.thymeleaf.standard.processor.StandardDOMEventAttributeTagProcessor
+[THYMELEAF]             * [* {th:onemptied,data-th-onemptied}] [1000]: org.thymeleaf.standard.processor.StandardDOMEventAttributeTagProcessor
+[THYMELEAF]             * [* {th:ondragleave,data-th-ondragleave}] [1000]: org.thymeleaf.standard.processor.StandardDOMEventAttributeTagProcessor
+[THYMELEAF]             * [* {th:onmouseout,data-th-onmouseout}] [1000]: org.thymeleaf.standard.processor.StandardDOMEventAttributeTagProcessor
+[THYMELEAF]             * [* {th:oncanplay,data-th-oncanplay}] [1000]: org.thymeleaf.standard.processor.StandardDOMEventAttributeTagProcessor
+[THYMELEAF]             * [* {th:onkeyup,data-th-onkeyup}] [1000]: org.thymeleaf.standard.processor.StandardDOMEventAttributeTagProcessor
+[THYMELEAF]             * [* {th:onseeked,data-th-onseeked}] [1000]: org.thymeleaf.standard.processor.StandardDOMEventAttributeTagProcessor
+[THYMELEAF]             * [* {th:onended,data-th-onended}] [1000]: org.thymeleaf.standard.processor.StandardDOMEventAttributeTagProcessor
+[THYMELEAF]             * [* {th:onbeforeprint,data-th-onbeforeprint}] [1000]: org.thymeleaf.standard.processor.StandardDOMEventAttributeTagProcessor
+[THYMELEAF]             * [* {th:ondrop,data-th-ondrop}] [1000]: org.thymeleaf.standard.processor.StandardDOMEventAttributeTagProcessor
+[THYMELEAF]             * [* {th:oninput,data-th-oninput}] [1000]: org.thymeleaf.standard.processor.StandardDOMEventAttributeTagProcessor
+[THYMELEAF]             * [* {th:onwaiting,data-th-onwaiting}] [1000]: org.thymeleaf.standard.processor.StandardDOMEventAttributeTagProcessor
+[THYMELEAF]             * [* {th:onstorage,data-th-onstorage}] [1000]: org.thymeleaf.standard.processor.StandardDOMEventAttributeTagProcessor
+[THYMELEAF]             * [* {th:onredo,data-th-onredo}] [1000]: org.thymeleaf.standard.processor.StandardDOMEventAttributeTagProcessor
+[THYMELEAF]             * [* {th:onresize,data-th-onresize}] [1000]: org.thymeleaf.standard.processor.StandardDOMEventAttributeTagProcessor
+[THYMELEAF]             * [* {th:onbeforeunload,data-th-onbeforeunload}] [1000]: org.thymeleaf.standard.processor.StandardDOMEventAttributeTagProcessor
+[THYMELEAF]             * [* {th:onmousedown,data-th-onmousedown}] [1000]: org.thymeleaf.standard.processor.StandardDOMEventAttributeTagProcessor
+[THYMELEAF]             * [* {th:onsuspend,data-th-onsuspend}] [1000]: org.thymeleaf.standard.processor.StandardDOMEventAttributeTagProcessor
+[THYMELEAF]             * [* {th:oninvalid,data-th-oninvalid}] [1000]: org.thymeleaf.standard.processor.StandardDOMEventAttributeTagProcessor
+[THYMELEAF]             * [* {th:onafterprint,data-th-onafterprint}] [1000]: org.thymeleaf.standard.processor.StandardDOMEventAttributeTagProcessor
+[THYMELEAF]             * [* {th:ontimeupdate,data-th-ontimeupdate}] [1000]: org.thymeleaf.standard.processor.StandardDOMEventAttributeTagProcessor
+[THYMELEAF]             * [* {th:onmouseover,data-th-onmouseover}] [1000]: org.thymeleaf.standard.processor.StandardDOMEventAttributeTagProcessor
+[THYMELEAF]             * [* {th:onreset,data-th-onreset}] [1000]: org.thymeleaf.standard.processor.StandardDOMEventAttributeTagProcessor
+[THYMELEAF]             * [* {th:ondblclick,data-th-ondblclick}] [1000]: org.thymeleaf.standard.processor.StandardDOMEventAttributeTagProcessor
+[THYMELEAF]             * [* {th:onabort,data-th-onabort}] [1000]: org.thymeleaf.standard.processor.StandardDOMEventAttributeTagProcessor
+[THYMELEAF]             * [* {th:onmousewheel,data-th-onmousewheel}] [1000]: org.thymeleaf.standard.processor.StandardDOMEventAttributeTagProcessor
+[THYMELEAF]             * [* {th:onloadedmetadata,data-th-onloadedmetadata}] [1000]: org.thymeleaf.standard.processor.StandardDOMEventAttributeTagProcessor
+[THYMELEAF]             * [* {th:onselect,data-th-onselect}] [1000]: org.thymeleaf.standard.processor.StandardDOMEventAttributeTagProcessor
+[THYMELEAF]             * [* {th:onerror,data-th-onerror}] [1000]: org.thymeleaf.standard.processor.StandardDOMEventAttributeTagProcessor
+[THYMELEAF]             * [* {th:ononline,data-th-ononline}] [1000]: org.thymeleaf.standard.processor.StandardDOMEventAttributeTagProcessor
+[THYMELEAF]             * [* {th:onreadystatechange,data-th-onreadystatechange}] [1000]: org.thymeleaf.standard.processor.StandardDOMEventAttributeTagProcessor
+[THYMELEAF]             * [* {th:onload,data-th-onload}] [1000]: org.thymeleaf.standard.processor.StandardDOMEventAttributeTagProcessor
 [THYMELEAF]             * [* {th:inline,data-th-inline}] [1000]: org.thymeleaf.standard.processor.StandardInlineHTMLTagProcessor
-[THYMELEAF]             * [* {th:name,data-th-name}] [1000]: org.thymeleaf.standard.processor.StandardNonRemovableAttributeTagProcessor
 [THYMELEAF]             * [* {th:type,data-th-type}] [1000]: org.thymeleaf.standard.processor.StandardNonRemovableAttributeTagProcessor
-[THYMELEAF]             * [* {th:formtarget,data-th-formtarget}] [1000]: org.thymeleaf.standard.processor.StandardRemovableAttributeTagProcessor
-[THYMELEAF]             * [* {th:border,data-th-border}] [1000]: org.thymeleaf.standard.processor.StandardRemovableAttributeTagProcessor
-[THYMELEAF]             * [* {th:marginwidth,data-th-marginwidth}] [1000]: org.thymeleaf.standard.processor.StandardRemovableAttributeTagProcessor
-[THYMELEAF]             * [* {th:background,data-th-background}] [1000]: org.thymeleaf.standard.processor.StandardRemovableAttributeTagProcessor
-[THYMELEAF]             * [* {th:poster,data-th-poster}] [1000]: org.thymeleaf.standard.processor.StandardRemovableAttributeTagProcessor
-[THYMELEAF]             * [* {th:rel,data-th-rel}] [1000]: org.thymeleaf.standard.processor.StandardRemovableAttributeTagProcessor
-[THYMELEAF]             * [* {th:hspace,data-th-hspace}] [1000]: org.thymeleaf.standard.processor.StandardRemovableAttributeTagProcessor
-[THYMELEAF]             * [* {th:hreflang,data-th-hreflang}] [1000]: org.thymeleaf.standard.processor.StandardRemovableAttributeTagProcessor
-[THYMELEAF]             * [* {th:contextmenu,data-th-contextmenu}] [1000]: org.thymeleaf.standard.processor.StandardRemovableAttributeTagProcessor
-[THYMELEAF]             * [* {th:usemap,data-th-usemap}] [1000]: org.thymeleaf.standard.processor.StandardRemovableAttributeTagProcessor
-[THYMELEAF]             * [* {th:cellspacing,data-th-cellspacing}] [1000]: org.thymeleaf.standard.processor.StandardRemovableAttributeTagProcessor
-[THYMELEAF]             * [* {th:title,data-th-title}] [1000]: org.thymeleaf.standard.processor.StandardRemovableAttributeTagProcessor
-[THYMELEAF]             * [* {th:form,data-th-form}] [1000]: org.thymeleaf.standard.processor.StandardRemovableAttributeTagProcessor
-[THYMELEAF]             * [* {th:rev,data-th-rev}] [1000]: org.thymeleaf.standard.processor.StandardRemovableAttributeTagProcessor
-[THYMELEAF]             * [* {th:http-equiv,data-th-http-equiv}] [1000]: org.thymeleaf.standard.processor.StandardRemovableAttributeTagProcessor
-[THYMELEAF]             * [* {th:rows,data-th-rows}] [1000]: org.thymeleaf.standard.processor.StandardRemovableAttributeTagProcessor
-[THYMELEAF]             * [* {th:summary,data-th-summary}] [1000]: org.thymeleaf.standard.processor.StandardRemovableAttributeTagProcessor
-[THYMELEAF]             * [* {th:pattern,data-th-pattern}] [1000]: org.thymeleaf.standard.processor.StandardRemovableAttributeTagProcessor
-[THYMELEAF]             * [* {th:width,data-th-width}] [1000]: org.thymeleaf.standard.processor.StandardRemovableAttributeTagProcessor
-[THYMELEAF]             * [* {th:standby,data-th-standby}] [1000]: org.thymeleaf.standard.processor.StandardRemovableAttributeTagProcessor
-[THYMELEAF]             * [* {th:valuetype,data-th-valuetype}] [1000]: org.thymeleaf.standard.processor.StandardRemovableAttributeTagProcessor
-[THYMELEAF]             * [* {th:data,data-th-data}] [1000]: org.thymeleaf.standard.processor.StandardRemovableAttributeTagProcessor
-[THYMELEAF]             * [* {th:archive,data-th-archive}] [1000]: org.thymeleaf.standard.processor.StandardRemovableAttributeTagProcessor
-[THYMELEAF]             * [* {th:span,data-th-span}] [1000]: org.thymeleaf.standard.processor.StandardRemovableAttributeTagProcessor
-[THYMELEAF]             * [* {th:id,data-th-id}] [1000]: org.thymeleaf.standard.processor.StandardRemovableAttributeTagProcessor
-[THYMELEAF]             * [* {th:marginheight,data-th-marginheight}] [1000]: org.thymeleaf.standard.processor.StandardRemovableAttributeTagProcessor
-[THYMELEAF]             * [* {th:draggable,data-th-draggable}] [1000]: org.thymeleaf.standard.processor.StandardRemovableAttributeTagProcessor
-[THYMELEAF]             * [* {th:dropzone,data-th-dropzone}] [1000]: org.thymeleaf.standard.processor.StandardRemovableAttributeTagProcessor
-[THYMELEAF]             * [* {th:cite,data-th-cite}] [1000]: org.thymeleaf.standard.processor.StandardRemovableAttributeTagProcessor
-[THYMELEAF]             * [* {th:formenctype,data-th-formenctype}] [1000]: org.thymeleaf.standard.processor.StandardRemovableAttributeTagProcessor
-[THYMELEAF]             * [* {th:optimum,data-th-optimum}] [1000]: org.thymeleaf.standard.processor.StandardRemovableAttributeTagProcessor
-[THYMELEAF]             * [* {th:enctype,data-th-enctype}] [1000]: org.thymeleaf.standard.processor.StandardRemovableAttributeTagProcessor
-[THYMELEAF]             * [* {th:scrolling,data-th-scrolling}] [1000]: org.thymeleaf.standard.processor.StandardRemovableAttributeTagProcessor
-[THYMELEAF]             * [* {th:kind,data-th-kind}] [1000]: org.thymeleaf.standard.processor.StandardRemovableAttributeTagProcessor
-[THYMELEAF]             * [* {th:min,data-th-min}] [1000]: org.thymeleaf.standard.processor.StandardRemovableAttributeTagProcessor
-[THYMELEAF]             * [* {th:target,data-th-target}] [1000]: org.thymeleaf.standard.processor.StandardRemovableAttributeTagProcessor
-[THYMELEAF]             * [* {th:height,data-th-height}] [1000]: org.thymeleaf.standard.processor.StandardRemovableAttributeTagProcessor
-[THYMELEAF]             * [* {th:abbr,data-th-abbr}] [1000]: org.thymeleaf.standard.processor.StandardRemovableAttributeTagProcessor
-[THYMELEAF]             * [* {th:preload,data-th-preload}] [1000]: org.thymeleaf.standard.processor.StandardRemovableAttributeTagProcessor
-[THYMELEAF]             * [* {th:autocomplete,data-th-autocomplete}] [1000]: org.thymeleaf.standard.processor.StandardRemovableAttributeTagProcessor
-[THYMELEAF]             * [* {th:vspace,data-th-vspace}] [1000]: org.thymeleaf.standard.processor.StandardRemovableAttributeTagProcessor
-[THYMELEAF]             * [* {th:bgcolor,data-th-bgcolor}] [1000]: org.thymeleaf.standard.processor.StandardRemovableAttributeTagProcessor
-[THYMELEAF]             * [* {th:contenteditable,data-th-contenteditable}] [1000]: org.thymeleaf.standard.processor.StandardRemovableAttributeTagProcessor
+[THYMELEAF]             * [* {th:name,data-th-name}] [1000]: org.thymeleaf.standard.processor.StandardNonRemovableAttributeTagProcessor
 [THYMELEAF]             * [* {th:scheme,data-th-scheme}] [1000]: org.thymeleaf.standard.processor.StandardRemovableAttributeTagProcessor
-[THYMELEAF]             * [* {th:charset,data-th-charset}] [1000]: org.thymeleaf.standard.processor.StandardRemovableAttributeTagProcessor
-[THYMELEAF]             * [* {th:step,data-th-step}] [1000]: org.thymeleaf.standard.processor.StandardRemovableAttributeTagProcessor
-[THYMELEAF]             * [* {th:media,data-th-media}] [1000]: org.thymeleaf.standard.processor.StandardRemovableAttributeTagProcessor
-[THYMELEAF]             * [* {th:challenge,data-th-challenge}] [1000]: org.thymeleaf.standard.processor.StandardRemovableAttributeTagProcessor
-[THYMELEAF]             * [* {th:label,data-th-label}] [1000]: org.thymeleaf.standard.processor.StandardRemovableAttributeTagProcessor
-[THYMELEAF]             * [* {th:cols,data-th-cols}] [1000]: org.thymeleaf.standard.processor.StandardRemovableAttributeTagProcessor
-[THYMELEAF]             * [* {th:frame,data-th-frame}] [1000]: org.thymeleaf.standard.processor.StandardRemovableAttributeTagProcessor
-[THYMELEAF]             * [* {th:start,data-th-start}] [1000]: org.thymeleaf.standard.processor.StandardRemovableAttributeTagProcessor
-[THYMELEAF]             * [* {th:rules,data-th-rules}] [1000]: org.thymeleaf.standard.processor.StandardRemovableAttributeTagProcessor
-[THYMELEAF]             * [* {th:classid,data-th-classid}] [1000]: org.thymeleaf.standard.processor.StandardRemovableAttributeTagProcessor
-[THYMELEAF]             * [* {th:placeholder,data-th-placeholder}] [1000]: org.thymeleaf.standard.processor.StandardRemovableAttributeTagProcessor
-[THYMELEAF]             * [* {th:keytype,data-th-keytype}] [1000]: org.thymeleaf.standard.processor.StandardRemovableAttributeTagProcessor
-[THYMELEAF]             * [* {th:list,data-th-list}] [1000]: org.thymeleaf.standard.processor.StandardRemovableAttributeTagProcessor
-[THYMELEAF]             * [* {th:low,data-th-low}] [1000]: org.thymeleaf.standard.processor.StandardRemovableAttributeTagProcessor
-[THYMELEAF]             * [* {th:for,data-th-for}] [1000]: org.thymeleaf.standard.processor.StandardRemovableAttributeTagProcessor
-[THYMELEAF]             * [* {th:frameborder,data-th-frameborder}] [1000]: org.thymeleaf.standard.processor.StandardRemovableAttributeTagProcessor
-[THYMELEAF]             * [* {th:scope,data-th-scope}] [1000]: org.thymeleaf.standard.processor.StandardRemovableAttributeTagProcessor
-[THYMELEAF]             * [* {th:dir,data-th-dir}] [1000]: org.thymeleaf.standard.processor.StandardRemovableAttributeTagProcessor
-[THYMELEAF]             * [* {th:srclang,data-th-srclang}] [1000]: org.thymeleaf.standard.processor.StandardRemovableAttributeTagProcessor
-[THYMELEAF]             * [* {th:formmethod,data-th-formmethod}] [1000]: org.thymeleaf.standard.processor.StandardRemovableAttributeTagProcessor
-[THYMELEAF]             * [* {th:align,data-th-align}] [1000]: org.thymeleaf.standard.processor.StandardRemovableAttributeTagProcessor
-[THYMELEAF]             * [* {th:headers,data-th-headers}] [1000]: org.thymeleaf.standard.processor.StandardRemovableAttributeTagProcessor
-[THYMELEAF]             * [* {th:sandbox,data-th-sandbox}] [1000]: org.thymeleaf.standard.processor.StandardRemovableAttributeTagProcessor
-[THYMELEAF]             * [* {th:tabindex,data-th-tabindex}] [1000]: org.thymeleaf.standard.processor.StandardRemovableAttributeTagProcessor
-[THYMELEAF]             * [* {th:icon,data-th-icon}] [1000]: org.thymeleaf.standard.processor.StandardRemovableAttributeTagProcessor
-[THYMELEAF]             * [* {th:radiogroup,data-th-radiogroup}] [1000]: org.thymeleaf.standard.processor.StandardRemovableAttributeTagProcessor
-[THYMELEAF]             * [* {th:codetype,data-th-codetype}] [1000]: org.thymeleaf.standard.processor.StandardRemovableAttributeTagProcessor
-[THYMELEAF]             * [* {th:max,data-th-max}] [1000]: org.thymeleaf.standard.processor.StandardRemovableAttributeTagProcessor
-[THYMELEAF]             * [* {th:colspan,data-th-colspan}] [1000]: org.thymeleaf.standard.processor.StandardRemovableAttributeTagProcessor
-[THYMELEAF]             * [* {th:accept-charset,data-th-accept-charset}] [1000]: org.thymeleaf.standard.processor.StandardRemovableAttributeTagProcessor
-[THYMELEAF]             * [* {th:accesskey,data-th-accesskey}] [1000]: org.thymeleaf.standard.processor.StandardRemovableAttributeTagProcessor
-[THYMELEAF]             * [* {th:sizes,data-th-sizes}] [1000]: org.thymeleaf.standard.processor.StandardRemovableAttributeTagProcessor
-[THYMELEAF]             * [* {th:lang,data-th-lang}] [1000]: org.thymeleaf.standard.processor.StandardRemovableAttributeTagProcessor
-[THYMELEAF]             * [* {th:size,data-th-size}] [1000]: org.thymeleaf.standard.processor.StandardRemovableAttributeTagProcessor
-[THYMELEAF]             * [* {th:class,data-th-class}] [1000]: org.thymeleaf.standard.processor.StandardRemovableAttributeTagProcessor
-[THYMELEAF]             * [* {th:datetime,data-th-datetime}] [1000]: org.thymeleaf.standard.processor.StandardRemovableAttributeTagProcessor
-[THYMELEAF]             * [* {th:manifest,data-th-manifest}] [1000]: org.thymeleaf.standard.processor.StandardRemovableAttributeTagProcessor
-[THYMELEAF]             * [* {th:compact,data-th-compact}] [1000]: org.thymeleaf.standard.processor.StandardRemovableAttributeTagProcessor
-[THYMELEAF]             * [* {th:alt,data-th-alt}] [1000]: org.thymeleaf.standard.processor.StandardRemovableAttributeTagProcessor
 [THYMELEAF]             * [* {th:content,data-th-content}] [1000]: org.thymeleaf.standard.processor.StandardRemovableAttributeTagProcessor
-[THYMELEAF]             * [* {th:high,data-th-high}] [1000]: org.thymeleaf.standard.processor.StandardRemovableAttributeTagProcessor
-[THYMELEAF]             * [* {th:style,data-th-style}] [1000]: org.thymeleaf.standard.processor.StandardRemovableAttributeTagProcessor
-[THYMELEAF]             * [* {th:maxlength,data-th-maxlength}] [1000]: org.thymeleaf.standard.processor.StandardRemovableAttributeTagProcessor
-[THYMELEAF]             * [* {th:spellcheck,data-th-spellcheck}] [1000]: org.thymeleaf.standard.processor.StandardRemovableAttributeTagProcessor
-[THYMELEAF]             * [* {th:accept,data-th-accept}] [1000]: org.thymeleaf.standard.processor.StandardRemovableAttributeTagProcessor
-[THYMELEAF]             * [* {th:longdesc,data-th-longdesc}] [1000]: org.thymeleaf.standard.processor.StandardRemovableAttributeTagProcessor
-[THYMELEAF]             * [* {th:codebase,data-th-codebase}] [1000]: org.thymeleaf.standard.processor.StandardRemovableAttributeTagProcessor
-[THYMELEAF]             * [* {th:formaction,data-th-formaction}] [1000]: org.thymeleaf.standard.processor.StandardRemovableAttributeTagProcessor
-[THYMELEAF]             * [* {th:audio,data-th-audio}] [1000]: org.thymeleaf.standard.processor.StandardRemovableAttributeTagProcessor
+[THYMELEAF]             * [* {th:bgcolor,data-th-bgcolor}] [1000]: org.thymeleaf.standard.processor.StandardRemovableAttributeTagProcessor
+[THYMELEAF]             * [* {th:label,data-th-label}] [1000]: org.thymeleaf.standard.processor.StandardRemovableAttributeTagProcessor
+[THYMELEAF]             * [* {th:contextmenu,data-th-contextmenu}] [1000]: org.thymeleaf.standard.processor.StandardRemovableAttributeTagProcessor
 [THYMELEAF]             * [* {th:wrap,data-th-wrap}] [1000]: org.thymeleaf.standard.processor.StandardRemovableAttributeTagProcessor
-[THYMELEAF]             * [* {th:rowspan,data-th-rowspan}] [1000]: org.thymeleaf.standard.processor.StandardRemovableAttributeTagProcessor
-[THYMELEAF]             * [* {th:cellpadding,data-th-cellpadding}] [1000]: org.thymeleaf.standard.processor.StandardRemovableAttributeTagProcessor
+[THYMELEAF]             * [* {th:vspace,data-th-vspace}] [1000]: org.thymeleaf.standard.processor.StandardRemovableAttributeTagProcessor
+[THYMELEAF]             * [* {th:formtarget,data-th-formtarget}] [1000]: org.thymeleaf.standard.processor.StandardRemovableAttributeTagProcessor
+[THYMELEAF]             * [* {th:keytype,data-th-keytype}] [1000]: org.thymeleaf.standard.processor.StandardRemovableAttributeTagProcessor
+[THYMELEAF]             * [* {th:style,data-th-style}] [1000]: org.thymeleaf.standard.processor.StandardRemovableAttributeTagProcessor
+[THYMELEAF]             * [* {th:low,data-th-low}] [1000]: org.thymeleaf.standard.processor.StandardRemovableAttributeTagProcessor
+[THYMELEAF]             * [* {th:id,data-th-id}] [1000]: org.thymeleaf.standard.processor.StandardRemovableAttributeTagProcessor
+[THYMELEAF]             * [* {th:accesskey,data-th-accesskey}] [1000]: org.thymeleaf.standard.processor.StandardRemovableAttributeTagProcessor
+[THYMELEAF]             * [* {th:target,data-th-target}] [1000]: org.thymeleaf.standard.processor.StandardRemovableAttributeTagProcessor
+[THYMELEAF]             * [* {th:classid,data-th-classid}] [1000]: org.thymeleaf.standard.processor.StandardRemovableAttributeTagProcessor
+[THYMELEAF]             * [* {th:icon,data-th-icon}] [1000]: org.thymeleaf.standard.processor.StandardRemovableAttributeTagProcessor
+[THYMELEAF]             * [* {th:enctype,data-th-enctype}] [1000]: org.thymeleaf.standard.processor.StandardRemovableAttributeTagProcessor
+[THYMELEAF]             * [* {th:challenge,data-th-challenge}] [1000]: org.thymeleaf.standard.processor.StandardRemovableAttributeTagProcessor
+[THYMELEAF]             * [* {th:frame,data-th-frame}] [1000]: org.thymeleaf.standard.processor.StandardRemovableAttributeTagProcessor
+[THYMELEAF]             * [* {th:maxlength,data-th-maxlength}] [1000]: org.thymeleaf.standard.processor.StandardRemovableAttributeTagProcessor
+[THYMELEAF]             * [* {th:placeholder,data-th-placeholder}] [1000]: org.thymeleaf.standard.processor.StandardRemovableAttributeTagProcessor
+[THYMELEAF]             * [* {th:data,data-th-data}] [1000]: org.thymeleaf.standard.processor.StandardRemovableAttributeTagProcessor
+[THYMELEAF]             * [* {th:cellspacing,data-th-cellspacing}] [1000]: org.thymeleaf.standard.processor.StandardRemovableAttributeTagProcessor
+[THYMELEAF]             * [* {th:marginheight,data-th-marginheight}] [1000]: org.thymeleaf.standard.processor.StandardRemovableAttributeTagProcessor
+[THYMELEAF]             * [* {th:rows,data-th-rows}] [1000]: org.thymeleaf.standard.processor.StandardRemovableAttributeTagProcessor
+[THYMELEAF]             * [* {th:codetype,data-th-codetype}] [1000]: org.thymeleaf.standard.processor.StandardRemovableAttributeTagProcessor
+[THYMELEAF]             * [* {th:lang,data-th-lang}] [1000]: org.thymeleaf.standard.processor.StandardRemovableAttributeTagProcessor
+[THYMELEAF]             * [* {th:dir,data-th-dir}] [1000]: org.thymeleaf.standard.processor.StandardRemovableAttributeTagProcessor
+[THYMELEAF]             * [* {th:marginwidth,data-th-marginwidth}] [1000]: org.thymeleaf.standard.processor.StandardRemovableAttributeTagProcessor
+[THYMELEAF]             * [* {th:title,data-th-title}] [1000]: org.thymeleaf.standard.processor.StandardRemovableAttributeTagProcessor
+[THYMELEAF]             * [* {th:frameborder,data-th-frameborder}] [1000]: org.thymeleaf.standard.processor.StandardRemovableAttributeTagProcessor
+[THYMELEAF]             * [* {th:formenctype,data-th-formenctype}] [1000]: org.thymeleaf.standard.processor.StandardRemovableAttributeTagProcessor
+[THYMELEAF]             * [* {th:contenteditable,data-th-contenteditable}] [1000]: org.thymeleaf.standard.processor.StandardRemovableAttributeTagProcessor
+[THYMELEAF]             * [* {th:formmethod,data-th-formmethod}] [1000]: org.thymeleaf.standard.processor.StandardRemovableAttributeTagProcessor
+[THYMELEAF]             * [* {th:tabindex,data-th-tabindex}] [1000]: org.thymeleaf.standard.processor.StandardRemovableAttributeTagProcessor
+[THYMELEAF]             * [* {th:charset,data-th-charset}] [1000]: org.thymeleaf.standard.processor.StandardRemovableAttributeTagProcessor
+[THYMELEAF]             * [* {th:sandbox,data-th-sandbox}] [1000]: org.thymeleaf.standard.processor.StandardRemovableAttributeTagProcessor
+[THYMELEAF]             * [* {th:media,data-th-media}] [1000]: org.thymeleaf.standard.processor.StandardRemovableAttributeTagProcessor
+[THYMELEAF]             * [* {th:manifest,data-th-manifest}] [1000]: org.thymeleaf.standard.processor.StandardRemovableAttributeTagProcessor
+[THYMELEAF]             * [* {th:http-equiv,data-th-http-equiv}] [1000]: org.thymeleaf.standard.processor.StandardRemovableAttributeTagProcessor
+[THYMELEAF]             * [* {th:autocomplete,data-th-autocomplete}] [1000]: org.thymeleaf.standard.processor.StandardRemovableAttributeTagProcessor
+[THYMELEAF]             * [* {th:alt,data-th-alt}] [1000]: org.thymeleaf.standard.processor.StandardRemovableAttributeTagProcessor
+[THYMELEAF]             * [* {th:longdesc,data-th-longdesc}] [1000]: org.thymeleaf.standard.processor.StandardRemovableAttributeTagProcessor
+[THYMELEAF]             * [* {th:span,data-th-span}] [1000]: org.thymeleaf.standard.processor.StandardRemovableAttributeTagProcessor
+[THYMELEAF]             * [* {th:for,data-th-for}] [1000]: org.thymeleaf.standard.processor.StandardRemovableAttributeTagProcessor
+[THYMELEAF]             * [* {th:min,data-th-min}] [1000]: org.thymeleaf.standard.processor.StandardRemovableAttributeTagProcessor
+[THYMELEAF]             * [* {th:radiogroup,data-th-radiogroup}] [1000]: org.thymeleaf.standard.processor.StandardRemovableAttributeTagProcessor
+[THYMELEAF]             * [* {th:start,data-th-start}] [1000]: org.thymeleaf.standard.processor.StandardRemovableAttributeTagProcessor
+[THYMELEAF]             * [* {th:hreflang,data-th-hreflang}] [1000]: org.thymeleaf.standard.processor.StandardRemovableAttributeTagProcessor
+[THYMELEAF]             * [* {th:spellcheck,data-th-spellcheck}] [1000]: org.thymeleaf.standard.processor.StandardRemovableAttributeTagProcessor
+[THYMELEAF]             * [* {th:border,data-th-border}] [1000]: org.thymeleaf.standard.processor.StandardRemovableAttributeTagProcessor
+[THYMELEAF]             * [* {th:size,data-th-size}] [1000]: org.thymeleaf.standard.processor.StandardRemovableAttributeTagProcessor
+[THYMELEAF]             * [* {th:form,data-th-form}] [1000]: org.thymeleaf.standard.processor.StandardRemovableAttributeTagProcessor
+[THYMELEAF]             * [* {th:sizes,data-th-sizes}] [1000]: org.thymeleaf.standard.processor.StandardRemovableAttributeTagProcessor
 [THYMELEAF]             * [* {th:axis,data-th-axis}] [1000]: org.thymeleaf.standard.processor.StandardRemovableAttributeTagProcessor
+[THYMELEAF]             * [* {th:rules,data-th-rules}] [1000]: org.thymeleaf.standard.processor.StandardRemovableAttributeTagProcessor
+[THYMELEAF]             * [* {th:usemap,data-th-usemap}] [1000]: org.thymeleaf.standard.processor.StandardRemovableAttributeTagProcessor
+[THYMELEAF]             * [* {th:cellpadding,data-th-cellpadding}] [1000]: org.thymeleaf.standard.processor.StandardRemovableAttributeTagProcessor
+[THYMELEAF]             * [* {th:draggable,data-th-draggable}] [1000]: org.thymeleaf.standard.processor.StandardRemovableAttributeTagProcessor
+[THYMELEAF]             * [* {th:colspan,data-th-colspan}] [1000]: org.thymeleaf.standard.processor.StandardRemovableAttributeTagProcessor
+[THYMELEAF]             * [* {th:kind,data-th-kind}] [1000]: org.thymeleaf.standard.processor.StandardRemovableAttributeTagProcessor
+[THYMELEAF]             * [* {th:summary,data-th-summary}] [1000]: org.thymeleaf.standard.processor.StandardRemovableAttributeTagProcessor
+[THYMELEAF]             * [* {th:cite,data-th-cite}] [1000]: org.thymeleaf.standard.processor.StandardRemovableAttributeTagProcessor
+[THYMELEAF]             * [* {th:archive,data-th-archive}] [1000]: org.thymeleaf.standard.processor.StandardRemovableAttributeTagProcessor
+[THYMELEAF]             * [* {th:abbr,data-th-abbr}] [1000]: org.thymeleaf.standard.processor.StandardRemovableAttributeTagProcessor
+[THYMELEAF]             * [* {th:step,data-th-step}] [1000]: org.thymeleaf.standard.processor.StandardRemovableAttributeTagProcessor
+[THYMELEAF]             * [* {th:max,data-th-max}] [1000]: org.thymeleaf.standard.processor.StandardRemovableAttributeTagProcessor
+[THYMELEAF]             * [* {th:headers,data-th-headers}] [1000]: org.thymeleaf.standard.processor.StandardRemovableAttributeTagProcessor
+[THYMELEAF]             * [* {th:optimum,data-th-optimum}] [1000]: org.thymeleaf.standard.processor.StandardRemovableAttributeTagProcessor
+[THYMELEAF]             * [* {th:rowspan,data-th-rowspan}] [1000]: org.thymeleaf.standard.processor.StandardRemovableAttributeTagProcessor
+[THYMELEAF]             * [* {th:accept-charset,data-th-accept-charset}] [1000]: org.thymeleaf.standard.processor.StandardRemovableAttributeTagProcessor
+[THYMELEAF]             * [* {th:cols,data-th-cols}] [1000]: org.thymeleaf.standard.processor.StandardRemovableAttributeTagProcessor
+[THYMELEAF]             * [* {th:preload,data-th-preload}] [1000]: org.thymeleaf.standard.processor.StandardRemovableAttributeTagProcessor
+[THYMELEAF]             * [* {th:standby,data-th-standby}] [1000]: org.thymeleaf.standard.processor.StandardRemovableAttributeTagProcessor
+[THYMELEAF]             * [* {th:background,data-th-background}] [1000]: org.thymeleaf.standard.processor.StandardRemovableAttributeTagProcessor
+[THYMELEAF]             * [* {th:align,data-th-align}] [1000]: org.thymeleaf.standard.processor.StandardRemovableAttributeTagProcessor
+[THYMELEAF]             * [* {th:high,data-th-high}] [1000]: org.thymeleaf.standard.processor.StandardRemovableAttributeTagProcessor
+[THYMELEAF]             * [* {th:formaction,data-th-formaction}] [1000]: org.thymeleaf.standard.processor.StandardRemovableAttributeTagProcessor
+[THYMELEAF]             * [* {th:scope,data-th-scope}] [1000]: org.thymeleaf.standard.processor.StandardRemovableAttributeTagProcessor
+[THYMELEAF]             * [* {th:scrolling,data-th-scrolling}] [1000]: org.thymeleaf.standard.processor.StandardRemovableAttributeTagProcessor
+[THYMELEAF]             * [* {th:width,data-th-width}] [1000]: org.thymeleaf.standard.processor.StandardRemovableAttributeTagProcessor
+[THYMELEAF]             * [* {th:poster,data-th-poster}] [1000]: org.thymeleaf.standard.processor.StandardRemovableAttributeTagProcessor
+[THYMELEAF]             * [* {th:list,data-th-list}] [1000]: org.thymeleaf.standard.processor.StandardRemovableAttributeTagProcessor
+[THYMELEAF]             * [* {th:valuetype,data-th-valuetype}] [1000]: org.thymeleaf.standard.processor.StandardRemovableAttributeTagProcessor
+[THYMELEAF]             * [* {th:dropzone,data-th-dropzone}] [1000]: org.thymeleaf.standard.processor.StandardRemovableAttributeTagProcessor
+[THYMELEAF]             * [* {th:audio,data-th-audio}] [1000]: org.thymeleaf.standard.processor.StandardRemovableAttributeTagProcessor
+[THYMELEAF]             * [* {th:accept,data-th-accept}] [1000]: org.thymeleaf.standard.processor.StandardRemovableAttributeTagProcessor
+[THYMELEAF]             * [* {th:compact,data-th-compact}] [1000]: org.thymeleaf.standard.processor.StandardRemovableAttributeTagProcessor
+[THYMELEAF]             * [* {th:pattern,data-th-pattern}] [1000]: org.thymeleaf.standard.processor.StandardRemovableAttributeTagProcessor
+[THYMELEAF]             * [* {th:rev,data-th-rev}] [1000]: org.thymeleaf.standard.processor.StandardRemovableAttributeTagProcessor
+[THYMELEAF]             * [* {th:datetime,data-th-datetime}] [1000]: org.thymeleaf.standard.processor.StandardRemovableAttributeTagProcessor
+[THYMELEAF]             * [* {th:class,data-th-class}] [1000]: org.thymeleaf.standard.processor.StandardRemovableAttributeTagProcessor
+[THYMELEAF]             * [* {th:hspace,data-th-hspace}] [1000]: org.thymeleaf.standard.processor.StandardRemovableAttributeTagProcessor
+[THYMELEAF]             * [* {th:rel,data-th-rel}] [1000]: org.thymeleaf.standard.processor.StandardRemovableAttributeTagProcessor
+[THYMELEAF]             * [* {th:codebase,data-th-codebase}] [1000]: org.thymeleaf.standard.processor.StandardRemovableAttributeTagProcessor
+[THYMELEAF]             * [* {th:srclang,data-th-srclang}] [1000]: org.thymeleaf.standard.processor.StandardRemovableAttributeTagProcessor
+[THYMELEAF]             * [* {th:height,data-th-height}] [1000]: org.thymeleaf.standard.processor.StandardRemovableAttributeTagProcessor
 [THYMELEAF]             * [* {th:xmlbase,data-th-xmlbase}] [1000]: org.thymeleaf.standard.processor.StandardXmlBaseTagProcessor
 [THYMELEAF]             * [* {th:xmllang,data-th-xmllang}] [1000]: org.thymeleaf.standard.processor.StandardXmlLangTagProcessor
 [THYMELEAF]             * [* {xmlns:th}] [1000]: org.thymeleaf.standard.processor.StandardXmlNsTagProcessor
@@ -443,8 +443,8 @@
 [THYMELEAF]             * [* {th:utext}] [1400]: org.thymeleaf.standard.processor.StandardUtextTagProcessor
 [THYMELEAF]             * [* {th:assert}] [1550]: org.thymeleaf.standard.processor.StandardAssertTagProcessor
 [THYMELEAF]             * [* {th:remove}] [1600]: org.thymeleaf.standard.processor.StandardRemoveTagProcessor
-[THYMELEAF]             * [{th:block} *] [100000]: org.thymeleaf.standard.processor.StandardBlockTagProcessor
 [THYMELEAF]             * [* 100000] [org.thymeleaf.standard.processor.StandardBlockTagProcessor]: {}
+[THYMELEAF]             * [{th:block} *] [100000]: org.thymeleaf.standard.processor.StandardBlockTagProcessor
 [THYMELEAF]         * Text Processors by [precedence]:
 [THYMELEAF]             * [1000]: org.thymeleaf.standard.processor.StandardInliningTextProcessor
 [THYMELEAF]     * Processors for Template Mode: CSS
@@ -463,8 +463,8 @@
 [THYMELEAF]             * [* {th:utext}] [1400]: org.thymeleaf.standard.processor.StandardUtextTagProcessor
 [THYMELEAF]             * [* {th:assert}] [1550]: org.thymeleaf.standard.processor.StandardAssertTagProcessor
 [THYMELEAF]             * [* {th:remove}] [1600]: org.thymeleaf.standard.processor.StandardRemoveTagProcessor
-[THYMELEAF]             * [{th:block} *] [100000]: org.thymeleaf.standard.processor.StandardBlockTagProcessor
 [THYMELEAF]             * [* 100000] [org.thymeleaf.standard.processor.StandardBlockTagProcessor]: {}
+[THYMELEAF]             * [{th:block} *] [100000]: org.thymeleaf.standard.processor.StandardBlockTagProcessor
 [THYMELEAF]         * Text Processors by [precedence]:
 [THYMELEAF]             * [1000]: org.thymeleaf.standard.processor.StandardInliningTextProcessor
 [THYMELEAF]     * Expression Objects:
@@ -501,205 +501,349 @@
 [THYMELEAF]         * #requestdatavalues
 [THYMELEAF]     * Execution Attributes:
 [THYMELEAF]         * "StandardExpressionParser": Standard Expression Parser
-[THYMELEAF]         * "StandardJavaScriptSerializer": org.thymeleaf.standard.serializer.StandardJavaScriptSerializer@1280e7fe
-[THYMELEAF]         * "StandardCSSSerializer": org.thymeleaf.standard.serializer.StandardCSSSerializer@2d00148e
+[THYMELEAF]         * "StandardJavaScriptSerializer": org.thymeleaf.standard.serializer.StandardJavaScriptSerializer@19939f66
+[THYMELEAF]         * "StandardCSSSerializer": org.thymeleaf.standard.serializer.StandardCSSSerializer@5fcfb3a0
 [THYMELEAF]         * "EnableSpringELCompiler": false
 [THYMELEAF]         * "StandardVariableExpressionEvaluator": SpringEL
-[THYMELEAF]         * "StandardConversionService": org.thymeleaf.spring5.expression.SpringStandardConversionService@73d5166
+[THYMELEAF]         * "StandardConversionService": org.thymeleaf.spring5.expression.SpringStandardConversionService@5b5dfb0b
 [THYMELEAF] * Dialect [2 of 2]: java8time (org.thymeleaf.extras.java8time.dialect.Java8TimeDialect)
 [THYMELEAF]     * Expression Objects:
 [THYMELEAF]         * #temporals
 [THYMELEAF] TEMPLATE ENGINE CONFIGURED OK
-2020-06-04 08:51:13.751 DEBUG 50935 --- [http-nio-8080-exec-1] org.thymeleaf.TemplateEngine             : [THYMELEAF] TEMPLATE ENGINE INITIALIZED
-2020-06-04 08:51:14.372 DEBUG 50935 --- [http-nio-8080-exec-1] o.s.web.servlet.DispatcherServlet        : Completed 200 OK
-2020-06-04 08:51:14.428 DEBUG 50935 --- [http-nio-8080-exec-3] o.s.web.servlet.DispatcherServlet        : GET "/bootstrap-datepicker.css", parameters={}
-2020-06-04 08:51:14.428 DEBUG 50935 --- [http-nio-8080-exec-2] o.s.web.servlet.DispatcherServlet        : GET "/bootstrap.css", parameters={}
-2020-06-04 08:51:14.438 DEBUG 50935 --- [http-nio-8080-exec-2] o.s.w.s.handler.SimpleUrlHandlerMapping  : Mapped to ResourceHttpRequestHandler ["classpath:/META-INF/resources/", "classpath:/resources/", "classpath:/static/", "classpath:/public/", "/"]
-2020-06-04 08:51:14.439 DEBUG 50935 --- [http-nio-8080-exec-3] o.s.w.s.handler.SimpleUrlHandlerMapping  : Mapped to ResourceHttpRequestHandler ["classpath:/META-INF/resources/", "classpath:/resources/", "classpath:/static/", "classpath:/public/", "/"]
-2020-06-04 08:51:14.467 DEBUG 50935 --- [http-nio-8080-exec-3] o.s.web.servlet.DispatcherServlet        : Completed 200 OK
-2020-06-04 08:51:14.471 DEBUG 50935 --- [http-nio-8080-exec-2] o.s.web.servlet.DispatcherServlet        : Completed 200 OK
-2020-06-04 08:51:14.550 DEBUG 50935 --- [http-nio-8080-exec-4] o.s.web.servlet.DispatcherServlet        : GET "/images/favicon-32x32.png", parameters={}
-2020-06-04 08:51:14.553 DEBUG 50935 --- [http-nio-8080-exec-4] o.s.w.s.handler.SimpleUrlHandlerMapping  : Mapped to ResourceHttpRequestHandler ["classpath:/META-INF/resources/", "classpath:/resources/", "classpath:/static/", "classpath:/public/", "/"]
-2020-06-04 08:51:14.556 DEBUG 50935 --- [http-nio-8080-exec-4] o.s.web.servlet.DispatcherServlet        : Completed 200 OK
-2020-06-04 08:51:17.368 DEBUG 50935 --- [http-nio-8080-exec-5] o.s.web.servlet.DispatcherServlet        : GET "/timetable/students/list", parameters={}
-2020-06-04 08:51:17.370 DEBUG 50935 --- [http-nio-8080-exec-5] s.w.s.m.m.a.RequestMappingHandlerMapping : Mapped to com.foxminded.timetable.controllers.StudentController#listStudents(Model, HttpSession, String, String)
-2020-06-04 08:51:17.380 DEBUG 50935 --- [http-nio-8080-exec-5] c.f.timetable.service.StudentService     : Fetching students from repository
-2020-06-04 08:51:17.380 DEBUG 50935 --- [http-nio-8080-exec-5] c.f.timetable.dao.jdbc.JdbcStudentDao    : Retrieving students
-2020-06-04 08:51:17.392 DEBUG 50935 --- [http-nio-8080-exec-5] o.s.w.s.v.ContentNegotiatingViewResolver : Selected 'text/html' given [text/html, application/xhtml+xml, image/webp, image/apng, application/xml;q=0.9, application/signed-exchange;v=b3;q=0.9, */*;q=0.8]
-2020-06-04 08:51:17.548 DEBUG 50935 --- [http-nio-8080-exec-6] o.s.web.servlet.DispatcherServlet        : GET "/bootstrap.css", parameters={}
-2020-06-04 08:51:17.551 DEBUG 50935 --- [http-nio-8080-exec-6] o.s.w.s.handler.SimpleUrlHandlerMapping  : Mapped to ResourceHttpRequestHandler ["classpath:/META-INF/resources/", "classpath:/resources/", "classpath:/static/", "classpath:/public/", "/"]
-2020-06-04 08:51:17.560 DEBUG 50935 --- [http-nio-8080-exec-6] o.s.web.servlet.DispatcherServlet        : Completed 200 OK
-2020-06-04 08:51:17.563 DEBUG 50935 --- [http-nio-8080-exec-7] o.s.web.servlet.DispatcherServlet        : GET "/bootstrap-datepicker.css", parameters={}
-2020-06-04 08:51:17.579 DEBUG 50935 --- [http-nio-8080-exec-7] o.s.w.s.handler.SimpleUrlHandlerMapping  : Mapped to ResourceHttpRequestHandler ["classpath:/META-INF/resources/", "classpath:/resources/", "classpath:/static/", "classpath:/public/", "/"]
-2020-06-04 08:51:17.581 DEBUG 50935 --- [http-nio-8080-exec-7] o.s.web.servlet.DispatcherServlet        : Completed 200 OK
-2020-06-04 08:51:17.598 DEBUG 50935 --- [http-nio-8080-exec-8] o.s.web.servlet.DispatcherServlet        : GET "/images/favicon-32x32.png", parameters={}
-2020-06-04 08:51:17.601 DEBUG 50935 --- [http-nio-8080-exec-8] o.s.w.s.handler.SimpleUrlHandlerMapping  : Mapped to ResourceHttpRequestHandler ["classpath:/META-INF/resources/", "classpath:/resources/", "classpath:/static/", "classpath:/public/", "/"]
-2020-06-04 08:51:17.605 DEBUG 50935 --- [http-nio-8080-exec-8] o.s.web.servlet.DispatcherServlet        : Completed 200 OK
-2020-06-04 08:51:17.676 DEBUG 50935 --- [http-nio-8080-exec-5] o.s.web.servlet.DispatcherServlet        : Completed 200 OK
-2020-06-04 08:51:26.375 DEBUG 50935 --- [http-nio-8080-exec-9] o.s.web.servlet.DispatcherServlet        : POST "/timetable/students/list", parameters={masked}
-2020-06-04 08:51:26.376 DEBUG 50935 --- [http-nio-8080-exec-9] s.w.s.m.m.a.RequestMappingHandlerMapping : Mapped to com.foxminded.timetable.controllers.StudentController#selectStudent(long, HttpSession, RedirectAttributes)
-2020-06-04 08:51:26.383 DEBUG 50935 --- [http-nio-8080-exec-9] c.f.timetable.service.StudentService     : Fetching student ID1 from repository
-2020-06-04 08:51:26.394 DEBUG 50935 --- [http-nio-8080-exec-9] o.s.web.servlet.view.RedirectView        : View name 'redirect:/timetable/students/student/home', model {}
-2020-06-04 08:51:26.395 DEBUG 50935 --- [http-nio-8080-exec-9] o.s.web.servlet.DispatcherServlet        : Completed 302 FOUND
-2020-06-04 08:51:26.403 DEBUG 50935 --- [http-nio-8080-exec-10] o.s.web.servlet.DispatcherServlet        : GET "/timetable/students/student/home", parameters={}
-2020-06-04 08:51:26.404 DEBUG 50935 --- [http-nio-8080-exec-10] s.w.s.m.m.a.RequestMappingHandlerMapping : Mapped to com.foxminded.timetable.controllers.StudentController#home(Model, HttpSession)
-2020-06-04 08:51:26.412 DEBUG 50935 --- [http-nio-8080-exec-10] c.f.timetable.service.ScheduleService    : Filtering schedules in range 2020-06-04-2020-06-04 by group: 8
-2020-06-04 08:51:26.413 DEBUG 50935 --- [http-nio-8080-exec-10] c.f.timetable.service.ScheduleService    : Fetching schedules in range 2020-06-04-2020-06-04 from repository
-2020-06-04 08:51:26.417 DEBUG 50935 --- [http-nio-8080-exec-10] o.s.w.s.v.ContentNegotiatingViewResolver : Selected 'text/html' given [text/html, application/xhtml+xml, image/webp, image/apng, application/xml;q=0.9, application/signed-exchange;v=b3;q=0.9, */*;q=0.8]
-2020-06-04 08:51:26.471 DEBUG 50935 --- [http-nio-8080-exec-10] o.s.web.servlet.DispatcherServlet        : Completed 200 OK
-2020-06-04 08:51:26.531 DEBUG 50935 --- [http-nio-8080-exec-3] o.s.web.servlet.DispatcherServlet        : GET "/bootstrap.css", parameters={}
-2020-06-04 08:51:26.531 DEBUG 50935 --- [http-nio-8080-exec-1] o.s.web.servlet.DispatcherServlet        : GET "/bootstrap-datepicker.css", parameters={}
-2020-06-04 08:51:26.533 DEBUG 50935 --- [http-nio-8080-exec-1] o.s.w.s.handler.SimpleUrlHandlerMapping  : Mapped to ResourceHttpRequestHandler ["classpath:/META-INF/resources/", "classpath:/resources/", "classpath:/static/", "classpath:/public/", "/"]
-2020-06-04 08:51:26.535 DEBUG 50935 --- [http-nio-8080-exec-3] o.s.w.s.handler.SimpleUrlHandlerMapping  : Mapped to ResourceHttpRequestHandler ["classpath:/META-INF/resources/", "classpath:/resources/", "classpath:/static/", "classpath:/public/", "/"]
-2020-06-04 08:51:26.535 DEBUG 50935 --- [http-nio-8080-exec-1] o.s.web.servlet.DispatcherServlet        : Completed 200 OK
-2020-06-04 08:51:26.540 DEBUG 50935 --- [http-nio-8080-exec-3] o.s.web.servlet.DispatcherServlet        : Completed 200 OK
-2020-06-04 08:51:26.570 DEBUG 50935 --- [http-nio-8080-exec-2] o.s.web.servlet.DispatcherServlet        : GET "/images/favicon-32x32.png", parameters={}
-2020-06-04 08:51:26.572 DEBUG 50935 --- [http-nio-8080-exec-2] o.s.w.s.handler.SimpleUrlHandlerMapping  : Mapped to ResourceHttpRequestHandler ["classpath:/META-INF/resources/", "classpath:/resources/", "classpath:/static/", "classpath:/public/", "/"]
-2020-06-04 08:51:26.576 DEBUG 50935 --- [http-nio-8080-exec-2] o.s.web.servlet.DispatcherServlet        : Completed 200 OK
-2020-06-04 08:51:29.704 DEBUG 50935 --- [http-nio-8080-exec-4] o.s.web.servlet.DispatcherServlet        : GET "/timetable/students/list", parameters={}
-2020-06-04 08:51:29.705 DEBUG 50935 --- [http-nio-8080-exec-4] s.w.s.m.m.a.RequestMappingHandlerMapping : Mapped to com.foxminded.timetable.controllers.StudentController#listStudents(Model, HttpSession, String, String)
-2020-06-04 08:51:29.707 DEBUG 50935 --- [http-nio-8080-exec-4] c.f.timetable.service.StudentService     : Fetching students from repository
-2020-06-04 08:51:29.708 DEBUG 50935 --- [http-nio-8080-exec-4] c.f.timetable.dao.jdbc.JdbcStudentDao    : Retrieving students
-2020-06-04 08:51:29.712 DEBUG 50935 --- [http-nio-8080-exec-4] o.s.w.s.v.ContentNegotiatingViewResolver : Selected 'text/html' given [text/html, application/xhtml+xml, image/webp, image/apng, application/xml;q=0.9, application/signed-exchange;v=b3;q=0.9, */*;q=0.8]
-2020-06-04 08:51:29.839 DEBUG 50935 --- [http-nio-8080-exec-4] o.s.web.servlet.DispatcherServlet        : Completed 200 OK
-2020-06-04 08:51:32.748 DEBUG 50935 --- [http-nio-8080-exec-7] o.s.web.servlet.DispatcherServlet        : GET "/bootstrap.css", parameters={}
-2020-06-04 08:51:32.749 DEBUG 50935 --- [http-nio-8080-exec-6] o.s.web.servlet.DispatcherServlet        : GET "/bootstrap-datepicker.css", parameters={}
-2020-06-04 08:51:32.749 DEBUG 50935 --- [http-nio-8080-exec-7] o.s.w.s.handler.SimpleUrlHandlerMapping  : Mapped to ResourceHttpRequestHandler ["classpath:/META-INF/resources/", "classpath:/resources/", "classpath:/static/", "classpath:/public/", "/"]
-2020-06-04 08:51:32.750 DEBUG 50935 --- [http-nio-8080-exec-6] o.s.w.s.handler.SimpleUrlHandlerMapping  : Mapped to ResourceHttpRequestHandler ["classpath:/META-INF/resources/", "classpath:/resources/", "classpath:/static/", "classpath:/public/", "/"]
-2020-06-04 08:51:32.752 DEBUG 50935 --- [http-nio-8080-exec-6] o.s.web.servlet.DispatcherServlet        : Completed 200 OK
-2020-06-04 08:51:32.754 DEBUG 50935 --- [http-nio-8080-exec-7] o.s.web.servlet.DispatcherServlet        : Completed 200 OK
-2020-06-04 08:51:32.837 DEBUG 50935 --- [http-nio-8080-exec-8] o.s.web.servlet.DispatcherServlet        : GET "/bootstrap-datepicker.css.map", parameters={}
-2020-06-04 08:51:32.838 DEBUG 50935 --- [http-nio-8080-exec-8] o.s.w.s.handler.SimpleUrlHandlerMapping  : Mapped to ResourceHttpRequestHandler ["classpath:/META-INF/resources/", "classpath:/resources/", "classpath:/static/", "classpath:/public/", "/"]
-2020-06-04 08:51:32.840 DEBUG 50935 --- [http-nio-8080-exec-8] o.s.w.s.r.ResourceHttpRequestHandler     : Resource not found
-2020-06-04 08:51:32.840 DEBUG 50935 --- [http-nio-8080-exec-8] o.s.web.servlet.DispatcherServlet        : Completed 404 NOT_FOUND
-2020-06-04 08:51:32.845 DEBUG 50935 --- [http-nio-8080-exec-8] o.s.web.servlet.DispatcherServlet        : "ERROR" dispatch for GET "/error", parameters={}
-2020-06-04 08:51:32.847 DEBUG 50935 --- [http-nio-8080-exec-8] s.w.s.m.m.a.RequestMappingHandlerMapping : Mapped to org.springframework.boot.autoconfigure.web.servlet.error.BasicErrorController#error(HttpServletRequest)
-2020-06-04 08:51:32.862 DEBUG 50935 --- [http-nio-8080-exec-8] o.s.w.s.m.m.a.HttpEntityMethodProcessor  : Using 'application/json', given [*/*] and supported [application/json, application/*+json, application/json, application/*+json]
-2020-06-04 08:51:32.863 DEBUG 50935 --- [http-nio-8080-exec-8] o.s.w.s.m.m.a.HttpEntityMethodProcessor  : Writing [{timestamp=Thu Jun 04 08:51:32 EEST 2020, status=404, error=Not Found, message=No message available, (truncated)...]
-2020-06-04 08:51:32.963 DEBUG 50935 --- [http-nio-8080-exec-8] o.s.web.servlet.DispatcherServlet        : Exiting from "ERROR" dispatch, status 404
-2020-06-04 08:52:07.332 DEBUG 50935 --- [http-nio-8080-exec-5] o.s.web.servlet.DispatcherServlet        : POST "/timetable/students/list", parameters={masked}
-2020-06-04 08:52:07.334 DEBUG 50935 --- [http-nio-8080-exec-5] s.w.s.m.m.a.RequestMappingHandlerMapping : Mapped to com.foxminded.timetable.controllers.StudentController#selectStudent(long, HttpSession, RedirectAttributes)
-2020-06-04 08:52:07.335 DEBUG 50935 --- [http-nio-8080-exec-5] c.f.timetable.service.StudentService     : Fetching student ID3 from repository
-2020-06-04 08:52:07.338 DEBUG 50935 --- [http-nio-8080-exec-5] o.s.web.servlet.view.RedirectView        : View name 'redirect:/timetable/students/student/home', model {}
-2020-06-04 08:52:07.338 DEBUG 50935 --- [http-nio-8080-exec-5] o.s.web.servlet.DispatcherServlet        : Completed 302 FOUND
-2020-06-04 08:52:07.346 DEBUG 50935 --- [http-nio-8080-exec-9] o.s.web.servlet.DispatcherServlet        : GET "/timetable/students/student/home", parameters={}
-2020-06-04 08:52:07.346 DEBUG 50935 --- [http-nio-8080-exec-9] s.w.s.m.m.a.RequestMappingHandlerMapping : Mapped to com.foxminded.timetable.controllers.StudentController#home(Model, HttpSession)
-2020-06-04 08:52:07.347 DEBUG 50935 --- [http-nio-8080-exec-9] c.f.timetable.service.ScheduleService    : Filtering schedules in range 2020-06-04-2020-06-04 by group: 10
-2020-06-04 08:52:07.347 DEBUG 50935 --- [http-nio-8080-exec-9] c.f.timetable.service.ScheduleService    : Fetching schedules in range 2020-06-04-2020-06-04 from repository
-2020-06-04 08:52:07.348 DEBUG 50935 --- [http-nio-8080-exec-9] o.s.w.s.v.ContentNegotiatingViewResolver : Selected 'text/html' given [text/html, application/xhtml+xml, image/webp, image/apng, application/xml;q=0.9, application/signed-exchange;v=b3;q=0.9, */*;q=0.8]
-2020-06-04 08:52:07.374 DEBUG 50935 --- [http-nio-8080-exec-9] o.s.web.servlet.DispatcherServlet        : Completed 200 OK
-2020-06-04 08:52:07.432 DEBUG 50935 --- [http-nio-8080-exec-10] o.s.web.servlet.DispatcherServlet        : GET "/bootstrap.css", parameters={}
-2020-06-04 08:52:07.434 DEBUG 50935 --- [http-nio-8080-exec-10] o.s.w.s.handler.SimpleUrlHandlerMapping  : Mapped to ResourceHttpRequestHandler ["classpath:/META-INF/resources/", "classpath:/resources/", "classpath:/static/", "classpath:/public/", "/"]
-2020-06-04 08:52:07.439 DEBUG 50935 --- [http-nio-8080-exec-10] o.s.web.servlet.DispatcherServlet        : Completed 200 OK
-2020-06-04 08:52:07.441 DEBUG 50935 --- [http-nio-8080-exec-10] o.s.web.servlet.DispatcherServlet        : GET "/bootstrap-datepicker.css", parameters={}
-2020-06-04 08:52:07.444 DEBUG 50935 --- [http-nio-8080-exec-10] o.s.w.s.handler.SimpleUrlHandlerMapping  : Mapped to ResourceHttpRequestHandler ["classpath:/META-INF/resources/", "classpath:/resources/", "classpath:/static/", "classpath:/public/", "/"]
-2020-06-04 08:52:07.447 DEBUG 50935 --- [http-nio-8080-exec-10] o.s.web.servlet.DispatcherServlet        : Completed 200 OK
-2020-06-04 08:52:07.467 DEBUG 50935 --- [http-nio-8080-exec-3] o.s.web.servlet.DispatcherServlet        : GET "/images/favicon-32x32.png", parameters={}
-2020-06-04 08:52:07.469 DEBUG 50935 --- [http-nio-8080-exec-3] o.s.w.s.handler.SimpleUrlHandlerMapping  : Mapped to ResourceHttpRequestHandler ["classpath:/META-INF/resources/", "classpath:/resources/", "classpath:/static/", "classpath:/public/", "/"]
-2020-06-04 08:52:07.474 DEBUG 50935 --- [http-nio-8080-exec-3] o.s.web.servlet.DispatcherServlet        : Completed 200 OK
-2020-06-04 08:52:08.364 DEBUG 50935 --- [http-nio-8080-exec-2] o.s.web.servlet.DispatcherServlet        : GET "/timetable/students/list", parameters={}
-2020-06-04 08:52:08.364 DEBUG 50935 --- [http-nio-8080-exec-2] s.w.s.m.m.a.RequestMappingHandlerMapping : Mapped to com.foxminded.timetable.controllers.StudentController#listStudents(Model, HttpSession, String, String)
-2020-06-04 08:52:08.365 DEBUG 50935 --- [http-nio-8080-exec-2] c.f.timetable.service.StudentService     : Fetching students from repository
-2020-06-04 08:52:08.366 DEBUG 50935 --- [http-nio-8080-exec-2] c.f.timetable.dao.jdbc.JdbcStudentDao    : Retrieving students
-2020-06-04 08:52:08.368 DEBUG 50935 --- [http-nio-8080-exec-2] o.s.w.s.v.ContentNegotiatingViewResolver : Selected 'text/html' given [text/html, application/xhtml+xml, image/webp, image/apng, application/xml;q=0.9, application/signed-exchange;v=b3;q=0.9, */*;q=0.8]
-2020-06-04 08:52:08.449 DEBUG 50935 --- [http-nio-8080-exec-2] o.s.web.servlet.DispatcherServlet        : Completed 200 OK
-2020-06-04 08:52:08.464 DEBUG 50935 --- [http-nio-8080-exec-4] o.s.web.servlet.DispatcherServlet        : GET "/bootstrap-datepicker.css", parameters={}
-2020-06-04 08:52:08.465 DEBUG 50935 --- [http-nio-8080-exec-6] o.s.web.servlet.DispatcherServlet        : GET "/bootstrap.css", parameters={}
-2020-06-04 08:52:08.465 DEBUG 50935 --- [http-nio-8080-exec-4] o.s.w.s.handler.SimpleUrlHandlerMapping  : Mapped to ResourceHttpRequestHandler ["classpath:/META-INF/resources/", "classpath:/resources/", "classpath:/static/", "classpath:/public/", "/"]
-2020-06-04 08:52:08.467 DEBUG 50935 --- [http-nio-8080-exec-6] o.s.w.s.handler.SimpleUrlHandlerMapping  : Mapped to ResourceHttpRequestHandler ["classpath:/META-INF/resources/", "classpath:/resources/", "classpath:/static/", "classpath:/public/", "/"]
-2020-06-04 08:52:08.468 DEBUG 50935 --- [http-nio-8080-exec-4] o.s.web.servlet.DispatcherServlet        : Completed 200 OK
-2020-06-04 08:52:08.471 DEBUG 50935 --- [http-nio-8080-exec-6] o.s.web.servlet.DispatcherServlet        : Completed 200 OK
-2020-06-04 08:52:10.022 DEBUG 50935 --- [http-nio-8080-exec-7] o.s.web.servlet.DispatcherServlet        : POST "/timetable/students/list", parameters={masked}
-2020-06-04 08:52:10.022 DEBUG 50935 --- [http-nio-8080-exec-7] s.w.s.m.m.a.RequestMappingHandlerMapping : Mapped to com.foxminded.timetable.controllers.StudentController#selectStudent(long, HttpSession, RedirectAttributes)
-2020-06-04 08:52:10.023 DEBUG 50935 --- [http-nio-8080-exec-7] c.f.timetable.service.StudentService     : Fetching student ID1 from repository
-2020-06-04 08:52:10.027 DEBUG 50935 --- [http-nio-8080-exec-7] o.s.web.servlet.view.RedirectView        : View name 'redirect:/timetable/students/student/home', model {}
-2020-06-04 08:52:10.027 DEBUG 50935 --- [http-nio-8080-exec-7] o.s.web.servlet.DispatcherServlet        : Completed 302 FOUND
-2020-06-04 08:52:10.034 DEBUG 50935 --- [http-nio-8080-exec-8] o.s.web.servlet.DispatcherServlet        : GET "/timetable/students/student/home", parameters={}
-2020-06-04 08:52:10.034 DEBUG 50935 --- [http-nio-8080-exec-8] s.w.s.m.m.a.RequestMappingHandlerMapping : Mapped to com.foxminded.timetable.controllers.StudentController#home(Model, HttpSession)
-2020-06-04 08:52:10.035 DEBUG 50935 --- [http-nio-8080-exec-8] c.f.timetable.service.ScheduleService    : Filtering schedules in range 2020-06-04-2020-06-04 by group: 8
-2020-06-04 08:52:10.035 DEBUG 50935 --- [http-nio-8080-exec-8] c.f.timetable.service.ScheduleService    : Fetching schedules in range 2020-06-04-2020-06-04 from repository
-2020-06-04 08:52:10.037 DEBUG 50935 --- [http-nio-8080-exec-8] o.s.w.s.v.ContentNegotiatingViewResolver : Selected 'text/html' given [text/html, application/xhtml+xml, image/webp, image/apng, application/xml;q=0.9, application/signed-exchange;v=b3;q=0.9, */*;q=0.8]
-2020-06-04 08:52:10.061 DEBUG 50935 --- [http-nio-8080-exec-8] o.s.web.servlet.DispatcherServlet        : Completed 200 OK
-2020-06-04 08:52:10.113 DEBUG 50935 --- [http-nio-8080-exec-5] o.s.web.servlet.DispatcherServlet        : GET "/bootstrap.css", parameters={}
-2020-06-04 08:52:10.114 DEBUG 50935 --- [http-nio-8080-exec-5] o.s.w.s.handler.SimpleUrlHandlerMapping  : Mapped to ResourceHttpRequestHandler ["classpath:/META-INF/resources/", "classpath:/resources/", "classpath:/static/", "classpath:/public/", "/"]
-2020-06-04 08:52:10.120 DEBUG 50935 --- [http-nio-8080-exec-5] o.s.web.servlet.DispatcherServlet        : Completed 200 OK
-2020-06-04 08:52:10.130 DEBUG 50935 --- [http-nio-8080-exec-9] o.s.web.servlet.DispatcherServlet        : GET "/bootstrap-datepicker.css", parameters={}
-2020-06-04 08:52:10.131 DEBUG 50935 --- [http-nio-8080-exec-9] o.s.w.s.handler.SimpleUrlHandlerMapping  : Mapped to ResourceHttpRequestHandler ["classpath:/META-INF/resources/", "classpath:/resources/", "classpath:/static/", "classpath:/public/", "/"]
-2020-06-04 08:52:10.134 DEBUG 50935 --- [http-nio-8080-exec-9] o.s.web.servlet.DispatcherServlet        : Completed 200 OK
-2020-06-04 08:52:10.159 DEBUG 50935 --- [http-nio-8080-exec-1] o.s.web.servlet.DispatcherServlet        : GET "/images/favicon-32x32.png", parameters={}
-2020-06-04 08:52:10.161 DEBUG 50935 --- [http-nio-8080-exec-1] o.s.w.s.handler.SimpleUrlHandlerMapping  : Mapped to ResourceHttpRequestHandler ["classpath:/META-INF/resources/", "classpath:/resources/", "classpath:/static/", "classpath:/public/", "/"]
-2020-06-04 08:52:10.162 DEBUG 50935 --- [http-nio-8080-exec-1] o.s.web.servlet.DispatcherServlet        : Completed 200 OK
-2020-06-04 08:52:11.147 DEBUG 50935 --- [http-nio-8080-exec-10] o.s.web.servlet.DispatcherServlet        : GET "/timetable/students/list", parameters={}
-2020-06-04 08:52:11.148 DEBUG 50935 --- [http-nio-8080-exec-10] s.w.s.m.m.a.RequestMappingHandlerMapping : Mapped to com.foxminded.timetable.controllers.StudentController#listStudents(Model, HttpSession, String, String)
-2020-06-04 08:52:11.150 DEBUG 50935 --- [http-nio-8080-exec-10] c.f.timetable.service.StudentService     : Fetching students from repository
-2020-06-04 08:52:11.151 DEBUG 50935 --- [http-nio-8080-exec-10] c.f.timetable.dao.jdbc.JdbcStudentDao    : Retrieving students
-2020-06-04 08:52:11.153 DEBUG 50935 --- [http-nio-8080-exec-10] o.s.w.s.v.ContentNegotiatingViewResolver : Selected 'text/html' given [text/html, application/xhtml+xml, image/webp, image/apng, application/xml;q=0.9, application/signed-exchange;v=b3;q=0.9, */*;q=0.8]
-2020-06-04 08:52:11.244 DEBUG 50935 --- [http-nio-8080-exec-10] o.s.web.servlet.DispatcherServlet        : Completed 200 OK
-2020-06-04 08:52:12.970 DEBUG 50935 --- [http-nio-8080-exec-3] o.s.web.servlet.DispatcherServlet        : GET "/bootstrap.css", parameters={}
-2020-06-04 08:52:12.972 DEBUG 50935 --- [http-nio-8080-exec-3] o.s.w.s.handler.SimpleUrlHandlerMapping  : Mapped to ResourceHttpRequestHandler ["classpath:/META-INF/resources/", "classpath:/resources/", "classpath:/static/", "classpath:/public/", "/"]
-2020-06-04 08:52:12.973 DEBUG 50935 --- [http-nio-8080-exec-2] o.s.web.servlet.DispatcherServlet        : GET "/bootstrap-datepicker.css", parameters={}
-2020-06-04 08:52:12.974 DEBUG 50935 --- [http-nio-8080-exec-2] o.s.w.s.handler.SimpleUrlHandlerMapping  : Mapped to ResourceHttpRequestHandler ["classpath:/META-INF/resources/", "classpath:/resources/", "classpath:/static/", "classpath:/public/", "/"]
-2020-06-04 08:52:12.976 DEBUG 50935 --- [http-nio-8080-exec-2] o.s.web.servlet.DispatcherServlet        : Completed 200 OK
-2020-06-04 08:52:12.976 DEBUG 50935 --- [http-nio-8080-exec-3] o.s.web.servlet.DispatcherServlet        : Completed 200 OK
-2020-06-04 08:52:13.080 DEBUG 50935 --- [http-nio-8080-exec-4] o.s.web.servlet.DispatcherServlet        : GET "/bootstrap-datepicker.css.map", parameters={}
-2020-06-04 08:52:13.083 DEBUG 50935 --- [http-nio-8080-exec-4] o.s.w.s.handler.SimpleUrlHandlerMapping  : Mapped to ResourceHttpRequestHandler ["classpath:/META-INF/resources/", "classpath:/resources/", "classpath:/static/", "classpath:/public/", "/"]
-2020-06-04 08:52:13.092 DEBUG 50935 --- [http-nio-8080-exec-4] o.s.w.s.r.ResourceHttpRequestHandler     : Resource not found
-2020-06-04 08:52:13.093 DEBUG 50935 --- [http-nio-8080-exec-4] o.s.web.servlet.DispatcherServlet        : Completed 404 NOT_FOUND
-2020-06-04 08:52:13.094 DEBUG 50935 --- [http-nio-8080-exec-4] o.s.web.servlet.DispatcherServlet        : "ERROR" dispatch for GET "/error", parameters={}
-2020-06-04 08:52:13.095 DEBUG 50935 --- [http-nio-8080-exec-4] s.w.s.m.m.a.RequestMappingHandlerMapping : Mapped to org.springframework.boot.autoconfigure.web.servlet.error.BasicErrorController#error(HttpServletRequest)
-2020-06-04 08:52:13.099 DEBUG 50935 --- [http-nio-8080-exec-4] o.s.w.s.m.m.a.HttpEntityMethodProcessor  : Using 'application/json', given [*/*] and supported [application/json, application/*+json, application/json, application/*+json]
-2020-06-04 08:52:13.099 DEBUG 50935 --- [http-nio-8080-exec-4] o.s.w.s.m.m.a.HttpEntityMethodProcessor  : Writing [{timestamp=Thu Jun 04 08:52:13 EEST 2020, status=404, error=Not Found, message=No message available, (truncated)...]
-2020-06-04 08:52:13.101 DEBUG 50935 --- [http-nio-8080-exec-4] o.s.web.servlet.DispatcherServlet        : Exiting from "ERROR" dispatch, status 404
-2020-06-04 08:52:43.719 DEBUG 50935 --- [http-nio-8080-exec-6] o.s.web.servlet.DispatcherServlet        : POST "/timetable/students/list", parameters={masked}
-2020-06-04 08:52:43.721 DEBUG 50935 --- [http-nio-8080-exec-6] s.w.s.m.m.a.RequestMappingHandlerMapping : Mapped to com.foxminded.timetable.controllers.StudentController#selectStudent(long, HttpSession, RedirectAttributes)
-2020-06-04 08:52:43.722 DEBUG 50935 --- [http-nio-8080-exec-6] c.f.timetable.service.StudentService     : Fetching student ID2 from repository
-2020-06-04 08:52:43.724 DEBUG 50935 --- [http-nio-8080-exec-6] o.s.web.servlet.view.RedirectView        : View name 'redirect:/timetable/students/student/home', model {}
-2020-06-04 08:52:43.724 DEBUG 50935 --- [http-nio-8080-exec-6] o.s.web.servlet.DispatcherServlet        : Completed 302 FOUND
-2020-06-04 08:52:43.737 DEBUG 50935 --- [http-nio-8080-exec-7] o.s.web.servlet.DispatcherServlet        : GET "/timetable/students/student/home", parameters={}
-2020-06-04 08:52:43.737 DEBUG 50935 --- [http-nio-8080-exec-7] s.w.s.m.m.a.RequestMappingHandlerMapping : Mapped to com.foxminded.timetable.controllers.StudentController#home(Model, HttpSession)
-2020-06-04 08:52:43.738 DEBUG 50935 --- [http-nio-8080-exec-7] c.f.timetable.service.ScheduleService    : Filtering schedules in range 2020-06-04-2020-06-04 by group: 3
-2020-06-04 08:52:43.738 DEBUG 50935 --- [http-nio-8080-exec-7] c.f.timetable.service.ScheduleService    : Fetching schedules in range 2020-06-04-2020-06-04 from repository
-2020-06-04 08:52:43.740 DEBUG 50935 --- [http-nio-8080-exec-7] o.s.w.s.v.ContentNegotiatingViewResolver : Selected 'text/html' given [text/html, application/xhtml+xml, image/webp, image/apng, application/xml;q=0.9, application/signed-exchange;v=b3;q=0.9, */*;q=0.8]
-2020-06-04 08:52:43.766 DEBUG 50935 --- [http-nio-8080-exec-7] o.s.web.servlet.DispatcherServlet        : Completed 200 OK
-2020-06-04 08:52:43.839 DEBUG 50935 --- [http-nio-8080-exec-8] o.s.web.servlet.DispatcherServlet        : GET "/bootstrap.css", parameters={}
-2020-06-04 08:52:43.839 DEBUG 50935 --- [http-nio-8080-exec-5] o.s.web.servlet.DispatcherServlet        : GET "/bootstrap-datepicker.css", parameters={}
-2020-06-04 08:52:43.841 DEBUG 50935 --- [http-nio-8080-exec-8] o.s.w.s.handler.SimpleUrlHandlerMapping  : Mapped to ResourceHttpRequestHandler ["classpath:/META-INF/resources/", "classpath:/resources/", "classpath:/static/", "classpath:/public/", "/"]
-2020-06-04 08:52:43.842 DEBUG 50935 --- [http-nio-8080-exec-5] o.s.w.s.handler.SimpleUrlHandlerMapping  : Mapped to ResourceHttpRequestHandler ["classpath:/META-INF/resources/", "classpath:/resources/", "classpath:/static/", "classpath:/public/", "/"]
-2020-06-04 08:52:43.843 DEBUG 50935 --- [http-nio-8080-exec-5] o.s.web.servlet.DispatcherServlet        : Completed 200 OK
-2020-06-04 08:52:43.844 DEBUG 50935 --- [http-nio-8080-exec-8] o.s.web.servlet.DispatcherServlet        : Completed 200 OK
-2020-06-04 08:52:43.880 DEBUG 50935 --- [http-nio-8080-exec-9] o.s.web.servlet.DispatcherServlet        : GET "/images/favicon-32x32.png", parameters={}
-2020-06-04 08:52:43.880 DEBUG 50935 --- [http-nio-8080-exec-9] o.s.w.s.handler.SimpleUrlHandlerMapping  : Mapped to ResourceHttpRequestHandler ["classpath:/META-INF/resources/", "classpath:/resources/", "classpath:/static/", "classpath:/public/", "/"]
-2020-06-04 08:52:43.882 DEBUG 50935 --- [http-nio-8080-exec-9] o.s.web.servlet.DispatcherServlet        : Completed 200 OK
-2020-06-04 08:52:44.041 DEBUG 50935 --- [http-nio-8080-exec-1] o.s.web.servlet.DispatcherServlet        : GET "/bootstrap-datepicker.css.map", parameters={}
-2020-06-04 08:52:44.042 DEBUG 50935 --- [http-nio-8080-exec-1] o.s.w.s.handler.SimpleUrlHandlerMapping  : Mapped to ResourceHttpRequestHandler ["classpath:/META-INF/resources/", "classpath:/resources/", "classpath:/static/", "classpath:/public/", "/"]
-2020-06-04 08:52:44.043 DEBUG 50935 --- [http-nio-8080-exec-1] o.s.w.s.r.ResourceHttpRequestHandler     : Resource not found
-2020-06-04 08:52:44.044 DEBUG 50935 --- [http-nio-8080-exec-1] o.s.web.servlet.DispatcherServlet        : Completed 404 NOT_FOUND
-2020-06-04 08:52:44.044 DEBUG 50935 --- [http-nio-8080-exec-1] o.s.web.servlet.DispatcherServlet        : "ERROR" dispatch for GET "/error", parameters={}
-2020-06-04 08:52:44.045 DEBUG 50935 --- [http-nio-8080-exec-1] s.w.s.m.m.a.RequestMappingHandlerMapping : Mapped to org.springframework.boot.autoconfigure.web.servlet.error.BasicErrorController#error(HttpServletRequest)
-2020-06-04 08:52:44.046 DEBUG 50935 --- [http-nio-8080-exec-1] o.s.w.s.m.m.a.HttpEntityMethodProcessor  : Using 'application/json', given [*/*] and supported [application/json, application/*+json, application/json, application/*+json]
-2020-06-04 08:52:44.046 DEBUG 50935 --- [http-nio-8080-exec-1] o.s.w.s.m.m.a.HttpEntityMethodProcessor  : Writing [{timestamp=Thu Jun 04 08:52:44 EEST 2020, status=404, error=Not Found, message=No message available, (truncated)...]
-2020-06-04 08:52:44.047 DEBUG 50935 --- [http-nio-8080-exec-1] o.s.web.servlet.DispatcherServlet        : Exiting from "ERROR" dispatch, status 404
-2020-06-04 08:52:46.010 DEBUG 50935 --- [http-nio-8080-exec-10] o.s.web.servlet.DispatcherServlet        : GET "/timetable/students/list", parameters={}
-2020-06-04 08:52:46.010 DEBUG 50935 --- [http-nio-8080-exec-10] s.w.s.m.m.a.RequestMappingHandlerMapping : Mapped to com.foxminded.timetable.controllers.StudentController#listStudents(Model, HttpSession, String, String)
-2020-06-04 08:52:46.014 DEBUG 50935 --- [http-nio-8080-exec-10] c.f.timetable.service.StudentService     : Fetching students from repository
-2020-06-04 08:52:46.014 DEBUG 50935 --- [http-nio-8080-exec-10] c.f.timetable.dao.jdbc.JdbcStudentDao    : Retrieving students
-2020-06-04 08:52:46.017 DEBUG 50935 --- [http-nio-8080-exec-10] o.s.w.s.v.ContentNegotiatingViewResolver : Selected 'text/html' given [text/html, application/xhtml+xml, image/webp, image/apng, application/xml;q=0.9, application/signed-exchange;v=b3;q=0.9, */*;q=0.8]
-2020-06-04 08:52:46.100 DEBUG 50935 --- [http-nio-8080-exec-10] o.s.web.servlet.DispatcherServlet        : Completed 200 OK
-2020-06-04 08:52:46.165 DEBUG 50935 --- [http-nio-8080-exec-2] o.s.web.servlet.DispatcherServlet        : GET "/bootstrap.css", parameters={}
-2020-06-04 08:52:46.166 DEBUG 50935 --- [http-nio-8080-exec-2] o.s.w.s.handler.SimpleUrlHandlerMapping  : Mapped to ResourceHttpRequestHandler ["classpath:/META-INF/resources/", "classpath:/resources/", "classpath:/static/", "classpath:/public/", "/"]
-2020-06-04 08:52:46.167 DEBUG 50935 --- [http-nio-8080-exec-3] o.s.web.servlet.DispatcherServlet        : GET "/bootstrap-datepicker.css", parameters={}
-2020-06-04 08:52:46.168 DEBUG 50935 --- [http-nio-8080-exec-3] o.s.w.s.handler.SimpleUrlHandlerMapping  : Mapped to ResourceHttpRequestHandler ["classpath:/META-INF/resources/", "classpath:/resources/", "classpath:/static/", "classpath:/public/", "/"]
-2020-06-04 08:52:46.169 DEBUG 50935 --- [http-nio-8080-exec-2] o.s.web.servlet.DispatcherServlet        : Completed 200 OK
-2020-06-04 08:52:46.171 DEBUG 50935 --- [http-nio-8080-exec-3] o.s.web.servlet.DispatcherServlet        : Completed 200 OK
-2020-06-04 08:52:46.458 DEBUG 50935 --- [http-nio-8080-exec-4] o.s.web.servlet.DispatcherServlet        : GET "/bootstrap-datepicker.css.map", parameters={}
-2020-06-04 08:52:46.459 DEBUG 50935 --- [http-nio-8080-exec-4] o.s.w.s.handler.SimpleUrlHandlerMapping  : Mapped to ResourceHttpRequestHandler ["classpath:/META-INF/resources/", "classpath:/resources/", "classpath:/static/", "classpath:/public/", "/"]
-2020-06-04 08:52:46.460 DEBUG 50935 --- [http-nio-8080-exec-4] o.s.w.s.r.ResourceHttpRequestHandler     : Resource not found
-2020-06-04 08:52:46.460 DEBUG 50935 --- [http-nio-8080-exec-4] o.s.web.servlet.DispatcherServlet        : Completed 404 NOT_FOUND
-2020-06-04 08:52:46.461 DEBUG 50935 --- [http-nio-8080-exec-4] o.s.web.servlet.DispatcherServlet        : "ERROR" dispatch for GET "/error", parameters={}
-2020-06-04 08:52:46.461 DEBUG 50935 --- [http-nio-8080-exec-4] s.w.s.m.m.a.RequestMappingHandlerMapping : Mapped to org.springframework.boot.autoconfigure.web.servlet.error.BasicErrorController#error(HttpServletRequest)
-2020-06-04 08:52:46.462 DEBUG 50935 --- [http-nio-8080-exec-4] o.s.w.s.m.m.a.HttpEntityMethodProcessor  : Using 'application/json', given [*/*] and supported [application/json, application/*+json, application/json, application/*+json]
-2020-06-04 08:52:46.462 DEBUG 50935 --- [http-nio-8080-exec-4] o.s.w.s.m.m.a.HttpEntityMethodProcessor  : Writing [{timestamp=Thu Jun 04 08:52:46 EEST 2020, status=404, error=Not Found, message=No message available, (truncated)...]
-2020-06-04 08:52:46.463 DEBUG 50935 --- [http-nio-8080-exec-4] o.s.web.servlet.DispatcherServlet        : Exiting from "ERROR" dispatch, status 404
-2020-06-04 08:54:30.437  INFO 50935 --- [SpringContextShutdownHook] o.s.s.concurrent.ThreadPoolTaskExecutor  : Shutting down ExecutorService 'applicationTaskExecutor'
-2020-06-04 08:54:30.441  INFO 50935 --- [SpringContextShutdownHook] com.zaxxer.hikari.HikariDataSource       : HikariPool-1 - Shutdown initiated...
-2020-06-04 08:54:30.442  INFO 50935 --- [SpringContextShutdownHook] com.zaxxer.hikari.HikariDataSource       : HikariPool-1 - Shutdown completed.
+2020-06-08 19:41:50.046 DEBUG 13491 --- [http-nio-8080-exec-1] org.thymeleaf.TemplateEngine             : [THYMELEAF] TEMPLATE ENGINE INITIALIZED
+2020-06-08 19:41:50.521 DEBUG 13491 --- [http-nio-8080-exec-1] o.s.web.servlet.DispatcherServlet        : Completed 200 OK
+2020-06-08 19:41:50.568 DEBUG 13491 --- [http-nio-8080-exec-2] o.s.web.servlet.DispatcherServlet        : GET "/bootstrap.css;jsessionid=212B5D766301FA5E783E395FCB83200B", parameters={}
+2020-06-08 19:41:50.574 DEBUG 13491 --- [http-nio-8080-exec-3] o.s.web.servlet.DispatcherServlet        : GET "/bootstrap-datepicker.css;jsessionid=212B5D766301FA5E783E395FCB83200B", parameters={}
+2020-06-08 19:41:50.577 DEBUG 13491 --- [http-nio-8080-exec-2] o.s.w.s.handler.SimpleUrlHandlerMapping  : Mapped to ResourceHttpRequestHandler ["classpath:/META-INF/resources/", "classpath:/resources/", "classpath:/static/", "classpath:/public/", "/"]
+2020-06-08 19:41:50.578 DEBUG 13491 --- [http-nio-8080-exec-3] o.s.w.s.handler.SimpleUrlHandlerMapping  : Mapped to ResourceHttpRequestHandler ["classpath:/META-INF/resources/", "classpath:/resources/", "classpath:/static/", "classpath:/public/", "/"]
+2020-06-08 19:41:50.601 DEBUG 13491 --- [http-nio-8080-exec-3] o.s.web.servlet.DispatcherServlet        : Completed 200 OK
+2020-06-08 19:41:50.605 DEBUG 13491 --- [http-nio-8080-exec-2] o.s.web.servlet.DispatcherServlet        : Completed 200 OK
+2020-06-08 19:41:52.593 DEBUG 13491 --- [http-nio-8080-exec-4] o.s.web.servlet.DispatcherServlet        : GET "/images/favicon-32x32.png;jsessionid=212B5D766301FA5E783E395FCB83200B", parameters={}
+2020-06-08 19:41:52.596 DEBUG 13491 --- [http-nio-8080-exec-4] o.s.w.s.handler.SimpleUrlHandlerMapping  : Mapped to ResourceHttpRequestHandler ["classpath:/META-INF/resources/", "classpath:/resources/", "classpath:/static/", "classpath:/public/", "/"]
+2020-06-08 19:41:52.598 DEBUG 13491 --- [http-nio-8080-exec-4] o.s.web.servlet.DispatcherServlet        : Completed 200 OK
+2020-06-08 19:41:53.066 DEBUG 13491 --- [http-nio-8080-exec-5] o.s.web.servlet.DispatcherServlet        : GET "/images/favicon.ico;jsessionid=212B5D766301FA5E783E395FCB83200B", parameters={}
+2020-06-08 19:41:53.069 DEBUG 13491 --- [http-nio-8080-exec-5] o.s.w.s.handler.SimpleUrlHandlerMapping  : Mapped to ResourceHttpRequestHandler ["classpath:/META-INF/resources/", "classpath:/resources/", "classpath:/static/", "classpath:/public/", "/"]
+2020-06-08 19:41:53.089 DEBUG 13491 --- [http-nio-8080-exec-5] o.s.web.servlet.DispatcherServlet        : Completed 200 OK
+2020-06-08 19:41:57.943 DEBUG 13491 --- [http-nio-8080-exec-6] o.s.web.servlet.DispatcherServlet        : GET "/timetable/management/home;jsessionid=212B5D766301FA5E783E395FCB83200B", parameters={}
+2020-06-08 19:41:57.944 DEBUG 13491 --- [http-nio-8080-exec-6] s.w.s.m.m.a.RequestMappingHandlerMapping : Mapped to com.foxminded.timetable.controllers.ManagementController#home(String, Model, HttpSession, String)
+2020-06-08 19:41:57.961 DEBUG 13491 --- [http-nio-8080-exec-6] c.f.timetable.service.ScheduleService    : Fetching schedules in range 2020-06-08-2020-06-08 from repository
+2020-06-08 19:41:57.966 DEBUG 13491 --- [http-nio-8080-exec-6] o.s.w.s.v.ContentNegotiatingViewResolver : Selected 'text/html' given [text/html, application/xhtml+xml, image/webp, image/apng, application/xml;q=0.9, application/signed-exchange;v=b3;q=0.9, */*;q=0.8]
+2020-06-08 19:41:58.061 DEBUG 13491 --- [http-nio-8080-exec-6] o.s.web.servlet.DispatcherServlet        : Completed 200 OK
+2020-06-08 19:41:58.121 DEBUG 13491 --- [http-nio-8080-exec-8] o.s.web.servlet.DispatcherServlet        : GET "/bootstrap-datepicker.css", parameters={}
+2020-06-08 19:41:58.122 DEBUG 13491 --- [http-nio-8080-exec-7] o.s.web.servlet.DispatcherServlet        : GET "/bootstrap.css", parameters={}
+2020-06-08 19:41:58.126 DEBUG 13491 --- [http-nio-8080-exec-7] o.s.w.s.handler.SimpleUrlHandlerMapping  : Mapped to ResourceHttpRequestHandler ["classpath:/META-INF/resources/", "classpath:/resources/", "classpath:/static/", "classpath:/public/", "/"]
+2020-06-08 19:41:58.126 DEBUG 13491 --- [http-nio-8080-exec-8] o.s.w.s.handler.SimpleUrlHandlerMapping  : Mapped to ResourceHttpRequestHandler ["classpath:/META-INF/resources/", "classpath:/resources/", "classpath:/static/", "classpath:/public/", "/"]
+2020-06-08 19:41:58.137 DEBUG 13491 --- [http-nio-8080-exec-7] o.s.web.servlet.DispatcherServlet        : Completed 200 OK
+2020-06-08 19:41:58.138 DEBUG 13491 --- [http-nio-8080-exec-8] o.s.web.servlet.DispatcherServlet        : Completed 200 OK
+2020-06-08 19:41:58.170 DEBUG 13491 --- [http-nio-8080-exec-9] o.s.web.servlet.DispatcherServlet        : GET "/images/favicon-32x32.png", parameters={}
+2020-06-08 19:41:58.173 DEBUG 13491 --- [http-nio-8080-exec-9] o.s.w.s.handler.SimpleUrlHandlerMapping  : Mapped to ResourceHttpRequestHandler ["classpath:/META-INF/resources/", "classpath:/resources/", "classpath:/static/", "classpath:/public/", "/"]
+2020-06-08 19:41:58.177 DEBUG 13491 --- [http-nio-8080-exec-9] o.s.web.servlet.DispatcherServlet        : Completed 200 OK
+2020-06-08 19:41:58.355 DEBUG 13491 --- [http-nio-8080-exec-10] o.s.web.servlet.DispatcherServlet        : GET "/images/favicon.ico", parameters={}
+2020-06-08 19:41:58.357 DEBUG 13491 --- [http-nio-8080-exec-10] o.s.w.s.handler.SimpleUrlHandlerMapping  : Mapped to ResourceHttpRequestHandler ["classpath:/META-INF/resources/", "classpath:/resources/", "classpath:/static/", "classpath:/public/", "/"]
+2020-06-08 19:41:58.360 DEBUG 13491 --- [http-nio-8080-exec-10] o.s.web.servlet.DispatcherServlet        : Completed 200 OK
+2020-06-08 19:42:00.143 DEBUG 13491 --- [http-nio-8080-exec-1] o.s.web.servlet.DispatcherServlet        : GET "/timetable/management/two_week", parameters={}
+2020-06-08 19:42:00.145 DEBUG 13491 --- [http-nio-8080-exec-1] s.w.s.m.m.a.RequestMappingHandlerMapping : Mapped to com.foxminded.timetable.controllers.ManagementController#twoWeekSchedule(Model)
+2020-06-08 19:42:00.148 DEBUG 13491 --- [http-nio-8080-exec-1] c.f.t.service.ScheduleTemplateService    : Fetching templates from repository
+2020-06-08 19:42:00.150 DEBUG 13491 --- [http-nio-8080-exec-1] c.f.t.dao.jdbc.JdbcScheduleTemplateDao   : Retrieving schedule templates
+2020-06-08 19:42:00.165 DEBUG 13491 --- [http-nio-8080-exec-1] o.s.w.s.v.ContentNegotiatingViewResolver : Selected 'text/html' given [text/html, application/xhtml+xml, image/webp, image/apng, application/xml;q=0.9, application/signed-exchange;v=b3;q=0.9, */*;q=0.8]
+2020-06-08 19:42:00.313 DEBUG 13491 --- [http-nio-8080-exec-1] o.s.web.servlet.DispatcherServlet        : Completed 200 OK
+2020-06-08 19:42:00.313 DEBUG 13491 --- [http-nio-8080-exec-3] o.s.web.servlet.DispatcherServlet        : GET "/bootstrap.css", parameters={}
+2020-06-08 19:42:00.322 DEBUG 13491 --- [http-nio-8080-exec-3] o.s.w.s.handler.SimpleUrlHandlerMapping  : Mapped to ResourceHttpRequestHandler ["classpath:/META-INF/resources/", "classpath:/resources/", "classpath:/static/", "classpath:/public/", "/"]
+2020-06-08 19:42:00.325 DEBUG 13491 --- [http-nio-8080-exec-2] o.s.web.servlet.DispatcherServlet        : GET "/bootstrap-datepicker.css", parameters={}
+2020-06-08 19:42:00.327 DEBUG 13491 --- [http-nio-8080-exec-2] o.s.w.s.handler.SimpleUrlHandlerMapping  : Mapped to ResourceHttpRequestHandler ["classpath:/META-INF/resources/", "classpath:/resources/", "classpath:/static/", "classpath:/public/", "/"]
+2020-06-08 19:42:00.331 DEBUG 13491 --- [http-nio-8080-exec-2] o.s.web.servlet.DispatcherServlet        : Completed 200 OK
+2020-06-08 19:42:00.331 DEBUG 13491 --- [http-nio-8080-exec-3] o.s.web.servlet.DispatcherServlet        : Completed 200 OK
+2020-06-08 19:42:00.356 DEBUG 13491 --- [http-nio-8080-exec-4] o.s.web.servlet.DispatcherServlet        : GET "/images/favicon-32x32.png", parameters={}
+2020-06-08 19:42:00.358 DEBUG 13491 --- [http-nio-8080-exec-4] o.s.w.s.handler.SimpleUrlHandlerMapping  : Mapped to ResourceHttpRequestHandler ["classpath:/META-INF/resources/", "classpath:/resources/", "classpath:/static/", "classpath:/public/", "/"]
+2020-06-08 19:42:00.362 DEBUG 13491 --- [http-nio-8080-exec-4] o.s.web.servlet.DispatcherServlet        : Completed 200 OK
+2020-06-08 19:42:11.847 DEBUG 13491 --- [http-nio-8080-exec-5] o.s.web.servlet.DispatcherServlet        : GET "/timetable/management/university/courses", parameters={}
+2020-06-08 19:42:11.849 DEBUG 13491 --- [http-nio-8080-exec-5] s.w.s.m.m.a.RequestMappingHandlerMapping : Mapped to com.foxminded.timetable.controllers.ManagementUniversityCoursesController#courses(Model, String, String, String)
+2020-06-08 19:42:11.853 DEBUG 13491 --- [http-nio-8080-exec-5] c.f.timetable.service.CourseService      : Fetching courses from repository
+2020-06-08 19:42:11.853 DEBUG 13491 --- [http-nio-8080-exec-5] c.f.timetable.dao.jdbc.JdbcCourseDao     : Retrieving courses
+2020-06-08 19:42:11.856 DEBUG 13491 --- [http-nio-8080-exec-5] o.s.w.s.v.ContentNegotiatingViewResolver : Selected 'text/html' given [text/html, application/xhtml+xml, image/webp, image/apng, application/xml;q=0.9, application/signed-exchange;v=b3;q=0.9, */*;q=0.8]
+2020-06-08 19:42:11.939 DEBUG 13491 --- [http-nio-8080-exec-5] o.s.web.servlet.DispatcherServlet        : Completed 200 OK
+2020-06-08 19:42:11.980 DEBUG 13491 --- [http-nio-8080-exec-6] o.s.web.servlet.DispatcherServlet        : GET "/bootstrap.css", parameters={}
+2020-06-08 19:42:11.981 DEBUG 13491 --- [http-nio-8080-exec-6] o.s.w.s.handler.SimpleUrlHandlerMapping  : Mapped to ResourceHttpRequestHandler ["classpath:/META-INF/resources/", "classpath:/resources/", "classpath:/static/", "classpath:/public/", "/"]
+2020-06-08 19:42:11.983 DEBUG 13491 --- [http-nio-8080-exec-7] o.s.web.servlet.DispatcherServlet        : GET "/bootstrap-datepicker.css", parameters={}
+2020-06-08 19:42:11.984 DEBUG 13491 --- [http-nio-8080-exec-7] o.s.w.s.handler.SimpleUrlHandlerMapping  : Mapped to ResourceHttpRequestHandler ["classpath:/META-INF/resources/", "classpath:/resources/", "classpath:/static/", "classpath:/public/", "/"]
+2020-06-08 19:42:11.986 DEBUG 13491 --- [http-nio-8080-exec-6] o.s.web.servlet.DispatcherServlet        : Completed 200 OK
+2020-06-08 19:42:11.988 DEBUG 13491 --- [http-nio-8080-exec-7] o.s.web.servlet.DispatcherServlet        : Completed 200 OK
+2020-06-08 19:42:12.018 DEBUG 13491 --- [http-nio-8080-exec-8] o.s.web.servlet.DispatcherServlet        : GET "/images/favicon-32x32.png", parameters={}
+2020-06-08 19:42:12.019 DEBUG 13491 --- [http-nio-8080-exec-8] o.s.w.s.handler.SimpleUrlHandlerMapping  : Mapped to ResourceHttpRequestHandler ["classpath:/META-INF/resources/", "classpath:/resources/", "classpath:/static/", "classpath:/public/", "/"]
+2020-06-08 19:42:12.021 DEBUG 13491 --- [http-nio-8080-exec-8] o.s.web.servlet.DispatcherServlet        : Completed 200 OK
+2020-06-08 19:42:19.087 DEBUG 13491 --- [http-nio-8080-exec-9] o.s.web.servlet.DispatcherServlet        : POST "/timetable/management/university/courses/rename", parameters={masked}
+2020-06-08 19:42:19.089 DEBUG 13491 --- [http-nio-8080-exec-9] s.w.s.m.m.a.RequestMappingHandlerMapping : Mapped to com.foxminded.timetable.controllers.ManagementUniversityCoursesController#rename(RedirectAttributes, RenameForm)
+2020-06-08 19:42:19.092 DEBUG 13491 --- [http-nio-8080-exec-9] c.f.timetable.service.CourseService      : Fetching course ID5 from repository
+2020-06-08 19:42:19.094 DEBUG 13491 --- [http-nio-8080-exec-9] c.f.timetable.dao.jdbc.JdbcCourseDao     : Looking for course by ID 5
+2020-06-08 19:42:19.096 DEBUG 13491 --- [http-nio-8080-exec-9] c.f.timetable.service.CourseService      : Updating course Course(id=5, name=a)
+2020-06-08 19:42:19.103 DEBUG 13491 --- [http-nio-8080-exec-9] c.f.timetable.dao.jdbc.JdbcCourseDao     : Updated Course(id=5, name=a)
+2020-06-08 19:42:19.109 DEBUG 13491 --- [http-nio-8080-exec-9] o.s.web.servlet.view.RedirectView        : View name 'redirect:/timetable/management/university/courses', model {}
+2020-06-08 19:42:19.122 DEBUG 13491 --- [http-nio-8080-exec-9] o.s.web.servlet.DispatcherServlet        : Completed 302 FOUND
+2020-06-08 19:42:19.133 DEBUG 13491 --- [http-nio-8080-exec-10] o.s.web.servlet.DispatcherServlet        : GET "/timetable/management/university/courses", parameters={}
+2020-06-08 19:42:19.137 DEBUG 13491 --- [http-nio-8080-exec-10] s.w.s.m.m.a.RequestMappingHandlerMapping : Mapped to com.foxminded.timetable.controllers.ManagementUniversityCoursesController#courses(Model, String, String, String)
+2020-06-08 19:42:19.138 DEBUG 13491 --- [http-nio-8080-exec-10] c.f.timetable.service.CourseService      : Fetching courses from repository
+2020-06-08 19:42:19.138 DEBUG 13491 --- [http-nio-8080-exec-10] c.f.timetable.dao.jdbc.JdbcCourseDao     : Retrieving courses
+2020-06-08 19:42:19.140 DEBUG 13491 --- [http-nio-8080-exec-10] o.s.w.s.v.ContentNegotiatingViewResolver : Selected 'text/html' given [text/html, application/xhtml+xml, image/webp, image/apng, application/xml;q=0.9, application/signed-exchange;v=b3;q=0.9, */*;q=0.8]
+2020-06-08 19:42:19.189 DEBUG 13491 --- [http-nio-8080-exec-10] o.s.web.servlet.DispatcherServlet        : Completed 200 OK
+2020-06-08 19:42:19.233 DEBUG 13491 --- [http-nio-8080-exec-1] o.s.web.servlet.DispatcherServlet        : GET "/bootstrap-datepicker.css", parameters={}
+2020-06-08 19:42:19.235 DEBUG 13491 --- [http-nio-8080-exec-1] o.s.w.s.handler.SimpleUrlHandlerMapping  : Mapped to ResourceHttpRequestHandler ["classpath:/META-INF/resources/", "classpath:/resources/", "classpath:/static/", "classpath:/public/", "/"]
+2020-06-08 19:42:19.237 DEBUG 13491 --- [http-nio-8080-exec-3] o.s.web.servlet.DispatcherServlet        : GET "/bootstrap.css", parameters={}
+2020-06-08 19:42:19.238 DEBUG 13491 --- [http-nio-8080-exec-3] o.s.w.s.handler.SimpleUrlHandlerMapping  : Mapped to ResourceHttpRequestHandler ["classpath:/META-INF/resources/", "classpath:/resources/", "classpath:/static/", "classpath:/public/", "/"]
+2020-06-08 19:42:19.239 DEBUG 13491 --- [http-nio-8080-exec-1] o.s.web.servlet.DispatcherServlet        : Completed 200 OK
+2020-06-08 19:42:19.243 DEBUG 13491 --- [http-nio-8080-exec-3] o.s.web.servlet.DispatcherServlet        : Completed 200 OK
+2020-06-08 19:42:19.270 DEBUG 13491 --- [http-nio-8080-exec-2] o.s.web.servlet.DispatcherServlet        : GET "/images/favicon-32x32.png", parameters={}
+2020-06-08 19:42:19.271 DEBUG 13491 --- [http-nio-8080-exec-2] o.s.w.s.handler.SimpleUrlHandlerMapping  : Mapped to ResourceHttpRequestHandler ["classpath:/META-INF/resources/", "classpath:/resources/", "classpath:/static/", "classpath:/public/", "/"]
+2020-06-08 19:42:19.273 DEBUG 13491 --- [http-nio-8080-exec-2] o.s.web.servlet.DispatcherServlet        : Completed 200 OK
+2020-06-08 19:42:26.228 DEBUG 13491 --- [http-nio-8080-exec-4] o.s.web.servlet.DispatcherServlet        : POST "/timetable/management/university/courses/schedule", parameters={masked}
+2020-06-08 19:42:26.229 DEBUG 13491 --- [http-nio-8080-exec-4] s.w.s.m.m.a.RequestMappingHandlerMapping : Mapped to com.foxminded.timetable.controllers.ManagementUniversityCoursesController#courseSchedule(Model, ScheduleForm, RedirectAttributes)
+2020-06-08 19:42:26.231 DEBUG 13491 --- [http-nio-8080-exec-4] c.f.timetable.service.CourseService      : Fetching course ID5 from repository
+2020-06-08 19:42:26.232 DEBUG 13491 --- [http-nio-8080-exec-4] c.f.timetable.dao.jdbc.JdbcCourseDao     : Looking for course by ID 5
+2020-06-08 19:42:26.239 DEBUG 13491 --- [http-nio-8080-exec-4] c.f.timetable.service.ScheduleService    : Filtering schedules in range 2020-09-07-2020-09-07 by course: 5
+2020-06-08 19:42:26.240 DEBUG 13491 --- [http-nio-8080-exec-4] c.f.timetable.service.ScheduleService    : Fetching schedules in range 2020-09-07-2020-09-07 from repository
+2020-06-08 19:42:26.240 DEBUG 13491 --- [http-nio-8080-exec-4] c.f.timetable.service.ScheduleService    : Fetching schedules for 2020-09-07 from repository
+2020-06-08 19:42:26.246 DEBUG 13491 --- [http-nio-8080-exec-4] c.f.timetable.dao.jdbc.JdbcScheduleDao   : Retrieving schedules for 2020-09-07
+2020-06-08 19:42:26.250 DEBUG 13491 --- [http-nio-8080-exec-4] c.f.timetable.service.ScheduleService    : Nothing found, generating schedules for 2020-09-07
+2020-06-08 19:42:26.251 DEBUG 13491 --- [http-nio-8080-exec-4] c.f.t.dao.jdbc.JdbcScheduleTemplateDao   : Retrieving schedule templates for week parity false on MONDAY
+2020-06-08 19:42:26.261 DEBUG 13491 --- [http-nio-8080-exec-4] c.f.timetable.dao.jdbc.JdbcScheduleDao   : Schedules saved
+2020-06-08 19:42:26.262 DEBUG 13491 --- [http-nio-8080-exec-4] c.f.timetable.dao.jdbc.JdbcScheduleDao   : Retrieving schedules for 2020-09-07
+2020-06-08 19:42:26.271 DEBUG 13491 --- [http-nio-8080-exec-4] c.f.timetable.service.ScheduleService    : Filtering schedules in range 2020-09-08-2020-09-08 by course: 5
+2020-06-08 19:42:26.271 DEBUG 13491 --- [http-nio-8080-exec-4] c.f.timetable.service.ScheduleService    : Fetching schedules in range 2020-09-08-2020-09-08 from repository
+2020-06-08 19:42:26.272 DEBUG 13491 --- [http-nio-8080-exec-4] c.f.timetable.service.ScheduleService    : Fetching schedules for 2020-09-08 from repository
+2020-06-08 19:42:26.272 DEBUG 13491 --- [http-nio-8080-exec-4] c.f.timetable.dao.jdbc.JdbcScheduleDao   : Retrieving schedules for 2020-09-08
+2020-06-08 19:42:26.273 DEBUG 13491 --- [http-nio-8080-exec-4] c.f.timetable.service.ScheduleService    : Nothing found, generating schedules for 2020-09-08
+2020-06-08 19:42:26.273 DEBUG 13491 --- [http-nio-8080-exec-4] c.f.t.dao.jdbc.JdbcScheduleTemplateDao   : Retrieving schedule templates for week parity false on TUESDAY
+2020-06-08 19:42:26.277 DEBUG 13491 --- [http-nio-8080-exec-4] c.f.timetable.dao.jdbc.JdbcScheduleDao   : Schedules saved
+2020-06-08 19:42:26.278 DEBUG 13491 --- [http-nio-8080-exec-4] c.f.timetable.dao.jdbc.JdbcScheduleDao   : Retrieving schedules for 2020-09-08
+2020-06-08 19:42:26.284 DEBUG 13491 --- [http-nio-8080-exec-4] c.f.timetable.service.ScheduleService    : Filtering schedules in range 2020-09-09-2020-09-09 by course: 5
+2020-06-08 19:42:26.285 DEBUG 13491 --- [http-nio-8080-exec-4] c.f.timetable.service.ScheduleService    : Fetching schedules in range 2020-09-09-2020-09-09 from repository
+2020-06-08 19:42:26.285 DEBUG 13491 --- [http-nio-8080-exec-4] c.f.timetable.service.ScheduleService    : Fetching schedules for 2020-09-09 from repository
+2020-06-08 19:42:26.285 DEBUG 13491 --- [http-nio-8080-exec-4] c.f.timetable.dao.jdbc.JdbcScheduleDao   : Retrieving schedules for 2020-09-09
+2020-06-08 19:42:26.287 DEBUG 13491 --- [http-nio-8080-exec-4] c.f.timetable.service.ScheduleService    : Nothing found, generating schedules for 2020-09-09
+2020-06-08 19:42:26.287 DEBUG 13491 --- [http-nio-8080-exec-4] c.f.t.dao.jdbc.JdbcScheduleTemplateDao   : Retrieving schedule templates for week parity false on WEDNESDAY
+2020-06-08 19:42:26.293 DEBUG 13491 --- [http-nio-8080-exec-4] c.f.timetable.dao.jdbc.JdbcScheduleDao   : Schedules saved
+2020-06-08 19:42:26.293 DEBUG 13491 --- [http-nio-8080-exec-4] c.f.timetable.dao.jdbc.JdbcScheduleDao   : Retrieving schedules for 2020-09-09
+2020-06-08 19:42:26.300 DEBUG 13491 --- [http-nio-8080-exec-4] c.f.timetable.service.ScheduleService    : Filtering schedules in range 2020-09-10-2020-09-10 by course: 5
+2020-06-08 19:42:26.301 DEBUG 13491 --- [http-nio-8080-exec-4] c.f.timetable.service.ScheduleService    : Fetching schedules in range 2020-09-10-2020-09-10 from repository
+2020-06-08 19:42:26.301 DEBUG 13491 --- [http-nio-8080-exec-4] c.f.timetable.service.ScheduleService    : Fetching schedules for 2020-09-10 from repository
+2020-06-08 19:42:26.301 DEBUG 13491 --- [http-nio-8080-exec-4] c.f.timetable.dao.jdbc.JdbcScheduleDao   : Retrieving schedules for 2020-09-10
+2020-06-08 19:42:26.302 DEBUG 13491 --- [http-nio-8080-exec-4] c.f.timetable.service.ScheduleService    : Nothing found, generating schedules for 2020-09-10
+2020-06-08 19:42:26.302 DEBUG 13491 --- [http-nio-8080-exec-4] c.f.t.dao.jdbc.JdbcScheduleTemplateDao   : Retrieving schedule templates for week parity false on THURSDAY
+2020-06-08 19:42:26.307 DEBUG 13491 --- [http-nio-8080-exec-4] c.f.timetable.dao.jdbc.JdbcScheduleDao   : Schedules saved
+2020-06-08 19:42:26.308 DEBUG 13491 --- [http-nio-8080-exec-4] c.f.timetable.dao.jdbc.JdbcScheduleDao   : Retrieving schedules for 2020-09-10
+2020-06-08 19:42:26.310 DEBUG 13491 --- [http-nio-8080-exec-4] c.f.timetable.service.ScheduleService    : Filtering schedules in range 2020-09-11-2020-09-11 by course: 5
+2020-06-08 19:42:26.310 DEBUG 13491 --- [http-nio-8080-exec-4] c.f.timetable.service.ScheduleService    : Fetching schedules in range 2020-09-11-2020-09-11 from repository
+2020-06-08 19:42:26.310 DEBUG 13491 --- [http-nio-8080-exec-4] c.f.timetable.service.ScheduleService    : Fetching schedules for 2020-09-11 from repository
+2020-06-08 19:42:26.310 DEBUG 13491 --- [http-nio-8080-exec-4] c.f.timetable.dao.jdbc.JdbcScheduleDao   : Retrieving schedules for 2020-09-11
+2020-06-08 19:42:26.311 DEBUG 13491 --- [http-nio-8080-exec-4] c.f.timetable.service.ScheduleService    : Nothing found, generating schedules for 2020-09-11
+2020-06-08 19:42:26.311 DEBUG 13491 --- [http-nio-8080-exec-4] c.f.t.dao.jdbc.JdbcScheduleTemplateDao   : Retrieving schedule templates for week parity false on FRIDAY
+2020-06-08 19:42:26.320 DEBUG 13491 --- [http-nio-8080-exec-4] c.f.timetable.dao.jdbc.JdbcScheduleDao   : Schedules saved
+2020-06-08 19:42:26.320 DEBUG 13491 --- [http-nio-8080-exec-4] c.f.timetable.dao.jdbc.JdbcScheduleDao   : Retrieving schedules for 2020-09-11
+2020-06-08 19:42:26.326 DEBUG 13491 --- [http-nio-8080-exec-4] c.f.timetable.service.ScheduleService    : Filtering schedules in range 2020-09-14-2020-09-14 by course: 5
+2020-06-08 19:42:26.326 DEBUG 13491 --- [http-nio-8080-exec-4] c.f.timetable.service.ScheduleService    : Fetching schedules in range 2020-09-14-2020-09-14 from repository
+2020-06-08 19:42:26.326 DEBUG 13491 --- [http-nio-8080-exec-4] c.f.timetable.service.ScheduleService    : Fetching schedules for 2020-09-14 from repository
+2020-06-08 19:42:26.326 DEBUG 13491 --- [http-nio-8080-exec-4] c.f.timetable.dao.jdbc.JdbcScheduleDao   : Retrieving schedules for 2020-09-14
+2020-06-08 19:42:26.327 DEBUG 13491 --- [http-nio-8080-exec-4] c.f.timetable.service.ScheduleService    : Nothing found, generating schedules for 2020-09-14
+2020-06-08 19:42:26.327 DEBUG 13491 --- [http-nio-8080-exec-4] c.f.t.dao.jdbc.JdbcScheduleTemplateDao   : Retrieving schedule templates for week parity true on MONDAY
+2020-06-08 19:42:26.331 DEBUG 13491 --- [http-nio-8080-exec-4] c.f.timetable.dao.jdbc.JdbcScheduleDao   : Schedules saved
+2020-06-08 19:42:26.332 DEBUG 13491 --- [http-nio-8080-exec-4] c.f.timetable.dao.jdbc.JdbcScheduleDao   : Retrieving schedules for 2020-09-14
+2020-06-08 19:42:26.334 DEBUG 13491 --- [http-nio-8080-exec-4] c.f.timetable.service.ScheduleService    : Filtering schedules in range 2020-09-15-2020-09-15 by course: 5
+2020-06-08 19:42:26.334 DEBUG 13491 --- [http-nio-8080-exec-4] c.f.timetable.service.ScheduleService    : Fetching schedules in range 2020-09-15-2020-09-15 from repository
+2020-06-08 19:42:26.334 DEBUG 13491 --- [http-nio-8080-exec-4] c.f.timetable.service.ScheduleService    : Fetching schedules for 2020-09-15 from repository
+2020-06-08 19:42:26.334 DEBUG 13491 --- [http-nio-8080-exec-4] c.f.timetable.dao.jdbc.JdbcScheduleDao   : Retrieving schedules for 2020-09-15
+2020-06-08 19:42:26.335 DEBUG 13491 --- [http-nio-8080-exec-4] c.f.timetable.service.ScheduleService    : Nothing found, generating schedules for 2020-09-15
+2020-06-08 19:42:26.335 DEBUG 13491 --- [http-nio-8080-exec-4] c.f.t.dao.jdbc.JdbcScheduleTemplateDao   : Retrieving schedule templates for week parity true on TUESDAY
+2020-06-08 19:42:26.343 DEBUG 13491 --- [http-nio-8080-exec-4] c.f.timetable.dao.jdbc.JdbcScheduleDao   : Schedules saved
+2020-06-08 19:42:26.343 DEBUG 13491 --- [http-nio-8080-exec-4] c.f.timetable.dao.jdbc.JdbcScheduleDao   : Retrieving schedules for 2020-09-15
+2020-06-08 19:42:26.345 DEBUG 13491 --- [http-nio-8080-exec-4] c.f.timetable.service.ScheduleService    : Filtering schedules in range 2020-09-16-2020-09-16 by course: 5
+2020-06-08 19:42:26.345 DEBUG 13491 --- [http-nio-8080-exec-4] c.f.timetable.service.ScheduleService    : Fetching schedules in range 2020-09-16-2020-09-16 from repository
+2020-06-08 19:42:26.345 DEBUG 13491 --- [http-nio-8080-exec-4] c.f.timetable.service.ScheduleService    : Fetching schedules for 2020-09-16 from repository
+2020-06-08 19:42:26.345 DEBUG 13491 --- [http-nio-8080-exec-4] c.f.timetable.dao.jdbc.JdbcScheduleDao   : Retrieving schedules for 2020-09-16
+2020-06-08 19:42:26.351 DEBUG 13491 --- [http-nio-8080-exec-4] c.f.timetable.service.ScheduleService    : Nothing found, generating schedules for 2020-09-16
+2020-06-08 19:42:26.351 DEBUG 13491 --- [http-nio-8080-exec-4] c.f.t.dao.jdbc.JdbcScheduleTemplateDao   : Retrieving schedule templates for week parity true on WEDNESDAY
+2020-06-08 19:42:26.356 DEBUG 13491 --- [http-nio-8080-exec-4] c.f.timetable.dao.jdbc.JdbcScheduleDao   : Schedules saved
+2020-06-08 19:42:26.356 DEBUG 13491 --- [http-nio-8080-exec-4] c.f.timetable.dao.jdbc.JdbcScheduleDao   : Retrieving schedules for 2020-09-16
+2020-06-08 19:42:26.358 DEBUG 13491 --- [http-nio-8080-exec-4] c.f.timetable.service.ScheduleService    : Filtering schedules in range 2020-09-17-2020-09-17 by course: 5
+2020-06-08 19:42:26.358 DEBUG 13491 --- [http-nio-8080-exec-4] c.f.timetable.service.ScheduleService    : Fetching schedules in range 2020-09-17-2020-09-17 from repository
+2020-06-08 19:42:26.358 DEBUG 13491 --- [http-nio-8080-exec-4] c.f.timetable.service.ScheduleService    : Fetching schedules for 2020-09-17 from repository
+2020-06-08 19:42:26.358 DEBUG 13491 --- [http-nio-8080-exec-4] c.f.timetable.dao.jdbc.JdbcScheduleDao   : Retrieving schedules for 2020-09-17
+2020-06-08 19:42:26.359 DEBUG 13491 --- [http-nio-8080-exec-4] c.f.timetable.service.ScheduleService    : Nothing found, generating schedules for 2020-09-17
+2020-06-08 19:42:26.359 DEBUG 13491 --- [http-nio-8080-exec-4] c.f.t.dao.jdbc.JdbcScheduleTemplateDao   : Retrieving schedule templates for week parity true on THURSDAY
+2020-06-08 19:42:26.362 DEBUG 13491 --- [http-nio-8080-exec-4] c.f.timetable.dao.jdbc.JdbcScheduleDao   : Schedules saved
+2020-06-08 19:42:26.363 DEBUG 13491 --- [http-nio-8080-exec-4] c.f.timetable.dao.jdbc.JdbcScheduleDao   : Retrieving schedules for 2020-09-17
+2020-06-08 19:42:26.369 DEBUG 13491 --- [http-nio-8080-exec-4] c.f.timetable.service.ScheduleService    : Filtering schedules in range 2020-09-18-2020-09-18 by course: 5
+2020-06-08 19:42:26.369 DEBUG 13491 --- [http-nio-8080-exec-4] c.f.timetable.service.ScheduleService    : Fetching schedules in range 2020-09-18-2020-09-18 from repository
+2020-06-08 19:42:26.369 DEBUG 13491 --- [http-nio-8080-exec-4] c.f.timetable.service.ScheduleService    : Fetching schedules for 2020-09-18 from repository
+2020-06-08 19:42:26.369 DEBUG 13491 --- [http-nio-8080-exec-4] c.f.timetable.dao.jdbc.JdbcScheduleDao   : Retrieving schedules for 2020-09-18
+2020-06-08 19:42:26.370 DEBUG 13491 --- [http-nio-8080-exec-4] c.f.timetable.service.ScheduleService    : Nothing found, generating schedules for 2020-09-18
+2020-06-08 19:42:26.370 DEBUG 13491 --- [http-nio-8080-exec-4] c.f.t.dao.jdbc.JdbcScheduleTemplateDao   : Retrieving schedule templates for week parity true on FRIDAY
+2020-06-08 19:42:26.374 DEBUG 13491 --- [http-nio-8080-exec-4] c.f.timetable.dao.jdbc.JdbcScheduleDao   : Schedules saved
+2020-06-08 19:42:26.374 DEBUG 13491 --- [http-nio-8080-exec-4] c.f.timetable.dao.jdbc.JdbcScheduleDao   : Retrieving schedules for 2020-09-18
+2020-06-08 19:42:26.378 DEBUG 13491 --- [http-nio-8080-exec-4] c.f.timetable.service.ScheduleService    : Filtering schedules in range 2020-09-21-2020-09-21 by course: 5
+2020-06-08 19:42:26.378 DEBUG 13491 --- [http-nio-8080-exec-4] c.f.timetable.service.ScheduleService    : Fetching schedules in range 2020-09-21-2020-09-21 from repository
+2020-06-08 19:42:26.378 DEBUG 13491 --- [http-nio-8080-exec-4] c.f.timetable.service.ScheduleService    : Fetching schedules for 2020-09-21 from repository
+2020-06-08 19:42:26.378 DEBUG 13491 --- [http-nio-8080-exec-4] c.f.timetable.dao.jdbc.JdbcScheduleDao   : Retrieving schedules for 2020-09-21
+2020-06-08 19:42:26.382 DEBUG 13491 --- [http-nio-8080-exec-4] c.f.timetable.service.ScheduleService    : Nothing found, generating schedules for 2020-09-21
+2020-06-08 19:42:26.383 DEBUG 13491 --- [http-nio-8080-exec-4] c.f.t.dao.jdbc.JdbcScheduleTemplateDao   : Retrieving schedule templates for week parity false on MONDAY
+2020-06-08 19:42:26.385 DEBUG 13491 --- [http-nio-8080-exec-4] c.f.timetable.dao.jdbc.JdbcScheduleDao   : Schedules saved
+2020-06-08 19:42:26.386 DEBUG 13491 --- [http-nio-8080-exec-4] c.f.timetable.dao.jdbc.JdbcScheduleDao   : Retrieving schedules for 2020-09-21
+2020-06-08 19:42:26.387 DEBUG 13491 --- [http-nio-8080-exec-4] c.f.timetable.service.ScheduleService    : Filtering schedules in range 2020-09-22-2020-09-22 by course: 5
+2020-06-08 19:42:26.388 DEBUG 13491 --- [http-nio-8080-exec-4] c.f.timetable.service.ScheduleService    : Fetching schedules in range 2020-09-22-2020-09-22 from repository
+2020-06-08 19:42:26.388 DEBUG 13491 --- [http-nio-8080-exec-4] c.f.timetable.service.ScheduleService    : Fetching schedules for 2020-09-22 from repository
+2020-06-08 19:42:26.388 DEBUG 13491 --- [http-nio-8080-exec-4] c.f.timetable.dao.jdbc.JdbcScheduleDao   : Retrieving schedules for 2020-09-22
+2020-06-08 19:42:26.388 DEBUG 13491 --- [http-nio-8080-exec-4] c.f.timetable.service.ScheduleService    : Nothing found, generating schedules for 2020-09-22
+2020-06-08 19:42:26.389 DEBUG 13491 --- [http-nio-8080-exec-4] c.f.t.dao.jdbc.JdbcScheduleTemplateDao   : Retrieving schedule templates for week parity false on TUESDAY
+2020-06-08 19:42:26.391 DEBUG 13491 --- [http-nio-8080-exec-4] c.f.timetable.dao.jdbc.JdbcScheduleDao   : Schedules saved
+2020-06-08 19:42:26.391 DEBUG 13491 --- [http-nio-8080-exec-4] c.f.timetable.dao.jdbc.JdbcScheduleDao   : Retrieving schedules for 2020-09-22
+2020-06-08 19:42:26.393 DEBUG 13491 --- [http-nio-8080-exec-4] c.f.timetable.service.ScheduleService    : Filtering schedules in range 2020-09-23-2020-09-23 by course: 5
+2020-06-08 19:42:26.393 DEBUG 13491 --- [http-nio-8080-exec-4] c.f.timetable.service.ScheduleService    : Fetching schedules in range 2020-09-23-2020-09-23 from repository
+2020-06-08 19:42:26.393 DEBUG 13491 --- [http-nio-8080-exec-4] c.f.timetable.service.ScheduleService    : Fetching schedules for 2020-09-23 from repository
+2020-06-08 19:42:26.393 DEBUG 13491 --- [http-nio-8080-exec-4] c.f.timetable.dao.jdbc.JdbcScheduleDao   : Retrieving schedules for 2020-09-23
+2020-06-08 19:42:26.394 DEBUG 13491 --- [http-nio-8080-exec-4] c.f.timetable.service.ScheduleService    : Nothing found, generating schedules for 2020-09-23
+2020-06-08 19:42:26.394 DEBUG 13491 --- [http-nio-8080-exec-4] c.f.t.dao.jdbc.JdbcScheduleTemplateDao   : Retrieving schedule templates for week parity false on WEDNESDAY
+2020-06-08 19:42:26.400 DEBUG 13491 --- [http-nio-8080-exec-4] c.f.timetable.dao.jdbc.JdbcScheduleDao   : Schedules saved
+2020-06-08 19:42:26.400 DEBUG 13491 --- [http-nio-8080-exec-4] c.f.timetable.dao.jdbc.JdbcScheduleDao   : Retrieving schedules for 2020-09-23
+2020-06-08 19:42:26.402 DEBUG 13491 --- [http-nio-8080-exec-4] c.f.timetable.service.ScheduleService    : Filtering schedules in range 2020-09-24-2020-09-24 by course: 5
+2020-06-08 19:42:26.402 DEBUG 13491 --- [http-nio-8080-exec-4] c.f.timetable.service.ScheduleService    : Fetching schedules in range 2020-09-24-2020-09-24 from repository
+2020-06-08 19:42:26.403 DEBUG 13491 --- [http-nio-8080-exec-4] c.f.timetable.service.ScheduleService    : Fetching schedules for 2020-09-24 from repository
+2020-06-08 19:42:26.403 DEBUG 13491 --- [http-nio-8080-exec-4] c.f.timetable.dao.jdbc.JdbcScheduleDao   : Retrieving schedules for 2020-09-24
+2020-06-08 19:42:26.403 DEBUG 13491 --- [http-nio-8080-exec-4] c.f.timetable.service.ScheduleService    : Nothing found, generating schedules for 2020-09-24
+2020-06-08 19:42:26.404 DEBUG 13491 --- [http-nio-8080-exec-4] c.f.t.dao.jdbc.JdbcScheduleTemplateDao   : Retrieving schedule templates for week parity false on THURSDAY
+2020-06-08 19:42:26.406 DEBUG 13491 --- [http-nio-8080-exec-4] c.f.timetable.dao.jdbc.JdbcScheduleDao   : Schedules saved
+2020-06-08 19:42:26.406 DEBUG 13491 --- [http-nio-8080-exec-4] c.f.timetable.dao.jdbc.JdbcScheduleDao   : Retrieving schedules for 2020-09-24
+2020-06-08 19:42:26.408 DEBUG 13491 --- [http-nio-8080-exec-4] c.f.timetable.service.ScheduleService    : Filtering schedules in range 2020-09-25-2020-09-25 by course: 5
+2020-06-08 19:42:26.408 DEBUG 13491 --- [http-nio-8080-exec-4] c.f.timetable.service.ScheduleService    : Fetching schedules in range 2020-09-25-2020-09-25 from repository
+2020-06-08 19:42:26.409 DEBUG 13491 --- [http-nio-8080-exec-4] c.f.timetable.service.ScheduleService    : Fetching schedules for 2020-09-25 from repository
+2020-06-08 19:42:26.409 DEBUG 13491 --- [http-nio-8080-exec-4] c.f.timetable.dao.jdbc.JdbcScheduleDao   : Retrieving schedules for 2020-09-25
+2020-06-08 19:42:26.409 DEBUG 13491 --- [http-nio-8080-exec-4] c.f.timetable.service.ScheduleService    : Nothing found, generating schedules for 2020-09-25
+2020-06-08 19:42:26.410 DEBUG 13491 --- [http-nio-8080-exec-4] c.f.t.dao.jdbc.JdbcScheduleTemplateDao   : Retrieving schedule templates for week parity false on FRIDAY
+2020-06-08 19:42:26.413 DEBUG 13491 --- [http-nio-8080-exec-4] c.f.timetable.dao.jdbc.JdbcScheduleDao   : Schedules saved
+2020-06-08 19:42:26.413 DEBUG 13491 --- [http-nio-8080-exec-4] c.f.timetable.dao.jdbc.JdbcScheduleDao   : Retrieving schedules for 2020-09-25
+2020-06-08 19:42:26.416 DEBUG 13491 --- [http-nio-8080-exec-4] c.f.timetable.service.ScheduleService    : Filtering schedules in range 2020-09-28-2020-09-28 by course: 5
+2020-06-08 19:42:26.416 DEBUG 13491 --- [http-nio-8080-exec-4] c.f.timetable.service.ScheduleService    : Fetching schedules in range 2020-09-28-2020-09-28 from repository
+2020-06-08 19:42:26.416 DEBUG 13491 --- [http-nio-8080-exec-4] c.f.timetable.service.ScheduleService    : Fetching schedules for 2020-09-28 from repository
+2020-06-08 19:42:26.417 DEBUG 13491 --- [http-nio-8080-exec-4] c.f.timetable.dao.jdbc.JdbcScheduleDao   : Retrieving schedules for 2020-09-28
+2020-06-08 19:42:26.418 DEBUG 13491 --- [http-nio-8080-exec-4] c.f.timetable.service.ScheduleService    : Nothing found, generating schedules for 2020-09-28
+2020-06-08 19:42:26.419 DEBUG 13491 --- [http-nio-8080-exec-4] c.f.t.dao.jdbc.JdbcScheduleTemplateDao   : Retrieving schedule templates for week parity true on MONDAY
+2020-06-08 19:42:26.421 DEBUG 13491 --- [http-nio-8080-exec-4] c.f.timetable.dao.jdbc.JdbcScheduleDao   : Schedules saved
+2020-06-08 19:42:26.421 DEBUG 13491 --- [http-nio-8080-exec-4] c.f.timetable.dao.jdbc.JdbcScheduleDao   : Retrieving schedules for 2020-09-28
+2020-06-08 19:42:26.422 DEBUG 13491 --- [http-nio-8080-exec-4] c.f.timetable.service.ScheduleService    : Filtering schedules in range 2020-09-29-2020-09-29 by course: 5
+2020-06-08 19:42:26.423 DEBUG 13491 --- [http-nio-8080-exec-4] c.f.timetable.service.ScheduleService    : Fetching schedules in range 2020-09-29-2020-09-29 from repository
+2020-06-08 19:42:26.423 DEBUG 13491 --- [http-nio-8080-exec-4] c.f.timetable.service.ScheduleService    : Fetching schedules for 2020-09-29 from repository
+2020-06-08 19:42:26.423 DEBUG 13491 --- [http-nio-8080-exec-4] c.f.timetable.dao.jdbc.JdbcScheduleDao   : Retrieving schedules for 2020-09-29
+2020-06-08 19:42:26.424 DEBUG 13491 --- [http-nio-8080-exec-4] c.f.timetable.service.ScheduleService    : Nothing found, generating schedules for 2020-09-29
+2020-06-08 19:42:26.424 DEBUG 13491 --- [http-nio-8080-exec-4] c.f.t.dao.jdbc.JdbcScheduleTemplateDao   : Retrieving schedule templates for week parity true on TUESDAY
+2020-06-08 19:42:26.426 DEBUG 13491 --- [http-nio-8080-exec-4] c.f.timetable.dao.jdbc.JdbcScheduleDao   : Schedules saved
+2020-06-08 19:42:26.426 DEBUG 13491 --- [http-nio-8080-exec-4] c.f.timetable.dao.jdbc.JdbcScheduleDao   : Retrieving schedules for 2020-09-29
+2020-06-08 19:42:26.428 DEBUG 13491 --- [http-nio-8080-exec-4] c.f.timetable.service.ScheduleService    : Filtering schedules in range 2020-09-30-2020-09-30 by course: 5
+2020-06-08 19:42:26.428 DEBUG 13491 --- [http-nio-8080-exec-4] c.f.timetable.service.ScheduleService    : Fetching schedules in range 2020-09-30-2020-09-30 from repository
+2020-06-08 19:42:26.428 DEBUG 13491 --- [http-nio-8080-exec-4] c.f.timetable.service.ScheduleService    : Fetching schedules for 2020-09-30 from repository
+2020-06-08 19:42:26.428 DEBUG 13491 --- [http-nio-8080-exec-4] c.f.timetable.dao.jdbc.JdbcScheduleDao   : Retrieving schedules for 2020-09-30
+2020-06-08 19:42:26.430 DEBUG 13491 --- [http-nio-8080-exec-4] c.f.timetable.service.ScheduleService    : Nothing found, generating schedules for 2020-09-30
+2020-06-08 19:42:26.430 DEBUG 13491 --- [http-nio-8080-exec-4] c.f.t.dao.jdbc.JdbcScheduleTemplateDao   : Retrieving schedule templates for week parity true on WEDNESDAY
+2020-06-08 19:42:26.433 DEBUG 13491 --- [http-nio-8080-exec-4] c.f.timetable.dao.jdbc.JdbcScheduleDao   : Schedules saved
+2020-06-08 19:42:26.433 DEBUG 13491 --- [http-nio-8080-exec-4] c.f.timetable.dao.jdbc.JdbcScheduleDao   : Retrieving schedules for 2020-09-30
+2020-06-08 19:42:26.434 DEBUG 13491 --- [http-nio-8080-exec-4] c.f.timetable.service.ScheduleService    : Filtering schedules in range 2020-10-01-2020-10-01 by course: 5
+2020-06-08 19:42:26.434 DEBUG 13491 --- [http-nio-8080-exec-4] c.f.timetable.service.ScheduleService    : Fetching schedules in range 2020-10-01-2020-10-01 from repository
+2020-06-08 19:42:26.435 DEBUG 13491 --- [http-nio-8080-exec-4] c.f.timetable.service.ScheduleService    : Fetching schedules for 2020-10-01 from repository
+2020-06-08 19:42:26.435 DEBUG 13491 --- [http-nio-8080-exec-4] c.f.timetable.dao.jdbc.JdbcScheduleDao   : Retrieving schedules for 2020-10-01
+2020-06-08 19:42:26.435 DEBUG 13491 --- [http-nio-8080-exec-4] c.f.timetable.service.ScheduleService    : Nothing found, generating schedules for 2020-10-01
+2020-06-08 19:42:26.436 DEBUG 13491 --- [http-nio-8080-exec-4] c.f.t.dao.jdbc.JdbcScheduleTemplateDao   : Retrieving schedule templates for week parity true on THURSDAY
+2020-06-08 19:42:26.438 DEBUG 13491 --- [http-nio-8080-exec-4] c.f.timetable.dao.jdbc.JdbcScheduleDao   : Schedules saved
+2020-06-08 19:42:26.438 DEBUG 13491 --- [http-nio-8080-exec-4] c.f.timetable.dao.jdbc.JdbcScheduleDao   : Retrieving schedules for 2020-10-01
+2020-06-08 19:42:26.439 DEBUG 13491 --- [http-nio-8080-exec-4] c.f.timetable.service.ScheduleService    : Filtering schedules in range 2020-10-02-2020-10-02 by course: 5
+2020-06-08 19:42:26.439 DEBUG 13491 --- [http-nio-8080-exec-4] c.f.timetable.service.ScheduleService    : Fetching schedules in range 2020-10-02-2020-10-02 from repository
+2020-06-08 19:42:26.439 DEBUG 13491 --- [http-nio-8080-exec-4] c.f.timetable.service.ScheduleService    : Fetching schedules for 2020-10-02 from repository
+2020-06-08 19:42:26.439 DEBUG 13491 --- [http-nio-8080-exec-4] c.f.timetable.dao.jdbc.JdbcScheduleDao   : Retrieving schedules for 2020-10-02
+2020-06-08 19:42:26.440 DEBUG 13491 --- [http-nio-8080-exec-4] c.f.timetable.service.ScheduleService    : Nothing found, generating schedules for 2020-10-02
+2020-06-08 19:42:26.440 DEBUG 13491 --- [http-nio-8080-exec-4] c.f.t.dao.jdbc.JdbcScheduleTemplateDao   : Retrieving schedule templates for week parity true on FRIDAY
+2020-06-08 19:42:26.442 DEBUG 13491 --- [http-nio-8080-exec-4] c.f.timetable.dao.jdbc.JdbcScheduleDao   : Schedules saved
+2020-06-08 19:42:26.442 DEBUG 13491 --- [http-nio-8080-exec-4] c.f.timetable.dao.jdbc.JdbcScheduleDao   : Retrieving schedules for 2020-10-02
+2020-06-08 19:42:26.445 DEBUG 13491 --- [http-nio-8080-exec-4] o.s.w.s.v.ContentNegotiatingViewResolver : Selected 'text/html' given [text/html, application/xhtml+xml, image/webp, image/apng, application/xml;q=0.9, application/signed-exchange;v=b3;q=0.9, */*;q=0.8]
+2020-06-08 19:42:26.568 DEBUG 13491 --- [http-nio-8080-exec-5] o.s.web.servlet.DispatcherServlet        : GET "/bootstrap.css", parameters={}
+2020-06-08 19:42:26.569 DEBUG 13491 --- [http-nio-8080-exec-5] o.s.w.s.handler.SimpleUrlHandlerMapping  : Mapped to ResourceHttpRequestHandler ["classpath:/META-INF/resources/", "classpath:/resources/", "classpath:/static/", "classpath:/public/", "/"]
+2020-06-08 19:42:26.570 DEBUG 13491 --- [http-nio-8080-exec-6] o.s.web.servlet.DispatcherServlet        : GET "/bootstrap-datepicker.css", parameters={}
+2020-06-08 19:42:26.570 DEBUG 13491 --- [http-nio-8080-exec-6] o.s.w.s.handler.SimpleUrlHandlerMapping  : Mapped to ResourceHttpRequestHandler ["classpath:/META-INF/resources/", "classpath:/resources/", "classpath:/static/", "classpath:/public/", "/"]
+2020-06-08 19:42:26.573 DEBUG 13491 --- [http-nio-8080-exec-6] o.s.web.servlet.DispatcherServlet        : Completed 200 OK
+2020-06-08 19:42:26.575 DEBUG 13491 --- [http-nio-8080-exec-5] o.s.web.servlet.DispatcherServlet        : Completed 200 OK
+2020-06-08 19:42:26.595 DEBUG 13491 --- [http-nio-8080-exec-7] o.s.web.servlet.DispatcherServlet        : GET "/images/favicon-32x32.png", parameters={}
+2020-06-08 19:42:26.596 DEBUG 13491 --- [http-nio-8080-exec-7] o.s.w.s.handler.SimpleUrlHandlerMapping  : Mapped to ResourceHttpRequestHandler ["classpath:/META-INF/resources/", "classpath:/resources/", "classpath:/static/", "classpath:/public/", "/"]
+2020-06-08 19:42:26.597 DEBUG 13491 --- [http-nio-8080-exec-7] o.s.web.servlet.DispatcherServlet        : Completed 200 OK
+2020-06-08 19:42:26.650 DEBUG 13491 --- [http-nio-8080-exec-4] o.s.web.servlet.DispatcherServlet        : Completed 200 OK
+2020-06-08 19:42:36.603 DEBUG 13491 --- [http-nio-8080-exec-8] o.s.web.servlet.DispatcherServlet        : GET "/timetable/management/schedule/available?scheduleId=100", parameters={masked}
+2020-06-08 19:42:36.604 DEBUG 13491 --- [http-nio-8080-exec-8] s.w.s.m.m.a.RequestMappingHandlerMapping : Mapped to com.foxminded.timetable.controllers.ManagementController#displayAvailableAuditoriumsProfessors(Model, long, String, String)
+2020-06-08 19:42:36.620 DEBUG 13491 --- [http-nio-8080-exec-8] c.f.timetable.service.ScheduleService    : Fetching schedule ID(100) from repository
+2020-06-08 19:42:36.621 DEBUG 13491 --- [http-nio-8080-exec-8] c.f.timetable.dao.jdbc.JdbcScheduleDao   : Looking for schedule by ID 100
+2020-06-08 19:42:36.623 DEBUG 13491 --- [http-nio-8080-exec-8] c.f.timetable.service.ProfessorService   : Fetching available professors from repository
+2020-06-08 19:42:36.624 DEBUG 13491 --- [http-nio-8080-exec-8] c.f.timetable.dao.jdbc.JdbcProfessorDao  : Retrieving available professors for FIRST 08:15-09:45 on 2020-09-18
+2020-06-08 19:42:36.631 DEBUG 13491 --- [http-nio-8080-exec-8] c.f.timetable.dao.jdbc.JdbcProfessorDao  : Found available professors: []
+2020-06-08 19:42:36.631 DEBUG 13491 --- [http-nio-8080-exec-8] c.f.timetable.service.AuditoriumService  : Fetching available auditoriums from repository
+2020-06-08 19:42:36.631 DEBUG 13491 --- [http-nio-8080-exec-8] c.f.t.dao.jdbc.JdbcAuditoriumDao         : Retrieving available auditoriums for FIRST 08:15-09:45 on 2020-09-18
+2020-06-08 19:42:36.633 DEBUG 13491 --- [http-nio-8080-exec-8] c.f.t.dao.jdbc.JdbcAuditoriumDao         : Found available auditoriums: []
+2020-06-08 19:42:36.636 DEBUG 13491 --- [http-nio-8080-exec-8] o.s.w.s.v.ContentNegotiatingViewResolver : Selected 'text/html' given [text/html, application/xhtml+xml, image/webp, image/apng, application/xml;q=0.9, application/signed-exchange;v=b3;q=0.9, */*;q=0.8]
+2020-06-08 19:42:36.692 DEBUG 13491 --- [http-nio-8080-exec-8] o.s.web.servlet.DispatcherServlet        : Completed 200 OK
+2020-06-08 19:42:36.758 DEBUG 13491 --- [http-nio-8080-exec-9] o.s.web.servlet.DispatcherServlet        : GET "/bootstrap.css", parameters={}
+2020-06-08 19:42:36.759 DEBUG 13491 --- [http-nio-8080-exec-9] o.s.w.s.handler.SimpleUrlHandlerMapping  : Mapped to ResourceHttpRequestHandler ["classpath:/META-INF/resources/", "classpath:/resources/", "classpath:/static/", "classpath:/public/", "/"]
+2020-06-08 19:42:36.765 DEBUG 13491 --- [http-nio-8080-exec-9] o.s.web.servlet.DispatcherServlet        : Completed 200 OK
+2020-06-08 19:42:36.766 DEBUG 13491 --- [http-nio-8080-exec-9] o.s.web.servlet.DispatcherServlet        : GET "/bootstrap-datepicker.css", parameters={}
+2020-06-08 19:42:36.767 DEBUG 13491 --- [http-nio-8080-exec-9] o.s.w.s.handler.SimpleUrlHandlerMapping  : Mapped to ResourceHttpRequestHandler ["classpath:/META-INF/resources/", "classpath:/resources/", "classpath:/static/", "classpath:/public/", "/"]
+2020-06-08 19:42:36.771 DEBUG 13491 --- [http-nio-8080-exec-9] o.s.web.servlet.DispatcherServlet        : Completed 200 OK
+2020-06-08 19:42:36.810 DEBUG 13491 --- [http-nio-8080-exec-1] o.s.web.servlet.DispatcherServlet        : GET "/images/favicon-32x32.png", parameters={}
+2020-06-08 19:42:36.811 DEBUG 13491 --- [http-nio-8080-exec-1] o.s.w.s.handler.SimpleUrlHandlerMapping  : Mapped to ResourceHttpRequestHandler ["classpath:/META-INF/resources/", "classpath:/resources/", "classpath:/static/", "classpath:/public/", "/"]
+2020-06-08 19:42:36.813 DEBUG 13491 --- [http-nio-8080-exec-1] o.s.web.servlet.DispatcherServlet        : Completed 200 OK
+2020-06-08 19:42:41.577 DEBUG 13491 --- [http-nio-8080-exec-3] o.s.web.servlet.DispatcherServlet        : GET "/timetable/management/schedule/available?scheduleId=65", parameters={masked}
+2020-06-08 19:42:41.577 DEBUG 13491 --- [http-nio-8080-exec-3] s.w.s.m.m.a.RequestMappingHandlerMapping : Mapped to com.foxminded.timetable.controllers.ManagementController#displayAvailableAuditoriumsProfessors(Model, long, String, String)
+2020-06-08 19:42:41.579 DEBUG 13491 --- [http-nio-8080-exec-3] c.f.timetable.service.ScheduleService    : Fetching schedule ID(65) from repository
+2020-06-08 19:42:41.579 DEBUG 13491 --- [http-nio-8080-exec-3] c.f.timetable.dao.jdbc.JdbcScheduleDao   : Looking for schedule by ID 65
+2020-06-08 19:42:41.580 DEBUG 13491 --- [http-nio-8080-exec-3] c.f.timetable.service.ProfessorService   : Fetching available professors from repository
+2020-06-08 19:42:41.580 DEBUG 13491 --- [http-nio-8080-exec-3] c.f.timetable.dao.jdbc.JdbcProfessorDao  : Retrieving available professors for SECOND 10:00-11:30 on 2020-09-15
+2020-06-08 19:42:41.581 DEBUG 13491 --- [http-nio-8080-exec-3] c.f.timetable.dao.jdbc.JdbcProfessorDao  : Found available professors: [Professor(firstName=Karaindash, lastName=the Wisdomous, id=1, courses=[Course(id=1, name=Scientology), Course(id=4, name=Dark Magic), Course(id=8, name=Applied Polyandry)]), Professor(firstName=Ayadaragalama, lastName=the Wisdomous, id=4, courses=[Course(id=2, name=Procrastination101), Course(id=6, name=Dark Magic Against Defense Against Dark Magic)])]
+2020-06-08 19:42:41.581 DEBUG 13491 --- [http-nio-8080-exec-3] c.f.timetable.service.AuditoriumService  : Fetching available auditoriums from repository
+2020-06-08 19:42:41.582 DEBUG 13491 --- [http-nio-8080-exec-3] c.f.t.dao.jdbc.JdbcAuditoriumDao         : Retrieving available auditoriums for SECOND 10:00-11:30 on 2020-09-15
+2020-06-08 19:42:41.583 DEBUG 13491 --- [http-nio-8080-exec-3] c.f.t.dao.jdbc.JdbcAuditoriumDao         : Found available auditoriums: [Auditorium(id=4, name=A-04), Auditorium(id=5, name=A-05)]
+2020-06-08 19:42:41.585 DEBUG 13491 --- [http-nio-8080-exec-3] o.s.w.s.v.ContentNegotiatingViewResolver : Selected 'text/html' given [text/html, application/xhtml+xml, image/webp, image/apng, application/xml;q=0.9, application/signed-exchange;v=b3;q=0.9, */*;q=0.8]
+2020-06-08 19:42:41.618 DEBUG 13491 --- [http-nio-8080-exec-3] o.s.web.servlet.DispatcherServlet        : Completed 200 OK
+2020-06-08 19:42:41.672 DEBUG 13491 --- [http-nio-8080-exec-6] o.s.web.servlet.DispatcherServlet        : GET "/bootstrap-datepicker.css", parameters={}
+2020-06-08 19:42:41.672 DEBUG 13491 --- [http-nio-8080-exec-2] o.s.web.servlet.DispatcherServlet        : GET "/bootstrap.css", parameters={}
+2020-06-08 19:42:41.675 DEBUG 13491 --- [http-nio-8080-exec-2] o.s.w.s.handler.SimpleUrlHandlerMapping  : Mapped to ResourceHttpRequestHandler ["classpath:/META-INF/resources/", "classpath:/resources/", "classpath:/static/", "classpath:/public/", "/"]
+2020-06-08 19:42:41.679 DEBUG 13491 --- [http-nio-8080-exec-2] o.s.web.servlet.DispatcherServlet        : Completed 200 OK
+2020-06-08 19:42:41.673 DEBUG 13491 --- [http-nio-8080-exec-6] o.s.w.s.handler.SimpleUrlHandlerMapping  : Mapped to ResourceHttpRequestHandler ["classpath:/META-INF/resources/", "classpath:/resources/", "classpath:/static/", "classpath:/public/", "/"]
+2020-06-08 19:42:41.684 DEBUG 13491 --- [http-nio-8080-exec-6] o.s.web.servlet.DispatcherServlet        : Completed 200 OK
+2020-06-08 19:42:41.711 DEBUG 13491 --- [http-nio-8080-exec-5] o.s.web.servlet.DispatcherServlet        : GET "/images/favicon-32x32.png", parameters={}
+2020-06-08 19:42:41.712 DEBUG 13491 --- [http-nio-8080-exec-5] o.s.w.s.handler.SimpleUrlHandlerMapping  : Mapped to ResourceHttpRequestHandler ["classpath:/META-INF/resources/", "classpath:/resources/", "classpath:/static/", "classpath:/public/", "/"]
+2020-06-08 19:42:41.714 DEBUG 13491 --- [http-nio-8080-exec-5] o.s.web.servlet.DispatcherServlet        : Completed 200 OK
+2020-06-08 19:42:47.364 DEBUG 13491 --- [http-nio-8080-exec-7] o.s.web.servlet.DispatcherServlet        : POST "/timetable/management/schedule/available", parameters={masked}
+2020-06-08 19:42:47.365 DEBUG 13491 --- [http-nio-8080-exec-7] s.w.s.m.m.a.RequestMappingHandlerMapping : Mapped to com.foxminded.timetable.controllers.ManagementController#changeSchedule(RedirectAttributes, ChangeScheduleForm)
+2020-06-08 19:42:47.371 DEBUG 13491 --- [http-nio-8080-exec-7] c.f.timetable.service.ScheduleService    : Fetching schedule ID(65) from repository
+2020-06-08 19:42:47.372 DEBUG 13491 --- [http-nio-8080-exec-7] c.f.timetable.dao.jdbc.JdbcScheduleDao   : Looking for schedule by ID 65
+2020-06-08 19:42:47.372 DEBUG 13491 --- [http-nio-8080-exec-7] c.f.timetable.service.AuditoriumService  : Fetching auditorium ID5 from repository
+2020-06-08 19:42:47.373 DEBUG 13491 --- [http-nio-8080-exec-7] c.f.t.dao.jdbc.JdbcAuditoriumDao         : Looking for auditorium by ID 5
+2020-06-08 19:42:47.375 DEBUG 13491 --- [http-nio-8080-exec-7] c.f.timetable.service.ProfessorService   : Fetching professor ID4 from repository
+2020-06-08 19:42:47.375 DEBUG 13491 --- [http-nio-8080-exec-7] c.f.timetable.dao.jdbc.JdbcProfessorDao  : Looking for professor by ID 4
+2020-06-08 19:42:47.377 DEBUG 13491 --- [http-nio-8080-exec-7] c.f.timetable.service.ScheduleService    : Updating schedule Schedule(id=65, templateId=85, date=2020-09-15, day=TUESDAY, period=SECOND 10:00-11:30, auditorium=Auditorium(id=5, name=A-05), course=Course(id=5, name=a), group=Group(id=9, name=G-09), professor=Professor(firstName=Ayadaragalama, lastName=the Wisdomous, id=4, courses=[Course(id=2, name=Procrastination101), Course(id=6, name=Dark Magic Against Defense Against Dark Magic)]))
+2020-06-08 19:42:47.379 DEBUG 13491 --- [http-nio-8080-exec-7] c.f.timetable.dao.jdbc.JdbcScheduleDao   : Updated schedule ID 65
+2020-06-08 19:42:47.381 DEBUG 13491 --- [http-nio-8080-exec-7] o.s.web.servlet.view.RedirectView        : View name 'redirect:/timetable/management/schedule/available?scheduleId=65', model {}
+2020-06-08 19:42:47.382 DEBUG 13491 --- [http-nio-8080-exec-7] o.s.web.servlet.DispatcherServlet        : Completed 302 FOUND
+2020-06-08 19:42:47.397 DEBUG 13491 --- [http-nio-8080-exec-4] o.s.web.servlet.DispatcherServlet        : GET "/timetable/management/schedule/available?scheduleId=65", parameters={masked}
+2020-06-08 19:42:47.398 DEBUG 13491 --- [http-nio-8080-exec-4] s.w.s.m.m.a.RequestMappingHandlerMapping : Mapped to com.foxminded.timetable.controllers.ManagementController#displayAvailableAuditoriumsProfessors(Model, long, String, String)
+2020-06-08 19:42:47.399 DEBUG 13491 --- [http-nio-8080-exec-4] c.f.timetable.service.ScheduleService    : Fetching schedule ID(65) from repository
+2020-06-08 19:42:47.399 DEBUG 13491 --- [http-nio-8080-exec-4] c.f.timetable.dao.jdbc.JdbcScheduleDao   : Looking for schedule by ID 65
+2020-06-08 19:42:47.401 DEBUG 13491 --- [http-nio-8080-exec-4] c.f.timetable.service.ProfessorService   : Fetching available professors from repository
+2020-06-08 19:42:47.401 DEBUG 13491 --- [http-nio-8080-exec-4] c.f.timetable.dao.jdbc.JdbcProfessorDao  : Retrieving available professors for SECOND 10:00-11:30 on 2020-09-15
+2020-06-08 19:42:47.402 DEBUG 13491 --- [http-nio-8080-exec-4] c.f.timetable.dao.jdbc.JdbcProfessorDao  : Found available professors: [Professor(firstName=Karaindash, lastName=the Wisdomous, id=1, courses=[Course(id=1, name=Scientology), Course(id=4, name=Dark Magic), Course(id=8, name=Applied Polyandry)]), Professor(firstName=Marduk-apla-iddina, lastName=the I, id=3, courses=[Course(id=2, name=Procrastination101), Course(id=5, name=a), Course(id=10, name=Modern Sand Castle Architecture)])]
+2020-06-08 19:42:47.403 DEBUG 13491 --- [http-nio-8080-exec-4] c.f.timetable.service.AuditoriumService  : Fetching available auditoriums from repository
+2020-06-08 19:42:47.403 DEBUG 13491 --- [http-nio-8080-exec-4] c.f.t.dao.jdbc.JdbcAuditoriumDao         : Retrieving available auditoriums for SECOND 10:00-11:30 on 2020-09-15
+2020-06-08 19:42:47.404 DEBUG 13491 --- [http-nio-8080-exec-4] c.f.t.dao.jdbc.JdbcAuditoriumDao         : Found available auditoriums: [Auditorium(id=1, name=A-01), Auditorium(id=4, name=A-04)]
+2020-06-08 19:42:47.406 DEBUG 13491 --- [http-nio-8080-exec-4] o.s.w.s.v.ContentNegotiatingViewResolver : Selected 'text/html' given [text/html, application/xhtml+xml, image/webp, image/apng, application/xml;q=0.9, application/signed-exchange;v=b3;q=0.9, */*;q=0.8]
+2020-06-08 19:42:47.478 DEBUG 13491 --- [http-nio-8080-exec-4] o.s.web.servlet.DispatcherServlet        : Completed 200 OK
+2020-06-08 19:42:47.528 DEBUG 13491 --- [http-nio-8080-exec-10] o.s.web.servlet.DispatcherServlet        : GET "/bootstrap-datepicker.css", parameters={}
+2020-06-08 19:42:47.528 DEBUG 13491 --- [http-nio-8080-exec-8] o.s.web.servlet.DispatcherServlet        : GET "/bootstrap.css", parameters={}
+2020-06-08 19:42:47.531 DEBUG 13491 --- [http-nio-8080-exec-10] o.s.w.s.handler.SimpleUrlHandlerMapping  : Mapped to ResourceHttpRequestHandler ["classpath:/META-INF/resources/", "classpath:/resources/", "classpath:/static/", "classpath:/public/", "/"]
+2020-06-08 19:42:47.531 DEBUG 13491 --- [http-nio-8080-exec-8] o.s.w.s.handler.SimpleUrlHandlerMapping  : Mapped to ResourceHttpRequestHandler ["classpath:/META-INF/resources/", "classpath:/resources/", "classpath:/static/", "classpath:/public/", "/"]
+2020-06-08 19:42:47.534 DEBUG 13491 --- [http-nio-8080-exec-10] o.s.web.servlet.DispatcherServlet        : Completed 200 OK
+2020-06-08 19:42:47.534 DEBUG 13491 --- [http-nio-8080-exec-8] o.s.web.servlet.DispatcherServlet        : Completed 200 OK
+2020-06-08 19:42:47.576 DEBUG 13491 --- [http-nio-8080-exec-9] o.s.web.servlet.DispatcherServlet        : GET "/images/favicon-32x32.png", parameters={}
+2020-06-08 19:42:47.577 DEBUG 13491 --- [http-nio-8080-exec-9] o.s.w.s.handler.SimpleUrlHandlerMapping  : Mapped to ResourceHttpRequestHandler ["classpath:/META-INF/resources/", "classpath:/resources/", "classpath:/static/", "classpath:/public/", "/"]
+2020-06-08 19:42:47.580 DEBUG 13491 --- [http-nio-8080-exec-9] o.s.web.servlet.DispatcherServlet        : Completed 200 OK
+2020-06-08 19:42:52.406  INFO 13491 --- [SpringContextShutdownHook] o.s.s.concurrent.ThreadPoolTaskExecutor  : Shutting down ExecutorService 'applicationTaskExecutor'
+2020-06-08 19:42:52.410  INFO 13491 --- [SpringContextShutdownHook] com.zaxxer.hikari.HikariDataSource       : HikariPool-1 - Shutdown initiated...
+2020-06-08 19:42:52.412  INFO 13491 --- [SpringContextShutdownHook] com.zaxxer.hikari.HikariDataSource       : HikariPool-1 - Shutdown completed.
