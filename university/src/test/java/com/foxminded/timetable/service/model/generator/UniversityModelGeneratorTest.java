@@ -1,112 +1,35 @@
 package com.foxminded.timetable.service.model.generator;
 
-import static java.util.stream.Collectors.counting;
-import static java.util.stream.Collectors.groupingBy;
-import static java.util.stream.Collectors.toList;
-import static org.assertj.core.api.Assertions.assertThat;
-import static org.assertj.core.api.Assertions.assertThatIllegalArgumentException;
-import static org.mockito.ArgumentMatchers.anyList;
-import static org.mockito.BDDMockito.then;
-import static org.mockito.Mockito.atLeastOnce;
+import com.foxminded.timetable.model.*;
+import com.foxminded.timetable.service.TimetableFacade;
+import org.junit.jupiter.api.Nested;
+import org.junit.jupiter.api.Test;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.boot.test.mock.mockito.SpyBean;
+import org.springframework.test.annotation.DirtiesContext;
+import org.springframework.test.annotation.DirtiesContext.MethodMode;
 
 import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
 import java.util.function.Function;
 
-import org.junit.jupiter.api.Nested;
-import org.junit.jupiter.api.Test;
-import org.junit.jupiter.api.extension.ExtendWith;
-import org.mockito.junit.jupiter.MockitoExtension;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.context.ConfigFileApplicationContextInitializer;
-import org.springframework.boot.test.mock.mockito.MockBean;
-import org.springframework.boot.test.mock.mockito.SpyBean;
-import org.springframework.test.annotation.DirtiesContext;
-import org.springframework.test.annotation.DirtiesContext.MethodMode;
-import org.springframework.test.context.ContextConfiguration;
-import org.springframework.test.context.junit.jupiter.SpringExtension;
+import static java.util.stream.Collectors.*;
+import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.assertThatIllegalArgumentException;
+import static org.mockito.ArgumentMatchers.anyList;
+import static org.mockito.BDDMockito.then;
+import static org.mockito.Mockito.atLeastOnce;
 
-import com.foxminded.timetable.TimetableApp;
-import com.foxminded.timetable.dao.AuditoriumDao;
-import com.foxminded.timetable.dao.CourseDao;
-import com.foxminded.timetable.dao.GroupDao;
-import com.foxminded.timetable.dao.ProfessorDao;
-import com.foxminded.timetable.dao.StudentDao;
-import com.foxminded.timetable.model.Auditorium;
-import com.foxminded.timetable.model.Course;
-import com.foxminded.timetable.model.Group;
-import com.foxminded.timetable.model.Professor;
-import com.foxminded.timetable.model.Student;
-
-@ExtendWith(MockitoExtension.class)
-@ExtendWith(SpringExtension.class)
-@ContextConfiguration(classes = TimetableApp.class, initializers = ConfigFileApplicationContextInitializer.class)
+@SpringBootTest
 class UniversityModelGeneratorTest {
 
     @SpyBean
-    private AuditoriumDao auditoriumRepository;
-    @SpyBean
-    private CourseDao courseRepository;
-    @SpyBean
-    private ProfessorDao professorRepository;
-    @SpyBean
-    private GroupDao groupRepository;
-    @SpyBean
-    private StudentDao studentRepository;
+    private TimetableFacade timetableFacade;
 
     @Autowired
     private UniversityModelGenerator universityModelGenerator;
-
-    @MockBean
-    private TimetableModelGenerator timatableModelGenerator;
-
-    @Nested
-    public class InputFileValidationTest {
-
-        @Test
-        public void shouldThrowIllegalArgumentExceptionGivenWrongFilePath() {
-
-            String wrongFilePath = "nonexistingFile.txt";
-            universityModelGenerator.setCoursesFilePath(wrongFilePath);
-            universityModelGenerator.setFirstNamesFilePath(wrongFilePath);
-            universityModelGenerator.setLastNamesFilePath(wrongFilePath);
-
-            assertThatIllegalArgumentException()
-                    .isThrownBy(
-                            () -> universityModelGenerator.generateAndSave())
-                    .withMessage("Unable to locate nonexistingFile.txt");
-        }
-
-        @Test
-        public void shouldThrowIllegalArgumentExceptionGivenWrongNonTxtFile() {
-
-            String wrongFile = "wrong_file.log";
-            universityModelGenerator.setCoursesFilePath(wrongFile);
-            universityModelGenerator.setFirstNamesFilePath(wrongFile);
-            universityModelGenerator.setLastNamesFilePath(wrongFile);
-
-            assertThatIllegalArgumentException()
-                    .isThrownBy(
-                            () -> universityModelGenerator.generateAndSave())
-                    .withMessage("wrong_file.log is not a *.txt file");
-        }
-
-        @Test
-        public void shouldThrowIllegalArgumentExceptionGivenEmptyFile() {
-
-            String emptyFile = "empty.txt";
-            universityModelGenerator.setCoursesFilePath(emptyFile);
-            universityModelGenerator.setFirstNamesFilePath(emptyFile);
-            universityModelGenerator.setLastNamesFilePath(emptyFile);
-
-            assertThatIllegalArgumentException()
-                    .isThrownBy(
-                            () -> universityModelGenerator.generateAndSave())
-                    .withMessage("empty.txt appears to be empty");
-        }
-
-    }
 
     @Test
     @DirtiesContext(methodMode = MethodMode.AFTER_METHOD)
@@ -114,13 +37,11 @@ class UniversityModelGeneratorTest {
 
         universityModelGenerator.generateAndSave();
 
-        then(auditoriumRepository).should(atLeastOnce()).saveAll(anyList());
-        then(courseRepository).should(atLeastOnce()).saveAll(anyList());
-        then(professorRepository).should(atLeastOnce()).saveAll(anyList());
-        then(professorRepository).should(atLeastOnce())
-                .saveAllProfessorsCourses(anyList());
-        then(groupRepository).should(atLeastOnce()).saveAll(anyList());
-        then(studentRepository).should(atLeastOnce()).saveAll(anyList());
+        then(timetableFacade).should(atLeastOnce()).saveAuditoriums(anyList());
+        then(timetableFacade).should(atLeastOnce()).saveCourses(anyList());
+        then(timetableFacade).should(atLeastOnce()).saveProfessors(anyList());
+        then(timetableFacade).should(atLeastOnce()).saveGroups(anyList());
+        then(timetableFacade).should(atLeastOnce()).saveStudents(anyList());
     }
 
     @Test
@@ -132,18 +53,18 @@ class UniversityModelGeneratorTest {
         int expectedNumberOfProfessors = 5;
         int expectedNumberOfStudents = 300;
 
-        long actualNumberOfAuditoriums = auditoriumRepository.count();
-        long actualNumberOfCourses = courseRepository.count();
-        long actualNumberOfGroups = groupRepository.count();
-        long actualNumberOfProfessors = professorRepository.count();
-        long actualNumberOfStudents = studentRepository.count();
+        long actualNumberOfAuditoriums = timetableFacade.countAuditoriums();
+        long actualNumberOfCourses = timetableFacade.countCourses();
+        long actualNumberOfGroups = timetableFacade.countGroups();
+        long actualNumberOfProfessors = timetableFacade.countProfessors();
+        long actualNumberOfStudents = timetableFacade.countStudents();
 
-        assertThat(actualNumberOfAuditoriums)
-                .isEqualTo(expectedNumberOfAuditoriums);
+        assertThat(actualNumberOfAuditoriums).isEqualTo(
+                expectedNumberOfAuditoriums);
         assertThat(actualNumberOfCourses).isEqualTo(expectedNumberOfCourses);
         assertThat(actualNumberOfGroups).isEqualTo(expectedNumberOfGroups);
-        assertThat(actualNumberOfProfessors)
-                .isEqualTo(expectedNumberOfProfessors);
+        assertThat(actualNumberOfProfessors).isEqualTo(
+                expectedNumberOfProfessors);
         assertThat(actualNumberOfStudents).isEqualTo(expectedNumberOfStudents);
     }
 
@@ -158,10 +79,10 @@ class UniversityModelGeneratorTest {
                 "DB Sanitation'); DROP TABLE students; --",
                 "Modern Sand Castle Architecture");
 
-        List<Course> actual = courseRepository.findAll();
+        List<Course> actual = timetableFacade.getCourses();
 
-        assertThat(actual).extracting(Course::getName)
-                .hasSameElementsAs(expected);
+        assertThat(actual).extracting(Course::getName).hasSameElementsAs(
+                expected);
     }
 
     @Test
@@ -169,10 +90,10 @@ class UniversityModelGeneratorTest {
 
         String groupNamePattern = "^G-\\d{2}$";
 
-        List<Group> actual = groupRepository.findAll();
+        List<Group> actual = timetableFacade.getGroups();
 
-        assertThat(actual).extracting(Group::getName)
-                .allMatch(name -> name.matches(groupNamePattern));
+        assertThat(actual).extracting(Group::getName).allMatch(
+                name -> name.matches(groupNamePattern));
     }
 
     @Test
@@ -180,10 +101,10 @@ class UniversityModelGeneratorTest {
 
         String auditoriumNamePattern = "^A-\\d{2}$";
 
-        List<Auditorium> actual = auditoriumRepository.findAll();
+        List<Auditorium> actual = timetableFacade.getAuditoriums();
 
-        assertThat(actual).extracting(Auditorium::getName)
-                .allMatch(name -> name.matches(auditoriumNamePattern));
+        assertThat(actual).extracting(Auditorium::getName).allMatch(
+                name -> name.matches(auditoriumNamePattern));
     }
 
     @Test
@@ -203,12 +124,12 @@ class UniversityModelGeneratorTest {
                 "Strangelove", "Sandlicker", "Nosepicker", "Footsticker",
                 "Buttspanker", "Eyetwitcher");
 
-        List<Student> actual = studentRepository.findAll();
+        List<Student> actual = timetableFacade.getStudents();
 
-        assertThat(actual).extracting(Student::getFirstName)
-                .isSubsetOf(expectedFirstNames);
-        assertThat(actual).extracting(Student::getLastName)
-                .isSubsetOf(expectedLastNames);
+        assertThat(actual).extracting(Student::getFirstName).isSubsetOf(
+                expectedFirstNames);
+        assertThat(actual).extracting(Student::getLastName).isSubsetOf(
+                expectedLastNames);
     }
 
     @Test
@@ -228,18 +149,18 @@ class UniversityModelGeneratorTest {
                 "Strangelove", "Sandlicker", "Nosepicker", "Footsticker",
                 "Buttspanker", "Eyetwitcher");
 
-        List<Professor> actual = professorRepository.findAll();
+        List<Professor> actual = timetableFacade.getProfessors();
 
-        assertThat(actual).extracting(Professor::getFirstName)
-                .isSubsetOf(expectedFirstNames);
-        assertThat(actual).extracting(Professor::getLastName)
-                .isSubsetOf(expectedLastNames);
+        assertThat(actual).extracting(Professor::getFirstName).isSubsetOf(
+                expectedFirstNames);
+        assertThat(actual).extracting(Professor::getLastName).isSubsetOf(
+                expectedLastNames);
     }
 
     @Test
     public void eachStudentShouldHaveAGroup() {
 
-        List<Student> actual = studentRepository.findAll();
+        List<Student> actual = timetableFacade.getStudents();
 
         assertThat(actual).extracting(Student::getGroup).isNotNull();
     }
@@ -247,46 +168,94 @@ class UniversityModelGeneratorTest {
     @Test
     public void eachGroupShouldHaveUpToThirtyStudents() {
 
-        Map<Group, Long> groupsSizes = studentRepository.findAll().stream()
+        Map<Group, Long> groupsSizes = timetableFacade.getStudents()
+                .stream()
                 .map(Student::getGroup)
                 .collect(groupingBy(Function.identity(), counting()));
 
-        assertThat(groupsSizes.values())
-                .allMatch(groupSize -> groupSize >= 1 && groupSize <= 30);
+        assertThat(groupsSizes.values()).allMatch(
+                groupSize -> groupSize >= 1 && groupSize <= 30);
     }
 
     @Test
     public void eachProfessorShouldHaveOneToFourCourses() {
 
-        List<Professor> actual = professorRepository.findAll();
+        List<Professor> actual = timetableFacade.getProfessors();
 
-        assertThat(actual).extracting(Professor::getCourses)
-                .allMatch(professorCourses -> !professorCourses.isEmpty()
-                        && professorCourses.size() >= 1
+        assertThat(actual).extracting(Professor::getCourses).allMatch(
+                professorCourses -> !professorCourses.isEmpty()
                         && professorCourses.size() <= 4);
     }
 
     @Test
     public void eachCourseShouldHaveOneToTwoProfessors() {
 
-        Map<Course, Long> coursesAssignments = professorRepository.findAll()
-                .stream().flatMap(professor -> professor.getCourses().stream())
-                .collect(groupingBy(Function.identity(), counting()));
+        Map<Course, Long> coursesAssignments =
+                timetableFacade.getProfessors().stream().flatMap(
+                        professor -> professor.getCourses().stream()).collect(
+                        groupingBy(Function.identity(), counting()));
 
-        assertThat(coursesAssignments.values())
-                .allMatch(courseAssignment -> courseAssignment >= 1
+        assertThat(coursesAssignments.values()).allMatch(
+                courseAssignment -> courseAssignment >= 1
                         && courseAssignment <= 2);
     }
 
     @Test
     public void eachCourseShouldBeAssigned() {
 
-        List<Course> expected = courseRepository.findAll();
+        List<Course> expected = timetableFacade.getCourses();
 
-        List<Course> actual = professorRepository.findAll().stream()
+        List<Course> actual = timetableFacade.getProfessors()
+                .stream()
                 .flatMap(professor -> professor.getCourses().stream())
-                .distinct().collect(toList());
+                .distinct()
+                .collect(toList());
 
         assertThat(actual).hasSameElementsAs(expected);
     }
+
+    @Nested
+    public class InputFileValidationTest {
+
+        @Test
+        public void shouldThrowIllegalArgumentExceptionGivenWrongFilePath() {
+
+            String wrongFilePath = "nonexistingFile.txt";
+            universityModelGenerator.setCoursesFilePath(wrongFilePath);
+            universityModelGenerator.setFirstNamesFilePath(wrongFilePath);
+            universityModelGenerator.setLastNamesFilePath(wrongFilePath);
+
+            assertThatIllegalArgumentException().isThrownBy(
+                    () -> universityModelGenerator.generateAndSave())
+                    .withMessage("Unable to locate nonexistingFile.txt");
+        }
+
+        @Test
+        public void shouldThrowIllegalArgumentExceptionGivenWrongNonTxtFile() {
+
+            String wrongFile = "wrong_file.log";
+            universityModelGenerator.setCoursesFilePath(wrongFile);
+            universityModelGenerator.setFirstNamesFilePath(wrongFile);
+            universityModelGenerator.setLastNamesFilePath(wrongFile);
+
+            assertThatIllegalArgumentException().isThrownBy(
+                    () -> universityModelGenerator.generateAndSave())
+                    .withMessage("wrong_file.log is not a *.txt file");
+        }
+
+        @Test
+        public void shouldThrowIllegalArgumentExceptionGivenEmptyFile() {
+
+            String emptyFile = "empty.txt";
+            universityModelGenerator.setCoursesFilePath(emptyFile);
+            universityModelGenerator.setFirstNamesFilePath(emptyFile);
+            universityModelGenerator.setLastNamesFilePath(emptyFile);
+
+            assertThatIllegalArgumentException().isThrownBy(
+                    () -> universityModelGenerator.generateAndSave())
+                    .withMessage("empty.txt appears to be empty");
+        }
+
+    }
+
 }

@@ -1,14 +1,7 @@
 package com.foxminded.timetable.dao.jdbc;
 
-import static org.assertj.core.api.Assertions.assertThat;
-
-import java.sql.ResultSet;
-import java.time.DayOfWeek;
-import java.time.LocalDate;
-import java.util.Arrays;
-import java.util.List;
-import java.util.Optional;
-
+import com.foxminded.timetable.dao.ScheduleDao;
+import com.foxminded.timetable.model.*;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -20,13 +13,14 @@ import org.springframework.jdbc.core.namedparam.SqlParameterSource;
 import org.springframework.test.context.jdbc.Sql;
 import org.springframework.test.context.jdbc.SqlMergeMode;
 
-import com.foxminded.timetable.dao.ScheduleDao;
-import com.foxminded.timetable.model.Auditorium;
-import com.foxminded.timetable.model.Course;
-import com.foxminded.timetable.model.Group;
-import com.foxminded.timetable.model.Period;
-import com.foxminded.timetable.model.Professor;
-import com.foxminded.timetable.model.Schedule;
+import java.sql.ResultSet;
+import java.time.DayOfWeek;
+import java.time.LocalDate;
+import java.util.Arrays;
+import java.util.List;
+import java.util.Optional;
+
+import static org.assertj.core.api.Assertions.assertThat;
 
 @JdbcTest
 @ComponentScan
@@ -34,46 +28,57 @@ import com.foxminded.timetable.model.Schedule;
 @SqlMergeMode(SqlMergeMode.MergeMode.MERGE)
 class JdbcScheduleDaoTest {
 
+    private final LocalDate                  dateOne       = LocalDate.of(2020,
+            9, 7);
+    private final LocalDate                  dateTwo       = LocalDate.of(2020,
+            9, 14);
+    private final Auditorium                 auditorium    = new Auditorium(1L,
+            "one");
+    private final Auditorium                 auditoriumNew = new Auditorium(2L,
+            "new");
+    private final Course                     course        = new Course(1L,
+            "one");
+    private final Group                      group         = new Group(1L,
+            "one");
+    private final Professor                  professor     = new Professor(1L,
+            "one", "one");
+    private final Schedule                   scheduleOne   = new Schedule(1L,
+            1L, dateOne, DayOfWeek.MONDAY, Period.FIRST, auditorium, course,
+            group, professor);
+    private final Schedule                   scheduleTwo   = new Schedule(2L,
+            2L, dateOne, DayOfWeek.MONDAY, Period.SECOND, auditorium, course,
+            group, professor);
+    private final Schedule                   scheduleThree = new Schedule(3L,
+            1L, dateTwo, DayOfWeek.MONDAY, Period.FIRST, auditorium, course,
+            group, professor);
+    private final List<Schedule>             schedules     = Arrays.asList(
+            scheduleOne, scheduleTwo, scheduleThree);
+    private final String                     findSql       =
+            "SELECT schedules.id, "
+                    + "schedules.template_id, schedules.on_date, schedules"
+                    + ".day, "
+                    + "schedules.period, schedules.auditorium_id, auditoriums"
+                    + ".name, "
+                    + "schedules.course_id, courses.name, schedules.group_id,"
+                    + " groups"
+                    + ".name, "
+                    + "schedules.professor_id, professors.first_name, "
+                    + "professors"
+                    + ".last_name " + "FROM schedules "
+                    + "LEFT JOIN auditoriums ON schedules.auditorium_id = "
+                    + "auditoriums"
+                    + ".id "
+                    + "LEFT JOIN courses ON schedules.course_id = courses.id "
+                    + "LEFT JOIN groups ON schedules.group_id = groups.id "
+                    + "LEFT JOIN professors ON schedules.professor_id = "
+                    + "professors.id";
     @Autowired
-    private NamedParameterJdbcTemplate jdbc;
-
-    private ScheduleDao scheduleRepository;
-
-    private LocalDate dateOne = LocalDate.of(2020, 9, 7);
-    private LocalDate dateTwo = LocalDate.of(2020, 9, 14);
-
-    private Auditorium auditorium = new Auditorium(1L, "one");
-    private Auditorium auditoriumNew = new Auditorium(2L, "new");
-    private Course course = new Course(1L, "one");
-    private Group group = new Group(1L, "one");
-    private Professor professor = new Professor(1L, "one", "one");
-
-    private Schedule scheduleOne = new Schedule(1L, 1L, dateOne,
-            DayOfWeek.MONDAY, Period.FIRST, auditorium, course, group,
-            professor);
-    private Schedule scheduleTwo = new Schedule(2L, 2L, dateOne,
-            DayOfWeek.MONDAY, Period.SECOND, auditorium, course, group,
-            professor);
-    private Schedule scheduleThree = new Schedule(3L, 1L, dateTwo,
-            DayOfWeek.MONDAY, Period.FIRST, auditorium, course, group,
-            professor);
-
-    private List<Schedule> schedules = Arrays.asList(scheduleOne, scheduleTwo,
-            scheduleThree);
-
-    private String findSql = "SELECT schedules.id, "
-            + "schedules.template_id, schedules.on_date, schedules.day, "
-            + "schedules.period, schedules.auditorium_id, auditoriums.name, "
-            + "schedules.course_id, courses.name, schedules.group_id, groups.name, "
-            + "schedules.professor_id, professors.first_name, professors.last_name "
-            + "FROM schedules "
-            + "LEFT JOIN auditoriums ON schedules.auditorium_id = auditoriums.id "
-            + "LEFT JOIN courses ON schedules.course_id = courses.id "
-            + "LEFT JOIN groups ON schedules.group_id = groups.id "
-            + "LEFT JOIN professors ON schedules.professor_id = professors.id";
+    private       NamedParameterJdbcTemplate jdbc;
+    private       ScheduleDao                scheduleRepository;
 
     @BeforeEach
     private void setUp() {
+
         this.scheduleRepository = new JdbcScheduleDao(jdbc);
     }
 
@@ -124,8 +129,8 @@ class JdbcScheduleDaoTest {
         Optional<Schedule> actualSchedule = scheduleRepository.findById(3L);
 
         assertThat(actualSchedule).isNotEmpty();
-        assertThat(expectedSchedule)
-                .isEqualToIgnoringNullFields(actualSchedule.get());
+        assertThat(expectedSchedule).isEqualToIgnoringNullFields(
+                actualSchedule.get());
     }
 
     @Test

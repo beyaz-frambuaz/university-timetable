@@ -1,57 +1,47 @@
 package com.foxminded.timetable.service.model.generator;
 
+import com.foxminded.timetable.model.*;
+import com.foxminded.timetable.service.TimetableFacade;
+import lombok.RequiredArgsConstructor;
+import lombok.Setter;
+import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.stereotype.Component;
+
 import java.io.IOException;
 import java.net.URISyntaxException;
 import java.net.URL;
 import java.nio.file.Files;
 import java.nio.file.Paths;
-import java.util.ArrayList;
-import java.util.Comparator;
-import java.util.List;
-import java.util.Optional;
-import java.util.Random;
+import java.util.*;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
-import org.springframework.beans.factory.annotation.Value;
-import org.springframework.stereotype.Service;
-
-import com.foxminded.timetable.dao.jdbc.Repositories;
-import com.foxminded.timetable.model.Auditorium;
-import com.foxminded.timetable.model.Course;
-import com.foxminded.timetable.model.Group;
-import com.foxminded.timetable.model.Professor;
-import com.foxminded.timetable.model.Student;
-
-import lombok.RequiredArgsConstructor;
-import lombok.Setter;
-import lombok.extern.slf4j.Slf4j;
-
 @Slf4j
 @Setter
-@Service
+@Component
 @RequiredArgsConstructor
 public class UniversityModelGenerator {
 
+    private final TimetableFacade timetableFacade;
     @Value("${university.total.students}")
-    private int totalStudents;
+    private       int             totalStudents;
     @Value("${university.total.professors}")
-    private int totalProfessors;
+    private       int              totalProfessors;
     @Value("${university.total.auditoriums}")
-    private int totalAuditoriums;
+    private       int              totalAuditoriums;
     @Value("${university.group.size}")
-    private int groupSize;
+    private       int              groupSize;
     @Value("${file.first.names}")
-    private String firstNamesFilePath;
+    private       String           firstNamesFilePath;
     @Value("${file.last.names}")
-    private String lastNamesFilePath;
+    private       String           lastNamesFilePath;
     @Value("${file.courses}")
-    private String coursesFilePath;
-
-    private final Repositories repositories;
+    private       String           coursesFilePath;
+    private       Random           random = new Random();
 
     public void generateAndSave() {
-        
+
         log.info("Generating university model");
         buildAuditoriums();
         List<Course> courses = buildCourses(coursesFilePath);
@@ -63,7 +53,7 @@ public class UniversityModelGenerator {
                 lastNamesFilePath);
         groupAndSaveStudents(students, groups);
         log.info("University model generated");
-        
+
     }
 
     /*
@@ -71,8 +61,7 @@ public class UniversityModelGenerator {
      */
     private void assignCoursesToProfessors(List<Course> courses,
             List<Professor> professors) {
-        
-        Random random = new Random();
+
         int maxCourses = 4;
         int maxProfessors = 2;
 
@@ -82,17 +71,13 @@ public class UniversityModelGenerator {
                 Optional<Professor> professor = professors.stream()
                         .filter(p -> p.getCourses().size() < maxCourses
                                 && !p.getCourses().contains(course))
-                        .sorted(Comparator
-                                .comparing(prof -> prof.getCourses().size()))
-                        .findFirst();
-                if (professor.isPresent()) {
-                    professor.get().addCourse(course);
-                }
+                        .min(Comparator.comparing(
+                                prof -> prof.getCourses().size()));
+                professor.ifPresent(value -> value.addCourse(course));
             }
         }
         log.debug("Courses assigned to professors");
-        repositories.getProfessorRepository()
-                .saveAllProfessorsCourses(professors);
+        professors.forEach(timetableFacade::saveProfessor);
     }
 
     /*
@@ -101,15 +86,14 @@ public class UniversityModelGenerator {
      */
     private List<Student> buildStudents(String firstNamesFilePath,
             String lastNamesFilePath) {
-        
+
         List<String> firstNames = readFile(firstNamesFilePath);
         List<String> lastNames = readFile(lastNamesFilePath);
-        Random random = new Random();
         List<Student> students = new ArrayList<>(totalStudents);
 
         for (int i = 0; i < totalStudents; i++) {
-            String firstName = firstNames
-                    .get(random.nextInt(firstNames.size()));
+            String firstName = firstNames.get(
+                    random.nextInt(firstNames.size()));
             String lastName = lastNames.get(random.nextInt(lastNames.size()));
 
             students.add(new Student(firstName, lastName));
@@ -124,23 +108,22 @@ public class UniversityModelGenerator {
      */
     private List<Professor> buildProfessors(String firstNamesFilePath,
             String lastNamesFilePath) {
-        
+
         List<String> firstNames = readFile(firstNamesFilePath);
         List<String> lastNames = readFile(lastNamesFilePath);
-        Random random = new Random();
         List<Professor> professors = new ArrayList<>(totalProfessors);
 
         for (int i = 0; i < totalProfessors; i++) {
-            String firstName = firstNames
-                    .get(random.nextInt(firstNames.size()));
+            String firstName = firstNames.get(
+                    random.nextInt(firstNames.size()));
             String lastName = lastNames.get(random.nextInt(lastNames.size()));
 
             professors.add(new Professor(firstName, lastName));
         }
         log.debug("Professors generated");
-        repositories.getProfessorRepository().saveAll(professors);
-        
-        return repositories.getProfessorRepository().findAll();
+        timetableFacade.saveProfessors(professors);
+
+        return timetableFacade.getProfessors();
     }
 
     /*
@@ -148,23 +131,25 @@ public class UniversityModelGenerator {
      */
     private void groupAndSaveStudents(List<Student> students,
             List<Group> groups) {
-        
+
         groups.forEach(group -> students.stream()
                 .sorted(Comparator.comparing(Student::getLastName))
-                .skip(groups.indexOf(group) * (long) groupSize).limit(groupSize)
+                .skip(groups.indexOf(group) * (long) groupSize)
+                .limit(groupSize)
                 .forEach(student -> student.setGroup(group)));
         log.debug("Students grouped");
-        
-        repositories.getStudentRepository().saveAll(students);
+
+        timetableFacade.saveStudents(students);
     }
 
     private List<Course> buildCourses(String filePath) {
-        
-        List<Course> courses = readFile(filePath).stream().map(Course::new)
+
+        List<Course> courses = readFile(filePath).stream()
+                .map(Course::new)
                 .collect(Collectors.toList());
         log.debug("Courses generated");
-        repositories.getCourseRepository().saveAll(courses);
-        return repositories.getCourseRepository().findAll();
+        timetableFacade.saveCourses(courses);
+        return timetableFacade.getCourses();
     }
 
     /*
@@ -172,9 +157,9 @@ public class UniversityModelGenerator {
      * group takes all courses
      */
     private List<Group> buildGroups() {
-        
-        int numberOfGroups = (int) Math
-                .ceil((double) totalStudents / (double) groupSize);
+
+        int numberOfGroups = (int) Math.ceil(
+                (double) totalStudents / (double) groupSize);
         List<Group> groups = new ArrayList<>(numberOfGroups);
 
         for (int groupId = 1; groupId <= numberOfGroups; groupId++) {
@@ -183,27 +168,27 @@ public class UniversityModelGenerator {
             groups.add(new Group(groupName));
         }
         log.debug("Groups generated");
-        repositories.getGroupRepository().saveAll(groups);
-        
-        return repositories.getGroupRepository().findAll();
+        timetableFacade.saveGroups(groups);
+
+        return timetableFacade.getGroups();
     }
 
     /*
      * Auditorium naming convention: 'A-01', 'A-02', etc.
      */
     private void buildAuditoriums() {
-        
+
         List<Auditorium> auditoriums = new ArrayList<>();
         for (int id = 1; id <= totalAuditoriums; id++) {
             String name = String.format("A-%02d", id);
             auditoriums.add(new Auditorium(name));
         }
         log.debug("Auditoriums generated");
-        repositories.getAuditoriumRepository().saveAll(auditoriums);
+        timetableFacade.saveAuditoriums(auditoriums);
     }
 
     private List<String> readFile(String filePath) {
-        
+
         URL url = validateUrl(filePath);
 
         try (Stream<String> fileStream = Files.lines(Paths.get(url.toURI()))) {
@@ -222,7 +207,7 @@ public class UniversityModelGenerator {
     }
 
     private URL validateUrl(String filePath) {
-        
+
         if (!filePath.matches(".+\\.txt$")) {
             throw new IllegalArgumentException(
                     filePath + " is not a *.txt file");
@@ -235,4 +220,5 @@ public class UniversityModelGenerator {
 
         return url;
     }
+
 }

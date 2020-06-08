@@ -1,12 +1,7 @@
 package com.foxminded.timetable.dao.jdbc;
 
-import static org.assertj.core.api.Assertions.assertThat;
-
-import java.sql.ResultSet;
-import java.util.Arrays;
-import java.util.List;
-import java.util.Optional;
-
+import com.foxminded.timetable.dao.GroupDao;
+import com.foxminded.timetable.model.Group;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -17,8 +12,12 @@ import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
 import org.springframework.test.context.jdbc.Sql;
 import org.springframework.test.context.jdbc.SqlMergeMode;
 
-import com.foxminded.timetable.dao.GroupDao;
-import com.foxminded.timetable.model.Group;
+import java.sql.ResultSet;
+import java.util.Arrays;
+import java.util.List;
+import java.util.Optional;
+
+import static org.assertj.core.api.Assertions.assertThat;
 
 @JdbcTest
 @ComponentScan
@@ -26,19 +25,19 @@ import com.foxminded.timetable.model.Group;
 @SqlMergeMode(SqlMergeMode.MergeMode.MERGE)
 class JdbcGroupDaoTest {
 
+    private final Group                      groupOne   = new Group(1L, "one");
+    private final Group                      groupTwo   = new Group(2L, "two");
+    private final Group                      groupThree = new Group(3L,
+            "three");
+    private final List<Group>                groups     = Arrays.asList(
+            groupOne, groupTwo, groupThree);
     @Autowired
-    private NamedParameterJdbcTemplate jdbc;
-
-    private GroupDao groupRepository;
-
-    private Group groupOne = new Group(1L, "one");
-    private Group groupTwo = new Group(2L, "two");
-    private Group groupThree = new Group(3L, "three");
-
-    private List<Group> groups = Arrays.asList(groupOne, groupTwo, groupThree);
+    private       NamedParameterJdbcTemplate jdbc;
+    private       GroupDao                   groupRepository;
 
     @BeforeEach
     private void setUp() {
+
         this.groupRepository = new JdbcGroupDao(jdbc);
     }
 
@@ -112,7 +111,7 @@ class JdbcGroupDaoTest {
 
     @Test
     @Sql("classpath:preload_sample_data_group_test.sql")
-    public void udpateShouldUpdateGroupName() {
+    public void updateShouldUpdateGroupName() {
 
         String newName = "new name";
         Group expected = new Group(groupOne.getId(), groupOne.getName());
@@ -136,8 +135,9 @@ class JdbcGroupDaoTest {
         groupRepository.saveAll(groups);
 
         String sql = "SELECT groups.id, groups.name FROM groups";
-        List<Group> actual = jdbc.query(sql, (ResultSet rs,
-                int rowNum) -> new Group(rs.getLong(1), rs.getString(2)));
+        List<Group> actual = jdbc.query(sql,
+                (ResultSet rs, int rowNum) -> new Group(rs.getLong(1),
+                        rs.getString(2)));
 
         assertThat(actual).hasSameElementsAs(groups);
     }

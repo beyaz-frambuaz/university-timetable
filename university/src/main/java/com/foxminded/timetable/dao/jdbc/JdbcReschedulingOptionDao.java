@@ -1,5 +1,18 @@
 package com.foxminded.timetable.dao.jdbc;
 
+import com.foxminded.timetable.dao.ReschedulingOptionDao;
+import com.foxminded.timetable.model.Auditorium;
+import com.foxminded.timetable.model.Period;
+import com.foxminded.timetable.model.ReschedulingOption;
+import com.foxminded.timetable.model.Schedule;
+import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
+import org.springframework.dao.EmptyResultDataAccessException;
+import org.springframework.jdbc.core.namedparam.MapSqlParameterSource;
+import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
+import org.springframework.jdbc.core.namedparam.SqlParameterSource;
+import org.springframework.stereotype.Repository;
+
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.time.DayOfWeek;
@@ -7,21 +20,6 @@ import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
-
-import org.springframework.dao.EmptyResultDataAccessException;
-import org.springframework.jdbc.core.namedparam.MapSqlParameterSource;
-import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
-import org.springframework.jdbc.core.namedparam.SqlParameterSource;
-import org.springframework.stereotype.Repository;
-
-import com.foxminded.timetable.dao.ReschedulingOptionDao;
-import com.foxminded.timetable.model.Auditorium;
-import com.foxminded.timetable.model.Period;
-import com.foxminded.timetable.model.ReschedulingOption;
-import com.foxminded.timetable.model.Schedule;
-
-import lombok.RequiredArgsConstructor;
-import lombok.extern.slf4j.Slf4j;
 
 @Slf4j
 @Repository
@@ -38,7 +36,7 @@ public class JdbcReschedulingOptionDao implements ReschedulingOptionDao {
 
     @Override
     public long count() {
-        
+
         log.debug("Counting rescheduling options");
         String sql = "SELECT COUNT(*) FROM rescheduling_options";
         return jdbc.getJdbcOperations().queryForObject(sql, Long.class);
@@ -57,17 +55,17 @@ public class JdbcReschedulingOptionDao implements ReschedulingOptionDao {
 
         log.debug("Retrieving rescheduling options for {} for schedule id: {}",
                 date, schedule.getId());
-        String filter = " WHERE rescheduling_options.day = :day "
-                + "AND (rescheduling_options.period, rescheduling_options.auditorium_id) "
-                + "NOT IN ( ("
-                + "SELECT schedule_templates.period, schedule_templates.auditorium_id "
-                + "FROM schedule_templates "
+        String filter = " WHERE rescheduling_options.day = :day AND "
+                + "(rescheduling_options.period, "
+                + "rescheduling_options.auditorium_id) "
+                + "NOT IN ( (SELECT schedule_templates.period, "
+                + "schedule_templates.auditorium_id FROM schedule_templates "
                 + "WHERE schedule_templates.week_parity = :weekParity "
-                + "AND schedule_templates.day = :day ) "
-                + "UNION ( SELECT schedules.period, schedules.auditorium_id "
+                + "AND schedule_templates.day = :day ) UNION "
+                + "( SELECT schedules.period, schedules.auditorium_id "
                 + "FROM schedules WHERE schedules.on_date = :date ) ) "
-                + "AND rescheduling_options.period NOT IN ( ("
-                + "SELECT schedule_templates.period FROM schedule_templates "
+                + "AND rescheduling_options.period NOT IN "
+                + "( (SELECT schedule_templates.period FROM schedule_templates "
                 + "WHERE schedule_templates.week_parity = :weekParity "
                 + "AND schedule_templates.day = :day "
                 + "AND (schedule_templates.group_id = :groupId "
@@ -76,8 +74,8 @@ public class JdbcReschedulingOptionDao implements ReschedulingOptionDao {
                 + "WHERE schedules.on_date = :date "
                 + "AND (schedules.group_id = :groupId "
                 + "OR schedules.professor_id = :professorId) ) )";
-        SqlParameterSource paramSource = new MapSqlParameterSource()
-                .addValue("day", date.getDayOfWeek().toString())
+        SqlParameterSource paramSource = new MapSqlParameterSource().addValue(
+                "day", date.getDayOfWeek().toString())
                 .addValue("weekParity", weekParity)
                 .addValue("date", date.toString())
                 .addValue("groupId", schedule.getGroup().getId())
@@ -88,16 +86,17 @@ public class JdbcReschedulingOptionDao implements ReschedulingOptionDao {
 
     @Override
     public Optional<ReschedulingOption> findById(long id) {
-        
+
         log.debug("Looking for rescheduling option by ID {}", id);
         try {
             String filter = " WHERE rescheduling_options.id = :id";
             SqlParameterSource paramSource = new MapSqlParameterSource("id",
                     id);
 
-            return Optional.of(jdbc.queryForObject(FIND_ALL_SQL + filter,
-                    paramSource, this::mapRow));
-            
+            return Optional.ofNullable(
+                    jdbc.queryForObject(FIND_ALL_SQL + filter, paramSource,
+                            this::mapRow));
+
         } catch (EmptyResultDataAccessException e) {
             log.warn("No rescheduling option found with ID {}", id);
             return Optional.empty();
@@ -111,13 +110,13 @@ public class JdbcReschedulingOptionDao implements ReschedulingOptionDao {
                 + "auditorium_id) VALUES (:day, :period, :auditoriumId)";
         List<SqlParameterSource> paramSource = new ArrayList<>();
         for (ReschedulingOption option : options) {
-            paramSource.add(new MapSqlParameterSource()
-                    .addValue("day", option.getDay().toString())
+            paramSource.add(new MapSqlParameterSource().addValue("day",
+                    option.getDay().toString())
                     .addValue("period", option.getPeriod().name())
                     .addValue("auditoriumId", option.getAuditorium().getId()));
         }
-        jdbc.batchUpdate(sql, paramSource
-                .toArray(new SqlParameterSource[paramSource.size()]));
+        jdbc.batchUpdate(sql, paramSource.toArray(
+                new SqlParameterSource[paramSource.size()]));
         log.debug("Rescheduling options saved");
 
         return options;

@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head th:replace="layout :: header(~{::title})">
+	<title>Professor: Two Week</title>
+</head>
+<body>
+
+<div th:replace="layout :: scheduleFormFilter"></div>
+
+<div th:replace="layout :: navbar"></div>
+
+<div class="container">
+	<div class="row align-items-center">
+		<div class="col">
+
+			<h1 th:text="${session.professor.fullName}">Hello, professor!</h1>
+
+			<hr class="my-4">
+
+			<div th:replace="layout :: twoWeek"></div>
+
+		</div>
+	</div>
+</div>
+
+<div th:replace="layout :: scripts"></div>
+
+</body>
+</html>

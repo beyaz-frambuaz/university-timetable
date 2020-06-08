@@ -1,12 +1,7 @@
 package com.foxminded.timetable.dao.jdbc;
 
-import static org.assertj.core.api.Assertions.assertThat;
-
-import java.sql.ResultSet;
-import java.util.Arrays;
-import java.util.List;
-import java.util.Optional;
-
+import com.foxminded.timetable.dao.CourseDao;
+import com.foxminded.timetable.model.Course;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -17,8 +12,12 @@ import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
 import org.springframework.test.context.jdbc.Sql;
 import org.springframework.test.context.jdbc.SqlMergeMode;
 
-import com.foxminded.timetable.dao.CourseDao;
-import com.foxminded.timetable.model.Course;
+import java.sql.ResultSet;
+import java.util.Arrays;
+import java.util.List;
+import java.util.Optional;
+
+import static org.assertj.core.api.Assertions.assertThat;
 
 @JdbcTest
 @ComponentScan
@@ -26,20 +25,21 @@ import com.foxminded.timetable.model.Course;
 @SqlMergeMode(SqlMergeMode.MergeMode.MERGE)
 class JdbcCourseDaoTest {
 
+    private final Course                     courseOne   = new Course(1L,
+            "one");
+    private final Course                     courseTwo   = new Course(2L,
+            "two");
+    private final Course                     courseThree = new Course(3L,
+            "three");
+    private final List<Course>               courses     = Arrays.asList(
+            courseOne, courseTwo, courseThree);
     @Autowired
-    private NamedParameterJdbcTemplate jdbc;
-
-    private CourseDao courseRepository;
-
-    private Course courseOne = new Course(1L, "one");
-    private Course courseTwo = new Course(2L, "two");
-    private Course courseThree = new Course(3L, "three");
-
-    private List<Course> courses = Arrays.asList(courseOne, courseTwo,
-            courseThree);
+    private       NamedParameterJdbcTemplate jdbc;
+    private       CourseDao                  courseRepository;
 
     @BeforeEach
     private void setUp() {
+
         this.courseRepository = new JdbcCourseDao(jdbc);
     }
 
@@ -98,7 +98,7 @@ class JdbcCourseDaoTest {
 
     @Test
     @Sql("classpath:preload_sample_data_course_test.sql")
-    public void udpateShouldUpdateCourseName() {
+    public void updateShouldUpdateCourseName() {
 
         String newName = "new name";
         Course expected = new Course(courseOne.getId(), courseOne.getName());
@@ -122,8 +122,9 @@ class JdbcCourseDaoTest {
         courseRepository.saveAll(courses);
 
         String sql = "SELECT courses.id, courses.name FROM courses";
-        List<Course> actual = jdbc.query(sql, (ResultSet rs,
-                int rowNum) -> new Course(rs.getLong(1), rs.getString(2)));
+        List<Course> actual = jdbc.query(sql,
+                (ResultSet rs, int rowNum) -> new Course(rs.getLong(1),
+                        rs.getString(2)));
 
         assertThat(actual).hasSameElementsAs(courses);
     }

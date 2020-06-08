@@ -1,0 +1,124 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head th:replace="layout :: header(~{::title})">
+	<title>University: Groups</title>
+</head>
+<body>
+
+<div th:replace="layout :: renameModal"></div>
+
+<div th:replace="layout :: newItemModal"></div>
+
+<div th:replace="layout :: scheduleFormFilterManagement"></div>
+
+<div th:replace="layout :: scheduleFormManagement"></div>
+
+<div th:replace="layout :: navbar"></div>
+
+<div class="container">
+	<div class="row align-items-center">
+		<div class="col">
+
+			<!-- Alert Success -->
+			<div th:if="${!successAlert.isEmpty()}" class="alert alert-dismissible alert-success">
+				<button type="button" class="close" data-dismiss="alert">&times;</button>
+				<h4 class="alert-heading">
+					<i class="fas fa-check-circle"></i>
+					Done!
+				</h4>
+				<p th:text="${successAlert}" class="mb-0">Message</p>
+			</div>
+
+			<!-- Alert Error -->
+			<div th:if="${!errorAlert.isEmpty()}" class="alert alert-dismissible alert-danger">
+				<button type="button" class="close" data-dismiss="alert">&times;</button>
+				<h4 class="alert-heading">
+					<i class="fas fa-exclamation-circle"></i>
+					Error!
+				</h4>
+				<p th:text="${errorAlert}" class="mb-0">Message</p>
+			</div>
+
+			<h1>Groups
+				<span type="button" class="text-body ml-4" data-toggle="modal" data-target="#new-item-modal">
+					<h3 class="fas fa-plus-circle icon-hover" data-toggle="tooltip" data-placement="right" data-container="body"
+					    title="Add new group"></h3>
+				</span>
+			</h1>
+			<p class="text-muted">Click on a group to see its students</p>
+
+			<!-- List of groups -->
+			<div class="accordion shadow mb-3" id="groupList">
+
+				<div th:each="group : ${groupedStudents}">
+					<div class="schedule-row no-border">
+
+						<button class="col list-group-item list-group-item-action btn" id="group1"
+						        th:classappend="${group.key.id.toString() == editedId}? 'btn-success'"
+						        th:id="'group' + *{group.key.id}"
+						        type="button"
+						        data-toggle="collapse"
+						        data-target="#studentsGroup1"
+						        aria-controls="studentsGroup1"
+						        th:attr="data-target='#studentsGroup' + *{group.key.id},
+					                 aria-controls='studentsGroup' + *{group.key.id}">
+							<div>
+								<span th:text="'ID: ' + *{group.key.id}" class="badge badge-pill badge-light">ID: 1</span>
+								<span th:text="*{group.key.name}" class="pl-2">Name One</span>
+								<small th:text="|(*{group.value.size()} students)|" class="text-muted ml-4">
+									(30 students)
+								</small>
+							</div>
+						</button>
+
+						<button type="button" class="btn btn-outline-secondary toggle-button" data-toggle="modal"
+						        data-target="#filtered-schedule-modal" data-title="Name One" data-id="1"
+						        th:attr="data-title=${group.key.name}, data-id=${group.key.id}">
+							View schedule
+						</button>
+
+						<button type="button" class="btn btn-outline-warning toggle-button" data-toggle="modal"
+						        data-target="#rename-modal" data-title="Name One" data-rename-id="1"
+						        th:attr="data-title=${group.key.name}, data-rename-id=${group.key.id}">
+							Rename
+						</button>
+					</div>
+
+					<div id="studentsGroup1" th:id="'studentsGroup' + *{group.key.id}"
+					     class="collapse course-attendees-container list-group"
+					     aria-labelledby="group1" th:attr="aria-labelledby='group' + *{group.key.id}"
+					     data-parent="#groupList">
+
+						<div class="schedule-row no-border my-2">
+
+							<div class="col-6" th:each="student : ${group.value}">
+
+								<div class="list-group-item d-flex justify-content-between">
+									<div>
+										<span th:text="|ID: *{student.id}|" class="badge badge-pill badge-light">ID: 1</span>
+										<span th:text="*{student.fullName}" class="pl-2">Name One</span>
+									</div>
+									<div>
+										<span th:text="*{student.group.name}" class="badge badge-pill badge-secondary">G-01</span>
+									</div>
+								</div>
+
+							</div>
+
+						</div>
+
+					</div>
+
+				</div>
+			</div>
+
+			<div class="my-3 text-muted">All active groups</div>
+
+		</div>
+	</div>
+</div>
+
+<div th:replace="layout :: scripts"></div>
+
+</body>
+</html>

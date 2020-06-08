@@ -1,0 +1,146 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head th:replace="layout :: header(~{::title})">
+	<title>Timetable</title>
+</head>
+<body>
+
+<div th:replace="layout :: navbar"></div>
+
+<div class="container">
+	<div class="row align-items-center">
+		<div class="col">
+			<div class="jumbotron shadow">
+				<h1 class="display-3">Welcome!</h1>
+				<p class="lead">This is a Timetable App I built as an educational project for the
+					<a href="https://foxminded.com.ua/ua/java/" target="_blank">Foxminded Java EE course</a>.</p>
+				<p class="text-warning">Start exploring: hit the logo in the top left corner to select a use case.</p>
+				<hr class="my-4">
+				<h1 class="text-muted">tl;dr</h1>
+				<h4 class="text-muted">Set-up</h4>
+				<p>App reads 20 first, 20 last names, and 10 courses from txt files and randomly generates a university
+					model with (currently) 300 students grouped by 30, 5 professors, 10 courses, and 5
+					auditoriums. Professor-courses are randomly assigned with max 2 professors per course and 4 courses per
+					professor. App also generates a random schedule where:
+				</p>
+				<ul>
+					<li>
+						All groups take all courses
+					</li>
+					<li>
+						Schedule cycles every two weeks
+					</li>
+					<li>
+						Courses are taught Mon-Fri
+					</li>
+					<li>
+						Each day is divided into 5 periods
+					</li>
+					<li>
+						Semester runs September 7 - December 11, 2020 (14 weeks)
+					</li>
+				</ul>
+				<p>
+					Timetable itself is organized in a way that ony two-week cycle of schedule templates is generated on startup.
+					Those templates are later used to generate schedule items for specific dates upon request. If schedule
+					items have already been created in the course of user interaction they are retrieved from the database. This
+					set-up allows the following flexibility:
+				</p>
+				<ul>
+					<li>
+						Entire semester schedule is <em>not generated on startup</em> but rather on "as-needed" basis
+					</li>
+					<li>
+						Courses can be <em>rescheduled once</em> per occurrence in which case same course in the next cycle will be
+						generated from the unchanged template
+					</li>
+					<li>
+						<em>Permanent rescheduling</em> is made easy: all it takes is updating a template (with any existing linked
+						schedule items). All further schedule items generated from amended template will reflect the change
+					</li>
+				</ul>
+				<hr class="my-4">
+				<h4 class="text-muted">Use cases</h4>
+				<p>Students can view:</p>
+				<ul>
+					<li>
+						Two-week schedule (templates for study cycle)
+					</li>
+					<li>
+						Their day/week/month schedule
+					</li>
+					<li>
+						Entire (unfiltered) day/week/month schedule
+					</li>
+				</ul>
+				<p>Faculty members can view:</p>
+				<ul>
+					<li>
+						Two-week schedule (templates for study cycle)
+					</li>
+					<li>
+						Their day/week/month schedule
+					</li>
+					<li>
+						Entire (unfiltered) day/week/month schedule
+					</li>
+					<li>
+						List of their courses
+					</li>
+					<li>
+						List of course attendees
+					</li>
+				</ul>
+				<p>University management has a full spectrum of options:</p>
+				<ul>
+					<li>University
+						<ul>
+							<li>
+								View students
+							</li>
+							<li>
+								Move students between groups
+							</li>
+							<li>
+								View professors and their courses
+							</li>
+							<li>
+								Change professors' course assignments
+							</li>
+							<li>
+								View professors' course attendees
+							</li>
+							<li>
+								View and rename auditoriums/courses/groups
+							</li>
+						</ul>
+					</li>
+					<li>Timetable
+						<ul>
+							<li>
+								View two-week schedule
+							</li>
+							<li>
+								View day/week/month schedule for student/professor/auditorium/entire (no filters)
+							</li>
+							<li>
+								View available professors/auditoriums for a specific period
+							</li>
+							<li>
+								Substitute professor in a schedule item
+							</li>
+							<li>
+								Reschedule course: single occurrence or permanently
+							</li>
+						</ul>
+					</li>
+				</ul>
+			</div>
+		</div>
+	</div>
+</div>
+
+<div th:replace="layout :: scripts"></div>
+
+</body>
+</html>

@@ -1,14 +1,9 @@
 package com.foxminded.timetable.dao.jdbc;
 
-import static org.assertj.core.api.Assertions.assertThat;
-
-import java.sql.ResultSet;
-import java.time.LocalDate;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
-import java.util.Optional;
-
+import com.foxminded.timetable.dao.ProfessorDao;
+import com.foxminded.timetable.model.Course;
+import com.foxminded.timetable.model.Period;
+import com.foxminded.timetable.model.Professor;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -19,10 +14,11 @@ import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
 import org.springframework.test.context.jdbc.Sql;
 import org.springframework.test.context.jdbc.SqlMergeMode;
 
-import com.foxminded.timetable.dao.ProfessorDao;
-import com.foxminded.timetable.model.Course;
-import com.foxminded.timetable.model.Period;
-import com.foxminded.timetable.model.Professor;
+import java.sql.ResultSet;
+import java.time.LocalDate;
+import java.util.*;
+
+import static org.assertj.core.api.Assertions.assertThat;
 
 @JdbcTest
 @ComponentScan
@@ -30,19 +26,21 @@ import com.foxminded.timetable.model.Professor;
 @SqlMergeMode(SqlMergeMode.MergeMode.MERGE)
 class JdbcProfessorDaoTest {
 
+    private final Professor                  professorOne   = new Professor(1L,
+            "one", "one");
+    private final Professor                  professorTwo   = new Professor(2L,
+            "two", "two");
+    private final Professor                  professorThree = new Professor(3L,
+            "three", "three");
+    private final List<Professor>            professors     = Arrays.asList(
+            professorOne, professorTwo, professorThree);
     @Autowired
-    private NamedParameterJdbcTemplate jdbc;
-
-    private ProfessorDao professorRepository;
-
-    private Professor professorOne = new Professor(1L, "one", "one");
-    private Professor professorTwo = new Professor(2L, "two", "two");
-    private Professor professorThree = new Professor(3L, "three", "three");
-    private List<Professor> professors = Arrays.asList(professorOne,
-            professorTwo, professorThree);
+    private       NamedParameterJdbcTemplate jdbc;
+    private       ProfessorDao               professorRepository;
 
     @BeforeEach
     private void setUp() {
+
         this.professorRepository = new JdbcProfessorDao(jdbc);
     }
 
@@ -69,7 +67,7 @@ class JdbcProfessorDaoTest {
     @Sql("classpath:preload_sample_data_professor_test.sql")
     public void findAllAvailableShouldRetrieveCorrectListOfAvailableProfessors() {
 
-        List<Professor> actual = professorRepository.findAllAvailable(false,
+        List<Professor> actual = professorRepository.findAllAvailable(
                 LocalDate.of(2020, 9, 7), Period.SECOND);
 
         assertThat(actual).containsOnly(professorOne, professorTwo)
@@ -90,8 +88,8 @@ class JdbcProfessorDaoTest {
     @Sql("classpath:preload_sample_data_professor_test.sql")
     public void findByIdShouldReturnEmptyOptionalGivenNonExistingId() {
 
-        Optional<Professor> actualProfessor = professorRepository
-                .findById(999L);
+        Optional<Professor> actualProfessor = professorRepository.findById(
+                999L);
 
         assertThat(actualProfessor).isEmpty();
     }
@@ -102,7 +100,8 @@ class JdbcProfessorDaoTest {
         Professor expected = professorRepository.save(professorOne);
 
         String sql = "SELECT professors.id, professors.first_name, "
-                + "professors.last_name FROM professors WHERE professors.id = :id";
+                + "professors.last_name FROM professors WHERE professors.id ="
+                + " :id";
         Professor actual = jdbc.queryForObject(sql,
                 new MapSqlParameterSource("id", expected.getId()),
                 (ResultSet rs, int rowNum) -> new Professor(rs.getLong(1),
@@ -133,10 +132,12 @@ class JdbcProfessorDaoTest {
         Course courseTwo = new Course(2L, "two");
 
         List<Professor> professorsWithCourses = new ArrayList<>(professors);
-        professorsWithCourses.get(0).setCourses(Arrays.asList(courseOne));
+        professorsWithCourses.get(0).setCourses(
+                Collections.singletonList(courseOne));
         professorsWithCourses.get(1)
                 .setCourses(Arrays.asList(courseOne, courseTwo));
-        professorsWithCourses.get(2).setCourses(Arrays.asList(courseTwo));
+        professorsWithCourses.get(2).setCourses(
+                Collections.singletonList(courseTwo));
 
         professorRepository.saveAllProfessorsCourses(professorsWithCourses);
 
@@ -187,7 +188,7 @@ class JdbcProfessorDaoTest {
         Professor expected = new Professor(professorOne.getId(),
                 professorOne.getFirstName(), professorOne.getLastName());
 
-        expected.setCourses(Arrays.asList(courseNew));
+        expected.setCourses(Collections.singletonList(courseNew));
 
         professorRepository.update(expected);
 

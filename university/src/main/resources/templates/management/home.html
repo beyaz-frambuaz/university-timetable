@@ -1,0 +1,205 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head th:replace="layout :: header(~{::title})">
+	<title>Management: Home</title>
+</head>
+<body>
+
+<!-- Rebuild timetable form modal -->
+<div class="modal fade" id="rebuild-timetable-modal" tabindex="-1" role="dialog"
+     aria-labelledby="rebuild-timetable-label" aria-hidden="true">
+	<div class="modal-dialog modal-dialog-centered" role="document">
+		<div class="modal-content">
+
+			<!--Header-->
+			<div class="modal-header">
+				<h5 id="rebuild-timetable-label" class="modal-title">
+					<i class="fas fa-hammer"></i>
+					Rebuild timetable confirmation
+				</h5>
+				<button type="button" class="close" data-dismiss="modal" aria-label="Close">
+					<span aria-hidden="true">&times;</span>
+				</button>
+			</div>
+
+			<!--Body-->
+			<div class="modal-body">
+				<p>
+					This operation will <span class="text-warning">erase all schedule-related data</span> and regenerate it
+					afresh using existing university entities.
+				</p>
+				<p>
+					The latter won't be affected.
+				</p>
+			</div>
+
+
+			<!--Submit-->
+			<div class="modal-footer">
+				<form action="#" th:action="@{/timetable/management/rebuild-timetable}" method="post">
+					<button type="submit" class="btn btn-outline-primary">Confirm</button>
+				</form>
+			</div>
+
+		</div>
+
+	</div>
+</div>
+
+<!-- Refresh all data form modal -->
+<div class="modal fade" id="refresh-all-data-modal" tabindex="-1" role="dialog"
+     aria-labelledby="refresh-all-data-label" aria-hidden="true">
+	<div class="modal-dialog modal-dialog-centered" role="document">
+		<div class="modal-content">
+
+			<!--Header-->
+			<div class="modal-header">
+				<h5 id="refresh-all-data-label" class="modal-title">
+					<i class="fas fa-sync-alt"></i>
+					Refresh all data confirmation
+				</h5>
+				<button type="button" class="close" data-dismiss="modal" aria-label="Close">
+					<span aria-hidden="true">&times;</span>
+				</button>
+			</div>
+
+			<!--Body-->
+			<div class="modal-body">
+				<p>
+					This operation will <span class="text-danger">erase all app data</span> (both university entities and
+					schedules) and regenerate it afresh using existing settings.
+				</p>
+			</div>
+
+
+			<!--Submit-->
+			<div class="modal-footer">
+				<form action="#" th:action="@{/timetable/management/refresh-all-data}" method="post">
+					<button type="submit" class="btn btn-outline-primary">Confirm</button>
+				</form>
+			</div>
+
+		</div>
+
+	</div>
+</div>
+
+<!--Info alert modal-->
+<div class="modal fade" id="infoAlert" tabindex="-1" role="dialog" aria-labelledby="info-alert" aria-hidden="true">
+	<div class="modal-dialog modal-dialog-centered" role="document">
+		<div class="modal-content">
+
+			<!--Header-->
+			<div class="modal-header">
+				<h5 class="modal-title text" id="info-alert">
+					<i class="fas fa-info-circle"></i>
+					Info
+				</h5>
+				<button type="button" class="close" data-dismiss="modal" aria-label="Close">
+					<span aria-hidden="true">&times;</span>
+				</button>
+			</div>
+
+			<!--Body-->
+			<div class="modal-body">
+				<p>Unfiltered entire schedule (whether two-week or for a specific date range) is always accessible right from
+					the top navigation bar.
+				</p>
+				<p>
+					Schedule filtered by specific university entity is available from respective pages in the University section.
+				</p>
+				<p>
+					Same section provides additional functionality to view and edit its entities.
+				</p>
+				<p>
+					All Schedule items (this excludes two-week schedule templates) are actionable: hover over them to explore.
+				</p>
+				<hr class="my-2">
+				<p>
+					Feel free to mess around with this page like rename courses or add new professors... After that you can
+					rebuild the timetable data (button below) to see those new courses scheduled for the semester. If you take
+					it too far - you can always start from the clean slate, that's what the refresh all data option is for ;)
+				</p>
+
+			</div>
+		</div>
+	</div>
+</div>
+
+<div th:replace="layout :: scheduleFormManagement"></div>
+
+<div th:replace="layout :: navbar"></div>
+
+<div class="container">
+	<div class="row align-items-center">
+		<div class="col">
+
+			<!-- Alert Success -->
+			<div th:if="${!successAlert.isEmpty()}" class="alert alert-dismissible alert-success">
+				<button type="button" class="close" data-dismiss="alert">&times;</button>
+				<h4 class="alert-heading">
+					<i class="fas fa-check-circle"></i>
+					Done!
+				</h4>
+				<p th:text="${successAlert}" class="mb-0">Message</p>
+			</div>
+
+			<!-- Alert Error -->
+			<div th:if="${!errorAlert.isEmpty()}" class="alert alert-dismissible alert-danger">
+				<button type="button" class="close" data-dismiss="alert">&times;</button>
+				<h4 class="alert-heading">
+					<i class="fas fa-exclamation-circle"></i>
+					Error!
+				</h4>
+				<p th:text="${errorAlert}" class="mb-0">Message</p>
+				<p>We've logged the error and will resolve it ASAP. In the meantime, please try to submit the form again.</p>
+			</div>
+
+			<h1>Welcome!
+				<span type="button" data-toggle="modal" data-target="#infoAlert">
+					<h3 class="fas fa-info-circle icon-hover ml-2" data-toggle="tooltip" data-placement="right"
+					    data-container="body" title="Info"></h3>
+				</span>
+			</h1>
+			<p class="text-warning">
+				Use the top navigation bar for all your university and timetable management needs
+			</p>
+
+			<hr class="my-4">
+
+			<!-- Rebuild/refresh data buttons -->
+			<div class="row">
+				<div class="col-auto" data-toggle="modal" data-target="#rebuild-timetable-modal">
+					<button type="button" class="btn btn-outline-warning" data-toggle="tooltip" data-placement="bottom"
+					        data-container="body"
+					        title="Erase all timetable data and generate afresh">
+						<i class="fas fa-hammer"></i>
+						Rebuild timetable
+					</button>
+				</div>
+				<div class="col-auto" data-toggle="modal" data-target="#refresh-all-data-modal">
+					<button type="button" class="btn btn-outline-danger" data-toggle="tooltip" data-placement="bottom"
+					        data-container="body"
+					        title="Erase all timetable and university data and generate afresh">
+						<i class="fas fa-sync-alt fa-spin"></i>
+						Refresh all data
+					</button>
+				</div>
+			</div>
+
+			<hr class="my-4">
+
+			<p th:text="'Today is ' + ${daySchedule.dayDescription}
+			+ (${daySchedule.periodSchedules.isEmpty()}? ' and the schedule is as clear as the Florida sky!' : ' and here is todays schedule')">
+				Today is today and the schedule is as clear as the Florida sky!</p>
+
+			<div th:replace="layout :: daySchedule"></div>
+
+		</div>
+	</div>
+</div>
+
+<div th:replace="layout :: scripts"></div>
+
+</body>
+</html>

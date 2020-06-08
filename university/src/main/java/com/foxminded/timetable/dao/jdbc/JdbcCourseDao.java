@@ -1,32 +1,33 @@
 package com.foxminded.timetable.dao.jdbc;
 
-import java.sql.ResultSet;
-import java.sql.SQLException;
-import java.util.List;
-import java.util.Optional;
-
+import com.foxminded.timetable.dao.CourseDao;
+import com.foxminded.timetable.model.Course;
+import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.jdbc.core.namedparam.MapSqlParameterSource;
 import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
 import org.springframework.jdbc.core.namedparam.SqlParameterSource;
 import org.springframework.jdbc.core.namedparam.SqlParameterSourceUtils;
+import org.springframework.jdbc.support.GeneratedKeyHolder;
+import org.springframework.jdbc.support.KeyHolder;
 import org.springframework.stereotype.Repository;
 
-import com.foxminded.timetable.dao.CourseDao;
-import com.foxminded.timetable.model.Course;
-
-import lombok.RequiredArgsConstructor;
-import lombok.extern.slf4j.Slf4j;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.util.List;
+import java.util.Objects;
+import java.util.Optional;
 
 @Slf4j
 @Repository
 @RequiredArgsConstructor
 public class JdbcCourseDao implements CourseDao {
 
-    private static final String INSERT_SQL = "INSERT INTO courses (name) "
-            + "VALUES (:name)";
-    private static final String FIND_ALL_SQL = "SELECT courses.id, courses.name"
-            + " FROM courses";
+    private static final String INSERT_SQL   =
+            "INSERT INTO courses (name) " + "VALUES (:name)";
+    private static final String FIND_ALL_SQL =
+            "SELECT courses.id, courses" + ".name FROM courses";
 
     private final NamedParameterJdbcTemplate jdbc;
 
@@ -54,8 +55,9 @@ public class JdbcCourseDao implements CourseDao {
             SqlParameterSource paramSource = new MapSqlParameterSource("id",
                     id);
 
-            return Optional.of(jdbc.queryForObject(FIND_ALL_SQL + filter,
-                    paramSource, this::mapRow));
+            return Optional.ofNullable(
+                    jdbc.queryForObject(FIND_ALL_SQL + filter, paramSource,
+                            this::mapRow));
 
         } catch (EmptyResultDataAccessException e) {
             log.warn("No course found with ID {}", id);
@@ -66,8 +68,11 @@ public class JdbcCourseDao implements CourseDao {
     @Override
     public Course save(Course course) {
 
+        KeyHolder keyHolder = new GeneratedKeyHolder();
         jdbc.update(INSERT_SQL,
-                new MapSqlParameterSource("name", course.getName()));
+                new MapSqlParameterSource("name", course.getName()), keyHolder);
+        Long id = Objects.requireNonNull(keyHolder.getKey()).longValue();
+        course.setId(id);
         log.debug("Saved {}", course);
 
         return course;
@@ -97,6 +102,7 @@ public class JdbcCourseDao implements CourseDao {
     }
 
     private Course mapRow(ResultSet rs, int rowNum) throws SQLException {
+
         return new Course(rs.getLong(1), rs.getString(2));
     }
 

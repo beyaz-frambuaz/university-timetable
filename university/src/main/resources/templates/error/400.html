@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head th:replace="layout :: header(~{::title})">
+	<title>Bad Request</title>
+</head>
+<body>
+
+<div th:replace="layout :: navbar"></div>
+
+<div class="container">
+	<div class="row">
+		<div class="col">
+
+			<div class="jumbotron shadow">
+				<h1>Could not understand the request you sent</h1>
+				<hr class="my-4">
+				<p>It's okay, misunderstandings happen, shall we try again? This time maybe
+					<span class="text-warning"> don't mess with the links ;)</span>
+				</p>
+			</div>
+
+		</div>
+	</div>
+</div>
+
+<div th:replace="layout :: scripts"></div>
+
+</body>
+</html>

@@ -1,0 +1,92 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head th:replace="layout :: header(~{::title})">
+	<title>University: Auditoriums</title>
+</head>
+<body>
+
+<div th:replace="layout :: renameModal"></div>
+
+<div th:replace="layout :: newItemModal"></div>
+
+<div th:replace="layout :: scheduleFormFilterManagement"></div>
+
+<div th:replace="layout :: scheduleFormManagement"></div>
+
+<div th:replace="layout :: navbar"></div>
+
+<div class="container">
+	<div class="row align-items-center">
+		<div class="col">
+
+			<!-- Alert Success -->
+			<div th:if="${!successAlert.isEmpty()}" class="alert alert-dismissible alert-success">
+				<button type="button" class="close" data-dismiss="alert">&times;</button>
+				<h4 class="alert-heading">
+					<i class="fas fa-check-circle"></i>
+					Done!
+				</h4>
+				<p th:text="${successAlert}" class="mb-0">Message</p>
+			</div>
+
+			<!-- Alert Error -->
+			<div th:if="${!errorAlert.isEmpty()}" class="alert alert-dismissible alert-danger">
+				<button type="button" class="close" data-dismiss="alert">&times;</button>
+				<h4 class="alert-heading">
+					<i class="fas fa-exclamation-circle"></i>
+					Error!
+				</h4>
+				<p th:text="${errorAlert}" class="mb-0">Message</p>
+			</div>
+
+			<h1>Auditoriums
+				<span type="button" class="text-body ml-4" data-toggle="modal" data-target="#new-item-modal">
+					<h3 class="fas fa-plus-circle icon-hover" data-toggle="tooltip" data-placement="right" data-container="body"
+					    title="Add new auditorium"></h3>
+				</span>
+			</h1>
+			<p class="text-muted">Hover over each auditorium to see additional options</p>
+
+			<!-- List of auditoriums -->
+			<div class="student-select-container shadow">
+				<div class="list-group">
+
+					<!-- Each auditorium	-->
+					<div th:each="auditorium : ${auditoriums}" class="schedule-row no-border">
+
+						<div class="col list-group-item d-flex justify-content-between"
+						     th:classappend="${auditorium.id.toString() == editedId}? 'btn-success'">
+
+							<div>
+								<span th:text="'ID: ' + *{auditorium.id}" class="badge badge-pill badge-light">ID: 1</span>
+								<span th:text="*{auditorium.name}" class="pl-2">Name One</span>
+							</div>
+						</div>
+
+						<button type="button" class="btn btn-outline-secondary toggle-button" data-toggle="modal"
+						        data-target="#filtered-schedule-modal" data-title="Name One" data-id="1"
+						        th:attr="data-title=${auditorium.name}, data-id=${auditorium.id}">
+							View schedule
+						</button>
+
+						<button type="button" class="btn btn-outline-warning toggle-button" data-toggle="modal"
+						        data-target="#rename-modal" data-title="Name One" data-rename-id="1"
+						        th:attr="data-title=${auditorium.name}, data-rename-id=${auditorium.id}">
+							Rename
+						</button>
+
+					</div>
+
+				</div>
+			</div>
+
+			<div class="my-3 text-muted">All active auditoriums</div>
+
+		</div>
+	</div>
+</div>
+
+<div th:replace="layout :: scripts"></div>
+
+</body>
+</html>

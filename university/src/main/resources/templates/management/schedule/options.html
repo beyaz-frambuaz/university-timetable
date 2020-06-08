@@ -1,0 +1,216 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head th:replace="layout :: header(~{::title})">
+	<title>Management: Schedule</title>
+</head>
+<body>
+
+<!-- Reschedule form modal -->
+<div class="modal fade" id="reschedule-modal" tabindex="-1" role="dialog"
+     aria-labelledby="reschedule-label" aria-hidden="true">
+	<div class="modal-dialog modal-dialog-centered" role="document">
+		<div class="modal-content">
+
+			<!--Header-->
+			<div class="modal-header">
+				<h5 id="reschedule-label" class="modal-title">
+					<i class="fas fa-calendar-times"></i>
+					Reschedule
+				</h5>
+				<button type="button" class="close" data-dismiss="modal" aria-label="Close">
+					<span aria-hidden="true">&times;</span>
+				</button>
+			</div>
+
+			<!--Body-->
+			<div class="modal-body">
+
+				<p>You can reschedule this schedule item once or permanently.</p>
+				<p>Permanent rescheduling means that all further occurrences of this class with take place as
+					specified by the rescheduling option you picked.</p>
+				<p>Permanent rescheduling will trigger an update on all existing schedule items with the same week parity.</p>
+				<p>Reschedule to
+					<span class="text-warning" id="reschedule-form-title">Jan 01, 2020, FIRST 08:15-09:45 period, A-03</span>
+				</p>
+
+				<form class="needs-validation" action="#" th:action="@{/timetable/management/schedule/reschedule}"
+				      th:object="${rescheduleForm}" method="post" novalidate>
+
+					<div class="container">
+
+						<div class="form-group">
+							<div class="custom-control custom-radio">
+								<input type="radio" id="management-schedule-radio1" name="scheduleOption" class="custom-control-input"
+								       value="date" th:value="${T(com.foxminded.timetable.forms.RescheduleFormOption).ONCE}"
+								       th:field="*{rescheduleFormOption}" checked required>
+								<label class="custom-control-label" for="management-schedule-radio1">Once</label>
+							</div>
+						</div>
+
+						<div class="form-group">
+							<div class="custom-control custom-radio">
+								<input type="radio" id="management-schedule-radio2" name="scheduleOption" class="custom-control-input"
+								       value="week" th:value="${T(com.foxminded.timetable.forms.RescheduleFormOption).PERMANENTLY}"
+								       th:field="*{rescheduleFormOption}" required>
+								<label class="custom-control-label" for="management-schedule-radio2">Permanently</label>
+							</div>
+						</div>
+
+						<input type="hidden" name="scheduleId" value="" th:value="${schedule.id}">
+						<input type="hidden" id="option-id" name="optionId" value="">
+						<input type="hidden" id="date" name="date" value="">
+
+						<!--Submit-->
+
+						<div class="modal-footer">
+							<button type="submit" class="btn btn-outline-primary">Reschedule</button>
+						</div>
+
+					</div>
+				</form>
+			</div>
+
+		</div>
+	</div>
+</div>
+
+<div th:replace="layout :: scheduleFormManagement"></div>
+
+<div th:replace="layout :: navbar"></div>
+
+<div class="container">
+	<div class="row align-items-center">
+		<div class="col">
+
+			<h3>Schedule item:</h3>
+			<div class="row">
+				<div class="col-2">
+					<span>Date:</span>
+				</div>
+				<div class="col">
+					<span th:text="${@semesterCalendar.getDayDescription(schedule.date)}">Jan 01, 2020</span>
+				</div>
+			</div>
+			<div class="row">
+				<div class="col-2">
+					<span>Day:</span>
+				</div>
+				<div class="col">
+					<span th:text="${schedule.day}">Monday</span>
+				</div>
+			</div>
+			<div class="row">
+				<div class="col-2">
+					<span>Period:</span>
+				</div>
+				<div class="col">
+					<span th:text="${schedule.period.toString()}">FIRST 08:30-09:45</span>
+				</div>
+			</div>
+			<div class="row">
+				<div class="col-2">
+					<span>Auditorium:</span>
+				</div>
+				<div class="col">
+					<span th:text="${schedule.auditorium.name}">A-01</span>
+				</div>
+			</div>
+			<div class="row">
+				<div class="col-2">
+					<span>Course:</span>
+				</div>
+				<div class="col">
+					<span th:text="${schedule.course.name}">Dark Magic Against Defense Against Dark Magic</span>
+				</div>
+			</div>
+			<div class="row">
+				<div class="col-2">
+					<span>Group:</span>
+				</div>
+				<div class="col">
+					<span th:text="${schedule.group.name}">G-01</span>
+				</div>
+			</div>
+			<div class="row">
+				<div class="col-2">
+					<span>Professor:</span>
+				</div>
+				<div class="col">
+					<span th:text="${schedule.professor.fullName}">Some really long professor name that might not fit</span>
+				</div>
+			</div>
+
+			<hr class="my-3">
+
+			<h1>Rescheduling options:</h1>
+			<p th:text="|Week of ${weekOptions.weekDescription}|">For week</p>
+
+			<!-- Rescheduling options -->
+			<div>
+			<small class="text-muted">Click on the option below to reschedule</small>
+				<!--Header-->
+				<div class="schedule-row schedule-header shadow">
+
+					<div class="col-1">Period</div>
+					<div class="col" th:each="dayOption : ${weekOptions.dayOptions}">
+						<span th:text="*{dayOption.dayShortDescription[0]}">MON</span>
+						<small th:text="'(' + *{dayOption.dayShortDescription[1]} + ')'"
+						       class="text-muted">(09.07.20)</small>
+					</div>
+				</div>
+				<!--Body-->
+				<div class="schedule-container shadow rounded">
+
+					<!--Background week #-->
+					<div class="schedule-background">
+						<span class="col-1 d-flex justify-content-center">W</span>
+						<span class="col-1 d-flex justify-content-center">e</span>
+						<span class="col-1 d-flex justify-content-center">e</span>
+						<span class="col-1 d-flex justify-content-center">k</span>
+						<span th:text="${weekOptions.weekNumber}"
+						      class="col-1 d-flex justify-content-center pt-2">14</span>
+					</div>
+
+					<!-- Options -->
+					<div class="schedule-body">
+
+						<!-- Each Period -->
+						<div class="schedule-row" th:each="period : ${T(com.foxminded.timetable.model.Period).values()}">
+
+							<div class="schedule-period col-1">
+								<span th:text="*{period.getTime()}">8:15-9:45</span>
+							</div>
+
+							<!--Day-->
+							<div th:each="dayOptions : ${weekOptions.dayOptions}" class="schedule col px-1">
+								<div class="list-group"
+										th:each="dayPeriodOption : *{dayOptions.periodOptions.get(period)}">
+									<button type="button" class="list-group-item list-group-item-action" data-toggle="modal"
+									        data-target="#reschedule-modal" data-option-id="1"
+									        data-title="title: Jan 01, 2020, FIRST 08:15-09:45 period, A-03" data-date="2020-01-01"
+									        th:attr="data-option-id=*{dayPeriodOption.id},
+									        data-title=${dayOptions.dayDescription}
+									        + ', ' + ${period.toString()}
+													+ ', ' + *{dayPeriodOption.auditorium.name},
+													data-date=${dayOptions.date}">
+										<span th:text="*{dayPeriodOption.auditorium.name}">A-02</span>
+									</button>
+								</div>
+							</div>
+
+						</div>
+
+					</div>
+
+				</div>
+			</div>
+
+
+		</div>
+	</div>
+</div>
+
+<div th:replace="layout :: scripts"></div>
+
+</body>
+</html>

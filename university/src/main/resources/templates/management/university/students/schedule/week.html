@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head th:replace="layout :: header(~{::title})">
+	<title>Management: Students</title>
+</head>
+<body>
+
+<div th:replace="layout :: findReschedulingOptions"></div>
+
+<div th:replace="layout :: scheduleFormManagement"></div>
+
+<div th:replace="layout :: navbar"></div>
+
+<div class="container">
+	<div class="row align-items-center">
+		<div class="col">
+
+			<a href="#" th:href="@{/timetable/management/university/students}" class="btn btn-outline-secondary btn-sm mb-3">
+				<i class="fas fa-angle-left"></i>
+				Back
+			</a>
+
+			<h1 th:text="|Group ${group.name} schedule|">Group schedule</h1>
+			<h6 th:text="'Week of ' + ${weekSchedule.weekDescription}">For week ...</h6>
+			<p th:text="${weekSchedule.daySchedules.isEmpty()}? 'No classes!' : _" class="text-warning"></p>
+
+			<hr class="my-4">
+
+			<div class="mb-1">
+				<small class="text-muted">Hover over schedule items for additional options</small>
+			</div>
+
+			<div th:replace="layout :: weekSchedule"></div>
+
+		</div>
+	</div>
+</div>
+
+<div th:replace="layout :: scripts"></div>
+
+</body>
+</html>

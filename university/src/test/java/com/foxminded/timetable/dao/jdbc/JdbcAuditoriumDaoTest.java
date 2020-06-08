@@ -1,13 +1,8 @@
 package com.foxminded.timetable.dao.jdbc;
 
-import static org.assertj.core.api.Assertions.assertThat;
-
-import java.sql.ResultSet;
-import java.time.LocalDate;
-import java.util.Arrays;
-import java.util.List;
-import java.util.Optional;
-
+import com.foxminded.timetable.dao.AuditoriumDao;
+import com.foxminded.timetable.model.Auditorium;
+import com.foxminded.timetable.model.Period;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -18,9 +13,13 @@ import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
 import org.springframework.test.context.jdbc.Sql;
 import org.springframework.test.context.jdbc.SqlMergeMode;
 
-import com.foxminded.timetable.dao.AuditoriumDao;
-import com.foxminded.timetable.model.Auditorium;
-import com.foxminded.timetable.model.Period;
+import java.sql.ResultSet;
+import java.time.LocalDate;
+import java.util.Arrays;
+import java.util.List;
+import java.util.Optional;
+
+import static org.assertj.core.api.Assertions.assertThat;
 
 @JdbcTest
 @ComponentScan
@@ -28,20 +27,21 @@ import com.foxminded.timetable.model.Period;
 @SqlMergeMode(SqlMergeMode.MergeMode.MERGE)
 class JdbcAuditoriumDaoTest {
 
+    private final Auditorium                 auditoriumOne   = new Auditorium(
+            1L, "one");
+    private final Auditorium                 auditoriumTwo   = new Auditorium(
+            2L, "two");
+    private final Auditorium                 auditoriumThree = new Auditorium(
+            3L, "three");
+    private final List<Auditorium>           auditoriums     = Arrays.asList(
+            auditoriumOne, auditoriumTwo, auditoriumThree);
     @Autowired
-    private NamedParameterJdbcTemplate jdbc;
-
-    private AuditoriumDao auditoriumRepository;
-
-    private Auditorium auditoriumOne = new Auditorium(1L, "one");
-    private Auditorium auditoriumTwo = new Auditorium(2L, "two");
-    private Auditorium auditoriumThree = new Auditorium(3L, "three");
-
-    private List<Auditorium> auditoriums = Arrays.asList(auditoriumOne,
-            auditoriumTwo, auditoriumThree);
+    private       NamedParameterJdbcTemplate jdbc;
+    private       AuditoriumDao              auditoriumRepository;
 
     @BeforeEach
     private void setUp() {
+
         this.auditoriumRepository = new JdbcAuditoriumDao(jdbc);
     }
 
@@ -68,7 +68,7 @@ class JdbcAuditoriumDaoTest {
     @Sql("classpath:preload_sample_data_auditorium_test.sql")
     public void findAllAvailableShouldRetrieveCorrectListOfAvailableAuditoriums() {
 
-        List<Auditorium> actual = auditoriumRepository.findAllAvailable(false,
+        List<Auditorium> actual = auditoriumRepository.findAllAvailable(
                 LocalDate.of(2020, 9, 7), Period.SECOND);
 
         assertThat(actual).containsOnly(auditoriumOne, auditoriumTwo)
@@ -80,8 +80,8 @@ class JdbcAuditoriumDaoTest {
     public void findByIdShouldReturnCorrectAuditorium() {
 
         Auditorium expectedAuditorium = new Auditorium(3L, "three");
-        Optional<Auditorium> actualAuditorium = auditoriumRepository
-                .findById(3L);
+        Optional<Auditorium> actualAuditorium = auditoriumRepository.findById(
+                3L);
 
         assertThat(actualAuditorium).isNotEmpty().contains(expectedAuditorium);
     }
@@ -90,8 +90,8 @@ class JdbcAuditoriumDaoTest {
     @Sql("classpath:preload_sample_data_auditorium_test.sql")
     public void findByIdShouldReturnEmptyOptionalGivenNonExistingId() {
 
-        Optional<Auditorium> actualAuditorium = auditoriumRepository
-                .findById(999L);
+        Optional<Auditorium> actualAuditorium = auditoriumRepository.findById(
+                999L);
 
         assertThat(actualAuditorium).isEmpty();
     }
@@ -113,7 +113,7 @@ class JdbcAuditoriumDaoTest {
 
     @Test
     @Sql("classpath:preload_sample_data_auditorium_test.sql")
-    public void udpateShouldUpdateAuditoriumName() {
+    public void updateShouldUpdateAuditoriumName() {
 
         String newName = "new name";
         Auditorium expected = new Auditorium(auditoriumOne.getId(),
@@ -138,8 +138,9 @@ class JdbcAuditoriumDaoTest {
         auditoriumRepository.saveAll(auditoriums);
 
         String sql = "SELECT auditoriums.id, auditoriums.name FROM auditoriums";
-        List<Auditorium> actual = jdbc.query(sql, (ResultSet rs,
-                int rowNum) -> new Auditorium(rs.getLong(1), rs.getString(2)));
+        List<Auditorium> actual = jdbc.query(sql,
+                (ResultSet rs, int rowNum) -> new Auditorium(rs.getLong(1),
+                        rs.getString(2)));
 
         assertThat(actual).hasSameElementsAs(auditoriums);
     }

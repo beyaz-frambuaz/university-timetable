@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head th:replace="layout :: header(~{::title})">
+	<title>Management: Schedule</title>
+</head>
+<body>
+
+<div th:replace="layout :: findReschedulingOptions"></div>
+
+<div th:replace="layout :: scheduleFormManagement"></div>
+
+<div th:replace="layout :: navbar"></div>
+
+<div class="container">
+	<div class="row align-items-center">
+		<div class="col">
+
+			<h1>Entire schedule</h1>
+			<h6 th:text="'Month of ' + ${monthSchedule.monthDescription}">For week ...</h6>
+			<p th:text="${monthSchedule.weekSchedules.isEmpty()}? 'No classes!' : _" class="text-warning"></p>
+
+			<hr class="my-4">
+
+			<div th:replace="layout :: monthSchedule"></div>
+
+		</div>
+	</div>
+</div>
+
+<div th:replace="layout :: scripts"></div>
+
+</body>
+</html>

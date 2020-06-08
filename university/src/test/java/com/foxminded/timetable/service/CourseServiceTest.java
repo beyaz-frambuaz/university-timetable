@@ -1,36 +1,30 @@
 package com.foxminded.timetable.service;
 
-import static org.assertj.core.api.Assertions.assertThat;
-import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.ArgumentMatchers.anyList;
-import static org.mockito.ArgumentMatchers.anyLong;
-import static org.mockito.BDDMockito.given;
-import static org.mockito.BDDMockito.then;
-
-import java.util.Arrays;
-import java.util.Collections;
-import java.util.List;
-import java.util.Optional;
-
+import com.foxminded.timetable.dao.CourseDao;
+import com.foxminded.timetable.model.Course;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 
-import com.foxminded.timetable.dao.CourseDao;
-import com.foxminded.timetable.model.Course;
+import java.util.Collections;
+import java.util.List;
+import java.util.Optional;
+
+import static org.assertj.core.api.Assertions.assertThat;
+import static org.mockito.ArgumentMatchers.*;
+import static org.mockito.BDDMockito.given;
+import static org.mockito.BDDMockito.then;
 
 @ExtendWith(MockitoExtension.class)
 class CourseServiceTest {
 
+    private final Course        course = new Course(1L, "A-01");
     @Mock
-    private CourseDao repository;
-
+    private       CourseDao     repository;
     @InjectMocks
-    private CourseService service;
-
-    private Course course = new Course(1L, "A-01");
+    private       CourseService service;
 
     @Test
     public void countShouldDelegateToRepository() {
@@ -74,7 +68,7 @@ class CourseServiceTest {
     @Test
     public void saveAllShouldDelegateToRepository() {
 
-        List<Course> courses = Arrays.asList(course);
+        List<Course> courses = Collections.singletonList(course);
         given(repository.saveAll(anyList())).willReturn(courses);
 
         List<Course> actual = service.saveAll(courses);
@@ -97,7 +91,7 @@ class CourseServiceTest {
     @Test
     public void findAllShouldDelegateToRepository() {
 
-        List<Course> courses = Arrays.asList(course);
+        List<Course> courses = Collections.singletonList(course);
         given(repository.findAll()).willReturn(courses);
 
         List<Course> actual = service.findAll();
@@ -110,13 +104,13 @@ class CourseServiceTest {
     public void findByIdShouldDelegateToRepository() {
 
         long id = 1L;
-        given(repository.findById(anyLong()))
-                .willReturn(Optional.of(course));
+        Optional<Course> expected = Optional.of(course);
+        given(repository.findById(anyLong())).willReturn(expected);
 
         Optional<Course> actual = service.findById(id);
 
         then(repository).should().findById(id);
-        assertThat(actual).isPresent().contains(course);
+        assertThat(actual).isEqualTo(expected);
     }
 
 }

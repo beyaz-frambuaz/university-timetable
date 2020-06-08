@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head th:replace="layout :: header(~{::title})">
+	<title>Professor: Courses</title>
+</head>
+<body>
+
+<div th:replace="layout :: scheduleFormFilter"></div>
+
+<div th:replace="layout :: navbar"></div>
+
+<div class="container">
+	<div class="row align-items-center">
+		<div class="col">
+
+			<h1 th:text="${session.professor.getFullName()} + ' courses:'">Professor courses:</h1>
+
+			<hr class="my-3">
+			<p class="text-muted">Click on course name to view attendees</p>
+
+			<div class="accordion shadow" id="courseList">
+
+				<div th:each="courseAttendees : ${allCourseAttendees}">
+					<button class="list-group-item list-group-item-action btn" id="course1"
+					        th:id="'course' + *{courseAttendees.key.id}"
+					        type="button"
+					        data-toggle="collapse"
+					        data-target="#studentsCourse1"
+					        aria-controls="studentsCourse1"
+					        th:attr="data-target='#studentsCourse' + *{courseAttendees.key.id},
+					                 aria-controls='studentsCourse' + *{courseAttendees.key.id}">
+						<span th:text="*{courseAttendees.key.name}">Course</span>
+						<small th:text="'(' + *{courseAttendees.value.size()} + ' attendees)'" class="text-muted ml-4">(300
+							attendees)</small>
+					</button>
+
+					<div id="studentsCourse1" th:id="'studentsCourse' + *{courseAttendees.key.id}"
+					     class="collapse course-attendees-container list-group"
+					     aria-labelledby="course1" th:attr="aria-labelledby='course' + *{courseAttendees.key.id}"
+					     data-parent="#courseList">
+
+						<div class="schedule-row no-border my-2">
+
+							<div class="col-6" th:each="student : ${courseAttendees.value}">
+
+								<div class="list-group-item d-flex justify-content-between">
+									<div>
+										<span th:text="'ID: ' + *{student.id}" class="badge badge-pill badge-light">ID: 1</span>
+										<span th:text="*{student.fullName}" class="pl-2">Name One</span>
+									</div>
+									<div>
+										<span th:text="*{student.group.name}" class="badge badge-pill badge-secondary">G-01</span>
+									</div>
+								</div>
+
+							</div>
+
+						</div>
+
+					</div>
+				</div>
+
+			</div>
+
+		</div>
+	</div>
+</div>
+
+<div th:replace="layout :: scripts"></div>
+
+</body>
+</html>

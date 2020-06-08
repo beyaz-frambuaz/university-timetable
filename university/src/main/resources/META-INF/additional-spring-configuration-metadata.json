@@ -1,0 +1,48 @@
+{
+  "properties": [
+    {
+      "name": "file.courses",
+      "type": "java.lang.String",
+      "description": "Path to 'courses.txt'."
+    },
+    {
+      "name": "file.first.names",
+      "type": "java.lang.String",
+      "description": "Path to 'first_names.txt'."
+    },
+    {
+      "name": "file.last.names",
+      "type": "java.lang.String",
+      "description": "Path to 'last_names.txt'."
+    },
+    {
+      "name": "university.total.students",
+      "type": "java.lang.Integer",
+      "description": "Total number of students."
+    },
+    {
+      "name": "university.total.professors",
+      "type": "java.lang.Integer",
+      "description": "Total number of professors."
+    },
+    {
+      "name": "university.total.auditoriums",
+      "type": "java.lang.Integer",
+      "description": "Total number of auditoriums."
+    },
+    {
+      "name": "university.group.size",
+      "type": "java.lang.Integer",
+      "description": "Max students per group."
+    },
+    {
+      "name": "university.semester.start.date",
+      "type": "java.lang.String",
+      "description": "String representation of semester start date (YYYY-MM-DD)."
+    },
+    {
+      "name": "university.semester.end.date",
+      "type": "java.lang.String",
+      "description": "String representation of semester end date (YYYY-MM-DD)."
+    }
+]}

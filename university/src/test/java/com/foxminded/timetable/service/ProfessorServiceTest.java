@@ -1,40 +1,33 @@
 package com.foxminded.timetable.service;
 
-import static org.assertj.core.api.Assertions.assertThat;
-import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.ArgumentMatchers.anyBoolean;
-import static org.mockito.ArgumentMatchers.anyList;
-import static org.mockito.ArgumentMatchers.anyLong;
-import static org.mockito.BDDMockito.given;
-import static org.mockito.BDDMockito.then;
-
-import java.time.LocalDate;
-import java.util.Arrays;
-import java.util.Collections;
-import java.util.List;
-import java.util.Optional;
-
+import com.foxminded.timetable.dao.ProfessorDao;
+import com.foxminded.timetable.model.Course;
+import com.foxminded.timetable.model.Period;
+import com.foxminded.timetable.model.Professor;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 
-import com.foxminded.timetable.dao.ProfessorDao;
-import com.foxminded.timetable.model.Course;
-import com.foxminded.timetable.model.Period;
-import com.foxminded.timetable.model.Professor;
+import java.time.LocalDate;
+import java.util.Collections;
+import java.util.List;
+import java.util.Optional;
+
+import static org.assertj.core.api.Assertions.assertThat;
+import static org.mockito.ArgumentMatchers.*;
+import static org.mockito.BDDMockito.given;
+import static org.mockito.BDDMockito.then;
 
 @ExtendWith(MockitoExtension.class)
 class ProfessorServiceTest {
 
+    private final Professor        professor = new Professor(1L, "one", "one");
     @Mock
-    private ProfessorDao repository;
-
+    private       ProfessorDao     repository;
     @InjectMocks
-    private ProfessorService service;
-
-    private Professor professor = new Professor(1L, "one", "one");
+    private       ProfessorService service;
 
     @Test
     public void countShouldDelegateToRepository() {
@@ -73,12 +66,12 @@ class ProfessorServiceTest {
 
         then(repository).should().save(expected);
         then(repository).should()
-                .saveAllProfessorsCourses(Arrays.asList(expected));
+                .saveAllProfessorsCourses(Collections.singletonList(expected));
         assertThat(actual).isEqualTo(expected);
     }
 
     @Test
-    public void saveShouldUpdateProfessorInRepositoryIfExistingWithCourses() {
+    public void saveShouldUpdateProfessorInRepositoryIfExisting() {
 
         Course course = new Course(1L, "course");
         Professor expected = new Professor(1L, "one", "one");
@@ -93,18 +86,9 @@ class ProfessorServiceTest {
     }
 
     @Test
-    public void saveShouldReturnWithoutUpdateIfExistingWithNoCourses() {
-
-        Professor actual = service.save(professor);
-
-        then(repository).shouldHaveNoMoreInteractions();
-        assertThat(actual).isEqualTo(professor);
-    }
-
-    @Test
     public void saveAllShouldDelegateToRepository() {
 
-        List<Professor> professors = Arrays.asList(professor);
+        List<Professor> professors = Collections.singletonList(professor);
         given(repository.saveAll(anyList())).willReturn(professors);
 
         List<Professor> actual = service.saveAll(professors);
@@ -127,7 +111,7 @@ class ProfessorServiceTest {
     @Test
     public void findAllShouldDelegateToRepository() {
 
-        List<Professor> professors = Arrays.asList(professor);
+        List<Professor> professors = Collections.singletonList(professor);
         given(repository.findAll()).willReturn(professors);
 
         List<Professor> actual = service.findAll();
@@ -140,29 +124,27 @@ class ProfessorServiceTest {
     public void findByIdShouldDelegateToRepository() {
 
         long id = 1L;
-        given(repository.findById(anyLong()))
-                .willReturn(Optional.of(professor));
+        Optional<Professor> expected = Optional.of(professor);
+        given(repository.findById(anyLong())).willReturn(expected);
 
         Optional<Professor> actual = service.findById(id);
 
         then(repository).should().findById(id);
-        assertThat(actual).isPresent().contains(professor);
+        assertThat(actual).isEqualTo(expected);
     }
 
     @Test
     public void findAvailableForShouldDelegateToRepository() {
 
-        List<Professor> professors = Arrays.asList(professor);
-        boolean weekParity = false;
+        List<Professor> professors = Collections.singletonList(professor);
         LocalDate date = LocalDate.MAX;
         Period period = Period.FIRST;
-        given(repository.findAllAvailable(anyBoolean(), any(LocalDate.class),
+        given(repository.findAllAvailable(any(LocalDate.class),
                 any(Period.class))).willReturn(professors);
 
-        List<Professor> actual = service.findAvailableFor(weekParity, date,
-                period);
+        List<Professor> actual = service.findAvailableFor(date, period);
 
-        then(repository).should().findAllAvailable(weekParity, date, period);
+        then(repository).should().findAllAvailable(date, period);
         assertThat(actual).isEqualTo(professors);
     }
 

@@ -1,16 +1,14 @@
 package com.foxminded.timetable.service;
 
-import java.util.List;
-import java.util.Optional;
-
-import org.springframework.stereotype.Service;
-
 import com.foxminded.timetable.dao.StudentDao;
 import com.foxminded.timetable.model.Group;
 import com.foxminded.timetable.model.Student;
-
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.stereotype.Service;
+
+import java.util.List;
+import java.util.Optional;
 
 @Slf4j
 @Service
@@ -20,6 +18,7 @@ public class StudentService {
     private final StudentDao repository;
 
     public long count() {
+
         log.debug("Fetching student count from repository");
         return repository.count();
     }
@@ -54,16 +53,19 @@ public class StudentService {
     }
 
     public List<Student> findAll() {
+
         log.debug("Fetching students from repository");
         return repository.findAll();
     }
 
     public List<Student> findAllInGroups(List<Group> groups) {
+
         log.debug("Fetching students by groups from repository");
         return repository.findAllInGroups(groups);
     }
 
     public Optional<Student> findById(long id) {
+
         log.debug("Fetching student ID{} from repository", id);
         return repository.findById(id);
     }

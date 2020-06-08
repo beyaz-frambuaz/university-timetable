@@ -1,13 +1,7 @@
 package com.foxminded.timetable.dao.jdbc;
 
-import static org.assertj.core.api.Assertions.assertThat;
-
-import java.sql.ResultSet;
-import java.time.DayOfWeek;
-import java.util.Arrays;
-import java.util.List;
-import java.util.Optional;
-
+import com.foxminded.timetable.dao.ScheduleTemplateDao;
+import com.foxminded.timetable.model.*;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -18,13 +12,13 @@ import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
 import org.springframework.test.context.jdbc.Sql;
 import org.springframework.test.context.jdbc.SqlMergeMode;
 
-import com.foxminded.timetable.dao.ScheduleTemplateDao;
-import com.foxminded.timetable.model.Auditorium;
-import com.foxminded.timetable.model.Course;
-import com.foxminded.timetable.model.Group;
-import com.foxminded.timetable.model.Period;
-import com.foxminded.timetable.model.Professor;
-import com.foxminded.timetable.model.ScheduleTemplate;
+import java.sql.ResultSet;
+import java.time.DayOfWeek;
+import java.util.Arrays;
+import java.util.List;
+import java.util.Optional;
+
+import static org.assertj.core.api.Assertions.assertThat;
 
 @JdbcTest
 @ComponentScan
@@ -32,41 +26,52 @@ import com.foxminded.timetable.model.ScheduleTemplate;
 @SqlMergeMode(SqlMergeMode.MergeMode.MERGE)
 class JdbcScheduleTemplateDaoTest {
 
+    private final Auditorium                 auditorium    = new Auditorium(1L,
+            "one");
+    private final Auditorium                 auditoriumNew = new Auditorium(2L,
+            "new");
+    private final Course                     course        = new Course(1L,
+            "one");
+    private final Group                      group         = new Group(1L,
+            "one");
+    private final Professor                  professor     = new Professor(1L,
+            "one", "one");
+    private final ScheduleTemplate           templateOne   =
+            new ScheduleTemplate(
+            1L, false, DayOfWeek.MONDAY, Period.FIRST, auditorium, course,
+            group, professor);
+    private final ScheduleTemplate           templateTwo   =
+            new ScheduleTemplate(
+            2L, true, DayOfWeek.MONDAY, Period.SECOND, auditorium, course,
+            group, professor);
+    private final List<ScheduleTemplate>     templates     = Arrays.asList(
+            templateOne, templateTwo);
+    private final String                     findSql       =
+            "SELECT schedule_templates.id, "
+                    + "schedule_templates.week_parity, schedule_templates.day, "
+                    + "schedule_templates.period, schedule_templates"
+                    + ".auditorium_id, "
+                    + "auditoriums.name, schedule_templates.course_id, "
+                    + "courses.name, schedule_templates.group_id, groups.name, "
+                    + "schedule_templates.professor_id, professors.first_name, "
+                    + "professors.last_name FROM schedule_templates "
+                    + "LEFT JOIN auditoriums ON schedule_templates"
+                    + ".auditorium_id = "
+                    + "auditoriums.id "
+                    + "LEFT JOIN courses ON schedule_templates.course_id = "
+                    + "courses.id "
+                    + "LEFT JOIN groups ON schedule_templates.group_id = "
+                    + "groups.id "
+                    + "LEFT JOIN professors ON schedule_templates"
+                    + ".professor_id = "
+                    + "professors.id";
     @Autowired
-    private NamedParameterJdbcTemplate jdbc;
-
-    private ScheduleTemplateDao templateRepository;
-
-    private Auditorium auditorium = new Auditorium(1L, "one");
-    private Auditorium auditoriumNew = new Auditorium(2L, "new");
-    private Course course = new Course(1L, "one");
-    private Group group = new Group(1L, "one");
-    private Professor professor = new Professor(1L, "one", "one");
-
-    private ScheduleTemplate templateOne = new ScheduleTemplate(1L, false,
-            DayOfWeek.MONDAY, Period.FIRST, auditorium, course, group,
-            professor);
-    private ScheduleTemplate templateTwo = new ScheduleTemplate(2L, true,
-            DayOfWeek.MONDAY, Period.SECOND, auditorium, course, group,
-            professor);
-
-    private List<ScheduleTemplate> templates = Arrays.asList(templateOne,
-            templateTwo);
-
-    private String findSql = "SELECT schedule_templates.id, "
-            + "schedule_templates.week_parity, schedule_templates.day, "
-            + "schedule_templates.period, schedule_templates.auditorium_id, "
-            + "auditoriums.name, schedule_templates.course_id, "
-            + "courses.name, schedule_templates.group_id, groups.name, "
-            + "schedule_templates.professor_id, professors.first_name, "
-            + "professors.last_name FROM schedule_templates "
-            + "LEFT JOIN auditoriums ON schedule_templates.auditorium_id = auditoriums.id "
-            + "LEFT JOIN courses ON schedule_templates.course_id = courses.id "
-            + "LEFT JOIN groups ON schedule_templates.group_id = groups.id "
-            + "LEFT JOIN professors ON schedule_templates.professor_id = professors.id";
+    private       NamedParameterJdbcTemplate jdbc;
+    private       ScheduleTemplateDao        templateRepository;
 
     @BeforeEach
     private void setUp() {
+
         this.templateRepository = new JdbcScheduleTemplateDao(jdbc);
     }
 
@@ -94,8 +99,8 @@ class JdbcScheduleTemplateDaoTest {
     public void findAllByDateShouldRetrieveCorrectListOfTemplates() {
 
         boolean weekParity = false;
-        List<ScheduleTemplate> actual = templateRepository
-                .findAllByDate(weekParity, DayOfWeek.MONDAY);
+        List<ScheduleTemplate> actual = templateRepository.findAllByDate(
+                weekParity, DayOfWeek.MONDAY);
 
         assertThat(actual).containsOnly(templateOne)
                 .doesNotContain(templateTwo);
@@ -106,8 +111,8 @@ class JdbcScheduleTemplateDaoTest {
     public void findByIdShouldReturnCorrectTemplate() {
 
         ScheduleTemplate expectedTemplate = templateTwo;
-        Optional<ScheduleTemplate> actualTemplate = templateRepository
-                .findById(templateTwo.getId());
+        Optional<ScheduleTemplate> actualTemplate = templateRepository.findById(
+                templateTwo.getId());
 
         assertThat(actualTemplate).isNotEmpty().contains(expectedTemplate);
     }
@@ -116,8 +121,8 @@ class JdbcScheduleTemplateDaoTest {
     @Sql("classpath:preload_sample_data_schedule_template_test.sql")
     public void findByIdShouldReturnEmptyOptionalGivenNonExistingId() {
 
-        Optional<ScheduleTemplate> actualTemplate = templateRepository
-                .findById(999L);
+        Optional<ScheduleTemplate> actualTemplate = templateRepository.findById(
+                999L);
 
         assertThat(actualTemplate).isEmpty();
     }
