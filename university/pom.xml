@@ -8,13 +8,14 @@
     <groupId>org.springframework.boot</groupId>
     <artifactId>spring-boot-starter-parent</artifactId>
     <version>2.2.6.RELEASE</version>
-    <relativePath /> 
+    <relativePath />
   </parent>
 
   <groupId>taras-shablii</groupId>
   <artifactId>university-timetable</artifactId>
   <version>0.0.1-SNAPSHOT</version>
   <name>university-timetable</name>
+  <packaging>war</packaging>
   <description>Timetable management tool for university</description>
 
   <properties>
@@ -65,9 +66,15 @@
       <groupId>org.springframework.boot</groupId>
       <artifactId>spring-boot-starter-thymeleaf</artifactId>
     </dependency>
+    <dependency>
+      <groupId>org.springframework.boot</groupId>
+      <artifactId>spring-boot-starter-tomcat</artifactId>
+      <scope>provided</scope>
+    </dependency>
   </dependencies>
 
   <build>
+    <finalName>${project.artifactId}</finalName>
     <plugins>
       <plugin>
         <groupId>org.springframework.boot</groupId>

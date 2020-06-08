@@ -8,4 +8,8 @@
 - ### Task 13 - Exceptions and Logging
       [x] Add custom exceptions and logging. Use slf4j + logback
 - ### Task 14 - User Interface-1
-      [ ] Create status pages (read data from DB - show it in HTML). Use Spring MVC and Thymeleaf, Bootstrap. 
+      [x] Create status pages (read data from DB - show it in HTML). Use Spring MVC and Thymeleaf, Bootstrap. 
+- ### Task 15 - User Interface-2
+      [x] Create full CRUD pages for models that were used in the previous task.
+- ### Task 16 - Data Source
+      [ ] Create DataSource in web-project configuration files. Switch DAO layer to lookup DataSource by JNDI name.
