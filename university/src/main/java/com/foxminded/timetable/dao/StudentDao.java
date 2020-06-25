@@ -9,8 +9,4 @@ public interface StudentDao extends GenericDao<Student> {
 
     List<Student> findAllInGroups(List<Group> groups);
 
-    Student save(Student student);
-
-    Student update(Student student);
-
 }

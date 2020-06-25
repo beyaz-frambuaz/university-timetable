@@ -26,14 +26,14 @@ import java.util.stream.Collectors;
 public class ScheduleFormatter {
 
     private final SemesterCalendar semesterCalendar;
-    private final TimetableFacade  timetableFacade;
+    private final TimetableFacade timetableFacade;
 
     public DaySchedule prepareDaySchedule(SchedulePredicate predicate,
             LocalDate date, boolean filtered) {
 
         String dayDescription = semesterCalendar.getDayDescription(date);
-        String[] dayShortDescription = semesterCalendar.getDayShortDescription(
-                date);
+        String[] dayShortDescription =
+                semesterCalendar.getDayShortDescription(date);
 
         List<Schedule> schedule;
         if (filtered) {
@@ -58,12 +58,12 @@ public class ScheduleFormatter {
         long daysBetweenDates = ChronoUnit.DAYS.between(monday, friday) + 1;
         for (long i = 0; i < daysBetweenDates; i++) {
 
-            DaySchedule daySchedule = prepareDaySchedule(predicate,
-                    monday.plusDays(i), filtered);
+            DaySchedule daySchedule =
+                    prepareDaySchedule(predicate, monday.plusDays(i), filtered);
             daySchedules.add(daySchedule);
         }
-        String weekDescription = semesterCalendar.getWeekDescription(
-                anyWeekDate);
+        String weekDescription =
+                semesterCalendar.getWeekDescription(anyWeekDate);
         int weekNumber = semesterCalendar.getSemesterWeekNumber(anyWeekDate);
 
         return new WeekSchedule(daySchedules, weekDescription, weekNumber);
@@ -72,21 +72,21 @@ public class ScheduleFormatter {
     public MonthSchedule prepareMonthSchedule(SchedulePredicate predicate,
             LocalDate anyMonthDate, boolean filtered) {
 
-        String monthDescription = semesterCalendar.getMonthDescription(
-                anyMonthDate);
+        String monthDescription =
+                semesterCalendar.getMonthDescription(anyMonthDate);
 
-        LocalDate firstOfMonth = semesterCalendar.getFirstSemesterDayOfMonth(
-                anyMonthDate);
-        LocalDate lastOfMonth = semesterCalendar.getLastSemesterDayOfMonth(
-                anyMonthDate);
+        LocalDate firstOfMonth =
+                semesterCalendar.getFirstSemesterDayOfMonth(anyMonthDate);
+        LocalDate lastOfMonth =
+                semesterCalendar.getLastSemesterDayOfMonth(anyMonthDate);
         List<WeekSchedule> weekSchedules = new ArrayList<>();
         int weekNumber = semesterCalendar.getSemesterWeekNumber(firstOfMonth);
         int lastMonthWeek = semesterCalendar.getSemesterWeekNumber(lastOfMonth);
         for (; weekNumber <= lastMonthWeek; weekNumber++) {
 
             LocalDate monday = semesterCalendar.getWeekMonday(weekNumber);
-            WeekSchedule weekSchedule = prepareWeekSchedule(predicate, monday,
-                    filtered);
+            WeekSchedule weekSchedule =
+                    prepareWeekSchedule(predicate, monday, filtered);
             weekSchedules.add(weekSchedule);
         }
 
@@ -97,10 +97,10 @@ public class ScheduleFormatter {
 
         List<ScheduleTemplate> twoWeekTemplates =
                 timetableFacade.getTwoWeekSchedule();
-        Map<Period, List<ScheduleTemplate>> oddWeek = formatTemplatesIntoWeek(
-                twoWeekTemplates, false);
-        Map<Period, List<ScheduleTemplate>> evenWeek = formatTemplatesIntoWeek(
-                twoWeekTemplates, true);
+        Map<Period, List<ScheduleTemplate>> oddWeek =
+                formatTemplatesIntoWeek(twoWeekTemplates, false);
+        Map<Period, List<ScheduleTemplate>> evenWeek =
+                formatTemplatesIntoWeek(twoWeekTemplates, true);
 
         return new TwoWeekSchedule(oddWeek, evenWeek);
     }
@@ -108,12 +108,10 @@ public class ScheduleFormatter {
     private Map<Period, List<Schedule>> convertToPeriodDaySchedule(
             List<Schedule> schedule) {
 
-        return schedule.stream().sorted().collect(
-                Collectors.groupingBy(Schedule::getPeriod, LinkedHashMap::new,
-                        Collectors.toList())).entrySet().stream().sorted(
-                Map.Entry.comparingByKey()).collect(
-                Collectors.toMap(Map.Entry::getKey, Map.Entry::getValue,
-                        (e1, e2) -> e1, LinkedHashMap::new));
+        return schedule.stream()
+                .sorted()
+                .collect(Collectors.groupingBy(Schedule::getPeriod,
+                        LinkedHashMap::new, Collectors.toList()));
     }
 
     private Map<Period, List<ScheduleTemplate>> formatTemplatesIntoWeek(
@@ -123,13 +121,7 @@ public class ScheduleFormatter {
                 .filter(t -> t.getWeekParity() == weekParity)
                 .sorted()
                 .collect(Collectors.groupingBy(ScheduleTemplate::getPeriod,
-                        LinkedHashMap::new, Collectors.toList()))
-                .entrySet()
-                .stream()
-                .sorted(Map.Entry.comparingByKey())
-                .collect(
-                        Collectors.toMap(Map.Entry::getKey, Map.Entry::getValue,
-                                (e1, e2) -> e1, LinkedHashMap::new));
+                        LinkedHashMap::new, Collectors.toList()));
     }
 
 }

@@ -1,7 +1,6 @@
 package com.foxminded.timetable.service;
 
 import com.foxminded.timetable.dao.ProfessorDao;
-import com.foxminded.timetable.model.Course;
 import com.foxminded.timetable.model.Period;
 import com.foxminded.timetable.model.Professor;
 import org.junit.jupiter.api.Test;
@@ -42,7 +41,7 @@ class ProfessorServiceTest {
     }
 
     @Test
-    public void saveShouldAddProfessorToRepositoryIfNewAndNotAddCoursesIfMissing() {
+    public void saveShouldDelegateToRepository() {
 
         Professor expected = new Professor("new", "new");
         given(repository.save(any(Professor.class))).willReturn(expected);
@@ -50,38 +49,6 @@ class ProfessorServiceTest {
         Professor actual = service.save(expected);
 
         then(repository).should().save(expected);
-        then(repository).shouldHaveNoMoreInteractions();
-        assertThat(actual).isEqualTo(expected);
-    }
-
-    @Test
-    public void saveShouldAddProfessorToRepositoryIfNewAndAddCourses() {
-
-        Course course = new Course(1L, "course");
-        Professor expected = new Professor("new", "new");
-        expected.addCourse(course);
-        given(repository.save(any(Professor.class))).willReturn(expected);
-
-        Professor actual = service.save(expected);
-
-        then(repository).should().save(expected);
-        then(repository).should()
-                .saveAllProfessorsCourses(Collections.singletonList(expected));
-        assertThat(actual).isEqualTo(expected);
-    }
-
-    @Test
-    public void saveShouldUpdateProfessorInRepositoryIfExisting() {
-
-        Course course = new Course(1L, "course");
-        Professor expected = new Professor(1L, "one", "one");
-        expected.addCourse(course);
-        given(repository.update(any(Professor.class))).willReturn(expected);
-
-        Professor actual = service.save(expected);
-
-        then(repository).should().update(expected);
-        then(repository).shouldHaveNoMoreInteractions();
         assertThat(actual).isEqualTo(expected);
     }
 

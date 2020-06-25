@@ -10,10 +10,10 @@ import java.time.format.FormatStyle;
 public class ScheduleForm {
 
     private ScheduleOption scheduleOption;
-    private String         date;
-    private LocalDate      localDate;
-    private boolean        filtered;
-    private long           id;
+    private String date;
+    private LocalDate localDate;
+    private boolean filtered;
+    private long id;
 
     public String getDateDescription() {
 

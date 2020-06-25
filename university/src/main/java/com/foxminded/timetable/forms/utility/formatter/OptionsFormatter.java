@@ -2,14 +2,15 @@ package com.foxminded.timetable.forms.utility.formatter;
 
 import com.foxminded.timetable.forms.utility.DayOptions;
 import com.foxminded.timetable.forms.utility.WeekOptions;
-import com.foxminded.timetable.model.*;
-import com.foxminded.timetable.service.utility.SemesterCalendar;
+import com.foxminded.timetable.model.Period;
+import com.foxminded.timetable.model.ReschedulingOption;
+import com.foxminded.timetable.model.Schedule;
 import com.foxminded.timetable.service.TimetableFacade;
+import com.foxminded.timetable.service.utility.SemesterCalendar;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
 
 import java.time.LocalDate;
-import java.time.temporal.ChronoUnit;
 import java.util.ArrayList;
 import java.util.LinkedHashMap;
 import java.util.List;
@@ -21,30 +22,39 @@ import java.util.stream.Collectors;
 public class OptionsFormatter {
 
     private final SemesterCalendar semesterCalendar;
-    private final TimetableFacade  timetableFacade;
+    private final TimetableFacade timetableFacade;
 
-    public WeekOptions prepareWeekOptions(Schedule schedule, LocalDate monday,
-            LocalDate friday) {
+    public WeekOptions prepareWeekOptions(Schedule schedule, int weekNumber) {
 
-        Map<LocalDate, List<ReschedulingOption>> optionsFor =
-                timetableFacade.getOptionsFor(schedule, monday,
-                        friday);
+        List<ReschedulingOption> options =
+                timetableFacade.getOptionsForWeek(schedule, weekNumber);
+
         List<DayOptions> dayOptions = new ArrayList<>();
-        long daysBetweenDates = ChronoUnit.DAYS.between(monday, friday) + 1;
-        for (long i = 0; i < daysBetweenDates; i++) {
+        LocalDate monday = semesterCalendar.getWeekMonday(weekNumber);
+        for (long i = 0; i < 5; i++) {
 
-            DayOptions options = prepareDayOptions(monday.plusDays(i),
-                    optionsFor.get(monday.plusDays(i)));
-            dayOptions.add(options);
+            LocalDate weekDate = monday.plusDays(i);
+            DayOptions dayOption = convertToDayOptions(options.stream()
+                    .filter(option -> option.getDay()
+                            == weekDate.getDayOfWeek())
+                    .collect(Collectors.toList()), weekDate);
+            dayOptions.add(dayOption);
         }
         String weekDescription = semesterCalendar.getWeekDescription(monday);
-        int weekNumber = semesterCalendar.getSemesterWeekNumber(monday);
 
         return new WeekOptions(dayOptions, weekDescription, weekNumber);
     }
 
-    private DayOptions prepareDayOptions(LocalDate date,
-            List<ReschedulingOption> options) {
+    public DayOptions prepareDayOptions(Schedule schedule, LocalDate date) {
+
+        List<ReschedulingOption> options =
+                timetableFacade.getOptionsForDate(schedule, date);
+
+        return convertToDayOptions(options, date);
+    }
+
+    private DayOptions convertToDayOptions(List<ReschedulingOption> options,
+            LocalDate date) {
 
         String dayDescription = semesterCalendar.getDayDescription(date);
         String[] dayShortDescription =
@@ -63,13 +73,7 @@ public class OptionsFormatter {
         return options.stream()
                 .sorted()
                 .collect(Collectors.groupingBy(ReschedulingOption::getPeriod,
-                        LinkedHashMap::new, Collectors.toList()))
-                .entrySet()
-                .stream()
-                .sorted(Map.Entry.comparingByKey())
-                .collect(
-                        Collectors.toMap(Map.Entry::getKey, Map.Entry::getValue,
-                                (e1, e2) -> e1, LinkedHashMap::new));
+                        LinkedHashMap::new, Collectors.toList()));
     }
 
 }

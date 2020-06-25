@@ -1,15 +1,14 @@
 package com.foxminded.timetable.service.model.generator;
 
+import com.foxminded.timetable.dao.DataEraseDao;
 import com.foxminded.timetable.model.*;
 import com.foxminded.timetable.service.TimetableFacade;
-import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.mock.mockito.SpyBean;
-import org.springframework.test.annotation.DirtiesContext;
-import org.springframework.test.annotation.DirtiesContext.MethodMode;
 
+import javax.transaction.Transactional;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
@@ -17,7 +16,6 @@ import java.util.function.Function;
 
 import static java.util.stream.Collectors.*;
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.assertj.core.api.Assertions.assertThatIllegalArgumentException;
 import static org.mockito.ArgumentMatchers.anyList;
 import static org.mockito.BDDMockito.then;
 import static org.mockito.Mockito.atLeastOnce;
@@ -30,10 +28,14 @@ class UniversityModelGeneratorTest {
 
     @Autowired
     private UniversityModelGenerator universityModelGenerator;
+    @Autowired
+    private DataEraseDao             dataEraseDao;
 
     @Test
-    @DirtiesContext(methodMode = MethodMode.AFTER_METHOD)
+    @Transactional
     public void generateAndSaveShouldSaveGeneratedDataToRepository() {
+
+        dataEraseDao.eraseAllData();
 
         universityModelGenerator.generateAndSave();
 
@@ -71,18 +73,19 @@ class UniversityModelGeneratorTest {
     @Test
     public void modelShouldContainCorrectListOfCourses() {
 
-        List<String> expected = Arrays.asList("Scientology",
-                "Procrastination101", "Demagoguery", "Dark Magic",
-                "Defense Against Dark Magic",
-                "Dark Magic Against Defense Against Dark Magic",
-                "Theoretical Camel Tracking", "Applied Polyandry",
-                "DB Sanitation'); DROP TABLE students; --",
-                "Modern Sand Castle Architecture");
+        List<String> expected =
+                Arrays.asList("Scientology", "Procrastination101",
+                        "Demagoguery", "Dark Magic",
+                        "Defense Against Dark Magic",
+                        "Dark Magic Against Defense Against Dark Magic",
+                        "Theoretical Camel Tracking", "Applied Polyandry",
+                        "DB Sanitation'); DROP TABLE students; --",
+                        "Modern Sand Castle Architecture");
 
         List<Course> actual = timetableFacade.getCourses();
 
-        assertThat(actual).extracting(Course::getName).hasSameElementsAs(
-                expected);
+        assertThat(actual).extracting(Course::getName)
+                .hasSameElementsAs(expected);
     }
 
     @Test
@@ -92,8 +95,8 @@ class UniversityModelGeneratorTest {
 
         List<Group> actual = timetableFacade.getGroups();
 
-        assertThat(actual).extracting(Group::getName).allMatch(
-                name -> name.matches(groupNamePattern));
+        assertThat(actual).extracting(Group::getName)
+                .allMatch(name -> name.matches(groupNamePattern));
     }
 
     @Test
@@ -103,58 +106,62 @@ class UniversityModelGeneratorTest {
 
         List<Auditorium> actual = timetableFacade.getAuditoriums();
 
-        assertThat(actual).extracting(Auditorium::getName).allMatch(
-                name -> name.matches(auditoriumNamePattern));
+        assertThat(actual).extracting(Auditorium::getName)
+                .allMatch(name -> name.matches(auditoriumNamePattern));
     }
 
     @Test
     public void modelShouldContainStudentsCombinedFromNamesFiles() {
 
-        List<String> expectedFirstNames = Arrays.asList("Sumu-abum",
-                "Hammurabi", "Ishbibal", "Shushushi", "Peshgaldaramesh",
-                "Ayadaragalama", "Melamkurkurra", "Karaindash",
-                "Marduk-apla-iddina", "Nebuchadnezzar", "Nabu-shum-libur",
-                "Baba-aha-iddina", "Nabonassar", "Shalmaneser", "Sennacherib",
-                "Esarhaddon", "Ashurbanipal", "Sinsharishkun", "Nabopolassar",
-                "Darius");
-        List<String> expectedLastNames = Arrays.asList("the I", "the II",
-                "the III", "the Great", "the Majestic", "the Tall",
-                "the Gracious", "the Wise", "the Wisdomous", "the Kind",
-                "the Fast", "the Powerful", "the Sneaky", "the Preposterous",
-                "Strangelove", "Sandlicker", "Nosepicker", "Footsticker",
-                "Buttspanker", "Eyetwitcher");
+        List<String> expectedFirstNames =
+                Arrays.asList("Sumu-abum", "Hammurabi", "Ishbibal", "Shushushi",
+                        "Peshgaldaramesh", "Ayadaragalama", "Melamkurkurra",
+                        "Karaindash", "Marduk-apla-iddina", "Nebuchadnezzar",
+                        "Nabu-shum-libur", "Baba-aha-iddina", "Nabonassar",
+                        "Shalmaneser", "Sennacherib", "Esarhaddon",
+                        "Ashurbanipal", "Sinsharishkun", "Nabopolassar",
+                        "Darius");
+        List<String> expectedLastNames =
+                Arrays.asList("the I", "the II", "the III", "the Great",
+                        "the Majestic", "the Tall", "the Gracious", "the Wise",
+                        "the Wisdomous", "the Kind", "the Fast", "the Powerful",
+                        "the Sneaky", "the Preposterous", "Strangelove",
+                        "Sandlicker", "Nosepicker", "Footsticker",
+                        "Buttspanker", "Eyetwitcher");
 
         List<Student> actual = timetableFacade.getStudents();
 
-        assertThat(actual).extracting(Student::getFirstName).isSubsetOf(
-                expectedFirstNames);
-        assertThat(actual).extracting(Student::getLastName).isSubsetOf(
-                expectedLastNames);
+        assertThat(actual).extracting(Student::getFirstName)
+                .isSubsetOf(expectedFirstNames);
+        assertThat(actual).extracting(Student::getLastName)
+                .isSubsetOf(expectedLastNames);
     }
 
     @Test
     public void modelShouldContainProfessorsCombinedFromNamesFiles() {
 
-        List<String> expectedFirstNames = Arrays.asList("Sumu-abum",
-                "Hammurabi", "Ishbibal", "Shushushi", "Peshgaldaramesh",
-                "Ayadaragalama", "Melamkurkurra", "Karaindash",
-                "Marduk-apla-iddina", "Nebuchadnezzar", "Nabu-shum-libur",
-                "Baba-aha-iddina", "Nabonassar", "Shalmaneser", "Sennacherib",
-                "Esarhaddon", "Ashurbanipal", "Sinsharishkun", "Nabopolassar",
-                "Darius");
-        List<String> expectedLastNames = Arrays.asList("the I", "the II",
-                "the III", "the Great", "the Majestic", "the Tall",
-                "the Gracious", "the Wise", "the Wisdomous", "the Kind",
-                "the Fast", "the Powerful", "the Sneaky", "the Preposterous",
-                "Strangelove", "Sandlicker", "Nosepicker", "Footsticker",
-                "Buttspanker", "Eyetwitcher");
+        List<String> expectedFirstNames =
+                Arrays.asList("Sumu-abum", "Hammurabi", "Ishbibal", "Shushushi",
+                        "Peshgaldaramesh", "Ayadaragalama", "Melamkurkurra",
+                        "Karaindash", "Marduk-apla-iddina", "Nebuchadnezzar",
+                        "Nabu-shum-libur", "Baba-aha-iddina", "Nabonassar",
+                        "Shalmaneser", "Sennacherib", "Esarhaddon",
+                        "Ashurbanipal", "Sinsharishkun", "Nabopolassar",
+                        "Darius");
+        List<String> expectedLastNames =
+                Arrays.asList("the I", "the II", "the III", "the Great",
+                        "the Majestic", "the Tall", "the Gracious", "the Wise",
+                        "the Wisdomous", "the Kind", "the Fast", "the Powerful",
+                        "the Sneaky", "the Preposterous", "Strangelove",
+                        "Sandlicker", "Nosepicker", "Footsticker",
+                        "Buttspanker", "Eyetwitcher");
 
         List<Professor> actual = timetableFacade.getProfessors();
 
-        assertThat(actual).extracting(Professor::getFirstName).isSubsetOf(
-                expectedFirstNames);
-        assertThat(actual).extracting(Professor::getLastName).isSubsetOf(
-                expectedLastNames);
+        assertThat(actual).extracting(Professor::getFirstName)
+                .isSubsetOf(expectedFirstNames);
+        assertThat(actual).extracting(Professor::getLastName)
+                .isSubsetOf(expectedLastNames);
     }
 
     @Test
@@ -182,18 +189,18 @@ class UniversityModelGeneratorTest {
 
         List<Professor> actual = timetableFacade.getProfessors();
 
-        assertThat(actual).extracting(Professor::getCourses).allMatch(
-                professorCourses -> !professorCourses.isEmpty()
+        assertThat(actual).extracting(Professor::getCourses)
+                .allMatch(professorCourses -> !professorCourses.isEmpty()
                         && professorCourses.size() <= 4);
     }
 
     @Test
     public void eachCourseShouldHaveOneToTwoProfessors() {
 
-        Map<Course, Long> coursesAssignments =
-                timetableFacade.getProfessors().stream().flatMap(
-                        professor -> professor.getCourses().stream()).collect(
-                        groupingBy(Function.identity(), counting()));
+        Map<Course, Long> coursesAssignments = timetableFacade.getProfessors()
+                .stream()
+                .flatMap(professor -> professor.getCourses().stream())
+                .collect(groupingBy(Function.identity(), counting()));
 
         assertThat(coursesAssignments.values()).allMatch(
                 courseAssignment -> courseAssignment >= 1
@@ -212,50 +219,6 @@ class UniversityModelGeneratorTest {
                 .collect(toList());
 
         assertThat(actual).hasSameElementsAs(expected);
-    }
-
-    @Nested
-    public class InputFileValidationTest {
-
-        @Test
-        public void shouldThrowIllegalArgumentExceptionGivenWrongFilePath() {
-
-            String wrongFilePath = "nonexistingFile.txt";
-            universityModelGenerator.setCoursesFilePath(wrongFilePath);
-            universityModelGenerator.setFirstNamesFilePath(wrongFilePath);
-            universityModelGenerator.setLastNamesFilePath(wrongFilePath);
-
-            assertThatIllegalArgumentException().isThrownBy(
-                    () -> universityModelGenerator.generateAndSave())
-                    .withMessage("Unable to locate nonexistingFile.txt");
-        }
-
-        @Test
-        public void shouldThrowIllegalArgumentExceptionGivenWrongNonTxtFile() {
-
-            String wrongFile = "wrong_file.log";
-            universityModelGenerator.setCoursesFilePath(wrongFile);
-            universityModelGenerator.setFirstNamesFilePath(wrongFile);
-            universityModelGenerator.setLastNamesFilePath(wrongFile);
-
-            assertThatIllegalArgumentException().isThrownBy(
-                    () -> universityModelGenerator.generateAndSave())
-                    .withMessage("wrong_file.log is not a *.txt file");
-        }
-
-        @Test
-        public void shouldThrowIllegalArgumentExceptionGivenEmptyFile() {
-
-            String emptyFile = "empty.txt";
-            universityModelGenerator.setCoursesFilePath(emptyFile);
-            universityModelGenerator.setFirstNamesFilePath(emptyFile);
-            universityModelGenerator.setLastNamesFilePath(emptyFile);
-
-            assertThatIllegalArgumentException().isThrownBy(
-                    () -> universityModelGenerator.generateAndSave())
-                    .withMessage("empty.txt appears to be empty");
-        }
-
     }
 
 }

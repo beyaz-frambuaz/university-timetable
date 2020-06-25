@@ -11,10 +11,6 @@ public interface ScheduleDao extends GenericDao<Schedule> {
 
     List<Schedule> findAllByTemplateId(long templateId);
 
-    void updateAllWithTemplateId(Schedule schedule, int deltaDays);
-
-    Schedule save(Schedule schedule);
-
-    Schedule update(Schedule schedule);
+    List<Schedule> findAllInRange(LocalDate startDate, LocalDate endDate);
 
 }

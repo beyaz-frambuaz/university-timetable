@@ -8,6 +8,6 @@ import java.util.List;
 public class MonthSchedule {
 
     private final List<WeekSchedule> weekSchedules;
-    private final String             monthDescription;
+    private final String monthDescription;
 
 }

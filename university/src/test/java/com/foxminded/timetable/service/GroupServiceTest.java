@@ -43,7 +43,7 @@ class GroupServiceTest {
     }
 
     @Test
-    public void saveShouldAddGroupToRepositoryIfNew() {
+    public void saveShouldDelegateToRepository() {
 
         Group expected = new Group("A-04");
         given(repository.save(any(Group.class))).willReturn(expected);
@@ -51,20 +51,6 @@ class GroupServiceTest {
         Group actual = service.save(expected);
 
         then(repository).should().save(expected);
-        then(repository).shouldHaveNoMoreInteractions();
-        assertThat(actual).isEqualTo(expected);
-    }
-
-    @Test
-    public void saveShouldUpdateGroupInRepositoryIfExisting() {
-
-        Group expected = new Group(4L, "A-04");
-        given(repository.update(any(Group.class))).willReturn(expected);
-
-        Group actual = service.save(expected);
-
-        then(repository).should().update(expected);
-        then(repository).shouldHaveNoMoreInteractions();
         assertThat(actual).isEqualTo(expected);
     }
 
@@ -116,8 +102,8 @@ class GroupServiceTest {
         given(repository.findAllByProfessorAndCourse(anyLong(),
                 anyLong())).willReturn(groups);
 
-        List<Group> actual = service.findAllAttendingProfessorCourse(course,
-                professor);
+        List<Group> actual =
+                service.findAllAttendingProfessorCourse(course, professor);
 
         then(repository).should()
                 .findAllByProfessorAndCourse(professorId, courseId);

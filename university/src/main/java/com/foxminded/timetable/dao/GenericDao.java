@@ -13,4 +13,6 @@ public interface GenericDao<T> {
 
     List<T> saveAll(List<T> entities);
 
+    T save(T entity);
+
 }

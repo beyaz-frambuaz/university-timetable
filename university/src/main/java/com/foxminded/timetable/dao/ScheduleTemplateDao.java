@@ -7,10 +7,8 @@ import java.util.List;
 
 public interface ScheduleTemplateDao extends GenericDao<ScheduleTemplate> {
 
-    List<ScheduleTemplate> findAllByDate(boolean weekParity, DayOfWeek day);
+    List<ScheduleTemplate> findAllByDay(boolean weekParity, DayOfWeek day);
 
-    ScheduleTemplate save(ScheduleTemplate template);
-
-    ScheduleTemplate update(ScheduleTemplate template);
+    List<ScheduleTemplate> findAllByWeek(boolean weekParity);
 
 }

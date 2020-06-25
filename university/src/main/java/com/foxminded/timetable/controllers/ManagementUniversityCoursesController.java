@@ -31,7 +31,7 @@ import java.util.Optional;
 public class ManagementUniversityCoursesController {
 
     private final ScheduleFormatter scheduleFormatter;
-    private final TimetableFacade   timetableFacade;
+    private final TimetableFacade timetableFacade;
 
     @GetMapping("/")
     public String courses(Model model,
@@ -60,8 +60,8 @@ public class ManagementUniversityCoursesController {
             @ModelAttribute("scheduleForm") ScheduleForm scheduleForm,
             RedirectAttributes redirectAttributes) {
 
-        Optional<Course> optionalCourse = timetableFacade.getCourse(
-                scheduleForm.getId());
+        Optional<Course> optionalCourse =
+                timetableFacade.getCourse(scheduleForm.getId());
         if (!optionalCourse.isPresent()) {
             log.error("Course with ID({}) no found", scheduleForm.getId());
             redirectAttributes.addFlashAttribute("errorAlert",
@@ -125,8 +125,8 @@ public class ManagementUniversityCoursesController {
     public String rename(RedirectAttributes redirectAttributes,
             @ModelAttribute("renameForm") RenameForm renameForm) {
 
-        Optional<Course> optionalCourse = timetableFacade.getCourse(
-                renameForm.getRenameId());
+        Optional<Course> optionalCourse =
+                timetableFacade.getCourse(renameForm.getRenameId());
         if (!optionalCourse.isPresent()) {
             log.error("Course with ID({}) no found", renameForm.getRenameId());
             redirectAttributes.addFlashAttribute("errorAlert",

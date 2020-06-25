@@ -1,15 +1,15 @@
 package com.foxminded.timetable.controllers;
 
+import com.foxminded.timetable.exceptions.SessionExpiredException;
+import com.foxminded.timetable.forms.ScheduleForm;
 import com.foxminded.timetable.forms.utility.DaySchedule;
 import com.foxminded.timetable.forms.utility.MonthSchedule;
 import com.foxminded.timetable.forms.utility.TwoWeekSchedule;
 import com.foxminded.timetable.forms.utility.WeekSchedule;
-import com.foxminded.timetable.model.*;
+import com.foxminded.timetable.forms.utility.formatter.ScheduleFormatter;
+import com.foxminded.timetable.model.Student;
 import com.foxminded.timetable.service.TimetableFacade;
 import com.foxminded.timetable.service.utility.predicates.SchedulePredicateGroupId;
-import com.foxminded.timetable.exceptions.SessionExpiredException;
-import com.foxminded.timetable.forms.utility.formatter.ScheduleFormatter;
-import com.foxminded.timetable.forms.ScheduleForm;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Controller;
@@ -28,7 +28,7 @@ import java.util.Optional;
 @RequestMapping("/timetable/students")
 public class StudentController {
 
-    private final TimetableFacade   timetableFacade;
+    private final TimetableFacade timetableFacade;
     private final ScheduleFormatter scheduleFormatter;
 
     @GetMapping("/list")
@@ -51,8 +51,7 @@ public class StudentController {
     public String selectStudent(@RequestParam("studentId") long studentId,
             HttpSession session, RedirectAttributes redirectAttributes) {
 
-        Optional<Student> student =
-                timetableFacade.getStudent(studentId);
+        Optional<Student> student = timetableFacade.getStudent(studentId);
         if (!student.isPresent()) {
             log.error("Student with ID({}) not found", studentId);
             redirectAttributes.addFlashAttribute("errorAlert",

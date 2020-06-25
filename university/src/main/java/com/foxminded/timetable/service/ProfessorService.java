@@ -8,7 +8,6 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDate;
-import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
 
@@ -27,27 +26,14 @@ public class ProfessorService {
 
     public Professor save(Professor professor) {
 
-        if (professor.getId() == null) {
-            log.debug("Adding new professor {}", professor);
-            repository.save(professor);
-
-            if (!professor.getCourses().isEmpty()) {
-                log.debug("Adding professor's courses");
-                repository.saveAllProfessorsCourses(
-                        Collections.singletonList(professor));
-            }
-
-            return professor;
-        }
-
-        log.debug("Updating professor {}", professor);
-        return repository.update(professor);
+        log.debug("Saving professor {}", professor);
+        return repository.save(professor);
     }
 
     public List<Professor> saveAll(List<Professor> professors) {
 
         if (professors.isEmpty()) {
-            log.debug("Recieved empty list, not saving");
+            log.debug("Received empty list, not saving");
             return professors;
         }
 

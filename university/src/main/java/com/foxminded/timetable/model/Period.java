@@ -10,10 +10,10 @@ public enum Period {
     FOURTH(LocalTime.of(14, 15), LocalTime.of(15, 45)),
     FIFTH(LocalTime.of(16, 0), LocalTime.of(17, 30));
 
-    private final LocalTime         begins;
-    private final LocalTime         ends;
-    private final DateTimeFormatter formatter = DateTimeFormatter.ofPattern(
-            "HH:mm");
+    private final LocalTime begins;
+    private final LocalTime ends;
+    private final DateTimeFormatter formatter =
+            DateTimeFormatter.ofPattern("HH:mm");
 
     Period(LocalTime begins, LocalTime ends) {
 

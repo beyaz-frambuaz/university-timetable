@@ -8,8 +8,4 @@ public interface GroupDao extends GenericDao<Group> {
 
     List<Group> findAllByProfessorAndCourse(long professorId, long courseId);
 
-    Group save(Group group);
-
-    Group update(Group group);
-
 }

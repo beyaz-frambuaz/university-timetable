@@ -3,9 +3,10 @@ package com.foxminded.timetable.service;
 import com.foxminded.timetable.dao.ScheduleDao;
 import com.foxminded.timetable.dao.ScheduleTemplateDao;
 import com.foxminded.timetable.model.*;
+import com.foxminded.timetable.service.utility.SemesterCalendar;
 import com.foxminded.timetable.service.utility.predicates.SchedulePredicate;
 import com.foxminded.timetable.service.utility.predicates.SchedulePredicateGroupId;
-import com.foxminded.timetable.service.utility.SemesterCalendar;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
@@ -29,19 +30,16 @@ import static org.mockito.Mockito.mock;
 @ExtendWith(MockitoExtension.class)
 class ScheduleServiceTest {
 
-    private final Long                  id         = 1L;
-    private final Long                  templateId = 1L;
-    private final LocalDate             date       = LocalDate.of(2020, 1, 1);
-    private final DayOfWeek             day        = DayOfWeek.MONDAY;
-    private final Period                period     = Period.FIRST;
-    private final Auditorium            auditorium = new Auditorium(1L, "A-01");
-    private final Course                course     = new Course(1L, "course");
-    private final Group                 group      = new Group(1L, "G-01");
-    private final Professor             professor  = new Professor(1L, "one",
-            "one");
-    private final Schedule              schedule   = new Schedule(id,
-            templateId, date, day, period, auditorium, course, group,
-            professor);
+    private final Long             id         = 1L;
+    private final LocalDate        date       = LocalDate.of(2020, 6, 1);
+    private final DayOfWeek        day        = DayOfWeek.MONDAY;
+    private final Period           period     = Period.FIRST;
+    private final Auditorium       auditorium = new Auditorium(1L, "A-01");
+    private final Course           course     = new Course(1L, "course");
+    private final Group            group      = new Group(1L, "G-01");
+    private final Professor        professor  = new Professor(1L, "one", "one");
+    private       Schedule         schedule;
+
     @Mock
     private ScheduleDao         repository;
     @Mock
@@ -49,43 +47,26 @@ class ScheduleServiceTest {
     @Mock
     private ScheduleTemplateDao templateRepository;
     @InjectMocks
-    private       ScheduleService       service;
+    private ScheduleService     service;
 
-    @Test
-    public void countShouldDelegateToRepository() {
+    @BeforeEach
+    private void createSchedule() {
 
-        given(repository.count()).willReturn(id);
-
-        long actual = repository.count();
-
-        then(repository).should().count();
-        assertThat(actual).isEqualTo(id);
-
+        ScheduleTemplate template =
+                new ScheduleTemplate(id, false, day, period, auditorium, course,
+                        group, professor);
+        this.schedule = new Schedule(template, date);
+        this.schedule.setId(id);
     }
 
     @Test
-    public void saveShouldAddScheduleToRepositoryIfNew() {
+    public void saveShouldDelegateToRepository() {
 
-        Schedule expected = new Schedule(null, templateId, date, day, period,
-                auditorium, course, group, professor);
-        given(repository.save(any(Schedule.class))).willReturn(expected);
-
-        Schedule actual = service.save(expected);
-
-        then(repository).should().save(expected);
-        then(repository).shouldHaveNoMoreInteractions();
-        assertThat(actual).isEqualTo(expected);
-    }
-
-    @Test
-    public void saveShouldUpdateScheduleInRepositoryIfExisting() {
-
-        given(repository.update(any(Schedule.class))).willReturn(schedule);
+        given(repository.save(any(Schedule.class))).willReturn(schedule);
 
         Schedule actual = service.save(schedule);
 
-        then(repository).should().update(schedule);
-        then(repository).shouldHaveNoMoreInteractions();
+        then(repository).should().save(schedule);
         assertThat(actual).isEqualTo(schedule);
     }
 
@@ -113,14 +94,44 @@ class ScheduleServiceTest {
     }
 
     @Test
-    public void updateAllShouldCalculateDateShiftAndUpdateAllWithTemplateIdInRepository() {
+    public void updateAllWithSameTemplateIdShouldRequestAllByTemplateIdFromRepositoryAndUpdateEach() {
 
-        LocalDate newDate = LocalDate.of(2020, 1, 5);
-        int deltaDays = 4;
+        Schedule candidate = new Schedule(schedule);
+        long dateShift = 3L;
+        LocalDate targetDate = date.plusDays(dateShift);
+        DayOfWeek newDay = targetDate.getDayOfWeek();
+        Period newPeriod = Period.FIFTH;
+        Auditorium newAuditorium = new Auditorium("new");
+        candidate.setDay(newDay);
+        candidate.setPeriod(newPeriod);
+        candidate.setAuditorium(newAuditorium);
 
-        service.updateAll(schedule, newDate);
+        Schedule scheduleOne = schedule;
+        Schedule scheduleTwo = new Schedule(schedule);
+        scheduleTwo.setDate(LocalDate.of(2020, 6, 15));
+        List<Schedule> beforeUpdate = Arrays.asList(scheduleOne, scheduleTwo);
+        given(repository.findAllByTemplateId(anyLong())).willReturn(
+                beforeUpdate);
 
-        then(repository).should().updateAllWithTemplateId(schedule, deltaDays);
+        Schedule updatedOne = new Schedule(scheduleOne);
+        updatedOne.setDate(updatedOne.getDate().plusDays(dateShift));
+        updatedOne.setDay(newDay);
+        updatedOne.setPeriod(newPeriod);
+        updatedOne.setAuditorium(newAuditorium);
+
+        Schedule updatedTwo = new Schedule(scheduleTwo);
+        updatedTwo.setDate(updatedTwo.getDate().plusDays(dateShift));
+        updatedTwo.setDay(newDay);
+        updatedTwo.setPeriod(newPeriod);
+        updatedTwo.setAuditorium(newAuditorium);
+
+        List<Schedule> expected = Arrays.asList(updatedOne, updatedTwo);
+
+        List<Schedule> actual =
+                service.updateAllWithSameTemplateId(candidate, targetDate);
+
+        assertThat(actual).isEqualTo(expected);
+        then(repository).should().findAllByTemplateId(id);
     }
 
     @Test
@@ -148,6 +159,19 @@ class ScheduleServiceTest {
     }
 
     @Test
+    public void findAllGeneratedInRangeShouldDelegateToRepository() {
+
+        List<Schedule> expected = Collections.singletonList(schedule);
+        given(repository.findAllInRange(any(LocalDate.class),
+                any(LocalDate.class))).willReturn(expected);
+
+        List<Schedule> actual = service.findGeneratedInRange(date, date);
+
+        then(repository).should().findAllInRange(date, date);
+        assertThat(actual).isEqualTo(expected);
+    }
+
+    @Test
     public void findAllForShouldFindAllInRangeAndFilterByGivenPredicate() {
 
         Schedule expected = mock(Schedule.class);
@@ -170,19 +194,19 @@ class ScheduleServiceTest {
 
         LocalDate startDate = date;
         given(semesterCalendar.isSemesterDate(startDate)).willReturn(true);
-        LocalDate middleDate = LocalDate.of(2020, 1, 2);
+        LocalDate middleDate = LocalDate.of(2020, 6, 2);
         given(semesterCalendar.isSemesterDate(middleDate)).willReturn(false);
-        LocalDate endDate = LocalDate.of(2020, 1, 3);
+        LocalDate endDate = LocalDate.of(2020, 6, 3);
         given(semesterCalendar.isSemesterDate(endDate)).willReturn(true);
 
-        Schedule dateSchedule = mock(Schedule.class);
-        List<Schedule> dayOneSchedules = Collections.singletonList(
-                dateSchedule);
+        Schedule startDateSchedule = mock(Schedule.class);
+        List<Schedule> dayOneSchedules =
+                Collections.singletonList(startDateSchedule);
         given(repository.findAllByDate(startDate)).willReturn(dayOneSchedules);
 
         Schedule endDateSchedule = mock(Schedule.class);
-        List<Schedule> dayTwoSchedules = Collections.singletonList(
-                endDateSchedule);
+        List<Schedule> dayTwoSchedules =
+                Collections.singletonList(endDateSchedule);
         given(repository.findAllByDate(endDate)).willReturn(dayTwoSchedules);
 
         List<Schedule> actual = service.findAllInRange(startDate, endDate);
@@ -190,19 +214,7 @@ class ScheduleServiceTest {
         then(repository).should().findAllByDate(startDate);
         then(repository).should().findAllByDate(endDate);
         then(repository).shouldHaveNoMoreInteractions();
-        assertThat(actual).containsExactly(dateSchedule, endDateSchedule);
-    }
-
-    @Test
-    public void findAllByTemplateIdShouldDelegateToRepository() {
-
-        List<Schedule> schedules = Collections.singletonList(schedule);
-        given(repository.findAllByTemplateId(anyLong())).willReturn(schedules);
-
-        List<Schedule> actual = service.findAllByTemplateId(templateId);
-
-        then(repository).should().findAllByTemplateId(templateId);
-        assertThat(actual).isEqualTo(schedules);
+        assertThat(actual).containsExactly(startDateSchedule, endDateSchedule);
     }
 
     @Test
@@ -217,7 +229,7 @@ class ScheduleServiceTest {
                 any(LocalDate.class))).willReturn(false);
         given(repository.findAllByDate(any(LocalDate.class))).willReturn(
                 Collections.emptyList());
-        given(templateRepository.findAllByDate(anyBoolean(),
+        given(templateRepository.findAllByDay(anyBoolean(),
                 any(DayOfWeek.class))).willReturn(Collections.emptyList());
         given(repository.saveAll(anyList())).willReturn(
                 Collections.emptyList());
@@ -227,7 +239,7 @@ class ScheduleServiceTest {
         then(repository).should(atLeastOnce())
                 .findAllByDate(any(LocalDate.class));
         then(templateRepository).should(atLeastOnce())
-                .findAllByDate(anyBoolean(), any(DayOfWeek.class));
+                .findAllByDay(anyBoolean(), any(DayOfWeek.class));
         then(repository).should(atLeastOnce()).saveAll(anyList());
     }
 

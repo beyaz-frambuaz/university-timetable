@@ -4,8 +4,8 @@ import com.foxminded.timetable.dao.ScheduleDao;
 import com.foxminded.timetable.dao.ScheduleTemplateDao;
 import com.foxminded.timetable.model.Schedule;
 import com.foxminded.timetable.model.ScheduleTemplate;
-import com.foxminded.timetable.service.utility.predicates.SchedulePredicate;
 import com.foxminded.timetable.service.utility.SemesterCalendar;
+import com.foxminded.timetable.service.utility.predicates.SchedulePredicate;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
@@ -24,19 +24,14 @@ import static java.util.stream.Collectors.toList;
 @RequiredArgsConstructor
 public class ScheduleService {
 
-    private final SemesterCalendar    semesterCalendar;
+    private final SemesterCalendar semesterCalendar;
     private final ScheduleTemplateDao templateRepository;
-    private final ScheduleDao         repository;
+    private final ScheduleDao repository;
 
     public Schedule save(Schedule schedule) {
 
-        if (schedule.getId() == null) {
-            log.debug("Adding new schedule {}", schedule);
-            return repository.save(schedule);
-        }
-        log.debug("Updating schedule {}", schedule);
-        return repository.update(schedule);
-
+        log.debug("Saving schedule {}", schedule);
+        return repository.save(schedule);
     }
 
     public List<Schedule> saveAll(List<Schedule> schedules) {
@@ -50,13 +45,29 @@ public class ScheduleService {
         return repository.saveAll(schedules);
     }
 
-    public void updateAll(Schedule candidate, LocalDate targetDate) {
+    public List<Schedule> updateAllWithSameTemplateId(Schedule candidate,
+            LocalDate targetDate) {
 
-        log.debug("Calling repository to update all schedules linked to "
-                + "template ID({})", candidate.getTemplateId());
-        int deltaDays =
-                (int) ChronoUnit.DAYS.between(candidate.getDate(), targetDate);
-        repository.updateAllWithTemplateId(candidate, deltaDays);
+        List<Schedule> allByTemplateId =
+                findAllByTemplateId(candidate.getTemplate().getId());
+        long deltaDays =
+                ChronoUnit.DAYS.between(candidate.getDate(), targetDate);
+
+        for (Schedule schedule : allByTemplateId) {
+            schedule.setDate(schedule.getDate().plusDays(deltaDays));
+            schedule.setDay(candidate.getDay());
+            schedule.setPeriod(candidate.getPeriod());
+            schedule.setAuditorium(candidate.getAuditorium());
+        }
+
+        return allByTemplateId;
+    }
+
+    private List<Schedule> findAllByTemplateId(long templateId) {
+
+        log.debug("Fetching all schedules linked to template ID({}) from "
+                + "repository", templateId);
+        return repository.findAllByTemplateId(templateId);
     }
 
     public Optional<Schedule> findById(long id) {
@@ -71,11 +82,10 @@ public class ScheduleService {
         return repository.findAll();
     }
 
-    public List<Schedule> findAllByTemplateId(long templateId) {
+    public List<Schedule> findGeneratedInRange(LocalDate startDate,
+            LocalDate endDate) {
 
-        log.debug("Fetching all schedules linked to template ID({}) from "
-                + "repository", templateId);
-        return repository.findAllByTemplateId(templateId);
+        return repository.findAllInRange(startDate, endDate);
     }
 
     public List<Schedule> findAllFor(SchedulePredicate predicate,
@@ -123,13 +133,12 @@ public class ScheduleService {
         boolean weekParity = semesterCalendar.getWeekParityOf(date);
         DayOfWeek day = date.getDayOfWeek();
         List<ScheduleTemplate> dateTemplates =
-                templateRepository.findAllByDate(weekParity, day);
+                templateRepository.findAllByDay(weekParity, day);
         List<Schedule> dateSchedules = dateTemplates.stream()
                 .map(template -> new Schedule(template, date))
                 .collect(toList());
 
-        repository.saveAll(dateSchedules);
-        return repository.findAllByDate(date);
+        return repository.saveAll(dateSchedules);
     }
 
 }

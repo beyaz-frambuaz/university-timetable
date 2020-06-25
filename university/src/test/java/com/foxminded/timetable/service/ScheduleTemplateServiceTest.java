@@ -25,14 +25,15 @@ class ScheduleTemplateServiceTest {
     private final boolean                 weekParity = false;
     private final DayOfWeek               day        = DayOfWeek.MONDAY;
     private final Period                  period     = Period.FIRST;
-    private final Auditorium              auditorium = new Auditorium(1L,
-            "A-01");
+    private final Auditorium              auditorium =
+            new Auditorium(1L, "A-01");
     private final Course                  course     = new Course(1L, "course");
     private final Group                   group      = new Group(1L, "G-01");
-    private final Professor               professor  = new Professor(1L, "one",
-            "one");
-    private final ScheduleTemplate        template   = new ScheduleTemplate(id,
-            weekParity, day, period, auditorium, course, group, professor);
+    private final Professor               professor  =
+            new Professor(1L, "one", "one");
+    private final ScheduleTemplate        template   =
+            new ScheduleTemplate(id, weekParity, day, period, auditorium,
+                    course, group, professor);
     @Mock
     private       ScheduleTemplateDao     repository;
     @InjectMocks
@@ -52,31 +53,18 @@ class ScheduleTemplateServiceTest {
     }
 
     @Test
-    public void saveShouldAddScheduleTemplateToRepositoryIfNew() {
+    public void saveShouldDelegateToRepository() {
 
-        ScheduleTemplate expected = new ScheduleTemplate(weekParity, day,
-                period, auditorium, course, group, professor);
+        ScheduleTemplate expected =
+                new ScheduleTemplate(weekParity, day, period, auditorium,
+                        course, group, professor);
         given(repository.save(any(ScheduleTemplate.class))).willReturn(
                 expected);
 
         ScheduleTemplate actual = service.save(expected);
 
         then(repository).should().save(expected);
-        then(repository).shouldHaveNoMoreInteractions();
         assertThat(actual).isEqualTo(expected);
-    }
-
-    @Test
-    public void saveShouldUpdateScheduleTemplateInRepositoryIfExisting() {
-
-        given(repository.update(any(ScheduleTemplate.class))).willReturn(
-                template);
-
-        ScheduleTemplate actual = service.save(template);
-
-        then(repository).should().update(template);
-        then(repository).shouldHaveNoMoreInteractions();
-        assertThat(actual).isEqualTo(template);
     }
 
     @Test
@@ -124,6 +112,32 @@ class ScheduleTemplateServiceTest {
         Optional<ScheduleTemplate> actual = service.findById(id);
 
         then(repository).should().findById(id);
+        assertThat(actual).isEqualTo(expected);
+    }
+
+    @Test
+    public void findAllForWeekShouldDelegateToRepository() {
+
+        List<ScheduleTemplate> expected = Collections.singletonList(template);
+        given(repository.findAllByWeek(anyBoolean())).willReturn(expected);
+
+        List<ScheduleTemplate> actual = service.findAllForWeek(true);
+
+        then(repository).should().findAllByWeek(true);
+        assertThat(actual).isEqualTo(expected);
+    }
+
+    @Test
+    public void findAllForDayShouldDelegateToRepository() {
+
+        List<ScheduleTemplate> expected = Collections.singletonList(template);
+        DayOfWeek day = DayOfWeek.MONDAY;
+        given(repository.findAllByDay(anyBoolean(),
+                any(DayOfWeek.class))).willReturn(expected);
+
+        List<ScheduleTemplate> actual = service.findAllForDay(true, day);
+
+        then(repository).should().findAllByDay(true, day);
         assertThat(actual).isEqualTo(expected);
     }
 

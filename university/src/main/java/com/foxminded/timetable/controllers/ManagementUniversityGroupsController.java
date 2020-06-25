@@ -32,7 +32,7 @@ import java.util.stream.Collectors;
 public class ManagementUniversityGroupsController {
 
     private final ScheduleFormatter scheduleFormatter;
-    private final TimetableFacade   timetableFacade;
+    private final TimetableFacade timetableFacade;
 
     @GetMapping("/")
     public String groups(Model model,
@@ -46,16 +46,16 @@ public class ManagementUniversityGroupsController {
 
         Map<Group, List<Student>> groupedStudents =
                 timetableFacade.getStudents()
-                .stream()
-                .sorted(Comparator.comparing(Student::getId))
-                .collect(Collectors.groupingBy(Student::getGroup,
-                        LinkedHashMap::new, Collectors.toList()))
-                .entrySet()
-                .stream()
-                .sorted(Map.Entry.comparingByKey())
-                .collect(
-                        Collectors.toMap(Map.Entry::getKey, Map.Entry::getValue,
-                                (e1, e2) -> e1, LinkedHashMap::new));
+                        .stream()
+                        .sorted(Comparator.comparing(Student::getId))
+                        .collect(Collectors.groupingBy(Student::getGroup,
+                                LinkedHashMap::new, Collectors.toList()))
+                        .entrySet()
+                        .stream()
+                        .sorted(Map.Entry.comparingByKey())
+                        .collect(Collectors.toMap(Map.Entry::getKey,
+                                Map.Entry::getValue, (e1, e2) -> e1,
+                                LinkedHashMap::new));
         model.addAttribute("groupedStudents", groupedStudents);
 
         RenameForm renameForm = new RenameForm();
@@ -72,8 +72,8 @@ public class ManagementUniversityGroupsController {
             @ModelAttribute("scheduleForm") ScheduleForm scheduleForm,
             RedirectAttributes redirectAttributes) {
 
-        Optional<Group> optionalGroup = timetableFacade.getGroup(
-                scheduleForm.getId());
+        Optional<Group> optionalGroup =
+                timetableFacade.getGroup(scheduleForm.getId());
         if (!optionalGroup.isPresent()) {
             log.error("Group with ID({}) no found", scheduleForm.getId());
             redirectAttributes.addFlashAttribute("errorAlert",
@@ -100,8 +100,9 @@ public class ManagementUniversityGroupsController {
             case WEEK:
                 WeekSchedule weekSchedule =
                         scheduleFormatter.prepareWeekSchedule(
-                        new SchedulePredicateGroupId(scheduleForm.getId()),
-                        date, scheduleForm.isFiltered());
+                                new SchedulePredicateGroupId(
+                                        scheduleForm.getId()), date,
+                                scheduleForm.isFiltered());
                 model.addAttribute("weekSchedule", weekSchedule);
 
                 return "management/university/groups/schedule/week";
@@ -109,8 +110,9 @@ public class ManagementUniversityGroupsController {
             case MONTH:
                 MonthSchedule monthSchedule =
                         scheduleFormatter.prepareMonthSchedule(
-                        new SchedulePredicateGroupId(scheduleForm.getId()),
-                        date, scheduleForm.isFiltered());
+                                new SchedulePredicateGroupId(
+                                        scheduleForm.getId()), date,
+                                scheduleForm.isFiltered());
                 model.addAttribute("monthSchedule", monthSchedule);
 
                 return "management/university/groups/schedule/month";
@@ -135,8 +137,8 @@ public class ManagementUniversityGroupsController {
     public String rename(RedirectAttributes redirectAttributes,
             @ModelAttribute("renameForm") RenameForm renameForm) {
 
-        Optional<Group> optionalGroup = timetableFacade.getGroup(
-                renameForm.getRenameId());
+        Optional<Group> optionalGroup =
+                timetableFacade.getGroup(renameForm.getRenameId());
         if (!optionalGroup.isPresent()) {
             log.error("Group with ID({}) no found", renameForm.getRenameId());
             redirectAttributes.addFlashAttribute("errorAlert",

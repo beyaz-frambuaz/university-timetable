@@ -24,19 +24,14 @@ public class CourseService {
 
     public Course save(Course course) {
 
-        if (course.getId() == null) {
-            log.debug("Adding new course {}", course);
-            return repository.save(course);
-        }
-        log.debug("Updating course {}", course);
-        return repository.update(course);
-
+        log.debug("Saving course {}", course);
+        return repository.save(course);
     }
 
     public List<Course> saveAll(List<Course> courses) {
 
         if (courses.isEmpty()) {
-            log.debug("Recieved empty list, not saving");
+            log.debug("Received empty list, not saving");
             return courses;
         }
 

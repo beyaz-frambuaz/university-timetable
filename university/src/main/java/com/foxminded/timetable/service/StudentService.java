@@ -27,13 +27,8 @@ public class StudentService {
 
         if (student.getGroup() != null) {
 
-            if (student.getId() == null) {
-                log.debug("Adding new student {}", student);
-                return repository.save(student);
-            }
-
-            log.debug("Updating student {}", student);
-            return repository.update(student);
+            log.debug("Saving student {}", student);
+            return repository.save(student);
         }
 
         log.debug("Not saved: student {} has no group", student);
@@ -44,7 +39,7 @@ public class StudentService {
     public List<Student> saveAll(List<Student> students) {
 
         if (students.isEmpty()) {
-            log.debug("Recieved empty list, not saving");
+            log.debug("Received empty list, not saving");
             return students;
         }
 

@@ -4,8 +4,6 @@ import com.foxminded.timetable.dao.ReschedulingOptionDao;
 import com.foxminded.timetable.model.Auditorium;
 import com.foxminded.timetable.model.Period;
 import com.foxminded.timetable.model.ReschedulingOption;
-import com.foxminded.timetable.model.Schedule;
-import com.foxminded.timetable.service.utility.SemesterCalendar;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
@@ -13,17 +11,14 @@ import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 
 import java.time.DayOfWeek;
-import java.time.LocalDate;
 import java.util.Collections;
 import java.util.List;
-import java.util.Map;
 import java.util.Optional;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.ArgumentMatchers.*;
 import static org.mockito.BDDMockito.given;
 import static org.mockito.BDDMockito.then;
-import static org.mockito.Mockito.mock;
 
 @ExtendWith(MockitoExtension.class)
 class ReschedulingOptionServiceTest {
@@ -33,8 +28,6 @@ class ReschedulingOptionServiceTest {
                     new Auditorium("A-01"));
     @Mock
     private       ReschedulingOptionDao     repository;
-    @Mock
-    private       SemesterCalendar          semesterCalendar;
     @InjectMocks
     private       ReschedulingOptionService service;
 
@@ -100,53 +93,17 @@ class ReschedulingOptionServiceTest {
     }
 
     @Test
-    public void findAllForShouldMapRepositoryOptionsToEachSemesterDateInRange() {
+    public void findAllForDayShouldDelegateToRepository() {
 
-        LocalDate from = LocalDate.of(2020, 1, 1);
-        LocalDate until = LocalDate.of(2020, 1, 3);
-        given(semesterCalendar.isSemesterDate(any(LocalDate.class))).willReturn(
-                true);
-        given(semesterCalendar.getWeekParityOf(
-                any(LocalDate.class))).willReturn(false);
-        Schedule schedule = mock(Schedule.class);
-        List<ReschedulingOption> optionsOne = Collections.emptyList();
-        given(repository.findDayReschedulingOptionsForSchedule(false, from,
-                schedule)).willReturn(optionsOne);
-        List<ReschedulingOption> optionsTwo = Collections.emptyList();
-        given(repository.findDayReschedulingOptionsForSchedule(false,
-                from.plusDays(1L), schedule)).willReturn(optionsTwo);
-        List<ReschedulingOption> optionsThree = Collections.emptyList();
-        given(repository.findDayReschedulingOptionsForSchedule(false,
-                from.plusDays(2L), schedule)).willReturn(optionsThree);
+        List<ReschedulingOption> expected = Collections.singletonList(option);
+        DayOfWeek day = DayOfWeek.MONDAY;
+        given(repository.findAllByDay(any(DayOfWeek.class))).willReturn(
+                expected);
 
-        Map<LocalDate, List<ReschedulingOption>> actual =
-                service.findAllFor(schedule, from, until);
+        List<ReschedulingOption> actual = service.findAllForDay(day);
 
-        then(repository).should()
-                .findDayReschedulingOptionsForSchedule(false, from, schedule);
-        then(repository).should()
-                .findDayReschedulingOptionsForSchedule(false, from.plusDays(1L),
-                        schedule);
-        then(repository).should()
-                .findDayReschedulingOptionsForSchedule(false, until, schedule);
-        assertThat(actual).containsKeys(from, from.plusDays(1L), until)
-                .containsValues(optionsOne, optionsTwo, optionsThree);
-    }
-
-    @Test
-    public void findAllForShouldNotRequestOptionsFromRepositoryForNonSemesterDates() {
-
-        LocalDate from = LocalDate.of(2020, 1, 1);
-        LocalDate until = LocalDate.of(2020, 1, 3);
-        given(semesterCalendar.isSemesterDate(any(LocalDate.class))).willReturn(
-                false);
-        Schedule schedule = mock(Schedule.class);
-
-        Map<LocalDate, List<ReschedulingOption>> actual =
-                service.findAllFor(schedule, from, until);
-
-        then(repository).shouldHaveNoInteractions();
-        assertThat(actual).isEmpty();
+        then(repository).should().findAllByDay(day);
+        assertThat(actual).isEqualTo(expected);
     }
 
 }

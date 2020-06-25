@@ -328,53 +328,101 @@
 	<div class="row align-items-center">
 		<div class="col">
 
-			<p class="text-warning" th:text="${message}">Successfully rescheduled!</p>
-			<h2>Affected schedules:</h2>
-			<hr class="my-2">
+			<h3>Schedule item:</h3>
+			<div class="row">
+				<div class="col-2">
+					<span>Date:</span>
+				</div>
+				<div class="col">
+					<span th:text="${@semesterCalendar.getDayDescription(schedule.date)}">Jan 01, 2020</span>
+				</div>
+			</div>
+			<div class="row">
+				<div class="col-2">
+					<span>Day:</span>
+				</div>
+				<div class="col">
+					<span th:text="${schedule.day}">Monday</span>
+				</div>
+			</div>
+			<div class="row">
+				<div class="col-2">
+					<span>Period:</span>
+				</div>
+				<div class="col">
+					<span th:text="${schedule.period.toString()}">FIRST 08:30-09:45</span>
+				</div>
+			</div>
+			<div class="row">
+				<div class="col-2">
+					<span>Auditorium:</span>
+				</div>
+				<div class="col">
+					<span th:text="${schedule.auditorium.name}">A-01</span>
+				</div>
+			</div>
+			<div class="row">
+				<div class="col-2">
+					<span>Course:</span>
+				</div>
+				<div class="col">
+					<span th:text="${schedule.course.name}">Dark Magic Against Defense Against Dark Magic</span>
+				</div>
+			</div>
+			<div class="row">
+				<div class="col-2">
+					<span>Group:</span>
+				</div>
+				<div class="col">
+					<span th:text="${schedule.group.name}">G-01</span>
+				</div>
+			</div>
+			<div class="row">
+				<div class="col-2">
+					<span>Professor:</span>
+				</div>
+				<div class="col">
+					<span th:text="${schedule.professor.fullName}">Some really long professor name that might not fit</span>
+				</div>
+			</div>
 
-			<table class="table table-hover table-striped shadow">
-				<caption>Rescheduling changes</caption>
-				<thead>
-				<tr>
-					<th scope="col">ID</th>
-					<th scope="col">Date</th>
-					<th scope="col">Day</th>
-					<th scope="col">Period</th>
-					<th scope="col">Auditorium</th>
-					<th scope="col">Course</th>
-					<th scope="col">Group</th>
-					<th scope="col">Professor</th>
-				</tr>
-				</thead>
-				<tbody class="text-body">
-				<tr>
-					<td colspan="8">Initial schedule item:</td>
-				</tr>
-				<tr class="table-dark">
-					<th scope="row" th:text="${initial.id}">123</th>
-					<td th:text="*{@semesterCalendar.getDayDescription(schedule.date)}">Jan 01, 2020</td>
-					<td th:text="*{schedule.day.toString()}">Monday</td>
-					<td th:text="*{schedule.period.toString()}">FIRST 08:15-09:45</td>
-					<td th:text="*{schedule.auditorium.name}">A-01</td>
-					<td th:text="*{schedule.course.name}">Dark Magic Against Defense Against Dark Magic</td>
-					<td th:text="*{schedule.group.name}">G-01</td>
-					<td th:text="*{schedule.professor.fullName}">Professor Name</td>
-				</tr>
-				<tr>
-					<td colspan="8">After rescheduling:</td>
-				</tr>
-				<tr th:each="schedule : ${affected}">
-					<th scope="row" th:text="*{schedule.id}">123</th>
-					<td th:text="*{@semesterCalendar.getDayDescription(schedule.date)}">Jan 01, 2020</td>
-					<td th:text="*{schedule.day.toString()}">Monday</td>
-					<td th:text="*{schedule.period.toString()}">FIRST 08:15-09:45</td>
-					<td th:text="*{schedule.auditorium.name}">A-01</td>
-					<td th:text="*{schedule.course.name}">Dark Magic Against Defense Against Dark Magic</td>
-					<td th:text="*{schedule.group.name}">G-01</td>
-					<td th:text="*{schedule.professor.fullName}">Professor Name</td>
-				</tr>
-				</tbody>
-			</table>
+			<hr class="my-3">
+
+			<h1>Rescheduling options:</h1>
+
+			<!-- Day Rescheduling options -->
+			<div th:if="${dayOptions}">
+				<div class="day-schedule-container">
+
+					<div th:each="periodSchedule : ${daySchedule.periodSchedules}"
+					     class="schedule-row no-border align-items-center py-2">
+
+						<div class="col-2">
+							<span th:text="*{periodSchedule.key.getTime()}" class="pl-4">8:15-9:45</span>
+						</div>
+
+						<div class="col-10">
+							<ul class="list-group">
+								<div th:each="schedule : *{periodSchedule.value}">
+
+									<button type="button" class="list-group-item list-group-item-action" data-toggle="modal"
+									        data-target="#reschedule-modal" data-option-id="1"
+									        data-title="title: Jan 01, 2020, FIRST 08:15-09:45 period, A-03" data-date="2020-01-01"
+									        th:attr="data-option-id=*{dayPeriodOption.id},
+									        data-title=${dayOptions.dayDescription}
+									        + ', ' + ${period.toString()}
+													+ ', ' + *{dayPeriodOption.auditorium.name},
+													data-date=${dayOptions.date}">
+										<span th:text="*{dayPeriodOption.auditorium.name}">A-02</span>
+									</button>
+
+								</div>
+							</ul>
+						</div>
+					</div>
+
+				</div>
+			</div>
 
 		</div>
 	</div>

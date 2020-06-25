@@ -33,7 +33,7 @@ import java.util.stream.Collectors;
 public class ManagementUniversityStudentsController {
 
     private final ScheduleFormatter scheduleFormatter;
-    private final TimetableFacade   timetableFacade;
+    private final TimetableFacade timetableFacade;
 
     @GetMapping("/")
     public String students(Model model,
@@ -70,8 +70,8 @@ public class ManagementUniversityStudentsController {
             @ModelAttribute("scheduleForm") ScheduleForm scheduleForm,
             RedirectAttributes redirectAttributes) {
 
-        Optional<Group> optionalGroup = timetableFacade.getGroup(
-                scheduleForm.getId());
+        Optional<Group> optionalGroup =
+                timetableFacade.getGroup(scheduleForm.getId());
         if (!optionalGroup.isPresent()) {
             log.error("Group with ID({}) not found", scheduleForm.getId());
             redirectAttributes.addFlashAttribute("errorAlert",
@@ -135,8 +135,8 @@ public class ManagementUniversityStudentsController {
             @ModelAttribute(
                     "changeGroupForm") ChangeGroupForm changeGroupForm) {
 
-        Optional<Student> optionalStudent = timetableFacade.getStudent(
-                changeGroupForm.getStudentId());
+        Optional<Student> optionalStudent =
+                timetableFacade.getStudent(changeGroupForm.getStudentId());
         if (!optionalStudent.isPresent()) {
             log.error("Student with ID({}) not found",
                     changeGroupForm.getStudentId());
@@ -148,8 +148,8 @@ public class ManagementUniversityStudentsController {
         }
         Student student = optionalStudent.get();
 
-        Optional<Group> optionalGroup = timetableFacade.getGroup(
-                changeGroupForm.getNewGroupId());
+        Optional<Group> optionalGroup =
+                timetableFacade.getGroup(changeGroupForm.getNewGroupId());
         if (!optionalGroup.isPresent()) {
             log.error("Group with ID({}) not found",
                     changeGroupForm.getNewGroupId());
@@ -177,8 +177,8 @@ public class ManagementUniversityStudentsController {
     public String addNewStudent(RedirectAttributes redirectAttributes,
             @ModelAttribute("newStudentForm") NewStudentForm newStudentForm) {
 
-        Optional<Group> optionalGroup = timetableFacade.getGroup(
-                newStudentForm.getGroupId());
+        Optional<Group> optionalGroup =
+                timetableFacade.getGroup(newStudentForm.getGroupId());
         if (!optionalGroup.isPresent()) {
             log.error("Group with ID({}) not found",
                     newStudentForm.getGroupId());

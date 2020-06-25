@@ -2,27 +2,48 @@ package com.foxminded.timetable.model;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;
-import lombok.RequiredArgsConstructor;
+import lombok.NoArgsConstructor;
 
+import javax.persistence.*;
 import java.io.Serializable;
-import java.util.ArrayList;
-import java.util.List;
+import java.util.HashSet;
+import java.util.Set;
 
+@Entity
+@Table(name = "professors")
 @Data
 @AllArgsConstructor
-@RequiredArgsConstructor
+@NoArgsConstructor
 public class Professor implements Comparable<Professor>, Serializable {
 
-    private final     String       firstName;
-    private final     String       lastName;
-    private           Long         id;
-    private transient List<Course> courses = new ArrayList<>();
+    @Id
+    @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "p_seq")
+    @SequenceGenerator(name = "p_seq", sequenceName = "professor_id_seq")
+    private Long id;
+
+    private String firstName;
+
+    private String lastName;
+
+    @ManyToMany(fetch = FetchType.EAGER)
+    @JoinTable(name = "professors_courses")
+    private Set<Course> courses = new HashSet<>();
+
+    public Professor(String firstName, String lastName) {
+
+        this.firstName = firstName;
+        this.lastName = lastName;
+    }
 
     public Professor(long id, String firstName, String lastName) {
 
+        this(firstName, lastName);
         this.id = id;
-        this.firstName = firstName;
-        this.lastName = lastName;
+    }
+
+    public Set<Course> getCourses() {
+
+        return this.courses;
     }
 
     public void addCourse(Course course) {

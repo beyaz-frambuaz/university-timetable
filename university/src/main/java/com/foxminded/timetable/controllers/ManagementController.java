@@ -34,10 +34,10 @@ import java.util.Optional;
 public class ManagementController {
 
     private final ScheduleFormatter scheduleFormatter;
-    private final OptionsFormatter  optionsFormatter;
-    private final DataGenerator     dataGenerator;
-    private final TimetableFacade   timetableFacade;
-    private final SemesterCalendar  semesterCalendar;
+    private final OptionsFormatter optionsFormatter;
+    private final DataGenerator dataGenerator;
+    private final TimetableFacade timetableFacade;
+    private final SemesterCalendar semesterCalendar;
 
     @GetMapping("/home")
     public String home(@ModelAttribute("successAlert") String successAlert,
@@ -231,20 +231,21 @@ public class ManagementController {
         model.addAttribute("schedule", schedule);
 
         LocalDate date = findReschedulingOptionsForm.getLocalDate();
-        WeekOptions weekOptions = null;
+
+        DayOptions dayOptions = null;
         if (findReschedulingOptionsForm.getScheduleOption()
                 == ScheduleOption.DAY) {
 
-            weekOptions =
-                    optionsFormatter.prepareWeekOptions(schedule, date, date);
+            dayOptions = optionsFormatter.prepareDayOptions(schedule, date);
         }
+        model.addAttribute("dayOptions", dayOptions);
+
+        WeekOptions weekOptions = null;
         if (findReschedulingOptionsForm.getScheduleOption()
                 == ScheduleOption.WEEK) {
 
-            LocalDate monday = semesterCalendar.getWeekMonday(date);
-            LocalDate friday = semesterCalendar.getWeekFriday(date);
-            weekOptions = optionsFormatter.prepareWeekOptions(schedule, monday,
-                    friday);
+            weekOptions = optionsFormatter.prepareWeekOptions(schedule,
+                    semesterCalendar.getSemesterWeekNumber(date));
         }
         model.addAttribute("weekOptions", weekOptions);
 

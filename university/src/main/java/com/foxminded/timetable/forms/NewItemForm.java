@@ -6,4 +6,5 @@ import lombok.Data;
 public class NewItemForm {
 
     private String name;
+
 }

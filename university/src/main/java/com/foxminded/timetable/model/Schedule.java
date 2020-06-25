@@ -2,37 +2,64 @@ package com.foxminded.timetable.model;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;
+import lombok.NoArgsConstructor;
 
+import javax.persistence.*;
 import java.time.DayOfWeek;
 import java.time.LocalDate;
 
+@Entity
+@Table(name = "schedules")
 @Data
 @AllArgsConstructor
+@NoArgsConstructor
 public class Schedule implements Comparable<Schedule> {
 
-    private final Long       id;
-    private final Long       templateId;
-    private       LocalDate  date;
-    private       DayOfWeek  day;
-    private       Period     period;
-    private       Auditorium auditorium;
-    private       Course     course;
-    private       Group      group;
-    private       Professor  professor;
+    @Id
+    @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "sch_seq")
+    @SequenceGenerator(name = "sch_seq", sequenceName = "schedule_id_seq")
+    private Long id;
+
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn
+    private ScheduleTemplate template;
+
+    @Column(name = "on_date")
+    private LocalDate date;
+
+    @Enumerated(EnumType.STRING)
+    private DayOfWeek day;
+
+    @Enumerated(EnumType.STRING)
+    private Period period;
+
+    @ManyToOne
+    @JoinColumn
+    private Auditorium auditorium;
+
+    @ManyToOne
+    @JoinColumn
+    private Course course;
+
+    @ManyToOne
+    @JoinColumn
+    private Group group;
+
+    @ManyToOne
+    @JoinColumn
+    private Professor professor;
 
     public Schedule(ScheduleTemplate template, LocalDate date) {
 
-        this(null, template.getId(), date, template.getDay(),
-                template.getPeriod(), template.getAuditorium(),
-                template.getCourse(), template.getGroup(),
-                template.getProfessor());
+        this(null, template, date, template.getDay(), template.getPeriod(),
+                template.getAuditorium(), template.getCourse(),
+                template.getGroup(), template.getProfessor());
     }
 
     public Schedule(Schedule other) {
 
-        this(other.id, other.templateId, other.date, other.day,
-                other.period, other.auditorium, other.course,
-                other.group, other.professor);
+        this(other.id, other.template, other.date, other.day, other.period,
+                other.auditorium, other.course, other.group, other.professor);
     }
 
     @Override

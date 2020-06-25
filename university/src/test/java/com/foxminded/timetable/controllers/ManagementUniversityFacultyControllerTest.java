@@ -249,7 +249,7 @@ class ManagementUniversityFacultyControllerTest {
 
         Course professorCourse = mock(Course.class);
         given(professor.getCourses()).willReturn(
-                Collections.singletonList(professorCourse));
+                Collections.singleton(professorCourse));
 
         List<Student> students = Collections.emptyList();
         given(timetableFacade.getCourseAttendees(any(Course.class),
