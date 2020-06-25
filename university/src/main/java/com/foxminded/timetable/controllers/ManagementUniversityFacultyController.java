@@ -33,7 +33,7 @@ import java.util.Optional;
 public class ManagementUniversityFacultyController {
 
     private final ScheduleFormatter scheduleFormatter;
-    private final TimetableFacade   timetableFacade;
+    private final TimetableFacade timetableFacade;
 
     @GetMapping("/")
     public String professors(Model model,
@@ -59,8 +59,8 @@ public class ManagementUniversityFacultyController {
             @ModelAttribute("scheduleForm") ScheduleForm scheduleForm,
             RedirectAttributes redirectAttributes) {
 
-        Optional<Professor> optionalProfessor = timetableFacade.getProfessor(
-                scheduleForm.getId());
+        Optional<Professor> optionalProfessor =
+                timetableFacade.getProfessor(scheduleForm.getId());
         if (!optionalProfessor.isPresent()) {
             log.error("Professor with ID({}) not found", scheduleForm.getId());
             redirectAttributes.addFlashAttribute("errorAlert",
@@ -149,8 +149,8 @@ public class ManagementUniversityFacultyController {
         model.addAttribute("successAlert", successAlert);
         model.addAttribute("editedId", editedId);
 
-        Optional<Professor> optionalProfessor = timetableFacade.getProfessor(
-                professorId);
+        Optional<Professor> optionalProfessor =
+                timetableFacade.getProfessor(professorId);
         if (!optionalProfessor.isPresent()) {
             log.error("Professor with ID({}) not found", professorId);
             redirectAttributes.addFlashAttribute("errorAlert",
@@ -185,28 +185,28 @@ public class ManagementUniversityFacultyController {
     public String addCourse(RedirectAttributes redirectAttributes,
             @ModelAttribute("addCourseForm") AddCourseForm addCourseForm) {
 
-        Optional<Professor> optionalProfessor = timetableFacade.getProfessor(
-                addCourseForm.getProfessorId());
+        Optional<Professor> optionalProfessor =
+                timetableFacade.getProfessor(addCourseForm.getProfessorId());
         if (!optionalProfessor.isPresent()) {
             log.error("Professor with ID({}) not found",
                     addCourseForm.getProfessorId());
             redirectAttributes.addFlashAttribute("errorAlert",
-                    "Attempt to add course failed: professor "
-                            + "with ID(" + addCourseForm.getProfessorId()
+                    "Attempt to add course failed: professor " + "with ID("
+                            + addCourseForm.getProfessorId()
                             + ") could not be found. "
                             + "Please, resubmit the form.");
             return "redirect:/timetable/management/university/faculty";
         }
         Professor professor = optionalProfessor.get();
 
-        Optional<Course> optionalCourse = timetableFacade.getCourse(
-                addCourseForm.getNewCourse());
+        Optional<Course> optionalCourse =
+                timetableFacade.getCourse(addCourseForm.getNewCourse());
         if (!optionalCourse.isPresent()) {
             log.error("Course with ID({}) not found",
                     addCourseForm.getNewCourse());
             redirectAttributes.addFlashAttribute("errorAlert",
-                    "Attempt to add course failed: course "
-                            + "with ID(" + addCourseForm.getNewCourse()
+                    "Attempt to add course failed: course " + "with ID("
+                            + addCourseForm.getNewCourse()
                             + ") could not be found. "
                             + "Please, resubmit the form.");
             return "redirect:/timetable/management/university/faculty/courses"
@@ -229,28 +229,28 @@ public class ManagementUniversityFacultyController {
     public String dropCourse(RedirectAttributes redirectAttributes,
             @ModelAttribute("dropCourseForm") DropCourseForm dropCourseForm) {
 
-        Optional<Professor> optionalProfessor = timetableFacade.getProfessor(
-                dropCourseForm.getProfessorId());
+        Optional<Professor> optionalProfessor =
+                timetableFacade.getProfessor(dropCourseForm.getProfessorId());
         if (!optionalProfessor.isPresent()) {
             log.error("Professor with ID({}) not found",
                     dropCourseForm.getProfessorId());
             redirectAttributes.addFlashAttribute("errorAlert",
-                    "Attempt to drop course failed: professor "
-                            + "with ID(" + dropCourseForm.getProfessorId()
+                    "Attempt to drop course failed: professor " + "with ID("
+                            + dropCourseForm.getProfessorId()
                             + ") could not be found. "
                             + "Please, resubmit the form.");
             return "redirect:/timetable/management/university/faculty";
         }
         Professor professor = optionalProfessor.get();
 
-        Optional<Course> optionalCourse = timetableFacade.getCourse(
-                dropCourseForm.getCourseId());
+        Optional<Course> optionalCourse =
+                timetableFacade.getCourse(dropCourseForm.getCourseId());
         if (!optionalCourse.isPresent()) {
             log.error("Course with ID({}) not found",
                     dropCourseForm.getCourseId());
             redirectAttributes.addFlashAttribute("errorAlert",
-                    "Attempt to drop course failed: course "
-                            + "with ID(" + dropCourseForm.getCourseId()
+                    "Attempt to drop course failed: course " + "with ID("
+                            + dropCourseForm.getCourseId()
                             + ") could not be found. "
                             + "Please, resubmit the form.");
             return "redirect:/timetable/management/university/faculty/courses"

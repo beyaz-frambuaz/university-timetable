@@ -1,15 +1,17 @@
 package com.foxminded.timetable.controllers;
 
+import com.foxminded.timetable.exceptions.SessionExpiredException;
+import com.foxminded.timetable.forms.ScheduleForm;
 import com.foxminded.timetable.forms.utility.DaySchedule;
 import com.foxminded.timetable.forms.utility.MonthSchedule;
 import com.foxminded.timetable.forms.utility.TwoWeekSchedule;
 import com.foxminded.timetable.forms.utility.WeekSchedule;
-import com.foxminded.timetable.model.*;
+import com.foxminded.timetable.forms.utility.formatter.ScheduleFormatter;
+import com.foxminded.timetable.model.Course;
+import com.foxminded.timetable.model.Professor;
+import com.foxminded.timetable.model.Student;
 import com.foxminded.timetable.service.TimetableFacade;
 import com.foxminded.timetable.service.utility.predicates.SchedulePredicateProfessorId;
-import com.foxminded.timetable.exceptions.SessionExpiredException;
-import com.foxminded.timetable.forms.utility.formatter.ScheduleFormatter;
-import com.foxminded.timetable.forms.ScheduleForm;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Controller;
@@ -30,7 +32,7 @@ import java.util.Optional;
 @RequestMapping("/timetable/faculty")
 public class FacultyController {
 
-    private final TimetableFacade   timetableFacade;
+    private final TimetableFacade timetableFacade;
     private final ScheduleFormatter scheduleFormatter;
 
     @GetMapping("/list")
@@ -53,7 +55,8 @@ public class FacultyController {
     public String selectProfessor(@RequestParam("professorId") long professorId,
             HttpSession session, RedirectAttributes redirectAttributes) {
 
-        Optional<Professor> professor = timetableFacade.getProfessor(professorId);
+        Optional<Professor> professor =
+                timetableFacade.getProfessor(professorId);
         if (!professor.isPresent()) {
             log.error("Professor with ID({}) not found", professorId);
             redirectAttributes.addFlashAttribute("errorAlert",
@@ -128,8 +131,9 @@ public class FacultyController {
             case WEEK:
                 WeekSchedule weekSchedule =
                         scheduleFormatter.prepareWeekSchedule(
-                        new SchedulePredicateProfessorId(professor.getId()),
-                        date, scheduleForm.isFiltered());
+                                new SchedulePredicateProfessorId(
+                                        professor.getId()), date,
+                                scheduleForm.isFiltered());
                 model.addAttribute("weekSchedule", weekSchedule);
 
                 return "faculty/professor/schedule/week";
@@ -137,8 +141,9 @@ public class FacultyController {
             case MONTH:
                 MonthSchedule monthSchedule =
                         scheduleFormatter.prepareMonthSchedule(
-                        new SchedulePredicateProfessorId(professor.getId()),
-                        date, scheduleForm.isFiltered());
+                                new SchedulePredicateProfessorId(
+                                        professor.getId()), date,
+                                scheduleForm.isFiltered());
                 model.addAttribute("monthSchedule", monthSchedule);
 
                 return "faculty/professor/schedule/month";

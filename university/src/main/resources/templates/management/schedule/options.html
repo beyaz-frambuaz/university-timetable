@@ -143,11 +143,12 @@
 			<hr class="my-3">
 
 			<h1>Rescheduling options:</h1>
-			<p th:text="|Week of ${weekOptions.weekDescription}|">For week</p>
 
-			<!-- Rescheduling options -->
-			<div>
-			<small class="text-muted">Click on the option below to reschedule</small>
+
+			<!-- Week Rescheduling options -->
+			<div th:if="${weekOptions}">
+				<p th:text="|Week of ${weekOptions.weekDescription}|">For week</p>
+				<small class="text-muted">Click on the option below to reschedule</small>
 				<!--Header-->
 				<div class="schedule-row schedule-header shadow">
 
@@ -184,7 +185,7 @@
 							<!--Day-->
 							<div th:each="dayOptions : ${weekOptions.dayOptions}" class="schedule col px-1">
 								<div class="list-group"
-										th:each="dayPeriodOption : *{dayOptions.periodOptions.get(period)}">
+								     th:each="dayPeriodOption : *{dayOptions.periodOptions.get(period)}">
 									<button type="button" class="list-group-item list-group-item-action" data-toggle="modal"
 									        data-target="#reschedule-modal" data-option-id="1"
 									        data-title="title: Jan 01, 2020, FIRST 08:15-09:45 period, A-03" data-date="2020-01-01"
@@ -200,6 +201,42 @@
 
 						</div>
 
+					</div>
+
+				</div>
+			</div>
+
+			<!-- Day Rescheduling options -->
+			<div th:if="${dayOptions}">
+				<p th:text="|Day of ${dayOptions.dayDescription}|">For day</p>
+				<small class="text-muted">Click on the option below to reschedule</small>
+				<div class="day-schedule-container">
+
+					<div th:each="periodOptions : ${dayOptions.periodOptions}"
+					     class="schedule-row no-border align-items-center py-2">
+
+						<div class="col-2">
+							<span th:text="*{periodOptions.key.getTime()}" class="pl-4">8:15-9:45</span>
+						</div>
+
+						<div class="col-10">
+							<ul class="list-group">
+								<div th:each="dayPeriodOption : *{periodOptions.value}">
+
+									<button type="button" class="list-group-item list-group-item-action" data-toggle="modal"
+									        data-target="#reschedule-modal" data-option-id="1"
+									        data-title="title: Jan 01, 2020, FIRST 08:15-09:45 period, A-03" data-date="2020-01-01"
+									        th:attr="data-option-id=*{dayPeriodOption.id},
+									        data-title=${dayOptions.dayDescription}
+									        + ', ' + ${periodOptions.key.toString()}
+													+ ', ' + *{dayPeriodOption.auditorium.name},
+													data-date=${dayOptions.date}">
+										<span th:text="*{dayPeriodOption.auditorium.name}">A-02</span>
+									</button>
+
+								</div>
+							</ul>
+						</div>
 					</div>
 
 				</div>

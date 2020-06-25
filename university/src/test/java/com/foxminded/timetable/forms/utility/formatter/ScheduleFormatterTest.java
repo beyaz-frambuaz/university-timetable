@@ -84,11 +84,11 @@ class ScheduleFormatterTest {
         periodSchedules.put(secondPeriod,
                 Collections.singletonList(scheduleSecond));
 
-        DaySchedule expected = new DaySchedule(periodSchedules, description,
-                shortDescription);
+        DaySchedule expected =
+                new DaySchedule(periodSchedules, description, shortDescription);
 
-        DaySchedule actual = formatter.prepareDaySchedule(predicate, start,
-                filtered);
+        DaySchedule actual =
+                formatter.prepareDaySchedule(predicate, start, filtered);
 
         then(timetableFacade).should().getScheduleInRange(start, start);
         assertThat(actual).isEqualTo(expected);
@@ -129,21 +129,23 @@ class ScheduleFormatterTest {
         Map<Period, List<Schedule>> periodSchedulesStart = new HashMap<>();
         periodSchedulesStart.put(firstPeriod,
                 Collections.singletonList(scheduleStart));
-        DaySchedule dayScheduleStart = new DaySchedule(periodSchedulesStart,
-                description, shortDescription);
+        DaySchedule dayScheduleStart =
+                new DaySchedule(periodSchedulesStart, description,
+                        shortDescription);
         Map<Period, List<Schedule>> periodSchedulesEnd = new HashMap<>();
         periodSchedulesEnd.put(secondPeriod,
                 Collections.singletonList(scheduleEnd));
-        DaySchedule dayScheduleEnd = new DaySchedule(periodSchedulesEnd,
-                description, shortDescription);
-        List<DaySchedule> daySchedules = Arrays.asList(dayScheduleStart,
-                dayScheduleEnd);
+        DaySchedule dayScheduleEnd =
+                new DaySchedule(periodSchedulesEnd, description,
+                        shortDescription);
+        List<DaySchedule> daySchedules =
+                Arrays.asList(dayScheduleStart, dayScheduleEnd);
 
-        WeekSchedule expected = new WeekSchedule(daySchedules, description,
-                weekNumber);
+        WeekSchedule expected =
+                new WeekSchedule(daySchedules, description, weekNumber);
 
-        WeekSchedule actual = formatter.prepareWeekSchedule(predicate, start,
-                filtered);
+        WeekSchedule actual =
+                formatter.prepareWeekSchedule(predicate, start, filtered);
 
         then(timetableFacade).should().getScheduleInRange(start, start);
         then(timetableFacade).should().getScheduleInRange(end, end);
@@ -192,23 +194,26 @@ class ScheduleFormatterTest {
         Map<Period, List<Schedule>> periodSchedulesStart = new HashMap<>();
         periodSchedulesStart.put(firstPeriod,
                 Collections.singletonList(scheduleStart));
-        DaySchedule dayScheduleStart = new DaySchedule(periodSchedulesStart,
-                description, shortDescription);
+        DaySchedule dayScheduleStart =
+                new DaySchedule(periodSchedulesStart, description,
+                        shortDescription);
         Map<Period, List<Schedule>> periodSchedulesEnd = new HashMap<>();
         periodSchedulesEnd.put(secondPeriod,
                 Collections.singletonList(scheduleEnd));
-        DaySchedule dayScheduleEnd = new DaySchedule(periodSchedulesEnd,
-                description, shortDescription);
-        List<DaySchedule> daySchedules = Arrays.asList(dayScheduleStart,
-                dayScheduleEnd);
+        DaySchedule dayScheduleEnd =
+                new DaySchedule(periodSchedulesEnd, description,
+                        shortDescription);
+        List<DaySchedule> daySchedules =
+                Arrays.asList(dayScheduleStart, dayScheduleEnd);
 
-        WeekSchedule weekSchedule = new WeekSchedule(daySchedules, description,
-                weekNumber);
-        MonthSchedule expected = new MonthSchedule(
-                Collections.singletonList(weekSchedule), description);
+        WeekSchedule weekSchedule =
+                new WeekSchedule(daySchedules, description, weekNumber);
+        MonthSchedule expected =
+                new MonthSchedule(Collections.singletonList(weekSchedule),
+                        description);
 
-        MonthSchedule actual = formatter.prepareMonthSchedule(predicate, start,
-                filtered);
+        MonthSchedule actual =
+                formatter.prepareMonthSchedule(predicate, start, filtered);
 
         then(timetableFacade).should().getScheduleInRange(start, start);
         then(timetableFacade).should().getScheduleInRange(end, end);
@@ -229,10 +234,12 @@ class ScheduleFormatterTest {
         given(oddTemplate.getPeriod()).willReturn(firstPeriod);
         given(evenTemplate.getWeekParity()).willReturn(true);
         given(evenTemplate.getPeriod()).willReturn(secondPeriod);
-        Map<Period, List<ScheduleTemplate>> oddWeek = Collections.singletonMap(
-                firstPeriod, Collections.singletonList(oddTemplate));
-        Map<Period, List<ScheduleTemplate>> evenWeek = Collections.singletonMap(
-                secondPeriod, Collections.singletonList(evenTemplate));
+        Map<Period, List<ScheduleTemplate>> oddWeek =
+                Collections.singletonMap(firstPeriod,
+                        Collections.singletonList(oddTemplate));
+        Map<Period, List<ScheduleTemplate>> evenWeek =
+                Collections.singletonMap(secondPeriod,
+                        Collections.singletonList(evenTemplate));
         TwoWeekSchedule expected = new TwoWeekSchedule(oddWeek, evenWeek);
 
         TwoWeekSchedule actual = formatter.prepareTwoWeekSchedule();

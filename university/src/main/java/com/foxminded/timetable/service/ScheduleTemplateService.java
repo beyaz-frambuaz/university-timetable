@@ -6,6 +6,7 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
+import java.time.DayOfWeek;
 import java.util.List;
 import java.util.Optional;
 
@@ -24,13 +25,8 @@ public class ScheduleTemplateService {
 
     public ScheduleTemplate save(ScheduleTemplate template) {
 
-        if (template.getId() == null) {
-            log.debug("Adding new template {}", template);
-            return repository.save(template);
-        }
-        log.debug("Updating template {}", template);
-        return repository.update(template);
-
+        log.debug("Saving template {}", template);
+        return repository.save(template);
     }
 
     public List<ScheduleTemplate> saveAll(List<ScheduleTemplate> templates) {
@@ -48,6 +44,19 @@ public class ScheduleTemplateService {
 
         log.debug("Fetching templates from repository");
         return repository.findAll();
+    }
+
+    public List<ScheduleTemplate> findAllForWeek(boolean weekParity) {
+
+        log.debug("Fetching week templates for week parity {}", weekParity);
+        return repository.findAllByWeek(weekParity);
+    }
+
+    public List<ScheduleTemplate> findAllForDay(boolean weekParity,
+            DayOfWeek day) {
+
+        log.debug("Fetching {} templates for week parity {}", day, weekParity);
+        return repository.findAllByDay(weekParity, day);
     }
 
     public Optional<ScheduleTemplate> findById(long id) {

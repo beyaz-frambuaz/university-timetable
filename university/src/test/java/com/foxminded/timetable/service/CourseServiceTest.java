@@ -40,7 +40,7 @@ class CourseServiceTest {
     }
 
     @Test
-    public void saveShouldAddCourseToRepositoryIfNew() {
+    public void saveShouldDelegateToRepository() {
 
         Course expected = new Course("A-04");
         given(repository.save(any(Course.class))).willReturn(expected);
@@ -48,20 +48,6 @@ class CourseServiceTest {
         Course actual = service.save(expected);
 
         then(repository).should().save(expected);
-        then(repository).shouldHaveNoMoreInteractions();
-        assertThat(actual).isEqualTo(expected);
-    }
-
-    @Test
-    public void saveShouldUpdateCourseInRepositoryIfExisting() {
-
-        Course expected = new Course(4L, "A-04");
-        given(repository.update(any(Course.class))).willReturn(expected);
-
-        Course actual = service.save(expected);
-
-        then(repository).should().update(expected);
-        then(repository).shouldHaveNoMoreInteractions();
         assertThat(actual).isEqualTo(expected);
     }
 

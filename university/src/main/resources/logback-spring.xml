@@ -9,11 +9,6 @@
 
   <appender name="CONSOLE"
     class="ch.qos.logback.core.ConsoleAppender">
-<!--    <filter class="ch.qos.logback.classic.filter.LevelFilter">-->
-<!--      <level>ERROR</level>-->
-<!--      <onMatch>ACCEPT</onMatch>-->
-<!--      <onMismatch>DENY</onMismatch>-->
-<!--    </filter>-->
     <encoder>
       <Pattern>
         ${CONSOLE_LOG_PATTERN}
@@ -30,12 +25,13 @@
     </encoder>
   </appender>
 
-  <root level="debug">
+  <root level="info">
     <appender-ref ref="FILE" />
     <appender-ref ref="CONSOLE" />
   </root>
   
-  <logger name="org.springframework" level="info" />
-  <logger name="com.zaxxer.hikari" level="info" />
+  <logger name="org.hibernate.type.descriptor.sql.BasicBinder" level="trace" />
+  <logger name="org.hibernate.SQL" level="debug" />
+  <logger name="com.foxminded.timetable" level="debug" />
 
 </configuration>

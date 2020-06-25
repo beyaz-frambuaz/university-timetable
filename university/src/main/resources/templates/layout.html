@@ -919,54 +919,55 @@
 </div>
 
 <!-- Day schedule -->
-<div th:fragment="daySchedule" th:unless="${daySchedule.periodSchedules.isEmpty()}"
-     class="day-schedule-container">
+<div th:fragment="daySchedule" th:unless="${daySchedule.periodSchedules.isEmpty()}">
 	<div th:if="${#httpServletRequest.requestURI.contains('management')}" class="mb-1">
 		<small class="text-muted">Hover over schedule items for additional options</small>
 	</div>
-	<div th:each="periodSchedule : ${daySchedule.periodSchedules}"
-	     class="schedule-row no-border align-items-center py-2">
-		<div class="col-2">
-			<span th:text="*{periodSchedule.key.getTime()}" class="pl-4">8:15-9:45</span>
-		</div>
-		<div class="col-10">
-			<ul class="list-group">
-				<div th:each="schedule : *{periodSchedule.value}">
-					<div class="schedule-options" th:class="${#httpServletRequest.requestURI.contains('management')
+	<div class="day-schedule-container">
+		<div th:each="periodSchedule : ${daySchedule.periodSchedules}"
+		     class="schedule-row no-border align-items-center py-2">
+			<div class="col-2">
+				<span th:text="*{periodSchedule.key.getTime()}" class="pl-4">8:15-9:45</span>
+			</div>
+			<div class="col-10">
+				<ul class="list-group">
+					<div th:each="schedule : *{periodSchedule.value}">
+						<div class="schedule-options" th:class="${#httpServletRequest.requestURI.contains('management')
 							? 'schedule-options' : _ }">
 
-						<li class="list-group-item align-items-center">
-							<div class="d-flex justify-content-between mb-1">
-								<span th:text="*{schedule.auditorium.name}" class="badge badge-pill badge-primary">A-05</span>
-								<span th:text="*{schedule.group.name}" class="badge badge-pill badge-secondary">G-08</span>
-							</div>
-							<p class="text-muted mb-1">
-								<small th:text="*{schedule.course.name}">Defense Against Dark Magic</small>
-							</p>
-							<small th:text="*{schedule.professor.fullName}">Nabonassar the Sneaky</small>
-						</li>
+							<li class="list-group-item align-items-center">
+								<div class="d-flex justify-content-between mb-1">
+									<span th:text="*{schedule.auditorium.name}" class="badge badge-pill badge-primary">A-05</span>
+									<span th:text="*{schedule.group.name}" class="badge badge-pill badge-secondary">G-08</span>
+								</div>
+								<p class="text-muted mb-1">
+									<small th:text="*{schedule.course.name}">Defense Against Dark Magic</small>
+								</p>
+								<small th:text="*{schedule.professor.fullName}">Nabonassar the Sneaky</small>
+							</li>
 
-						<div th:if="${#httpServletRequest.requestURI.contains('management')}"
-						     class="align-content-center justify-content-center no-border options schedule-row">
-							<div class="col-auto">
-								<a href="#" class="btn btn-outline-warning" data-toggle="tooltip" data-placement="left"
-								   data-container="body"
-								   title="Find available professors and auditoriums, change either or both for this schedule item"
-								   th:href="@{/timetable/management/schedule/available(scheduleId=*{schedule.id})}">
-									Available...
-								</a>
-							</div>
-							<div class="col-auto">
-								<button type="button" class="btn btn-outline-danger" data-toggle="modal"
-								        data-target="#find-rescheduling-options-modal" data-schedule-id="1"
-								        th:attr="data-schedule-id=*{schedule.id}">
-									Reschedule
-								</button>
+							<div th:if="${#httpServletRequest.requestURI.contains('management')}"
+							     class="align-content-center justify-content-center no-border options schedule-row">
+								<div class="col-auto">
+									<a href="#" class="btn btn-outline-warning" data-toggle="tooltip" data-placement="left"
+									   data-container="body"
+									   title="Find available professors and auditoriums, change either or both for this schedule item"
+									   th:href="@{/timetable/management/schedule/available(scheduleId=*{schedule.id})}">
+										Available...
+									</a>
+								</div>
+								<div class="col-auto">
+									<button type="button" class="btn btn-outline-danger" data-toggle="modal"
+									        data-target="#find-rescheduling-options-modal" data-schedule-id="1"
+									        th:attr="data-schedule-id=*{schedule.id}">
+										Reschedule
+									</button>
+								</div>
 							</div>
 						</div>
 					</div>
-				</div>
-			</ul>
+				</ul>
+			</div>
 		</div>
 	</div>
 </div>

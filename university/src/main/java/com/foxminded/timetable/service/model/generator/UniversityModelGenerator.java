@@ -25,35 +25,36 @@ public class UniversityModelGenerator {
 
     private final TimetableFacade timetableFacade;
     @Value("${university.total.students}")
-    private       int             totalStudents;
+    private int totalStudents;
     @Value("${university.total.professors}")
-    private       int              totalProfessors;
+    private int totalProfessors;
     @Value("${university.total.auditoriums}")
-    private       int              totalAuditoriums;
+    private int totalAuditoriums;
     @Value("${university.group.size}")
-    private       int              groupSize;
+    private int groupSize;
     @Value("${file.first.names}")
-    private       String           firstNamesFilePath;
+    private String firstNamesFilePath;
     @Value("${file.last.names}")
-    private       String           lastNamesFilePath;
+    private String lastNamesFilePath;
     @Value("${file.courses}")
-    private       String           coursesFilePath;
-    private       Random           random = new Random();
+    private String coursesFilePath;
+    private Random random = new Random();
 
     public void generateAndSave() {
 
-        log.info("Generating university model");
+        log.info("Generating university model...");
+
         buildAuditoriums();
         List<Course> courses = buildCourses(coursesFilePath);
-        List<Professor> professors = buildProfessors(firstNamesFilePath,
-                lastNamesFilePath);
+        List<Professor> professors =
+                buildProfessors(firstNamesFilePath, lastNamesFilePath);
         assignCoursesToProfessors(courses, professors);
         List<Group> groups = buildGroups();
-        List<Student> students = buildStudents(firstNamesFilePath,
-                lastNamesFilePath);
+        List<Student> students =
+                buildStudents(firstNamesFilePath, lastNamesFilePath);
         groupAndSaveStudents(students, groups);
-        log.info("University model generated");
 
+        log.info("University model generated");
     }
 
     /*
@@ -77,7 +78,7 @@ public class UniversityModelGenerator {
             }
         }
         log.debug("Courses assigned to professors");
-        professors.forEach(timetableFacade::saveProfessor);
+        timetableFacade.saveProfessors(professors);
     }
 
     /*
@@ -92,12 +93,13 @@ public class UniversityModelGenerator {
         List<Student> students = new ArrayList<>(totalStudents);
 
         for (int i = 0; i < totalStudents; i++) {
-            String firstName = firstNames.get(
-                    random.nextInt(firstNames.size()));
+            String firstName =
+                    firstNames.get(random.nextInt(firstNames.size()));
             String lastName = lastNames.get(random.nextInt(lastNames.size()));
 
             students.add(new Student(firstName, lastName));
         }
+
         log.debug("Students generated");
         return students;
     }
@@ -114,16 +116,15 @@ public class UniversityModelGenerator {
         List<Professor> professors = new ArrayList<>(totalProfessors);
 
         for (int i = 0; i < totalProfessors; i++) {
-            String firstName = firstNames.get(
-                    random.nextInt(firstNames.size()));
+            String firstName =
+                    firstNames.get(random.nextInt(firstNames.size()));
             String lastName = lastNames.get(random.nextInt(lastNames.size()));
 
             professors.add(new Professor(firstName, lastName));
         }
-        log.debug("Professors generated");
-        timetableFacade.saveProfessors(professors);
 
-        return timetableFacade.getProfessors();
+        log.debug("Professors generated");
+        return professors;
     }
 
     /*
@@ -148,8 +149,7 @@ public class UniversityModelGenerator {
                 .map(Course::new)
                 .collect(Collectors.toList());
         log.debug("Courses generated");
-        timetableFacade.saveCourses(courses);
-        return timetableFacade.getCourses();
+        return timetableFacade.saveCourses(courses);
     }
 
     /*
@@ -158,8 +158,8 @@ public class UniversityModelGenerator {
      */
     private List<Group> buildGroups() {
 
-        int numberOfGroups = (int) Math.ceil(
-                (double) totalStudents / (double) groupSize);
+        int numberOfGroups =
+                (int) Math.ceil((double) totalStudents / (double) groupSize);
         List<Group> groups = new ArrayList<>(numberOfGroups);
 
         for (int groupId = 1; groupId <= numberOfGroups; groupId++) {
@@ -167,10 +167,9 @@ public class UniversityModelGenerator {
             String groupName = String.format("%c-%02d", groupInitial, groupId);
             groups.add(new Group(groupName));
         }
-        log.debug("Groups generated");
-        timetableFacade.saveGroups(groups);
 
-        return timetableFacade.getGroups();
+        log.debug("Groups generated");
+        return timetableFacade.saveGroups(groups);
     }
 
     /*

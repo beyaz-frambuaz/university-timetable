@@ -8,5 +8,6 @@ public class ChangeScheduleForm {
     private Long scheduleId;
     private Long auditoriumId;
     private Long professorId;
+
 }
 

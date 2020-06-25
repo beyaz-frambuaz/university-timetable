@@ -79,6 +79,26 @@ public class SemesterCalendarTest {
     }
 
     @ParameterizedTest
+    @ValueSource(ints = { -1, 0, 15 })
+    public void isSemesterWeekShouldReturnFalseGivenInvalidSemesterWeekNumbers(
+            int weekNumber) {
+
+        boolean semesterWeek = semesterCalendar.isSemesterWeek(weekNumber);
+
+        assertThat(semesterWeek).isFalse();
+    }
+
+    @ParameterizedTest
+    @ValueSource(ints = { 1, 8, 14 })
+    public void isSemesterWeekShouldReturnTrueGivenValidSemesterWeekNumbers(
+            int weekNumber) {
+
+        boolean semesterWeek = semesterCalendar.isSemesterWeek(weekNumber);
+
+        assertThat(semesterWeek).isTrue();
+    }
+
+    @ParameterizedTest
     @CsvSource(value = { "1:2020-09-07", "8:2020-10-26" }, delimiter = ':')
     public void getWeekMondayShouldReturnMondayDateGivenSemesterWeek(
             String week, String date) {
@@ -263,7 +283,7 @@ public class SemesterCalendarTest {
     public void getDayShortDescriptionShouldReturnFormattedDateDescription() {
 
         LocalDate date = LocalDate.of(2020, 1, 1);
-        String[] expected = {"WED", "1/1/20"};
+        String[] expected = { "WED", "1/1/20" };
 
         String[] actual = semesterCalendar.getDayShortDescription(date);
 

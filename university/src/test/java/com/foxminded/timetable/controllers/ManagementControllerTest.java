@@ -503,7 +503,7 @@ class ManagementControllerTest {
     }
 
     @Test
-    public void postOptionsShouldRequestAndDisplayWeekOptionsFromFormatterForOneDayWhenRequestedInForm()
+    public void postOptionsShouldRequestAndDisplayDayOptionsFromFormatter()
             throws Exception {
 
         long scheduleId = 1L;
@@ -535,32 +535,28 @@ class ManagementControllerTest {
         given(timetableFacade.getSchedule(anyLong())).willReturn(
                 Optional.of(schedule));
 
-        WeekOptions weekOptions = mock(WeekOptions.class);
-        given(optionsFormatter.prepareWeekOptions(any(Schedule.class),
-                any(LocalDate.class), any(LocalDate.class))).willReturn(
-                weekOptions);
+        DayOptions dayOptions = mock(DayOptions.class);
+        given(optionsFormatter.prepareDayOptions(any(Schedule.class),
+                any(LocalDate.class))).willReturn(dayOptions);
 
         mvc.perform(post("/timetable/management/schedule/options").flashAttr(
                 "findReschedulingOptionsForm", form))
                 .andExpect(status().isOk())
                 .andExpect(model().attribute("schedule", schedule))
-                .andExpect(model().attribute("weekOptions", weekOptions))
+                .andExpect(model().attribute("dayOptions", dayOptions))
                 .andExpect(model().attributeExists("rescheduleForm"))
                 .andExpect(view().name("management/schedule/options"));
 
         then(timetableFacade).should().getSchedule(scheduleId);
-        then(optionsFormatter).should()
-                .prepareWeekOptions(schedule, date, date);
+        then(optionsFormatter).should().prepareDayOptions(schedule, date);
     }
 
     @Test
-    public void postOptionsShouldRequestAndDisplayWeekOptionsFromFormatterForEntireWeekWhenRequestedInForm()
+    public void postOptionsShouldRequestAndDisplayWeekOptionsFromFormatter()
             throws Exception {
 
         long scheduleId = 1L;
         LocalDate date = LocalDate.MAX;
-        LocalDate monday = LocalDate.of(2020, 1, 1);
-        LocalDate friday = LocalDate.of(2020, 12, 12);
         Period period = Period.FIRST;
         Schedule schedule = mock(Schedule.class);
         Auditorium auditorium = mock(Auditorium.class);
@@ -590,13 +586,10 @@ class ManagementControllerTest {
 
         WeekOptions weekOptions = mock(WeekOptions.class);
         given(optionsFormatter.prepareWeekOptions(any(Schedule.class),
-                any(LocalDate.class), any(LocalDate.class))).willReturn(
-                weekOptions);
+                anyInt())).willReturn(weekOptions);
 
-        given(semesterCalendar.getWeekMonday(any(LocalDate.class))).willReturn(
-                monday);
-        given(semesterCalendar.getWeekFriday(any(LocalDate.class))).willReturn(
-                friday);
+        given(semesterCalendar.getSemesterWeekNumber(
+                any(LocalDate.class))).willReturn(1);
 
         mvc.perform(post("/timetable/management/schedule/options").flashAttr(
                 "findReschedulingOptionsForm", form))
@@ -607,8 +600,7 @@ class ManagementControllerTest {
                 .andExpect(view().name("management/schedule/options"));
 
         then(timetableFacade).should().getSchedule(scheduleId);
-        then(optionsFormatter).should()
-                .prepareWeekOptions(schedule, monday, friday);
+        then(optionsFormatter).should().prepareWeekOptions(schedule, 1);
     }
 
     @Test
@@ -689,7 +681,7 @@ class ManagementControllerTest {
         Group group = new Group("");
         Professor professor = new Professor("", "");
         Schedule schedule =
-                new Schedule(scheduleId, scheduleId, date, DayOfWeek.MONDAY,
+                new Schedule(scheduleId, null, date, DayOfWeek.MONDAY,
                         Period.FIRST, auditorium, course, group, professor);
         given(timetableFacade.getSchedule(anyLong())).willReturn(
                 Optional.of(schedule));
@@ -734,7 +726,7 @@ class ManagementControllerTest {
         Group group = new Group("");
         Professor professor = new Professor("", "");
         Schedule schedule =
-                new Schedule(scheduleId, scheduleId, date, DayOfWeek.MONDAY,
+                new Schedule(scheduleId, null, date, DayOfWeek.MONDAY,
                         Period.FIRST, auditorium, course, group, professor);
         given(timetableFacade.getSchedule(anyLong())).willReturn(
                 Optional.of(schedule));
@@ -780,7 +772,7 @@ class ManagementControllerTest {
         Group group = new Group("");
         Professor professor = new Professor("", "");
         Schedule schedule =
-                new Schedule(scheduleId, scheduleId, date, DayOfWeek.MONDAY,
+                new Schedule(scheduleId, null, date, DayOfWeek.MONDAY,
                         Period.FIRST, auditorium, course, group, professor);
         given(timetableFacade.getSchedule(anyLong())).willReturn(
                 Optional.of(schedule));
@@ -789,7 +781,6 @@ class ManagementControllerTest {
         given(timetableFacade.getOption(anyLong())).willReturn(
                 Optional.of(option));
 
-        List<Schedule> affected = Collections.singletonList(schedule);
         given(timetableFacade.reschedulePermanently(any(Schedule.class),
                 any(LocalDate.class), any(ReschedulingOption.class))).willThrow(
                 new ServiceException(""));

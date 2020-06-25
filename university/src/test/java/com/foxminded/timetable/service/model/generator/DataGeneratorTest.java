@@ -1,6 +1,6 @@
 package com.foxminded.timetable.service.model.generator;
 
-import com.foxminded.timetable.dao.jdbc.JdbcDataRefreshDao;
+import com.foxminded.timetable.dao.DataEraseDao;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
@@ -17,31 +17,43 @@ class DataGeneratorTest {
     @Mock
     private UniversityModelGenerator universityModelGenerator;
     @Mock
-    private JdbcDataRefreshDao       jdbcDataRefreshDao;
+    private DataEraseDao             dataEraseDao;
 
     @InjectMocks
     private DataGenerator dataGenerator;
 
     @Test
-    void refreshTimetableDataShouldEraseAndGenerateNewTimetableData() {
+    public void refreshTimetableDataShouldEraseAndGenerateNewTimetableData() {
 
         dataGenerator.refreshTimetableData();
 
-        then(jdbcDataRefreshDao).should().eraseTimetableData();
+        then(dataEraseDao).should().eraseTimetableData();
         then(timetableModelGenerator).should().generateAndSave();
-        then(jdbcDataRefreshDao).shouldHaveNoMoreInteractions();
+        then(dataEraseDao).shouldHaveNoMoreInteractions();
         then(timetableModelGenerator).shouldHaveNoMoreInteractions();
         then(universityModelGenerator).shouldHaveNoMoreInteractions();
     }
 
     @Test
-    void refreshAllDataShouldEraseAllDataAndGenerateNewUniversityAndTimetableData() {
+    public void refreshAllDataShouldEraseAllDataAndGenerateNewUniversityAndTimetableData() {
 
         dataGenerator.refreshAllData();
-        then(jdbcDataRefreshDao).should().eraseAllData();
+
+        then(dataEraseDao).should().eraseAllData();
         then(universityModelGenerator).should().generateAndSave();
         then(timetableModelGenerator).should().generateAndSave();
-        then(jdbcDataRefreshDao).shouldHaveNoMoreInteractions();
+        then(dataEraseDao).shouldHaveNoMoreInteractions();
+        then(universityModelGenerator).shouldHaveNoMoreInteractions();
+        then(timetableModelGenerator).shouldHaveNoMoreInteractions();
+    }
+
+    @Test
+    public void resetSequenceShouldDelegateDao() {
+
+        dataGenerator.resetSequences();
+
+        then(dataEraseDao).should().resetSequences();
+        then(dataEraseDao).shouldHaveNoMoreInteractions();
         then(universityModelGenerator).shouldHaveNoMoreInteractions();
         then(timetableModelGenerator).shouldHaveNoMoreInteractions();
     }

@@ -20,7 +20,7 @@ public class SemesterCalendar {
 
     private final LocalDate startDate;
     private final LocalDate endDate;
-    private final Integer   lengthInWeeks;
+    private final Integer lengthInWeeks;
 
     public SemesterCalendar(
             @Value("${university.semester.start.date}") String startDate,
@@ -36,8 +36,8 @@ public class SemesterCalendar {
     public boolean getWeekParityOf(LocalDate date) {
 
         int dateWeekInYear = date.get(IsoFields.WEEK_OF_WEEK_BASED_YEAR);
-        int weekInYearBeforeSemester = startDate.minusDays(1)
-                .get(IsoFields.WEEK_OF_WEEK_BASED_YEAR);
+        int weekInYearBeforeSemester =
+                startDate.minusDays(1).get(IsoFields.WEEK_OF_WEEK_BASED_YEAR);
         return (dateWeekInYear - weekInYearBeforeSemester) % 2 == 0;
     }
 
@@ -46,6 +46,11 @@ public class SemesterCalendar {
         return !(date.getDayOfWeek() == DayOfWeek.SATURDAY
                 || date.getDayOfWeek() == DayOfWeek.SUNDAY || date.isBefore(
                 startDate) || date.isAfter(endDate));
+    }
+
+    public boolean isSemesterWeek(int week) {
+
+        return week > 0 && week <= lengthInWeeks;
     }
 
     public LocalDate getWeekMonday(int weekNumber) {
@@ -104,15 +109,16 @@ public class SemesterCalendar {
     public String getSemesterDescription() {
 
         return startDate.format(
-                DateTimeFormatter.ofLocalizedDate(FormatStyle.MEDIUM)) + " - "
-                + endDate.format(
-                DateTimeFormatter.ofLocalizedDate(FormatStyle.MEDIUM));
+                DateTimeFormatter.ofLocalizedDate(FormatStyle.MEDIUM)
+                        .withLocale(Locale.US)) + " - " + endDate.format(
+                DateTimeFormatter.ofLocalizedDate(FormatStyle.MEDIUM)
+                        .withLocale(Locale.US));
     }
 
     public String getDayDescription(LocalDate date) {
 
-        return date.format(
-                DateTimeFormatter.ofLocalizedDate(FormatStyle.MEDIUM));
+        return date.format(DateTimeFormatter.ofLocalizedDate(FormatStyle.MEDIUM)
+                .withLocale(Locale.US));
     }
 
     public String getWeekDescription(LocalDate date) {
@@ -120,9 +126,10 @@ public class SemesterCalendar {
         LocalDate monday = getWeekMonday(date);
         LocalDate friday = getWeekFriday(date);
         return monday.format(
-                DateTimeFormatter.ofLocalizedDate(FormatStyle.MEDIUM)) + " - "
-                + friday.format(
-                DateTimeFormatter.ofLocalizedDate(FormatStyle.MEDIUM));
+                DateTimeFormatter.ofLocalizedDate(FormatStyle.MEDIUM)
+                        .withLocale(Locale.US)) + " - " + friday.format(
+                DateTimeFormatter.ofLocalizedDate(FormatStyle.MEDIUM)
+                        .withLocale(Locale.US));
     }
 
     public String getMonthDescription(LocalDate date) {
@@ -130,16 +137,17 @@ public class SemesterCalendar {
         LocalDate firstOfMonth = getFirstSemesterDayOfMonth(date);
         LocalDate lastOfMonth = getLastSemesterDayOfMonth(date);
         return firstOfMonth.format(
-                DateTimeFormatter.ofLocalizedDate(FormatStyle.MEDIUM)) + " - "
-                + lastOfMonth.format(
-                DateTimeFormatter.ofLocalizedDate(FormatStyle.MEDIUM));
+                DateTimeFormatter.ofLocalizedDate(FormatStyle.MEDIUM)
+                        .withLocale(Locale.US)) + " - " + lastOfMonth.format(
+                DateTimeFormatter.ofLocalizedDate(FormatStyle.MEDIUM)
+                        .withLocale(Locale.US));
     }
 
     public int getSemesterWeekNumber(LocalDate date) {
 
         int dateWeekInYear = date.get(IsoFields.WEEK_OF_WEEK_BASED_YEAR);
-        int weekInYearBeforeSemester = startDate.minusDays(1)
-                .get(IsoFields.WEEK_OF_WEEK_BASED_YEAR);
+        int weekInYearBeforeSemester =
+                startDate.minusDays(1).get(IsoFields.WEEK_OF_WEEK_BASED_YEAR);
         return dateWeekInYear - weekInYearBeforeSemester;
     }
 
@@ -147,8 +155,8 @@ public class SemesterCalendar {
 
         return new String[] { date.getDayOfWeek()
                 .getDisplayName(TextStyle.SHORT, Locale.US).toUpperCase(),
-                date.format(
-                        DateTimeFormatter.ofLocalizedDate(FormatStyle.SHORT)) };
+                date.format(DateTimeFormatter.ofLocalizedDate(FormatStyle.SHORT)
+                        .withLocale(Locale.US)) };
     }
 
 }

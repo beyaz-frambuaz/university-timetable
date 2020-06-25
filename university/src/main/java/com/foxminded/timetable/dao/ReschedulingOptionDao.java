@@ -1,14 +1,12 @@
 package com.foxminded.timetable.dao;
 
 import com.foxminded.timetable.model.ReschedulingOption;
-import com.foxminded.timetable.model.Schedule;
 
-import java.time.LocalDate;
+import java.time.DayOfWeek;
 import java.util.List;
 
 public interface ReschedulingOptionDao extends GenericDao<ReschedulingOption> {
 
-    List<ReschedulingOption> findDayReschedulingOptionsForSchedule(
-            boolean weekParity, LocalDate date, Schedule schedule);
+    List<ReschedulingOption> findAllByDay(DayOfWeek dayOfWeek);
 
 }

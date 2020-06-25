@@ -11,8 +11,8 @@ import java.util.Map;
 public class DayOptions {
 
     private final Map<Period, List<ReschedulingOption>> periodOptions;
-    private final String                                dayDescription;
-    private final String[]                              dayShortDescription;
-    private final String                                date;
+    private final String dayDescription;
+    private final String[] dayShortDescription;
+    private final String date;
 
 }

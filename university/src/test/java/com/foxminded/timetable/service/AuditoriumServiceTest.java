@@ -42,7 +42,7 @@ class AuditoriumServiceTest {
     }
 
     @Test
-    public void saveShouldAddAuditoriumToRepositoryIfNew() {
+    public void saveShouldDelegateToRepository() {
 
         Auditorium expected = new Auditorium("A-04");
         given(repository.save(any(Auditorium.class))).willReturn(expected);
@@ -50,20 +50,6 @@ class AuditoriumServiceTest {
         Auditorium actual = service.save(expected);
 
         then(repository).should().save(expected);
-        then(repository).shouldHaveNoMoreInteractions();
-        assertThat(actual).isEqualTo(expected);
-    }
-
-    @Test
-    public void saveShouldUpdateAuditoriumInRepositoryIfExisting() {
-
-        Auditorium expected = new Auditorium(4L, "A-04");
-        given(repository.update(any(Auditorium.class))).willReturn(expected);
-
-        Auditorium actual = service.save(expected);
-
-        then(repository).should().update(expected);
-        then(repository).shouldHaveNoMoreInteractions();
         assertThat(actual).isEqualTo(expected);
     }
 

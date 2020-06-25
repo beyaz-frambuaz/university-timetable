@@ -26,19 +26,14 @@ public class AuditoriumService {
 
     public Auditorium save(Auditorium auditorium) {
 
-        if (auditorium.getId() == null) {
-            log.debug("Adding new auditorium {}", auditorium);
-            return repository.save(auditorium);
-        }
-        log.debug("Updating auditorium {}", auditorium);
-        return repository.update(auditorium);
-
+        log.debug("Saving auditorium {}", auditorium);
+        return repository.save(auditorium);
     }
 
     public List<Auditorium> saveAll(List<Auditorium> auditoriums) {
 
         if (auditoriums.isEmpty()) {
-            log.debug("Recieved empty list, not saving");
+            log.debug("Received empty list, not saving");
             return auditoriums;
         }
 

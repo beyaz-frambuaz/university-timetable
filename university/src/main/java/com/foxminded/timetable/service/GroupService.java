@@ -26,19 +26,14 @@ public class GroupService {
 
     public Group save(Group group) {
 
-        if (group.getId() == null) {
-            log.debug("Adding new group {}", group);
-            return repository.save(group);
-        }
-        log.debug("Updating group {}", group);
-        return repository.update(group);
-
+        log.debug("Saving group {}", group);
+        return repository.save(group);
     }
 
     public List<Group> saveAll(List<Group> groups) {
 
         if (groups.isEmpty()) {
-            log.debug("Recieved empty list, not saving");
+            log.debug("Received empty list, not saving");
             return groups;
         }
 

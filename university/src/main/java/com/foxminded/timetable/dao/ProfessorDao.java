@@ -8,12 +8,6 @@ import java.util.List;
 
 public interface ProfessorDao extends GenericDao<Professor> {
 
-    void saveAllProfessorsCourses(List<Professor> professors);
-
     List<Professor> findAllAvailable(LocalDate date, Period period);
-
-    Professor save(Professor professor);
-
-    Professor update(Professor professor);
 
 }

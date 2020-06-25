@@ -278,7 +278,7 @@ class FacultyControllerTest {
         Professor professor = mock(Professor.class);
         Course course = mock(Course.class);
         given(professor.getCourses()).willReturn(
-                Collections.singletonList(course));
+                Collections.singleton(course));
         Student attendee = mock(Student.class);
         Group group = mock(Group.class);
         given(attendee.getGroup()).willReturn(group);

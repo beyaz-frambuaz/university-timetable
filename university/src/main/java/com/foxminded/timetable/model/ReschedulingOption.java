@@ -1,16 +1,36 @@
 package com.foxminded.timetable.model;
 
+import lombok.AllArgsConstructor;
 import lombok.Data;
+import lombok.NoArgsConstructor;
+import org.hibernate.annotations.Immutable;
 
+import javax.persistence.*;
 import java.time.DayOfWeek;
 
+@Entity
+@Table(name = "rescheduling_options")
+@Immutable
 @Data
+@AllArgsConstructor
+@NoArgsConstructor
 public class ReschedulingOption implements Comparable<ReschedulingOption> {
 
-    private final long       id;
-    private final DayOfWeek  day;
-    private final Period     period;
-    private final Auditorium auditorium;
+    @Id
+    @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "r_o_seq")
+    @SequenceGenerator(name = "r_o_seq",
+                       sequenceName = "rescheduling_option_id_seq")
+    private long id;
+
+    @Enumerated(EnumType.STRING)
+    private DayOfWeek day;
+
+    @Enumerated(EnumType.STRING)
+    private Period period;
+
+    @ManyToOne
+    @JoinColumn
+    private Auditorium auditorium;
 
     @Override
     public int compareTo(ReschedulingOption other) {

@@ -2,21 +2,48 @@ package com.foxminded.timetable.model;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;
+import lombok.NoArgsConstructor;
 
+import javax.persistence.*;
 import java.time.DayOfWeek;
 
+@Entity
+@Table(name = "schedule_templates")
 @Data
 @AllArgsConstructor
+@NoArgsConstructor
 public class ScheduleTemplate implements Comparable<ScheduleTemplate> {
 
-    private Long       id;
-    private boolean    weekParity;
-    private DayOfWeek  day;
-    private Period     period;
+    @Id
+    @Access(AccessType.PROPERTY)
+    @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "s_t_seq")
+    @SequenceGenerator(name = "s_t_seq",
+                       sequenceName = "schedule_template_id_seq")
+    private Long id;
+
+    private boolean weekParity;
+
+    @Enumerated(EnumType.STRING)
+    private DayOfWeek day;
+
+    @Enumerated(EnumType.STRING)
+    private Period period;
+
+    @ManyToOne
+    @JoinColumn
     private Auditorium auditorium;
-    private Course     course;
-    private Group      group;
-    private Professor  professor;
+
+    @ManyToOne
+    @JoinColumn
+    private Course course;
+
+    @ManyToOne
+    @JoinColumn
+    private Group group;
+
+    @ManyToOne
+    @JoinColumn
+    private Professor professor;
 
     public ScheduleTemplate(boolean weekParity, DayOfWeek day, Period period,
             Auditorium auditorium, Course course, Group group,

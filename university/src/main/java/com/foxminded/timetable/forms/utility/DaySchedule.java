@@ -11,7 +11,7 @@ import java.util.Map;
 public class DaySchedule {
 
     private final Map<Period, List<Schedule>> periodSchedules;
-    private final String                      dayDescription;
-    private final String[]                    dayShortDescription;
+    private final String dayDescription;
+    private final String[] dayShortDescription;
 
 }

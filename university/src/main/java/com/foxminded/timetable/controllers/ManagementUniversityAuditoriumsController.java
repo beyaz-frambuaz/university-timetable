@@ -31,7 +31,7 @@ import java.util.Optional;
 public class ManagementUniversityAuditoriumsController {
 
     private final ScheduleFormatter scheduleFormatter;
-    private final TimetableFacade   timetableFacade;
+    private final TimetableFacade timetableFacade;
 
     @GetMapping("/")
     public String auditoriums(Model model,
@@ -60,8 +60,8 @@ public class ManagementUniversityAuditoriumsController {
             @ModelAttribute("scheduleForm") ScheduleForm scheduleForm,
             RedirectAttributes redirectAttributes) {
 
-        Optional<Auditorium> optionalAuditorium = timetableFacade.getAuditorium(
-                scheduleForm.getId());
+        Optional<Auditorium> optionalAuditorium =
+                timetableFacade.getAuditorium(scheduleForm.getId());
         if (!optionalAuditorium.isPresent()) {
             log.error("Auditorium with ID({}) no found", scheduleForm.getId());
             redirectAttributes.addFlashAttribute("errorAlert", "Attempt to "
@@ -120,8 +120,8 @@ public class ManagementUniversityAuditoriumsController {
     public String rename(RedirectAttributes redirectAttributes,
             @ModelAttribute("renameForm") RenameForm renameForm) {
 
-        Optional<Auditorium> optionalAuditorium = timetableFacade.getAuditorium(
-                renameForm.getRenameId());
+        Optional<Auditorium> optionalAuditorium =
+                timetableFacade.getAuditorium(renameForm.getRenameId());
         if (!optionalAuditorium.isPresent()) {
             log.error("Auditorium with ID({}) no found",
                     renameForm.getRenameId());

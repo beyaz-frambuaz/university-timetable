@@ -53,7 +53,7 @@ class StudentServiceTest {
     }
 
     @Test
-    public void saveShouldAddStudentToRepositoryIfNew() {
+    public void saveShouldDelegateToRepository() {
 
         Student expected = new Student("new", "new");
         expected.setGroup(group);
@@ -62,20 +62,7 @@ class StudentServiceTest {
         Student actual = service.save(expected);
 
         then(repository).should().save(expected);
-        then(repository).shouldHaveNoMoreInteractions();
         assertThat(actual).isEqualTo(expected);
-    }
-
-    @Test
-    public void saveShouldUpdateStudentGroupInRepositoryIfExisting() {
-
-        given(repository.update(any(Student.class))).willReturn(student);
-
-        Student actual = service.save(student);
-
-        then(repository).should().update(student);
-        then(repository).shouldHaveNoMoreInteractions();
-        assertThat(actual).isEqualTo(student);
     }
 
     @Test

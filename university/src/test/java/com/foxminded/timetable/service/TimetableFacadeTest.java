@@ -1,7 +1,7 @@
 package com.foxminded.timetable.service;
 
-import com.foxminded.timetable.model.*;
 import com.foxminded.timetable.exceptions.ServiceException;
+import com.foxminded.timetable.model.*;
 import com.foxminded.timetable.service.utility.SemesterCalendar;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -11,13 +11,13 @@ import org.mockito.junit.jupiter.MockitoExtension;
 
 import java.time.DayOfWeek;
 import java.time.LocalDate;
+import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
-import java.util.Map;
 import java.util.Optional;
 
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.assertj.core.api.Assertions.assertThatExceptionOfType;
+import static org.assertj.core.api.AssertionsForClassTypes.assertThatExceptionOfType;
 import static org.junit.jupiter.api.Assertions.fail;
 import static org.mockito.ArgumentMatchers.*;
 import static org.mockito.BDDMockito.given;
@@ -391,21 +391,232 @@ public class TimetableFacadeTest {
     }
 
     @Test
-    public void getOptionsForShouldDelegateToOptionService() {
+    public void getOptionsForWeekShouldDelegateAppropriateCallsToUnderlyingServices() {
 
-        LocalDate date = LocalDate.MAX;
         Schedule schedule = mock(Schedule.class);
-        Map<LocalDate, List<ReschedulingOption>> expected =
-                Collections.emptyMap();
-        given(optionService.findAllFor(any(Schedule.class),
-                any(LocalDate.class), any(LocalDate.class))).willReturn(
-                expected);
+        int week = 1;
+        LocalDate monday = LocalDate.MIN;
+        LocalDate friday = LocalDate.MAX;
+        given(semesterCalendar.isSemesterWeek(anyInt())).willReturn(true);
+        given(semesterCalendar.getWeekMonday(anyInt())).willReturn(monday);
+        given(semesterCalendar.getWeekFriday(anyInt())).willReturn(friday);
 
-        Map<LocalDate, List<ReschedulingOption>> actual =
-                timetableFacade.getOptionsFor(schedule, date, date);
+        List<ScheduleTemplate> templates = Collections.emptyList();
+        given(templateService.findAllForWeek(anyBoolean())).willReturn(
+                templates);
 
-        then(optionService).should().findAllFor(schedule, date, date);
-        assertThat(actual).isEqualTo(expected);
+        List<Schedule> schedules = Collections.emptyList();
+        given(scheduleService.findGeneratedInRange(any(LocalDate.class),
+                any(LocalDate.class))).willReturn(schedules);
+
+        List<ReschedulingOption> options = Collections.emptyList();
+        given(optionService.findAll()).willReturn(options);
+
+        timetableFacade.getOptionsForWeek(schedule, week);
+
+        then(templateService).should().findAllForWeek(false);
+        then(scheduleService).should().findGeneratedInRange(monday, friday);
+        then(optionService).should().findAll();
+    }
+
+    @Test
+    public void getOptionsForWeekShouldReturnEmptyListGivenNonSemesterWeek() {
+
+        Schedule schedule = mock(Schedule.class);
+        int week = 1;
+        given(semesterCalendar.isSemesterWeek(anyInt())).willReturn(false);
+
+        List<ReschedulingOption> actual =
+                timetableFacade.getOptionsForWeek(schedule, week);
+
+        assertThat(actual).isEmpty();
+    }
+
+    @Test
+    public void getOptionsForDateShouldDelegateAppropriateCallsToUnderlyingServices() {
+
+        Schedule schedule = mock(Schedule.class);
+        LocalDate date = LocalDate.MAX;
+        given(semesterCalendar.isSemesterDate(any(LocalDate.class))).willReturn(
+                true);
+        given(semesterCalendar.getWeekParityOf(
+                any(LocalDate.class))).willReturn(true);
+
+        List<ScheduleTemplate> templates = Collections.emptyList();
+        given(templateService.findAllForDay(anyBoolean(), any(DayOfWeek.class)))
+                .willReturn(templates);
+
+        List<Schedule> schedules = Collections.emptyList();
+        given(scheduleService.findGeneratedInRange(any(LocalDate.class),
+                any(LocalDate.class))).willReturn(schedules);
+
+        List<ReschedulingOption> options = Collections.emptyList();
+        given(optionService.findAllForDay(any(DayOfWeek.class))).willReturn(
+                options);
+
+        timetableFacade.getOptionsForDate(schedule, date);
+
+        then(templateService).should().findAllForDay(true, date.getDayOfWeek());
+        then(scheduleService).should().findGeneratedInRange(date, date);
+        then(optionService).should().findAllForDay(date.getDayOfWeek());
+    }
+
+    @Test
+    public void getOptionsForDateShouldFilterOutOptionsWithBusyAuditoriums() {
+
+        given(semesterCalendar.isSemesterDate(any(LocalDate.class))).willReturn(
+                true);
+        given(semesterCalendar.getWeekParityOf(
+                any(LocalDate.class))).willReturn(true);
+
+        LocalDate date = LocalDate.of(2020, 6, 1);
+        DayOfWeek day = DayOfWeek.MONDAY;
+        Period period = Period.FIRST;
+        Group group = mock(Group.class);
+        Professor professor = mock(Professor.class);
+        Auditorium availableAuditorium = mock(Auditorium.class);
+        Auditorium busyAuditoriumOne = mock(Auditorium.class);
+        Auditorium busyAuditoriumTwo = mock(Auditorium.class);
+
+        ReschedulingOption availableOption =
+                new ReschedulingOption(1L, day, period, availableAuditorium);
+        ReschedulingOption busyOptionOne =
+                new ReschedulingOption(2L, day, period, busyAuditoriumOne);
+        ReschedulingOption busyOptionTwo =
+                new ReschedulingOption(3L, day, period, busyAuditoriumTwo);
+        List<ReschedulingOption> options =
+                Arrays.asList(availableOption, busyOptionOne, busyOptionTwo);
+
+        given(optionService.findAllForDay(any(DayOfWeek.class))).willReturn(
+                options);
+
+        Schedule schedule = mock(Schedule.class);
+        given(schedule.getDay()).willReturn(day);
+        given(schedule.getPeriod()).willReturn(period);
+        given(schedule.getAuditorium()).willReturn(busyAuditoriumOne);
+        given(schedule.getGroup()).willReturn(group);
+        given(schedule.getProfessor()).willReturn(professor);
+        given(scheduleService.findGeneratedInRange(any(LocalDate.class),
+                any(LocalDate.class))).willReturn(
+                Collections.singletonList(schedule));
+
+        ScheduleTemplate template = mock(ScheduleTemplate.class);
+        given(template.getDay()).willReturn(day);
+        given(template.getPeriod()).willReturn(period);
+        given(template.getAuditorium()).willReturn(busyAuditoriumTwo);
+        given(template.getGroup()).willReturn(group);
+        given(template.getProfessor()).willReturn(professor);
+        given(templateService.findAllForDay(anyBoolean(), any(DayOfWeek.class)))
+                .willReturn(Collections.singletonList(template));
+
+        Schedule candidate = mock(Schedule.class);
+        Professor candidateProfessor = mock(Professor.class);
+        Group candidateGroup = mock(Group.class);
+        given(candidate.getProfessor()).willReturn(candidateProfessor);
+        given(candidate.getGroup()).willReturn(candidateGroup);
+
+        List<ReschedulingOption> actual =
+                timetableFacade.getOptionsForDate(candidate, date);
+
+        assertThat(actual).containsOnly(availableOption)
+                .doesNotContain(busyOptionOne, busyOptionTwo);
+    }
+
+    @Test
+    public void getOptionsForDateShouldFilterOutOptionsInPeriodsWithBusyGroupOrProfessor() {
+
+        given(semesterCalendar.isSemesterDate(any(LocalDate.class))).willReturn(
+                true);
+        given(semesterCalendar.getWeekParityOf(
+                any(LocalDate.class))).willReturn(true);
+
+        LocalDate date = LocalDate.of(2020, 6, 1);
+        DayOfWeek day = DayOfWeek.MONDAY;
+        Period availablePeriod = Period.FIRST;
+        Period busyPeriodOne = Period.SECOND;
+        Period busyPeriodTwo = Period.THIRD;
+        Period busyPeriodThree = Period.FOURTH;
+        Period busyPeriodFour = Period.FIFTH;
+        Group group = mock(Group.class);
+        Professor professor = mock(Professor.class);
+        Auditorium auditorium = mock(Auditorium.class);
+        Auditorium anotherAuditorium = mock(Auditorium.class);
+
+
+        ReschedulingOption availableOption =
+                new ReschedulingOption(1L, day, availablePeriod, auditorium);
+        ReschedulingOption busyOptionOne =
+                new ReschedulingOption(2L, day, busyPeriodOne, auditorium);
+        ReschedulingOption busyOptionTwo =
+                new ReschedulingOption(3L, day, busyPeriodTwo, auditorium);
+        ReschedulingOption busyOptionThree =
+                new ReschedulingOption(4L, day, busyPeriodThree, auditorium);
+        ReschedulingOption busyOptionFour =
+                new ReschedulingOption(5L, day, busyPeriodFour, auditorium);
+        List<ReschedulingOption> options =
+                Arrays.asList(availableOption, busyOptionOne, busyOptionTwo,
+                        busyOptionThree, busyOptionFour);
+
+        given(optionService.findAllForDay(any(DayOfWeek.class))).willReturn(
+                options);
+
+        Schedule scheduleOne = mock(Schedule.class);
+        given(scheduleOne.getDay()).willReturn(day);
+        given(scheduleOne.getPeriod()).willReturn(busyPeriodOne);
+        given(scheduleOne.getAuditorium()).willReturn(anotherAuditorium);
+        given(scheduleOne.getGroup()).willReturn(group);
+
+        Schedule scheduleTwo = mock(Schedule.class);
+        given(scheduleTwo.getDay()).willReturn(day);
+        given(scheduleTwo.getPeriod()).willReturn(busyPeriodTwo);
+        given(scheduleTwo.getAuditorium()).willReturn(anotherAuditorium);
+        given(scheduleTwo.getGroup()).willReturn(mock(Group.class));
+        given(scheduleTwo.getProfessor()).willReturn(professor);
+
+        given(scheduleService.findGeneratedInRange(any(LocalDate.class),
+                any(LocalDate.class))).willReturn(
+                Arrays.asList(scheduleOne, scheduleTwo));
+
+        ScheduleTemplate templateOne = mock(ScheduleTemplate.class);
+        given(templateOne.getDay()).willReturn(day);
+        given(templateOne.getPeriod()).willReturn(busyPeriodThree);
+        given(templateOne.getAuditorium()).willReturn(anotherAuditorium);
+        given(templateOne.getGroup()).willReturn(group);
+
+        ScheduleTemplate templateTwo = mock(ScheduleTemplate.class);
+        given(templateTwo.getDay()).willReturn(day);
+        given(templateTwo.getPeriod()).willReturn(busyPeriodFour);
+        given(templateTwo.getAuditorium()).willReturn(anotherAuditorium);
+        given(templateTwo.getGroup()).willReturn(mock(Group.class));
+        given(templateTwo.getProfessor()).willReturn(professor);
+
+        given(templateService.findAllForDay(anyBoolean(), any(DayOfWeek.class)))
+                .willReturn(Arrays.asList(templateOne, templateTwo));
+
+        Schedule candidate = mock(Schedule.class);
+        given(candidate.getProfessor()).willReturn(professor);
+        given(candidate.getGroup()).willReturn(group);
+
+        List<ReschedulingOption> actual =
+                timetableFacade.getOptionsForDate(candidate, date);
+
+        assertThat(actual).containsOnly(availableOption)
+                .doesNotContain(busyOptionOne, busyOptionTwo, busyOptionThree,
+                        busyOptionFour);
+    }
+
+    @Test
+    public void getOptionsForDateShouldReturnEmptyListGivenNonSemesterDate() {
+
+        Schedule schedule = mock(Schedule.class);
+        LocalDate date = LocalDate.MAX;
+        given(semesterCalendar.isSemesterDate(any(LocalDate.class))).willReturn(
+                false);
+
+        List<ReschedulingOption> actual =
+                timetableFacade.getOptionsForDate(schedule, date);
+
+        assertThat(actual).isEmpty();
     }
 
     @Test
@@ -665,19 +876,18 @@ public class TimetableFacadeTest {
     /*
      * 1. should request template from service
      * 2. should set template attributes
-     * 3. should delegate save template to service
-     * 4. should set schedule attributes
-     * 5. should delegate update all to service
-     * 6. should request and return all affected schedules from service
+     * 3. should set schedule attributes
+     * 4. should delegate update all schedules with same template id to service
      */
     @Test
     public void reschedulePermanentlyTest() {
 
         long templateId = 1L;
         Schedule schedule = mock(Schedule.class);
-        given(schedule.getTemplateId()).willReturn(templateId);
-
         ScheduleTemplate template = mock(ScheduleTemplate.class);
+        given(schedule.getTemplate()).willReturn(template);
+        given(template.getId()).willReturn(templateId);
+
         given(templateService.findById(anyLong())).willReturn(
                 Optional.of(template));
 
@@ -693,12 +903,9 @@ public class TimetableFacadeTest {
         given(option.getPeriod()).willReturn(period);
         given(option.getAuditorium()).willReturn(auditorium);
 
-        given(templateService.save(any(ScheduleTemplate.class))).willReturn(
-                template);
-
         List<Schedule> expected = Collections.emptyList();
-        given(scheduleService.findAllByTemplateId(anyLong())).willReturn(
-                expected);
+        given(scheduleService.updateAllWithSameTemplateId(any(Schedule.class),
+                any(LocalDate.class))).willReturn(expected);
 
         List<Schedule> actual = null;
         try {
@@ -713,13 +920,12 @@ public class TimetableFacadeTest {
         then(template).should().setDay(day);
         then(template).should().setPeriod(period);
         then(template).should().setAuditorium(auditorium);
-        then(templateService).should().save(template);
 
         then(schedule).should().setDay(day);
         then(schedule).should().setPeriod(period);
         then(schedule).should().setAuditorium(auditorium);
-        then(scheduleService).should().updateAll(schedule, date);
-        then(scheduleService).should().findAllByTemplateId(templateId);
+        then(scheduleService).should()
+                .updateAllWithSameTemplateId(schedule, date);
         assertThat(actual).isEqualTo(expected);
     }
 
@@ -728,7 +934,9 @@ public class TimetableFacadeTest {
 
         long templateId = 1L;
         Schedule schedule = mock(Schedule.class);
-        given(schedule.getTemplateId()).willReturn(templateId);
+        ScheduleTemplate template = mock(ScheduleTemplate.class);
+        given(schedule.getTemplate()).willReturn(template);
+        given(template.getId()).willReturn(templateId);
         LocalDate date = LocalDate.MAX;
         ReschedulingOption option = mock(ReschedulingOption.class);
         Optional<ScheduleTemplate> emptyOptional = Optional.empty();
@@ -737,7 +945,7 @@ public class TimetableFacadeTest {
         assertThatExceptionOfType(ServiceException.class).isThrownBy(
                 () -> timetableFacade.reschedulePermanently(schedule, date,
                         option))
-                .withMessage("Template with ID(1) could not " + "be found");
+                .withMessage("Template with ID(1) could not be found");
     }
 
 }

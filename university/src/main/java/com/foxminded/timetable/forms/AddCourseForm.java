@@ -11,4 +11,5 @@ public class AddCourseForm {
     private List<Course> newCourses;
     private long newCourse;
     private long professorId;
+
 }

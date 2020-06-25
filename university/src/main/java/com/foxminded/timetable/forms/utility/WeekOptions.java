@@ -8,7 +8,7 @@ import java.util.List;
 public class WeekOptions {
 
     private final List<DayOptions> dayOptions;
-    private final String           weekDescription;
-    private final int              weekNumber;
+    private final String weekDescription;
+    private final int weekNumber;
 
 }

@@ -7,4 +7,5 @@ public class RenameForm {
 
     private String newName;
     private long renameId;
+
 }

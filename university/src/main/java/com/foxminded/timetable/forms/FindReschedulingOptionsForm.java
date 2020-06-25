@@ -8,9 +8,9 @@ import java.time.LocalDate;
 public class FindReschedulingOptionsForm {
 
     private ScheduleOption scheduleOption;
-    private String         date;
-    private LocalDate      localDate;
-    private long           scheduleId;
+    private String date;
+    private LocalDate localDate;
+    private long scheduleId;
 
     public void setDate(String date) {
 

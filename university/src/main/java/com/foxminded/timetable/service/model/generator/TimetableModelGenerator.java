@@ -17,15 +17,17 @@ import static java.util.stream.Collectors.toList;
 public class TimetableModelGenerator {
 
     private final TimetableFacade timetableFacade;
-    private final Random          random = new Random();
-    private       List<ScheduleTemplate> scheduleTemplates;
+    private final Random random = new Random();
+    private List<ScheduleTemplate> scheduleTemplates;
 
     public void generateAndSave() {
 
-        log.info("Generating timetable model");
+        log.info("Generating timetable model...");
+
         this.scheduleTemplates = new ArrayList<>();
         populateScheduleTemplates();
         timetableFacade.saveTemplates(scheduleTemplates);
+
         log.info("Timetable model generated");
     }
 
@@ -57,10 +59,11 @@ public class TimetableModelGenerator {
             for (Course course : courses) {
 
                 List<Professor> courseProfessors =
-                        getCourseProfessorsSortedByLeastWorkload(
-                        professors, course);
-                Optional<ScheduleTemplate> template = scheduleGroupForCourse(
-                        options, courseProfessors, group, course);
+                        getCourseProfessorsSortedByLeastWorkload(professors,
+                                course);
+                Optional<ScheduleTemplate> template =
+                        scheduleGroupForCourse(options, courseProfessors, group,
+                                course);
 
                 if (template.isPresent()) {
                     scheduleTemplates.add(template.get());
@@ -105,9 +108,9 @@ public class TimetableModelGenerator {
         Optional<ReschedulingOption> scheduleSlot;
 
         for (Professor professor : professors) {
-            boolean[][] weekParityOptions = new boolean[][] {
-                    new boolean[] { false, true },
-                    new boolean[] { true, false } };
+            boolean[][] weekParityOptions =
+                    new boolean[][] { new boolean[] { false, true },
+                            new boolean[] { true, false } };
             int randomParity = random.nextInt(2);
             for (boolean weekParity : weekParityOptions[randomParity]) {
                 Collections.shuffle(options);
