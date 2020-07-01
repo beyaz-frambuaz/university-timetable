@@ -1,6 +1,6 @@
 package com.foxminded.timetable.service;
 
-import com.foxminded.timetable.dao.ProfessorDao;
+import com.foxminded.timetable.dao.ProfessorRepository;
 import com.foxminded.timetable.model.Period;
 import com.foxminded.timetable.model.Professor;
 import lombok.RequiredArgsConstructor;
@@ -16,7 +16,7 @@ import java.util.Optional;
 @RequiredArgsConstructor
 public class ProfessorService {
 
-    private final ProfessorDao repository;
+    private final ProfessorRepository repository;
 
     public long count() {
 
@@ -57,6 +57,18 @@ public class ProfessorService {
 
         log.debug("Fetching available professors from repository");
         return repository.findAllAvailable(date, period);
+    }
+
+    public void delete(Professor professor) {
+
+        log.debug("Removing {}", professor);
+        repository.delete(professor);
+    }
+
+    public void deleteAll() {
+
+        log.debug("Removing all professors");
+        repository.deleteAllInBatch();
     }
 
 }

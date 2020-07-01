@@ -62,6 +62,8 @@
 	</div>
 </div>
 
+<div th:replace="layout :: deleteModal"></div>
+
 <div th:replace="layout :: scheduleFormFilterManagement"></div>
 
 <div th:replace="layout :: scheduleFormManagement"></div>
@@ -126,6 +128,12 @@
 						   class="btn btn-outline-warning toggle-button" >
 							Manage courses
 						</a>
+
+						<button type="button" class="btn btn-outline-danger toggle-button" data-toggle="modal"
+						        data-target="#delete-modal" data-title="Name One" data-delete-id="1"
+						        th:attr="data-title=${professor.fullName}, data-delete-id=${professor.id}">
+							Delete
+						</button>
 
 					</div>
 

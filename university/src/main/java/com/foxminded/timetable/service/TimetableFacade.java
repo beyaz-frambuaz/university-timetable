@@ -10,9 +10,7 @@ import org.springframework.stereotype.Service;
 
 import javax.transaction.Transactional;
 import java.time.LocalDate;
-import java.util.Collections;
-import java.util.List;
-import java.util.Optional;
+import java.util.*;
 import java.util.function.Predicate;
 import java.util.stream.Collectors;
 
@@ -63,6 +61,16 @@ public class TimetableFacade {
         return auditoriumService.findAvailableFor(date, period);
     }
 
+    public void deleteAuditorium(Auditorium auditorium) {
+
+        auditoriumService.delete(auditorium);
+    }
+
+    public void deleteAllAuditoriums() {
+
+        auditoriumService.deleteAll();
+    }
+
     public long countCourses() {
 
         return courseService.count();
@@ -88,6 +96,16 @@ public class TimetableFacade {
         return courseService.findAll();
     }
 
+    public void deleteCourse(Course course) {
+
+        courseService.delete(course);
+    }
+
+    public void deleteAllCourses() {
+
+        courseService.deleteAll();
+    }
+
     public long countGroups() {
 
         return groupService.count();
@@ -111,6 +129,35 @@ public class TimetableFacade {
     public List<Group> getGroups() {
 
         return groupService.findAll();
+    }
+
+    public Map<Group, List<Student>> getGroupedStudents() {
+
+        List<Student> students = studentService.findAll();
+        List<Group> groups = groupService.findAll();
+
+        Map<Group, List<Student>> groupedStudents = new LinkedHashMap<>();
+
+        for (Group group : groups) {
+
+            List<Student> groupStudents = students.stream()
+                    .filter(student -> student.getGroup().equals(group))
+                    .sorted(Comparator.comparing(Student::getId))
+                    .collect(Collectors.toList());
+            groupedStudents.put(group, groupStudents);
+        }
+
+        return groupedStudents;
+    }
+
+    public void deleteGroup(Group group) {
+
+        groupService.delete(group);
+    }
+
+    public void deleteAllGroups() {
+
+        groupService.deleteAll();
     }
 
     public long countProfessors() {
@@ -142,6 +189,16 @@ public class TimetableFacade {
             Period period) {
 
         return professorService.findAvailableFor(date, period);
+    }
+
+    public void deleteProfessor(Professor professor) {
+
+        professorService.delete(professor);
+    }
+
+    public void deleteAllProfessors() {
+
+        professorService.deleteAll();
     }
 
     public long countOptions() {
@@ -237,6 +294,11 @@ public class TimetableFacade {
                                 .equals(candidate.getProfessor())));
     }
 
+    public void deleteAllOptions() {
+
+        optionService.deleteAll();
+    }
+
     public Schedule saveSchedule(Schedule schedule) {
 
         return scheduleService.save(schedule);
@@ -269,6 +331,11 @@ public class TimetableFacade {
         return scheduleService.findAllInRange(startDate, endDate);
     }
 
+    public void deleteAllSchedules() {
+
+        scheduleService.deleteAll();
+    }
+
     public long countTemplates() {
 
         return templateService.count();
@@ -293,6 +360,11 @@ public class TimetableFacade {
     public List<ScheduleTemplate> getTwoWeekSchedule() {
 
         return templateService.findAll();
+    }
+
+    public void deleteAllTemplates() {
+
+        templateService.deleteAll();
     }
 
     public long countStudents() {
@@ -326,6 +398,16 @@ public class TimetableFacade {
         List<Group> professorGroups =
                 groupService.findAllAttendingProfessorCourse(course, professor);
         return studentService.findAllInGroups(professorGroups);
+    }
+
+    public void deleteStudent(Student student) {
+
+        studentService.delete(student);
+    }
+
+    public void deleteAllStudents() {
+
+        studentService.deleteAll();
     }
 
     public Schedule substituteProfessor(Schedule schedule,
@@ -376,6 +458,25 @@ public class TimetableFacade {
 
         return scheduleService.updateAllWithSameTemplateId(candidate,
                 targetDate);
+    }
+
+    public void deleteTimetableData() {
+
+        optionService.deleteAll();
+        scheduleService.deleteAll();
+        templateService.deleteAll();
+    }
+
+    public void deleteAllData() {
+
+        optionService.deleteAll();
+        scheduleService.deleteAll();
+        templateService.deleteAll();
+        auditoriumService.deleteAll();
+        courseService.deleteAll();
+        groupService.deleteAll();
+        professorService.deleteAll();
+        studentService.deleteAll();
     }
 
 }

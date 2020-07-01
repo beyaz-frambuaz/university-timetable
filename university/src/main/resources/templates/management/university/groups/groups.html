@@ -7,6 +7,8 @@
 
 <div th:replace="layout :: renameModal"></div>
 
+<div th:replace="layout :: deleteModal"></div>
+
 <div th:replace="layout :: newItemModal"></div>
 
 <div th:replace="layout :: scheduleFormFilterManagement"></div>
@@ -82,6 +84,13 @@
 						        th:attr="data-title=${group.key.name}, data-rename-id=${group.key.id}">
 							Rename
 						</button>
+
+						<button type="button" class="btn btn-outline-danger toggle-button" data-toggle="modal"
+						        data-target="#delete-modal" data-title="Name One" data-delete-id="1"
+						        th:attr="data-title=${group.key.name}, data-delete-id=${group.key.id}">
+							Delete
+						</button>
+
 					</div>
 
 					<div id="studentsGroup1" th:id="'studentsGroup' + *{group.key.id}"

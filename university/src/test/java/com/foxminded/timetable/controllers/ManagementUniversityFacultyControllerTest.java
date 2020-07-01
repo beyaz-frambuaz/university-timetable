@@ -195,6 +195,43 @@ class ManagementUniversityFacultyControllerTest {
     }
 
     @Test
+    public void getRemoveShouldRequestProfessorFromServiceAndRedirectToFacultyIfNotPresent()
+            throws Exception {
+
+        long id = 1L;
+        given(timetableFacade.getProfessor(anyLong())).willReturn(
+                Optional.empty());
+
+        mvc.perform(
+                get(baseUrl + "/remove").queryParam("id", String.valueOf(id)))
+                .andExpect(status().is3xxRedirection())
+                .andExpect(flash().attributeExists("errorAlert"))
+                .andExpect(redirectedUrl(baseUrl));
+
+        then(timetableFacade).should().getProfessor(id);
+    }
+
+    @Test
+    public void getRemoveShouldRequestServiceToDeleteAndRedirectToProfessorsWithMessage()
+            throws Exception {
+
+        long id = 1L;
+        Professor professor = mock(Professor.class);
+        given(timetableFacade.getProfessor(anyLong())).willReturn(
+                Optional.of(professor));
+
+        mvc.perform(
+                get(baseUrl + "/remove").queryParam("id", String.valueOf(id)))
+                .andExpect(status().is3xxRedirection())
+                .andExpect(flash().attributeExists("successAlert"))
+                .andExpect(flash().attribute("editedId", id))
+                .andExpect(redirectedUrl(baseUrl));
+
+        then(timetableFacade).should().getProfessor(id);
+        then(timetableFacade).should().deleteProfessor(professor);
+    }
+
+    @Test
     public void postNewShouldCreateProfessorRequestServiceToSaveAndRedirectToFacultyWithMessage()
             throws Exception {
 

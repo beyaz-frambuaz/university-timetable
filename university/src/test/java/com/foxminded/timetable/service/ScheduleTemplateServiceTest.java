@@ -1,6 +1,6 @@
 package com.foxminded.timetable.service;
 
-import com.foxminded.timetable.dao.ScheduleTemplateDao;
+import com.foxminded.timetable.dao.ScheduleTemplateRepository;
 import com.foxminded.timetable.model.*;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -35,7 +35,7 @@ class ScheduleTemplateServiceTest {
             new ScheduleTemplate(id, weekParity, day, period, auditorium,
                     course, group, professor);
     @Mock
-    private       ScheduleTemplateDao     repository;
+    private ScheduleTemplateRepository repository;
     @InjectMocks
     private       ScheduleTemplateService service;
 
@@ -119,11 +119,11 @@ class ScheduleTemplateServiceTest {
     public void findAllForWeekShouldDelegateToRepository() {
 
         List<ScheduleTemplate> expected = Collections.singletonList(template);
-        given(repository.findAllByWeek(anyBoolean())).willReturn(expected);
+        given(repository.findAllByWeekParity(anyBoolean())).willReturn(expected);
 
         List<ScheduleTemplate> actual = service.findAllForWeek(true);
 
-        then(repository).should().findAllByWeek(true);
+        then(repository).should().findAllByWeekParity(true);
         assertThat(actual).isEqualTo(expected);
     }
 
@@ -132,13 +132,21 @@ class ScheduleTemplateServiceTest {
 
         List<ScheduleTemplate> expected = Collections.singletonList(template);
         DayOfWeek day = DayOfWeek.MONDAY;
-        given(repository.findAllByDay(anyBoolean(),
+        given(repository.findAllByWeekParityAndDay(anyBoolean(),
                 any(DayOfWeek.class))).willReturn(expected);
 
         List<ScheduleTemplate> actual = service.findAllForDay(true, day);
 
-        then(repository).should().findAllByDay(true, day);
+        then(repository).should().findAllByWeekParityAndDay(true, day);
         assertThat(actual).isEqualTo(expected);
+    }
+
+    @Test
+    public void deleteAllShouldDelegateToRepository() {
+
+        service.deleteAll();
+
+        then(repository).should().deleteAllInBatch();
     }
 
 }

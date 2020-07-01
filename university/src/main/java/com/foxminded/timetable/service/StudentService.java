@@ -1,6 +1,6 @@
 package com.foxminded.timetable.service;
 
-import com.foxminded.timetable.dao.StudentDao;
+import com.foxminded.timetable.dao.StudentRepository;
 import com.foxminded.timetable.model.Group;
 import com.foxminded.timetable.model.Student;
 import lombok.RequiredArgsConstructor;
@@ -15,7 +15,7 @@ import java.util.Optional;
 @RequiredArgsConstructor
 public class StudentService {
 
-    private final StudentDao repository;
+    private final StudentRepository repository;
 
     public long count() {
 
@@ -56,13 +56,25 @@ public class StudentService {
     public List<Student> findAllInGroups(List<Group> groups) {
 
         log.debug("Fetching students by groups from repository");
-        return repository.findAllInGroups(groups);
+        return repository.findAllByGroupIn(groups);
     }
 
     public Optional<Student> findById(long id) {
 
         log.debug("Fetching student ID{} from repository", id);
         return repository.findById(id);
+    }
+
+    public void delete(Student student) {
+
+        log.debug("Removing {}", student);
+        repository.delete(student);
+    }
+
+    public void deleteAll() {
+
+        log.debug("Removing all students");
+        repository.deleteAllInBatch();
     }
 
 }

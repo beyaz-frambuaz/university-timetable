@@ -15,3 +15,7 @@
       [x] Create DataSource in web-project configuration files. Switch DAO layer to lookup DataSource by JNDI name.
 - ### Task 17 - Hibernate
       [x] Rewrite the DAO layer. Use Hibernate instead of Spring JDBC.
+- ### Task 18 - Spring Boot
+      [x] Convert application to Spring Boot. 
+- ### Task 19 - Spring Data JPA
+      [x] Rewrite the DAO layer. Use Spring Data JPA instead of Hibernate.

@@ -171,6 +171,48 @@
 	</div>
 </div>
 
+<!-- Delete modal -->
+<div th:fragment="deleteModal" class="modal fade" id="delete-modal" tabindex="-1" role="dialog"
+     aria-labelledby="delete-label" aria-hidden="true">
+	<div class="modal-dialog modal-dialog-centered" role="document">
+		<div class="modal-content">
+
+			<!--Header-->
+			<div class="modal-header">
+				<h5 id="delete-label" class="modal-title">
+					<i class="fas fa-trash-alt"></i>
+					Delete
+					<span th:if="${#httpServletRequest.requestURI.contains('university/auditoriums')}">auditorium</span>
+					<span th:if="${#httpServletRequest.requestURI.contains('university/groups')}">group</span>
+					<span th:if="${#httpServletRequest.requestURI.contains('university/courses')}">course</span>
+					<span th:if="${#httpServletRequest.requestURI.contains('university/faculty')}">professor</span>
+					<span th:if="${#httpServletRequest.requestURI.contains('university/students')}">student</span>
+				</h5>
+				<button type="button" class="close" data-dismiss="modal" aria-label="Close">
+					<span aria-hidden="true">&times;</span>
+				</button>
+			</div>
+
+			<!--Body-->
+			<div class="modal-body">
+				<h4 id="delete-title">Current name</h4>
+				<p class="text-warning">
+					NB: deleting this university item might cause deleting other related items where it is referenced! Proceed
+					at your own risk and peril
+				</p>
+				<br>
+
+			</div>
+
+			<div class="modal-footer">
+				<a class="btn btn-primary" href="#" id="delete-link"
+				   th:href="${#httpServletRequest.requestURI} + '/remove?id='">Confirm</a>
+			</div>
+
+		</div>
+	</div>
+</div>
+
 <!-- New auditorium/group/course form modal -->
 <div th:fragment="newItemModal" class="modal fade" id="new-item-modal" tabindex="-1" role="dialog"
      aria-labelledby="new-item-label" aria-hidden="true">
@@ -1072,11 +1114,9 @@
 
         let title = $(e.relatedTarget).data('title');
         let optionId = $(e.relatedTarget).data('option-id');
-        let date = $(e.relatedTarget).data('date');
 
-        $(e.currentTarget).find('#reschedule-form-title').text(title);
         $(e.currentTarget).find('#option-id').val(optionId);
-        $(e.currentTarget).find('#date').val(date);
+        $(e.currentTarget).find('#reschedule-form-title').text(title);
     });
 
     // find rescheduling options injection
@@ -1084,6 +1124,18 @@
 
         let scheduleId = $(e.relatedTarget).data('schedule-id');
         $(e.currentTarget).find('#schedule-id').val(scheduleId);
+    });
+
+    // find available data injection
+    $('#find-available').on('show.bs.modal', function (e) {
+        let title = $(e.relatedTarget).data('find-available-title');
+        let date = $(e.relatedTarget).data('find-available-date');
+        let period = $(e.relatedTarget).data('find-available-period');
+
+        $(e.currentTarget).find('#find-available-title').text(title);
+
+        $(e.currentTarget).find('#find-available-date').val(date);
+        $(e.currentTarget).find('#find-available-period').val(period);
     });
 
     // rename modal data injection
@@ -1094,6 +1146,17 @@
         $(e.currentTarget).find('#rename-title').text(title);
 
         $(e.currentTarget).find('#rename-id').val(renameId);
+    });
+
+    // delete modal data injection
+    $('#delete-modal').on('show.bs.modal', function (e) {
+        let title = $(e.relatedTarget).data('title');
+        let deleteId = $(e.relatedTarget).data('delete-id');
+
+        $(e.currentTarget).find('#delete-title').text(title);
+
+        let href = $(e.currentTarget).find('#delete-link').attr('href');
+        $(e.currentTarget).find('#delete-link').attr('href', href + deleteId);
     });
 
     // drop course modal data injection
@@ -1140,7 +1203,7 @@
 
     // datepicker
     $(document).ready(function () {
-        $('#filter-schedule-datepicker, #management-schedule-datepicker, #options-datepicker').datepicker({
+        $('#filter-schedule-datepicker, #management-schedule-datepicker').datepicker({
             autoclose: true,
             weekStart: '1',
             format: 'yyyy-mm-dd',
@@ -1174,4 +1237,5 @@
 </script>
 
 </body>
+
 </html>

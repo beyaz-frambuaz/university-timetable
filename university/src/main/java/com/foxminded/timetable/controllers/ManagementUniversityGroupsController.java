@@ -15,15 +15,13 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.ModelAttribute;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import java.time.LocalDate;
-import java.util.*;
-import java.util.stream.Collectors;
+import java.util.List;
+import java.util.Map;
+import java.util.Optional;
 
 @Slf4j
 @Controller
@@ -45,17 +43,7 @@ public class ManagementUniversityGroupsController {
         model.addAttribute("editedId", editedId);
 
         Map<Group, List<Student>> groupedStudents =
-                timetableFacade.getStudents()
-                        .stream()
-                        .sorted(Comparator.comparing(Student::getId))
-                        .collect(Collectors.groupingBy(Student::getGroup,
-                                LinkedHashMap::new, Collectors.toList()))
-                        .entrySet()
-                        .stream()
-                        .sorted(Map.Entry.comparingByKey())
-                        .collect(Collectors.toMap(Map.Entry::getKey,
-                                Map.Entry::getValue, (e1, e2) -> e1,
-                                LinkedHashMap::new));
+                timetableFacade.getGroupedStudents();
         model.addAttribute("groupedStudents", groupedStudents);
 
         RenameForm renameForm = new RenameForm();
@@ -157,6 +145,30 @@ public class ManagementUniversityGroupsController {
                 String.format("Group ID (%d) is now called %s", group.getId(),
                         group.getName()));
         redirectAttributes.addFlashAttribute("editedId", group.getId());
+
+        return "redirect:/timetable/management/university/groups";
+    }
+
+    @GetMapping("/remove")
+    public String removeGroup(RedirectAttributes redirectAttributes,
+            @RequestParam("id") long id) {
+
+        Optional<Group> optionalGroup = timetableFacade.getGroup(id);
+        if (!optionalGroup.isPresent()) {
+            log.error("Group with ID({}) no found", id);
+            redirectAttributes.addFlashAttribute("errorAlert",
+                    "Attempt to remove group failed: group with ID(" + id
+                            + ") could not be found. Please, "
+                            + "double-check and resubmit.");
+            return "redirect:/timetable/management/university/groups";
+        }
+        Group group = optionalGroup.get();
+
+        timetableFacade.deleteGroup(group);
+
+        redirectAttributes.addFlashAttribute("successAlert",
+                "Group ID (" + id + ") was deleted");
+        redirectAttributes.addFlashAttribute("editedId", id);
 
         return "redirect:/timetable/management/university/groups";
     }

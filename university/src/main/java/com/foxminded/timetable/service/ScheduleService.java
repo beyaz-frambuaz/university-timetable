@@ -1,7 +1,7 @@
 package com.foxminded.timetable.service;
 
-import com.foxminded.timetable.dao.ScheduleDao;
-import com.foxminded.timetable.dao.ScheduleTemplateDao;
+import com.foxminded.timetable.dao.ScheduleRepository;
+import com.foxminded.timetable.dao.ScheduleTemplateRepository;
 import com.foxminded.timetable.model.Schedule;
 import com.foxminded.timetable.model.ScheduleTemplate;
 import com.foxminded.timetable.service.utility.SemesterCalendar;
@@ -25,8 +25,8 @@ import static java.util.stream.Collectors.toList;
 public class ScheduleService {
 
     private final SemesterCalendar semesterCalendar;
-    private final ScheduleTemplateDao templateRepository;
-    private final ScheduleDao repository;
+    private final ScheduleTemplateRepository templateRepository;
+    private final ScheduleRepository repository;
 
     public Schedule save(Schedule schedule) {
 
@@ -85,7 +85,7 @@ public class ScheduleService {
     public List<Schedule> findGeneratedInRange(LocalDate startDate,
             LocalDate endDate) {
 
-        return repository.findAllInRange(startDate, endDate);
+        return repository.findAllByDateBetween(startDate, endDate);
     }
 
     public List<Schedule> findAllFor(SchedulePredicate predicate,
@@ -133,12 +133,18 @@ public class ScheduleService {
         boolean weekParity = semesterCalendar.getWeekParityOf(date);
         DayOfWeek day = date.getDayOfWeek();
         List<ScheduleTemplate> dateTemplates =
-                templateRepository.findAllByDay(weekParity, day);
+                templateRepository.findAllByWeekParityAndDay(weekParity, day);
         List<Schedule> dateSchedules = dateTemplates.stream()
                 .map(template -> new Schedule(template, date))
                 .collect(toList());
 
         return repository.saveAll(dateSchedules);
+    }
+
+    public void deleteAll() {
+
+        log.debug("Removing all schedules");
+        repository.deleteAllInBatch();
     }
 
 }

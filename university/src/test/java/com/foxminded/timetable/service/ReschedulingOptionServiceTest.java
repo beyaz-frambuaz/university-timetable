@@ -1,6 +1,6 @@
 package com.foxminded.timetable.service;
 
-import com.foxminded.timetable.dao.ReschedulingOptionDao;
+import com.foxminded.timetable.dao.ReschedulingOptionRepository;
 import com.foxminded.timetable.model.Auditorium;
 import com.foxminded.timetable.model.Period;
 import com.foxminded.timetable.model.ReschedulingOption;
@@ -27,7 +27,7 @@ class ReschedulingOptionServiceTest {
             new ReschedulingOption(1L, DayOfWeek.MONDAY, Period.FIRST,
                     new Auditorium("A-01"));
     @Mock
-    private       ReschedulingOptionDao     repository;
+    private ReschedulingOptionRepository repository;
     @InjectMocks
     private       ReschedulingOptionService service;
 
@@ -104,6 +104,14 @@ class ReschedulingOptionServiceTest {
 
         then(repository).should().findAllByDay(day);
         assertThat(actual).isEqualTo(expected);
+    }
+
+    @Test
+    public void deleteAllShouldDelegateToRepository() {
+
+        service.deleteAll();
+
+        then(repository).should().deleteAllInBatch();
     }
 
 }

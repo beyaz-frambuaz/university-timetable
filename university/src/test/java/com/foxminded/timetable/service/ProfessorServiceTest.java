@@ -1,6 +1,6 @@
 package com.foxminded.timetable.service;
 
-import com.foxminded.timetable.dao.ProfessorDao;
+import com.foxminded.timetable.dao.ProfessorRepository;
 import com.foxminded.timetable.model.Period;
 import com.foxminded.timetable.model.Professor;
 import org.junit.jupiter.api.Test;
@@ -22,11 +22,11 @@ import static org.mockito.BDDMockito.then;
 @ExtendWith(MockitoExtension.class)
 class ProfessorServiceTest {
 
-    private final Professor        professor = new Professor(1L, "one", "one");
+    private final Professor professor = new Professor(1L, "one", "one");
     @Mock
-    private       ProfessorDao     repository;
+    private ProfessorRepository repository;
     @InjectMocks
-    private       ProfessorService service;
+    private ProfessorService service;
 
     @Test
     public void countShouldDelegateToRepository() {
@@ -113,6 +113,22 @@ class ProfessorServiceTest {
 
         then(repository).should().findAllAvailable(date, period);
         assertThat(actual).isEqualTo(professors);
+    }
+
+    @Test
+    public void deleteShouldDelegateToRepository() {
+
+        service.delete(professor);
+
+        then(repository).should().delete(professor);
+    }
+
+    @Test
+    public void deleteAllShouldDelegateToRepository() {
+
+        service.deleteAll();
+
+        then(repository).should().deleteAllInBatch();
     }
 
 }

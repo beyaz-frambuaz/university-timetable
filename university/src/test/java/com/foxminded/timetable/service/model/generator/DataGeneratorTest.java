@@ -1,6 +1,7 @@
 package com.foxminded.timetable.service.model.generator;
 
-import com.foxminded.timetable.dao.DataEraseDao;
+import com.foxminded.timetable.dao.ResetSequencesDao;
+import com.foxminded.timetable.service.TimetableFacade;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
@@ -13,11 +14,13 @@ import static org.mockito.BDDMockito.then;
 class DataGeneratorTest {
 
     @Mock
+    private TimetableFacade timetableFacade;
+    @Mock
     private TimetableModelGenerator  timetableModelGenerator;
     @Mock
     private UniversityModelGenerator universityModelGenerator;
     @Mock
-    private DataEraseDao             dataEraseDao;
+    private ResetSequencesDao resetSequencesDao;
 
     @InjectMocks
     private DataGenerator dataGenerator;
@@ -27,11 +30,11 @@ class DataGeneratorTest {
 
         dataGenerator.refreshTimetableData();
 
-        then(dataEraseDao).should().eraseTimetableData();
+        then(timetableFacade).should().deleteTimetableData();
         then(timetableModelGenerator).should().generateAndSave();
-        then(dataEraseDao).shouldHaveNoMoreInteractions();
+        then(timetableFacade).shouldHaveNoMoreInteractions();
         then(timetableModelGenerator).shouldHaveNoMoreInteractions();
-        then(universityModelGenerator).shouldHaveNoMoreInteractions();
+        then(universityModelGenerator).shouldHaveNoInteractions();
     }
 
     @Test
@@ -39,10 +42,10 @@ class DataGeneratorTest {
 
         dataGenerator.refreshAllData();
 
-        then(dataEraseDao).should().eraseAllData();
+        then(timetableFacade).should().deleteAllData();
         then(universityModelGenerator).should().generateAndSave();
         then(timetableModelGenerator).should().generateAndSave();
-        then(dataEraseDao).shouldHaveNoMoreInteractions();
+        then(timetableFacade).shouldHaveNoMoreInteractions();
         then(universityModelGenerator).shouldHaveNoMoreInteractions();
         then(timetableModelGenerator).shouldHaveNoMoreInteractions();
     }
@@ -52,10 +55,11 @@ class DataGeneratorTest {
 
         dataGenerator.resetSequences();
 
-        then(dataEraseDao).should().resetSequences();
-        then(dataEraseDao).shouldHaveNoMoreInteractions();
-        then(universityModelGenerator).shouldHaveNoMoreInteractions();
-        then(timetableModelGenerator).shouldHaveNoMoreInteractions();
+        then(resetSequencesDao).should().resetSequences();
+        then(resetSequencesDao).shouldHaveNoMoreInteractions();
+        then(timetableFacade).shouldHaveNoInteractions();
+        then(universityModelGenerator).shouldHaveNoInteractions();
+        then(timetableModelGenerator).shouldHaveNoInteractions();
     }
 
 }

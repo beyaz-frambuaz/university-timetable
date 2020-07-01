@@ -1,6 +1,5 @@
 package com.foxminded.timetable.service.model.generator;
 
-import com.foxminded.timetable.dao.DataEraseDao;
 import com.foxminded.timetable.model.*;
 import com.foxminded.timetable.service.TimetableFacade;
 import org.junit.jupiter.api.Test;
@@ -28,14 +27,12 @@ class UniversityModelGeneratorTest {
 
     @Autowired
     private UniversityModelGenerator universityModelGenerator;
-    @Autowired
-    private DataEraseDao             dataEraseDao;
 
     @Test
     @Transactional
     public void generateAndSaveShouldSaveGeneratedDataToRepository() {
 
-        dataEraseDao.eraseAllData();
+        timetableFacade.deleteAllData();
 
         universityModelGenerator.generateAndSave();
 

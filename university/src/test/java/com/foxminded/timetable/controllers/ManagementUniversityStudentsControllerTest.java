@@ -37,15 +37,15 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 @WebMvcTest(ManagementUniversityStudentsController.class)
 class ManagementUniversityStudentsControllerTest {
 
-    private final String baseUrl  = "/timetable/management/university/students";
+    private final String baseUrl = "/timetable/management/university/students";
     private final String baseView = "management/university/students";
 
     @Autowired
-    private MockMvc           mvc;
+    private MockMvc mvc;
     @MockBean
     private ScheduleFormatter scheduleFormatter;
     @MockBean
-    private TimetableFacade   timetableFacade;
+    private TimetableFacade timetableFacade;
 
     @Test
     public void getStudentsShouldRequestFromServiceAndDisplay()
@@ -206,8 +206,7 @@ class ManagementUniversityStudentsControllerTest {
         given(form.getGroupId()).willReturn(id);
         given(timetableFacade.getGroup(anyLong())).willReturn(Optional.empty());
 
-        mvc.perform(
-                post(baseUrl + "/new").flashAttr("newStudentForm", form))
+        mvc.perform(post(baseUrl + "/new").flashAttr("newStudentForm", form))
                 .andExpect(status().is3xxRedirection())
                 .andExpect(flash().attributeExists("errorAlert"))
                 .andExpect(redirectedUrl(baseUrl));
@@ -259,11 +258,11 @@ class ManagementUniversityStudentsControllerTest {
         ChangeGroupForm form = mock(ChangeGroupForm.class);
         long studentId = 1L;
         given(form.getStudentId()).willReturn(studentId);
-        given(timetableFacade.getStudent(anyLong())).willReturn(Optional.empty());
+        given(timetableFacade.getStudent(anyLong())).willReturn(
+                Optional.empty());
 
-        mvc.perform(
-                post(baseUrl + "/change/group").flashAttr("changeGroupForm",
-                        form))
+        mvc.perform(post(baseUrl + "/change/group").flashAttr("changeGroupForm",
+                form))
                 .andExpect(status().is3xxRedirection())
                 .andExpect(flash().attributeExists("errorAlert"))
                 .andExpect(redirectedUrl(baseUrl));
@@ -286,15 +285,51 @@ class ManagementUniversityStudentsControllerTest {
                 Optional.of(student));
         given(timetableFacade.getGroup(anyLong())).willReturn(Optional.empty());
 
-        mvc.perform(
-                post(baseUrl + "/change/group").flashAttr("changeGroupForm",
-                        form))
+        mvc.perform(post(baseUrl + "/change/group").flashAttr("changeGroupForm",
+                form))
                 .andExpect(status().is3xxRedirection())
                 .andExpect(flash().attributeExists("errorAlert"))
                 .andExpect(redirectedUrl(baseUrl));
 
         then(timetableFacade).should().getStudent(studentId);
         then(timetableFacade).should().getGroup(groupId);
+    }
+
+    @Test
+    public void getRemoveShouldRequestStudentFromServiceAndRedirectToStudentsIfNotPresent()
+            throws Exception {
+
+        long id = 1L;
+        given(timetableFacade.getStudent(anyLong())).willReturn(
+                Optional.empty());
+
+        mvc.perform(
+                get(baseUrl + "/remove").queryParam("id", String.valueOf(id)))
+                .andExpect(status().is3xxRedirection())
+                .andExpect(flash().attributeExists("errorAlert"))
+                .andExpect(redirectedUrl(baseUrl));
+
+        then(timetableFacade).should().getStudent(id);
+    }
+
+    @Test
+    public void getRemoveShouldRequestServiceToDeleteAndRedirectToStudentsWithMessage()
+            throws Exception {
+
+        long id = 1L;
+        Student student = mock(Student.class);
+        given(timetableFacade.getStudent(anyLong())).willReturn(
+                Optional.of(student));
+
+        mvc.perform(
+                get(baseUrl + "/remove").queryParam("id", String.valueOf(id)))
+                .andExpect(status().is3xxRedirection())
+                .andExpect(flash().attributeExists("successAlert"))
+                .andExpect(flash().attribute("editedId", id))
+                .andExpect(redirectedUrl(baseUrl));
+
+        then(timetableFacade).should().getStudent(id);
+        then(timetableFacade).should().deleteStudent(student);
     }
 
     @Test
@@ -319,9 +354,8 @@ class ManagementUniversityStudentsControllerTest {
         given(student.getGroup()).willReturn(group);
         given(student.getFirstName()).willReturn("");
 
-        mvc.perform(
-                post(baseUrl + "/change/group").flashAttr("changeGroupForm",
-                        form))
+        mvc.perform(post(baseUrl + "/change/group").flashAttr("changeGroupForm",
+                form))
                 .andExpect(status().is3xxRedirection())
                 .andExpect(flash().attributeExists("successAlert", "editedId"))
                 .andExpect(redirectedUrl(baseUrl));

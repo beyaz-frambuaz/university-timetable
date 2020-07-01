@@ -1,12 +1,10 @@
-package com.foxminded.timetable.dao.jpa;
+package com.foxminded.timetable.dao;
 
-import com.foxminded.timetable.dao.AuditoriumDao;
 import com.foxminded.timetable.model.Auditorium;
 import com.foxminded.timetable.model.Period;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
-import org.springframework.context.annotation.ComponentScan;
 import org.springframework.test.context.jdbc.Sql;
 
 import java.time.LocalDate;
@@ -14,17 +12,15 @@ import java.util.List;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
-
 @DataJpaTest
-@ComponentScan
-class AuditoriumDaoImplTest {
+class AuditoriumRepositoryTest {
 
     private final Auditorium auditoriumOne = new Auditorium(1L, "one");
     private final Auditorium auditoriumTwo = new Auditorium(2L, "two");
     private final Auditorium auditoriumThree = new Auditorium(3L, "three");
 
     @Autowired
-    private AuditoriumDao repository;
+    private AuditoriumRepository repository;
 
     @Test
     @Sql("classpath:sql/auditorium_test.sql")
