@@ -36,15 +36,15 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 @WebMvcTest(ManagementUniversityCoursesController.class)
 class ManagementUniversityCoursesControllerTest {
 
-    private final String baseUrl  = "/timetable/management/university/courses";
+    private final String baseUrl = "/timetable/management/university/courses";
     private final String baseView = "management/university/courses";
 
     @Autowired
-    private MockMvc           mvc;
+    private MockMvc mvc;
     @MockBean
     private ScheduleFormatter scheduleFormatter;
     @MockBean
-    private TimetableFacade   timetableFacade;
+    private TimetableFacade timetableFacade;
 
     @Test
     public void getCoursesShouldRequestFromServiceAndDisplay()
@@ -240,6 +240,43 @@ class ManagementUniversityCoursesControllerTest {
         then(timetableFacade).should().getCourse(id);
         then(course).should().setName(name);
         then(timetableFacade).should().saveCourse(course);
+    }
+
+    @Test
+    public void getRemoveShouldRequestCourseFromServiceAndRedirectToCoursesIfNotPresent()
+            throws Exception {
+
+        long id = 1L;
+        given(timetableFacade.getCourse(anyLong())).willReturn(
+                Optional.empty());
+
+        mvc.perform(
+                get(baseUrl + "/remove").queryParam("id", String.valueOf(id)))
+                .andExpect(status().is3xxRedirection())
+                .andExpect(flash().attributeExists("errorAlert"))
+                .andExpect(redirectedUrl(baseUrl));
+
+        then(timetableFacade).should().getCourse(id);
+    }
+
+    @Test
+    public void getRemoveShouldRequestServiceToDeleteAndRedirectToCoursesWithMessage()
+            throws Exception {
+
+        long id = 1L;
+        Course course = mock(Course.class);
+        given(timetableFacade.getCourse(anyLong())).willReturn(
+                Optional.of(course));
+
+        mvc.perform(
+                get(baseUrl + "/remove").queryParam("id", String.valueOf(id)))
+                .andExpect(status().is3xxRedirection())
+                .andExpect(flash().attributeExists("successAlert"))
+                .andExpect(flash().attribute("editedId", id))
+                .andExpect(redirectedUrl(baseUrl));
+
+        then(timetableFacade).should().getCourse(id);
+        then(timetableFacade).should().deleteCourse(course);
     }
 
     @Test

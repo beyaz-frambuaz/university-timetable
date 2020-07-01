@@ -15,10 +15,7 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.ModelAttribute;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import java.time.LocalDate;
@@ -169,6 +166,30 @@ public class ManagementUniversityStudentsController {
                 String.format("Student %s is now in group %s",
                         student.getFullName(), student.getGroup().getName()));
         redirectAttributes.addFlashAttribute("editedId", student.getId());
+
+        return "redirect:/timetable/management/university/students";
+    }
+
+    @GetMapping("/remove")
+    public String removeStudent(RedirectAttributes redirectAttributes,
+            @RequestParam("id") long id) {
+
+        Optional<Student> optionalStudent = timetableFacade.getStudent(id);
+        if (!optionalStudent.isPresent()) {
+            log.error("Student with ID({}) no found", id);
+            redirectAttributes.addFlashAttribute("errorAlert",
+                    "Attempt to remove student failed: student with ID(" + id
+                            + ") could not be found. Please, "
+                            + "double-check and resubmit.");
+            return "redirect:/timetable/management/university/students";
+        }
+        Student student = optionalStudent.get();
+
+        timetableFacade.deleteStudent(student);
+
+        redirectAttributes.addFlashAttribute("successAlert",
+                "Student ID (" + id + ") was deleted");
+        redirectAttributes.addFlashAttribute("editedId", id);
 
         return "redirect:/timetable/management/university/students";
     }

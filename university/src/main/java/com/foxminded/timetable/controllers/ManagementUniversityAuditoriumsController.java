@@ -14,10 +14,7 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.ModelAttribute;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import java.time.LocalDate;
@@ -140,6 +137,31 @@ public class ManagementUniversityAuditoriumsController {
                 String.format("Auditorium ID (%d) is now called %s",
                         auditorium.getId(), auditorium.getName()));
         redirectAttributes.addFlashAttribute("editedId", auditorium.getId());
+
+        return "redirect:/timetable/management/university/auditoriums";
+    }
+
+    @GetMapping("/remove")
+    public String removeAuditorium(RedirectAttributes redirectAttributes,
+            @RequestParam("id") long id) {
+
+        Optional<Auditorium> optionalAuditorium =
+                timetableFacade.getAuditorium(id);
+        if (!optionalAuditorium.isPresent()) {
+            log.error("Auditorium with ID({}) no found", id);
+            redirectAttributes.addFlashAttribute("errorAlert", "Attempt to "
+                    + "remove auditorium failed: auditorium with ID(" + id
+                    + ") could not be found. Please, double-check and "
+                    + "resubmit.");
+            return "redirect:/timetable/management/university/auditoriums";
+        }
+        Auditorium auditorium = optionalAuditorium.get();
+
+        timetableFacade.deleteAuditorium(auditorium);
+
+        redirectAttributes.addFlashAttribute("successAlert",
+                "Auditorium ID (" + id + ") was deleted");
+        redirectAttributes.addFlashAttribute("editedId", id);
 
         return "redirect:/timetable/management/university/auditoriums";
     }

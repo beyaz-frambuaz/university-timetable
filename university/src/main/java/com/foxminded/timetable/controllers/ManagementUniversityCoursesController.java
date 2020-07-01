@@ -14,10 +14,7 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.ModelAttribute;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import java.time.LocalDate;
@@ -145,6 +142,30 @@ public class ManagementUniversityCoursesController {
                 String.format("Course ID (%d) is now called %s", course.getId(),
                         course.getName()));
         redirectAttributes.addFlashAttribute("editedId", course.getId());
+
+        return "redirect:/timetable/management/university/courses";
+    }
+
+    @GetMapping("/remove")
+    public String removeCourse(RedirectAttributes redirectAttributes,
+            @RequestParam("id") long id) {
+
+        Optional<Course> optionalCourse = timetableFacade.getCourse(id);
+        if (!optionalCourse.isPresent()) {
+            log.error("Course with ID({}) no found", id);
+            redirectAttributes.addFlashAttribute("errorAlert",
+                    "Attempt to remove course failed: course with ID(" + id
+                            + ") could not be found. Please, "
+                            + "double-check and resubmit.");
+            return "redirect:/timetable/management/university/courses";
+        }
+        Course course = optionalCourse.get();
+
+        timetableFacade.deleteCourse(course);
+
+        redirectAttributes.addFlashAttribute("successAlert",
+                "Course ID (" + id + ") was deleted");
+        redirectAttributes.addFlashAttribute("editedId", id);
 
         return "redirect:/timetable/management/university/courses";
     }

@@ -1,6 +1,6 @@
 package com.foxminded.timetable.service;
 
-import com.foxminded.timetable.dao.ReschedulingOptionDao;
+import com.foxminded.timetable.dao.ReschedulingOptionRepository;
 import com.foxminded.timetable.model.ReschedulingOption;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -15,7 +15,7 @@ import java.util.Optional;
 @RequiredArgsConstructor
 public class ReschedulingOptionService {
 
-    private final ReschedulingOptionDao repository;
+    private final ReschedulingOptionRepository repository;
 
     public long count() {
 
@@ -50,6 +50,12 @@ public class ReschedulingOptionService {
 
         log.debug("Fetching option ID({}) from repository", id);
         return repository.findById(id);
+    }
+
+    public void deleteAll() {
+
+        log.debug("Removing all options");
+        repository.deleteAllInBatch();
     }
 
 }

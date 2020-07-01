@@ -1,6 +1,6 @@
 package com.foxminded.timetable.service;
 
-import com.foxminded.timetable.dao.GroupDao;
+import com.foxminded.timetable.dao.GroupRepository;
 import com.foxminded.timetable.model.Course;
 import com.foxminded.timetable.model.Group;
 import com.foxminded.timetable.model.Professor;
@@ -16,7 +16,7 @@ import java.util.Optional;
 @RequiredArgsConstructor
 public class GroupService {
 
-    private final GroupDao repository;
+    private final GroupRepository repository;
 
     public long count() {
 
@@ -60,6 +60,18 @@ public class GroupService {
 
         log.debug("Fetching group ID{} from repository", id);
         return repository.findById(id);
+    }
+
+    public void delete(Group group) {
+
+        log.debug("Removing {}", group);
+        repository.delete(group);
+    }
+
+    public void deleteAll() {
+
+        log.debug("Removing all groups");
+        repository.deleteAllInBatch();
     }
 
 }

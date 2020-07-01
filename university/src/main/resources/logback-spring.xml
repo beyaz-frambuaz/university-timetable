@@ -30,8 +30,6 @@
     <appender-ref ref="CONSOLE" />
   </root>
   
-  <logger name="org.hibernate.type.descriptor.sql.BasicBinder" level="trace" />
-  <logger name="org.hibernate.SQL" level="debug" />
   <logger name="com.foxminded.timetable" level="debug" />
 
 </configuration>

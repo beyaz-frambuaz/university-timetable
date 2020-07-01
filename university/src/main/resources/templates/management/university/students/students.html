@@ -130,6 +130,8 @@
 	</div>
 </div>
 
+<div th:replace="layout :: deleteModal"></div>
+
 <div th:replace="layout :: scheduleFormFilterManagement"></div>
 
 <div th:replace="layout :: scheduleFormManagement"></div>
@@ -202,6 +204,12 @@
 						        data-student-id=${student.id},
 						        data-group-id=${student.group.id}">
 							Change group
+						</button>
+
+						<button type="button" class="btn btn-outline-danger toggle-button" data-toggle="modal"
+						        data-target="#delete-modal" data-title="Name One" data-delete-id="1"
+						        th:attr="data-title=${student.fullName}, data-delete-id=${student.id}">
+							Delete
 						</button>
 
 					</div>

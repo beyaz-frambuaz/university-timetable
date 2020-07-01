@@ -1,6 +1,6 @@
 package com.foxminded.timetable.service;
 
-import com.foxminded.timetable.dao.AuditoriumDao;
+import com.foxminded.timetable.dao.AuditoriumRepository;
 import com.foxminded.timetable.model.Auditorium;
 import com.foxminded.timetable.model.Period;
 import lombok.RequiredArgsConstructor;
@@ -16,7 +16,7 @@ import java.util.Optional;
 @RequiredArgsConstructor
 public class AuditoriumService {
 
-    private final AuditoriumDao repository;
+    private final AuditoriumRepository repository;
 
     public long count() {
 
@@ -55,8 +55,19 @@ public class AuditoriumService {
 
     public List<Auditorium> findAvailableFor(LocalDate date, Period period) {
 
-        log.debug("Fetching available auditoriums from repository");
+        log.debug("Fetching available auditoriums for {} on {}", period, date);
         return repository.findAllAvailable(date, period);
     }
 
+    public void delete(Auditorium auditorium) {
+
+        log.debug("Removing {}", auditorium);
+        repository.delete(auditorium);
+    }
+
+    public void deleteAll() {
+
+        log.debug("Removing all auditoriums");
+        repository.deleteAllInBatch();
+    }
 }

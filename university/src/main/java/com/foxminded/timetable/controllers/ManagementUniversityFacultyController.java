@@ -121,6 +121,31 @@ public class ManagementUniversityFacultyController {
         return "redirect:/timetable/management/university/faculty";
     }
 
+    @GetMapping("/remove")
+    public String removeProfessor(RedirectAttributes redirectAttributes,
+            @RequestParam("id") long id) {
+
+        Optional<Professor> optionalProfessor =
+                timetableFacade.getProfessor(id);
+        if (!optionalProfessor.isPresent()) {
+            log.error("Professor with ID({}) no found", id);
+            redirectAttributes.addFlashAttribute("errorAlert",
+                    "Attempt to remove professor failed: professor with ID("
+                            + id + ") could not be found. Please, "
+                            + "double-check and resubmit.");
+            return "redirect:/timetable/management/university/faculty";
+        }
+        Professor professor = optionalProfessor.get();
+
+        timetableFacade.deleteProfessor(professor);
+
+        redirectAttributes.addFlashAttribute("successAlert",
+                "Professor ID (" + id + ") was deleted");
+        redirectAttributes.addFlashAttribute("editedId", id);
+
+        return "redirect:/timetable/management/university/faculty";
+    }
+
     @PostMapping("/new")
     public String addNewProfessor(RedirectAttributes redirectAttributes,
             @ModelAttribute(

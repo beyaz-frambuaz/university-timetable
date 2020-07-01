@@ -1,7 +1,7 @@
 package com.foxminded.timetable.service;
 
-import com.foxminded.timetable.dao.ScheduleDao;
-import com.foxminded.timetable.dao.ScheduleTemplateDao;
+import com.foxminded.timetable.dao.ScheduleRepository;
+import com.foxminded.timetable.dao.ScheduleTemplateRepository;
 import com.foxminded.timetable.model.*;
 import com.foxminded.timetable.service.utility.SemesterCalendar;
 import com.foxminded.timetable.service.utility.predicates.SchedulePredicate;
@@ -41,11 +41,11 @@ class ScheduleServiceTest {
     private       Schedule         schedule;
 
     @Mock
-    private ScheduleDao         repository;
+    private ScheduleRepository repository;
     @Mock
     private SemesterCalendar    semesterCalendar;
     @Mock
-    private ScheduleTemplateDao templateRepository;
+    private ScheduleTemplateRepository templateRepository;
     @InjectMocks
     private ScheduleService     service;
 
@@ -162,12 +162,12 @@ class ScheduleServiceTest {
     public void findAllGeneratedInRangeShouldDelegateToRepository() {
 
         List<Schedule> expected = Collections.singletonList(schedule);
-        given(repository.findAllInRange(any(LocalDate.class),
+        given(repository.findAllByDateBetween(any(LocalDate.class),
                 any(LocalDate.class))).willReturn(expected);
 
         List<Schedule> actual = service.findGeneratedInRange(date, date);
 
-        then(repository).should().findAllInRange(date, date);
+        then(repository).should().findAllByDateBetween(date, date);
         assertThat(actual).isEqualTo(expected);
     }
 
@@ -229,7 +229,7 @@ class ScheduleServiceTest {
                 any(LocalDate.class))).willReturn(false);
         given(repository.findAllByDate(any(LocalDate.class))).willReturn(
                 Collections.emptyList());
-        given(templateRepository.findAllByDay(anyBoolean(),
+        given(templateRepository.findAllByWeekParityAndDay(anyBoolean(),
                 any(DayOfWeek.class))).willReturn(Collections.emptyList());
         given(repository.saveAll(anyList())).willReturn(
                 Collections.emptyList());
@@ -239,8 +239,16 @@ class ScheduleServiceTest {
         then(repository).should(atLeastOnce())
                 .findAllByDate(any(LocalDate.class));
         then(templateRepository).should(atLeastOnce())
-                .findAllByDay(anyBoolean(), any(DayOfWeek.class));
+                .findAllByWeekParityAndDay(anyBoolean(), any(DayOfWeek.class));
         then(repository).should(atLeastOnce()).saveAll(anyList());
+    }
+
+    @Test
+    public void deleteAllShouldDelegateToRepository() {
+
+        service.deleteAll();
+
+        then(repository).should().deleteAllInBatch();
     }
 
 }

@@ -1,6 +1,6 @@
 package com.foxminded.timetable.service;
 
-import com.foxminded.timetable.dao.AuditoriumDao;
+import com.foxminded.timetable.dao.AuditoriumRepository;
 import com.foxminded.timetable.model.Auditorium;
 import com.foxminded.timetable.model.Period;
 import org.junit.jupiter.api.Test;
@@ -22,11 +22,11 @@ import static org.mockito.BDDMockito.then;
 @ExtendWith(MockitoExtension.class)
 class AuditoriumServiceTest {
 
-    private final Auditorium        auditorium = new Auditorium(1L, "A-01");
+    private final Auditorium auditorium = new Auditorium(1L, "A-01");
     @Mock
-    private       AuditoriumDao     repository;
+    private AuditoriumRepository repository;
     @InjectMocks
-    private       AuditoriumService service;
+    private AuditoriumService service;
 
     @Test
     public void countShouldDelegateToRepository() {
@@ -114,6 +114,22 @@ class AuditoriumServiceTest {
 
         then(repository).should().findAllAvailable(date, period);
         assertThat(actual).isEqualTo(auditoriums);
+    }
+
+    @Test
+    public void deleteShouldDelegateToRepository() {
+
+        service.delete(auditorium);
+
+        then(repository).should().delete(auditorium);
+    }
+
+    @Test
+    public void deleteAllShouldDelegateToRepository() {
+
+        service.deleteAll();
+
+        then(repository).should().deleteAllInBatch();
     }
 
 }

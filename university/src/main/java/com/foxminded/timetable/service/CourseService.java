@@ -1,6 +1,6 @@
 package com.foxminded.timetable.service;
 
-import com.foxminded.timetable.dao.CourseDao;
+import com.foxminded.timetable.dao.CourseRepository;
 import com.foxminded.timetable.model.Course;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -14,7 +14,7 @@ import java.util.Optional;
 @RequiredArgsConstructor
 public class CourseService {
 
-    private final CourseDao repository;
+    private final CourseRepository repository;
 
     public long count() {
 
@@ -49,6 +49,18 @@ public class CourseService {
 
         log.debug("Fetching course ID{} from repository", id);
         return repository.findById(id);
+    }
+
+    public void delete(Course course) {
+
+        log.debug("Removing {}", course);
+        repository.delete(course);
+    }
+
+    public void deleteAll() {
+
+        log.debug("Removing all courses");
+        repository.deleteAllInBatch();
     }
 
 }

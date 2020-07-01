@@ -1,6 +1,6 @@
 package com.foxminded.timetable.service;
 
-import com.foxminded.timetable.dao.GroupDao;
+import com.foxminded.timetable.dao.GroupRepository;
 import com.foxminded.timetable.model.Course;
 import com.foxminded.timetable.model.Group;
 import com.foxminded.timetable.model.Professor;
@@ -23,11 +23,11 @@ import static org.mockito.Mockito.mock;
 @ExtendWith(MockitoExtension.class)
 class GroupServiceTest {
 
-    private final Group        group = new Group(1L, "A-01");
+    private final Group group = new Group(1L, "A-01");
     @Mock
-    private       GroupDao     repository;
+    private GroupRepository repository;
     @InjectMocks
-    private       GroupService service;
+    private GroupService service;
 
     @Test
     public void countShouldDelegateToRepository() {
@@ -121,6 +121,22 @@ class GroupServiceTest {
 
         then(repository).should().findById(id);
         assertThat(actual).isEqualTo(expected);
+    }
+
+    @Test
+    public void deleteShouldDelegateToRepository() {
+
+        service.delete(group);
+
+        then(repository).should().delete(group);
+    }
+
+    @Test
+    public void deleteAllShouldDelegateToRepository() {
+
+        service.deleteAll();
+
+        then(repository).should().deleteAllInBatch();
     }
 
 }

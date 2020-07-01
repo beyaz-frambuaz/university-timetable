@@ -1,6 +1,6 @@
 package com.foxminded.timetable.service;
 
-import com.foxminded.timetable.dao.ScheduleTemplateDao;
+import com.foxminded.timetable.dao.ScheduleTemplateRepository;
 import com.foxminded.timetable.model.ScheduleTemplate;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -15,7 +15,7 @@ import java.util.Optional;
 @RequiredArgsConstructor
 public class ScheduleTemplateService {
 
-    private final ScheduleTemplateDao repository;
+    private final ScheduleTemplateRepository repository;
 
     public long count() {
 
@@ -49,20 +49,26 @@ public class ScheduleTemplateService {
     public List<ScheduleTemplate> findAllForWeek(boolean weekParity) {
 
         log.debug("Fetching week templates for week parity {}", weekParity);
-        return repository.findAllByWeek(weekParity);
+        return repository.findAllByWeekParity(weekParity);
     }
 
     public List<ScheduleTemplate> findAllForDay(boolean weekParity,
             DayOfWeek day) {
 
         log.debug("Fetching {} templates for week parity {}", day, weekParity);
-        return repository.findAllByDay(weekParity, day);
+        return repository.findAllByWeekParityAndDay(weekParity, day);
     }
 
     public Optional<ScheduleTemplate> findById(long id) {
 
         log.debug("Fetching template ID{} from repository", id);
         return repository.findById(id);
+    }
+
+    public void deleteAll() {
+
+        log.debug("Removing all templates");
+        repository.deleteAllInBatch();
     }
 
 }

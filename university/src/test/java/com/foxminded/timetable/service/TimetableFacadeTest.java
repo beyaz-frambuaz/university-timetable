@@ -11,10 +11,7 @@ import org.mockito.junit.jupiter.MockitoExtension;
 
 import java.time.DayOfWeek;
 import java.time.LocalDate;
-import java.util.Arrays;
-import java.util.Collections;
-import java.util.List;
-import java.util.Optional;
+import java.util.*;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.AssertionsForClassTypes.assertThatExceptionOfType;
@@ -131,6 +128,23 @@ public class TimetableFacadeTest {
     }
 
     @Test
+    public void deleteAuditoriumShouldDelegateToAuditoriumService() {
+
+        Auditorium auditorium = mock(Auditorium.class);
+        timetableFacade.deleteAuditorium(auditorium);
+
+        then(auditoriumService).should().delete(auditorium);
+    }
+
+    @Test
+    public void deleteAllAuditoriumsShouldDelegateToAuditoriumService() {
+
+        timetableFacade.deleteAllAuditoriums();
+
+        then(auditoriumService).should().deleteAll();
+    }
+
+    @Test
     public void countCoursesShouldDelegateToCourseService() {
 
         long expected = 1L;
@@ -191,6 +205,23 @@ public class TimetableFacadeTest {
 
         then(courseService).should().findAll();
         assertThat(actual).isEqualTo(expected);
+    }
+
+    @Test
+    public void deleteCourseShouldDelegateToCourseService() {
+
+        Course course = mock(Course.class);
+        timetableFacade.deleteCourse(course);
+
+        then(courseService).should().delete(course);
+    }
+
+    @Test
+    public void deleteAllCoursesShouldDelegateToCourseService() {
+
+        timetableFacade.deleteAllCourses();
+
+        then(courseService).should().deleteAll();
     }
 
     @Test
@@ -255,6 +286,47 @@ public class TimetableFacadeTest {
 
         then(groupService).should().findAll();
         assertThat(actual).isEqualTo(expected);
+    }
+
+    @Test
+    public void deleteGroupShouldDelegateToGroupService() {
+
+        Group group = mock(Group.class);
+        timetableFacade.deleteGroup(group);
+
+        then(groupService).should().delete(group);
+    }
+
+    @Test
+    public void deleteAllGroupsShouldDelegateToGroupService() {
+
+        timetableFacade.deleteAllGroups();
+
+        then(groupService).should().deleteAll();
+    }
+
+    @Test
+    public void getGroupedStudentsShouldRequestAllGroupsAndStudentsAndGroupThem() {
+
+        Group groupOne = new Group(1L, "groupOne");
+        Group groupTwo = new Group(2L, "groupTwo");
+        Student studentOne = new Student(1L, "student", "one", groupOne);
+        Student studentTwo = new Student(2L, "student", "two", groupOne);
+
+        given(groupService.findAll()).willReturn(
+                Arrays.asList(groupOne, groupTwo));
+        given(studentService.findAll()).willReturn(
+                Arrays.asList(studentOne, studentTwo));
+
+        Map<Group, List<Student>> expected = new LinkedHashMap<>();
+        expected.put(groupOne, Arrays.asList(studentOne, studentTwo));
+        expected.put(groupTwo, Collections.emptyList());
+
+        Map<Group, List<Student>> actual = timetableFacade.getGroupedStudents();
+
+        assertThat(actual).isEqualTo(expected);
+        then(groupService).should().findAll();
+        then(studentService).should().findAll();
     }
 
     @Test
@@ -336,6 +408,23 @@ public class TimetableFacadeTest {
 
         then(professorService).should().findAvailableFor(date, period);
         assertThat(actual).isEqualTo(expected);
+    }
+
+    @Test
+    public void deleteProfessorShouldDelegateToProfessorService() {
+
+        Professor professor = mock(Professor.class);
+        timetableFacade.deleteProfessor(professor);
+
+        then(professorService).should().delete(professor);
+    }
+
+    @Test
+    public void deleteAllProfessorsShouldDelegateToProfessorService() {
+
+        timetableFacade.deleteAllProfessors();
+
+        then(professorService).should().deleteAll();
     }
 
     @Test
@@ -620,6 +709,14 @@ public class TimetableFacadeTest {
     }
 
     @Test
+    public void deleteAllOptionsShouldDelegateToOptionService() {
+
+        timetableFacade.deleteAllOptions();
+
+        then(optionService).should().deleteAll();
+    }
+
+    @Test
     public void saveScheduleShouldDelegateToScheduleService() {
 
         Schedule expected = mock(Schedule.class);
@@ -686,6 +783,14 @@ public class TimetableFacadeTest {
     }
 
     @Test
+    public void deleteAllSchedulesShouldDelegateToScheduleService() {
+
+        timetableFacade.deleteAllSchedules();
+
+        then(scheduleService).should().deleteAll();
+    }
+
+    @Test
     public void countTemplatesShouldDelegateToTemplateService() {
 
         long expected = 1L;
@@ -747,6 +852,14 @@ public class TimetableFacadeTest {
 
         then(templateService).should().findAll();
         assertThat(actual).isEqualTo(expected);
+    }
+
+    @Test
+    public void deleteAllTemplatesShouldDelegateToTemplateService() {
+
+        timetableFacade.deleteAllTemplates();
+
+        then(templateService).should().deleteAll();
     }
 
     @Test
@@ -830,6 +943,23 @@ public class TimetableFacadeTest {
                 .findAllAttendingProfessorCourse(course, professor);
         then(studentService).should().findAllInGroups(professorGroups);
         assertThat(actual).isEqualTo(expected);
+    }
+
+    @Test
+    public void deleteStudentShouldDelegateToStudentService() {
+
+        Student student = mock(Student.class);
+        timetableFacade.deleteStudent(student);
+
+        then(studentService).should().delete(student);
+    }
+
+    @Test
+    public void deleteAllStudentsShouldDelegateToStudentService() {
+
+        timetableFacade.deleteAllStudents();
+
+        then(studentService).should().deleteAll();
     }
 
     @Test
@@ -946,6 +1076,31 @@ public class TimetableFacadeTest {
                 () -> timetableFacade.reschedulePermanently(schedule, date,
                         option))
                 .withMessage("Template with ID(1) could not be found");
+    }
+
+    @Test
+    public void deleteTimetableDataShouldDelegateDeleteAllToUnderlyingServices() {
+
+        timetableFacade.deleteTimetableData();
+
+        then(optionService).should().deleteAll();
+        then(scheduleService).should().deleteAll();
+        then(templateService).should().deleteAll();
+    }
+
+    @Test
+    public void deleteAllDataShouldDelegateDeleteAllToUnderlyingServices() {
+
+        timetableFacade.deleteAllData();
+
+        then(optionService).should().deleteAll();
+        then(scheduleService).should().deleteAll();
+        then(templateService).should().deleteAll();
+        then(auditoriumService).should().deleteAll();
+        then(courseService).should().deleteAll();
+        then(groupService).should().deleteAll();
+        then(professorService).should().deleteAll();
+        then(studentService).should().deleteAll();
     }
 
 }

@@ -244,6 +244,43 @@ class ManagementUniversityAuditoriumsControllerTest {
     }
 
     @Test
+    public void getRemoveShouldRequestAuditoriumFromServiceAndRedirectToAuditoriumsIfNotPresent()
+            throws Exception {
+
+        long id = 1L;
+        given(timetableFacade.getAuditorium(anyLong())).willReturn(
+                Optional.empty());
+
+        mvc.perform(get(baseUrl + "/remove").queryParam("id",
+                String.valueOf(id)))
+                .andExpect(status().is3xxRedirection())
+                .andExpect(flash().attributeExists("errorAlert"))
+                .andExpect(redirectedUrl(baseUrl));
+
+        then(timetableFacade).should().getAuditorium(id);
+    }
+
+    @Test
+    public void getRemoveShouldRequestServiceToDeleteAndRedirectToAuditoriumsWithMessage()
+            throws Exception {
+
+        long id = 1L;
+        Auditorium auditorium = mock(Auditorium.class);
+        given(timetableFacade.getAuditorium(anyLong())).willReturn(
+                Optional.of(auditorium));
+
+        mvc.perform(get(baseUrl + "/remove").queryParam("id",
+                String.valueOf(id)))
+                .andExpect(status().is3xxRedirection())
+                .andExpect(flash().attributeExists("successAlert"))
+                .andExpect(flash().attribute("editedId", id))
+                .andExpect(redirectedUrl(baseUrl));
+
+        then(timetableFacade).should().getAuditorium(id);
+        then(timetableFacade).should().deleteAuditorium(auditorium);
+    }
+
+    @Test
     public void postNewShouldCreateAuditoriumRequestServiceToSaveAndRedirectToAuditoriumsWithMessage()
             throws Exception {
 

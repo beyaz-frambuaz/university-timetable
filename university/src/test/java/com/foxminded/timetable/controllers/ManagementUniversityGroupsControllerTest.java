@@ -39,22 +39,22 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 @WebMvcTest(ManagementUniversityGroupsController.class)
 class ManagementUniversityGroupsControllerTest {
 
-    private final String baseUrl  = "/timetable/management/university/groups";
+    private final String baseUrl = "/timetable/management/university/groups";
     private final String baseView = "management/university/groups";
 
     @Autowired
-    private MockMvc           mvc;
+    private MockMvc mvc;
     @MockBean
     private ScheduleFormatter scheduleFormatter;
     @MockBean
-    private TimetableFacade   timetableFacade;
+    private TimetableFacade timetableFacade;
 
     @Test
-    public void getGroupsShouldRequestStudentsFromServiceAndDisplayInGroups() throws Exception {
+    public void getGroupsShouldRequestStudentsFromServiceAndDisplayInGroups()
+            throws Exception {
 
-        List<Student> students = Collections.emptyList();
-        given(timetableFacade.getStudents()).willReturn(students);
         Map<Group, List<Student>> groupedStudents = Collections.emptyMap();
+        given(timetableFacade.getGroupedStudents()).willReturn(groupedStudents);
 
         mvc.perform(get(baseUrl))
                 .andExpect(status().isOk())
@@ -64,7 +64,7 @@ class ManagementUniversityGroupsControllerTest {
                         "editedId", "renameForm", "newItemForm"))
                 .andExpect(view().name(baseView + "/groups"));
 
-        then(timetableFacade).should().getStudents();
+        then(timetableFacade).should().getGroupedStudents();
     }
 
     @Test
@@ -242,6 +242,42 @@ class ManagementUniversityGroupsControllerTest {
         then(timetableFacade).should().getGroup(id);
         then(group).should().setName(name);
         then(timetableFacade).should().saveGroup(group);
+    }
+
+    @Test
+    public void getRemoveShouldRequestGroupFromServiceAndRedirectToGroupsIfNotPresent()
+            throws Exception {
+
+        long id = 1L;
+        given(timetableFacade.getGroup(anyLong())).willReturn(Optional.empty());
+
+        mvc.perform(
+                get(baseUrl + "/remove").queryParam("id", String.valueOf(id)))
+                .andExpect(status().is3xxRedirection())
+                .andExpect(flash().attributeExists("errorAlert"))
+                .andExpect(redirectedUrl(baseUrl));
+
+        then(timetableFacade).should().getGroup(id);
+    }
+
+    @Test
+    public void getRemoveShouldRequestServiceToDeleteAndRedirectToGroupsWithMessage()
+            throws Exception {
+
+        long id = 1L;
+        Group group = mock(Group.class);
+        given(timetableFacade.getGroup(anyLong())).willReturn(
+                Optional.of(group));
+
+        mvc.perform(
+                get(baseUrl + "/remove").queryParam("id", String.valueOf(id)))
+                .andExpect(status().is3xxRedirection())
+                .andExpect(flash().attributeExists("successAlert"))
+                .andExpect(flash().attribute("editedId", id))
+                .andExpect(redirectedUrl(baseUrl));
+
+        then(timetableFacade).should().getGroup(id);
+        then(timetableFacade).should().deleteGroup(group);
     }
 
     @Test

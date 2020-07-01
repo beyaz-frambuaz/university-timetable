@@ -1,6 +1,6 @@
 package com.foxminded.timetable.service;
 
-import com.foxminded.timetable.dao.StudentDao;
+import com.foxminded.timetable.dao.StudentRepository;
 import com.foxminded.timetable.model.Group;
 import com.foxminded.timetable.model.Student;
 import org.junit.jupiter.api.Test;
@@ -21,12 +21,12 @@ import static org.mockito.BDDMockito.then;
 @ExtendWith(MockitoExtension.class)
 class StudentServiceTest {
 
-    private final Group          group   = new Group(1L, "group");
-    private final Student        student = new Student(1L, "one", "one", group);
+    private final Group group = new Group(1L, "group");
+    private final Student student = new Student(1L, "one", "one", group);
     @Mock
-    private       StudentDao     repository;
+    private StudentRepository repository;
     @InjectMocks
-    private       StudentService service;
+    private StudentService service;
 
     @Test
     public void countShouldDelegateToRepository() {
@@ -105,11 +105,11 @@ class StudentServiceTest {
 
         List<Group> groups = Collections.singletonList(group);
         List<Student> students = Collections.singletonList(student);
-        given(repository.findAllInGroups(anyList())).willReturn(students);
+        given(repository.findAllByGroupIn(anyList())).willReturn(students);
 
         List<Student> actual = service.findAllInGroups(groups);
 
-        then(repository).should().findAllInGroups(groups);
+        then(repository).should().findAllByGroupIn(groups);
         assertThat(actual).isEqualTo(students);
     }
 
@@ -124,6 +124,22 @@ class StudentServiceTest {
 
         then(repository).should().findById(id);
         assertThat(actual).isEqualTo(expected);
+    }
+
+    @Test
+    public void deleteShouldDelegateToRepository() {
+
+        service.delete(student);
+
+        then(repository).should().delete(student);
+    }
+
+    @Test
+    public void deleteAllShouldDelegateToRepository() {
+
+        service.deleteAll();
+
+        then(repository).should().deleteAllInBatch();
     }
 
 }
