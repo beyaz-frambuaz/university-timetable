@@ -17,10 +17,15 @@ import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.context.annotation.Import;
 import org.springframework.test.web.servlet.MockMvc;
+import org.springframework.test.web.servlet.MvcResult;
+import org.springframework.test.web.servlet.RequestBuilder;
+import org.springframework.validation.BindException;
 
+import javax.validation.ConstraintViolationException;
 import java.time.LocalDate;
 import java.util.*;
 
+import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.ArgumentMatchers.*;
 import static org.mockito.BDDMockito.given;
 import static org.mockito.BDDMockito.then;
@@ -33,15 +38,15 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 @WebMvcTest(ManagementUniversityFacultyController.class)
 class ManagementUniversityFacultyControllerTest {
 
-    private final String baseUrl  = "/timetable/management/university/faculty";
+    private final String baseUrl = "/timetable/management/university/faculty";
     private final String baseView = "management/university/faculty";
 
     @Autowired
-    private MockMvc           mvc;
+    private MockMvc mvc;
     @MockBean
     private ScheduleFormatter scheduleFormatter;
     @MockBean
-    private TimetableFacade   timetableFacade;
+    private TimetableFacade timetableFacade;
 
     @Test
     public void getFacultyShouldRequestFromServiceAndDisplay()
@@ -61,12 +66,40 @@ class ManagementUniversityFacultyControllerTest {
     }
 
     @Test
+    public void postScheduleShouldValidateFormAndRedirectToFacultyWithErrorMessageIfInvalid()
+            throws Exception {
+
+        long id = 0L;
+        String date = "invalid date";
+
+        ScheduleForm scheduleForm = new ScheduleForm();
+        scheduleForm.setDate(date);
+        scheduleForm.setId(id);
+
+        RequestBuilder requestBuilder =
+                post(baseUrl + "/schedule").flashAttr("scheduleForm",
+                        scheduleForm);
+        MvcResult mvcResult = mvc.perform(requestBuilder)
+                .andExpect(status().is3xxRedirection())
+                .andExpect(flash().attributeExists("errorAlert"))
+                .andExpect(redirectedUrl(baseUrl))
+                .andReturn();
+
+        Optional<BindException> exception = Optional.ofNullable(
+                (BindException) mvcResult.getResolvedException());
+
+        assertThat(exception).isPresent()
+                .containsInstanceOf(BindException.class);
+    }
+
+    @Test
     public void postScheduleShouldRequestProfessorFromServiceAndRedirectToFacultyIfNotPresent()
             throws Exception {
 
-        ScheduleForm form = mock(ScheduleForm.class);
         long id = 1L;
-        given(form.getId()).willReturn(id);
+        ScheduleForm form = new ScheduleForm();
+        form.setId(id);
+        form.setDate("2020-06-01");
         given(timetableFacade.getProfessor(anyLong())).willReturn(
                 Optional.empty());
 
@@ -88,13 +121,15 @@ class ManagementUniversityFacultyControllerTest {
         given(timetableFacade.getProfessor(anyLong())).willReturn(
                 Optional.of(professor));
 
-        ScheduleForm scheduleForm = mock(ScheduleForm.class);
         boolean filtered = true;
         LocalDate date = LocalDate.MAX;
-        given(scheduleForm.getScheduleOption()).willReturn(ScheduleOption.DAY);
-        given(scheduleForm.getLocalDate()).willReturn(date);
-        given(scheduleForm.getId()).willReturn(id);
-        given(scheduleForm.isFiltered()).willReturn(filtered);
+
+        ScheduleForm scheduleForm = new ScheduleForm();
+        scheduleForm.setDate(date.toString());
+        scheduleForm.setId(id);
+        scheduleForm.setScheduleOption(ScheduleOption.DAY);
+        scheduleForm.setFiltered(filtered);
+
         SchedulePredicate predicate = new SchedulePredicateProfessorId(id);
 
         DaySchedule daySchedule = mock(DaySchedule.class);
@@ -123,13 +158,15 @@ class ManagementUniversityFacultyControllerTest {
         given(timetableFacade.getProfessor(anyLong())).willReturn(
                 Optional.of(professor));
 
-        ScheduleForm scheduleForm = mock(ScheduleForm.class);
         boolean filtered = true;
         LocalDate date = LocalDate.MAX;
-        given(scheduleForm.getScheduleOption()).willReturn(ScheduleOption.WEEK);
-        given(scheduleForm.getLocalDate()).willReturn(date);
-        given(scheduleForm.getId()).willReturn(id);
-        given(scheduleForm.isFiltered()).willReturn(filtered);
+
+        ScheduleForm scheduleForm = new ScheduleForm();
+        scheduleForm.setDate(date.toString());
+        scheduleForm.setId(id);
+        scheduleForm.setScheduleOption(ScheduleOption.WEEK);
+        scheduleForm.setFiltered(filtered);
+
         SchedulePredicate predicate = new SchedulePredicateProfessorId(id);
 
         WeekSchedule weekSchedule = mock(WeekSchedule.class);
@@ -159,14 +196,15 @@ class ManagementUniversityFacultyControllerTest {
         given(timetableFacade.getProfessor(anyLong())).willReturn(
                 Optional.of(professor));
 
-        ScheduleForm scheduleForm = mock(ScheduleForm.class);
         boolean filtered = true;
         LocalDate date = LocalDate.MAX;
-        given(scheduleForm.getScheduleOption()).willReturn(
-                ScheduleOption.MONTH);
-        given(scheduleForm.getLocalDate()).willReturn(date);
-        given(scheduleForm.getId()).willReturn(id);
-        given(scheduleForm.isFiltered()).willReturn(filtered);
+
+        ScheduleForm scheduleForm = new ScheduleForm();
+        scheduleForm.setDate(date.toString());
+        scheduleForm.setId(id);
+        scheduleForm.setScheduleOption(ScheduleOption.MONTH);
+        scheduleForm.setFiltered(filtered);
+
         SchedulePredicate predicate = new SchedulePredicateProfessorId(id);
 
         MonthSchedule monthSchedule = mock(MonthSchedule.class);
@@ -192,6 +230,26 @@ class ManagementUniversityFacultyControllerTest {
         mvc.perform(get(baseUrl + "/schedule"))
                 .andExpect(status().is3xxRedirection())
                 .andExpect(redirectedUrl(baseUrl));
+    }
+
+    @Test
+    public void getRemoveShouldValidateIdAndRedirectToFacultyIfInvalid()
+            throws Exception {
+
+        long id = 0L;
+
+        MvcResult mvcResult = mvc.perform(
+                get(baseUrl + "/remove").queryParam("id", String.valueOf(id)))
+                .andExpect(status().is3xxRedirection())
+                .andExpect(flash().attributeExists("errorAlert"))
+                .andExpect(redirectedUrl(baseUrl))
+                .andReturn();
+
+        Optional<ConstraintViolationException> exception = Optional.ofNullable(
+                (ConstraintViolationException) mvcResult.getResolvedException());
+
+        assertThat(exception).isPresent()
+                .containsInstanceOf(ConstraintViolationException.class);
     }
 
     @Test
@@ -232,6 +290,30 @@ class ManagementUniversityFacultyControllerTest {
     }
 
     @Test
+    public void postNewShouldValidateFormAndRedirectToFacultyWithErrorMessageIfInvalid()
+            throws Exception {
+
+        NewProfessorForm newProfessorForm = new NewProfessorForm();
+        newProfessorForm.setFirstName(" ");
+        newProfessorForm.setLastName(" ");
+
+        RequestBuilder requestBuilder =
+                post(baseUrl + "/new").flashAttr("newProfessorForm",
+                        newProfessorForm);
+        MvcResult mvcResult = mvc.perform(requestBuilder)
+                .andExpect(status().is3xxRedirection())
+                .andExpect(flash().attributeExists("errorAlert"))
+                .andExpect(redirectedUrl(baseUrl))
+                .andReturn();
+
+        Optional<BindException> exception = Optional.ofNullable(
+                (BindException) mvcResult.getResolvedException());
+
+        assertThat(exception).isPresent()
+                .containsInstanceOf(BindException.class);
+    }
+
+    @Test
     public void postNewShouldCreateProfessorRequestServiceToSaveAndRedirectToFacultyWithMessage()
             throws Exception {
 
@@ -245,9 +327,9 @@ class ManagementUniversityFacultyControllerTest {
 
         Professor newProfessor = new Professor(name, name);
 
-        NewProfessorForm form = mock(NewProfessorForm.class);
-        given(form.getFirstName()).willReturn(name);
-        given(form.getLastName()).willReturn(name);
+        NewProfessorForm form = new NewProfessorForm();
+        form.setFirstName(name);
+        form.setLastName(name);
 
         mvc.perform(post(baseUrl + "/new").flashAttr("newProfessorForm", form))
                 .andExpect(status().is3xxRedirection())
@@ -256,6 +338,27 @@ class ManagementUniversityFacultyControllerTest {
                 .andExpect(redirectedUrl(baseUrl));
 
         then(timetableFacade).should().saveProfessor(newProfessor);
+    }
+
+    @Test
+    public void getCoursesShouldValidateIdAndRedirectToFacultyIfInvalid()
+            throws Exception {
+
+        long professorId = 0L;
+
+        MvcResult mvcResult = mvc.perform(
+                get(baseUrl + "/courses").queryParam("professorId",
+                        String.valueOf(professorId)))
+                .andExpect(status().is3xxRedirection())
+                .andExpect(flash().attributeExists("errorAlert"))
+                .andExpect(redirectedUrl(baseUrl))
+                .andReturn();
+
+        Optional<ConstraintViolationException> exception = Optional.ofNullable(
+                (ConstraintViolationException) mvcResult.getResolvedException());
+
+        assertThat(exception).isPresent()
+                .containsInstanceOf(ConstraintViolationException.class);
     }
 
     @Test
@@ -320,12 +423,38 @@ class ManagementUniversityFacultyControllerTest {
     }
 
     @Test
+    public void postCoursesAddShouldValidateFormAndRedirectToFacultyIfInvalid()
+            throws Exception {
+
+        long courseId = 0L;
+        long professorId = 0L;
+        AddCourseForm addCourseForm = new AddCourseForm();
+        addCourseForm.setNewCourse(courseId);
+        addCourseForm.setProfessorId(professorId);
+
+        MvcResult mvcResult = mvc.perform(
+                post(baseUrl + "/courses/add").flashAttr("addCourseForm",
+                        addCourseForm))
+                .andExpect(status().is3xxRedirection())
+                .andExpect(flash().attributeExists("errorAlert"))
+                .andExpect(redirectedUrl(baseUrl))
+                .andReturn();
+
+        Optional<BindException> exception = Optional.ofNullable(
+                (BindException) mvcResult.getResolvedException());
+
+        assertThat(exception).isPresent()
+                .containsInstanceOf(BindException.class);
+    }
+
+    @Test
     public void postCoursesAddShouldRequestProfessorFromServiceAndRedirectToFacultyIfNotPresent()
             throws Exception {
 
         long id = 1L;
-        AddCourseForm addCourseForm = mock(AddCourseForm.class);
-        given(addCourseForm.getProfessorId()).willReturn(id);
+        AddCourseForm addCourseForm = new AddCourseForm();
+        addCourseForm.setProfessorId(id);
+        addCourseForm.setNewCourse(id);
         given(timetableFacade.getProfessor(anyLong())).willReturn(
                 Optional.empty());
 
@@ -344,9 +473,9 @@ class ManagementUniversityFacultyControllerTest {
 
         long professorId = 1L;
         long courseId = 2L;
-        AddCourseForm addCourseForm = mock(AddCourseForm.class);
-        given(addCourseForm.getProfessorId()).willReturn(professorId);
-        given(addCourseForm.getNewCourse()).willReturn(courseId);
+        AddCourseForm addCourseForm = new AddCourseForm();
+        addCourseForm.setProfessorId(professorId);
+        addCourseForm.setNewCourse(courseId);
 
         Professor professor = mock(Professor.class);
         given(professor.getId()).willReturn(professorId);
@@ -372,9 +501,9 @@ class ManagementUniversityFacultyControllerTest {
 
         long professorId = 1L;
         long courseId = 2L;
-        AddCourseForm addCourseForm = mock(AddCourseForm.class);
-        given(addCourseForm.getProfessorId()).willReturn(professorId);
-        given(addCourseForm.getNewCourse()).willReturn(courseId);
+        AddCourseForm addCourseForm = new AddCourseForm();
+        addCourseForm.setProfessorId(professorId);
+        addCourseForm.setNewCourse(courseId);
 
         Professor professor = mock(Professor.class);
         given(professor.getId()).willReturn(professorId);
@@ -401,12 +530,38 @@ class ManagementUniversityFacultyControllerTest {
     }
 
     @Test
+    public void postCoursesDropShouldValidateFormAndRedirectToFacultyIfInvalid()
+            throws Exception {
+
+        long courseId = 0L;
+        long professorId = 0L;
+        DropCourseForm dropCourseForm = new DropCourseForm();
+        dropCourseForm.setCourseId(courseId);
+        dropCourseForm.setProfessorId(professorId);
+
+        MvcResult mvcResult = mvc.perform(
+                post(baseUrl + "/courses/add").flashAttr("dropCourseForm",
+                        dropCourseForm))
+                .andExpect(status().is3xxRedirection())
+                .andExpect(flash().attributeExists("errorAlert"))
+                .andExpect(redirectedUrl(baseUrl))
+                .andReturn();
+
+        Optional<BindException> exception = Optional.ofNullable(
+                (BindException) mvcResult.getResolvedException());
+
+        assertThat(exception).isPresent()
+                .containsInstanceOf(BindException.class);
+    }
+
+    @Test
     public void postCoursesDropShouldRequestProfessorFromServiceAndRedirectToFacultyIfNotPresent()
             throws Exception {
 
         long id = 1L;
-        DropCourseForm dropCourseForm = mock(DropCourseForm.class);
-        given(dropCourseForm.getProfessorId()).willReturn(id);
+        DropCourseForm dropCourseForm = new DropCourseForm();
+        dropCourseForm.setProfessorId(id);
+        dropCourseForm.setCourseId(id);
         given(timetableFacade.getProfessor(anyLong())).willReturn(
                 Optional.empty());
 
@@ -425,9 +580,9 @@ class ManagementUniversityFacultyControllerTest {
 
         long professorId = 1L;
         long courseId = 2L;
-        DropCourseForm dropCourseForm = mock(DropCourseForm.class);
-        given(dropCourseForm.getProfessorId()).willReturn(professorId);
-        given(dropCourseForm.getCourseId()).willReturn(courseId);
+        DropCourseForm dropCourseForm = new DropCourseForm();
+        dropCourseForm.setProfessorId(professorId);
+        dropCourseForm.setCourseId(courseId);
 
         Professor professor = mock(Professor.class);
         given(professor.getId()).willReturn(professorId);
@@ -453,9 +608,9 @@ class ManagementUniversityFacultyControllerTest {
 
         long professorId = 1L;
         long courseId = 2L;
-        DropCourseForm dropCourseForm = mock(DropCourseForm.class);
-        given(dropCourseForm.getProfessorId()).willReturn(professorId);
-        given(dropCourseForm.getCourseId()).willReturn(courseId);
+        DropCourseForm dropCourseForm = new DropCourseForm();
+        dropCourseForm.setProfessorId(professorId);
+        dropCourseForm.setCourseId(courseId);
 
         Professor professor = mock(Professor.class);
         given(professor.getId()).willReturn(professorId);

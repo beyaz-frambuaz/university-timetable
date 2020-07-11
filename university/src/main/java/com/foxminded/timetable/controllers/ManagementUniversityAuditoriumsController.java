@@ -14,17 +14,26 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.validation.BindException;
+import org.springframework.validation.ObjectError;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
+import javax.validation.ConstraintViolation;
+import javax.validation.ConstraintViolationException;
+import javax.validation.Valid;
+import javax.validation.constraints.Min;
 import java.time.LocalDate;
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
-@Slf4j
 @Controller
-@RequiredArgsConstructor
 @RequestMapping("**/university/auditoriums")
+@Validated
+@RequiredArgsConstructor
+@Slf4j
 public class ManagementUniversityAuditoriumsController {
 
     private final ScheduleFormatter scheduleFormatter;
@@ -54,7 +63,7 @@ public class ManagementUniversityAuditoriumsController {
 
     @PostMapping("/schedule")
     public String auditoriumSchedule(Model model,
-            @ModelAttribute("scheduleForm") ScheduleForm scheduleForm,
+            @ModelAttribute @Valid ScheduleForm scheduleForm,
             RedirectAttributes redirectAttributes) {
 
         Optional<Auditorium> optionalAuditorium =
@@ -115,7 +124,7 @@ public class ManagementUniversityAuditoriumsController {
 
     @PostMapping("/rename")
     public String rename(RedirectAttributes redirectAttributes,
-            @ModelAttribute("renameForm") RenameForm renameForm) {
+            @ModelAttribute @Valid RenameForm renameForm) {
 
         Optional<Auditorium> optionalAuditorium =
                 timetableFacade.getAuditorium(renameForm.getRenameId());
@@ -143,7 +152,9 @@ public class ManagementUniversityAuditoriumsController {
 
     @GetMapping("/remove")
     public String removeAuditorium(RedirectAttributes redirectAttributes,
-            @RequestParam("id") long id) {
+            @Min(value = 1,
+                 message = "Auditorium ID must not be less than 1") @RequestParam(
+                    "id") long id) {
 
         Optional<Auditorium> optionalAuditorium =
                 timetableFacade.getAuditorium(id);
@@ -168,7 +179,7 @@ public class ManagementUniversityAuditoriumsController {
 
     @PostMapping("/new")
     public String addNewAuditorium(RedirectAttributes redirectAttributes,
-            @ModelAttribute("newItemForm") NewItemForm newItemForm) {
+            @ModelAttribute @Valid NewItemForm newItemForm) {
 
         Auditorium auditorium = new Auditorium(newItemForm.getName());
         auditorium = timetableFacade.saveAuditorium(auditorium);
@@ -178,6 +189,35 @@ public class ManagementUniversityAuditoriumsController {
                         auditorium.getName(), auditorium.getId()));
         redirectAttributes.addFlashAttribute("editedId", auditorium.getId());
 
+
+        return "redirect:/timetable/management/university/auditoriums";
+    }
+
+    @ExceptionHandler(BindException.class)
+    public String handleInvalidData(RedirectAttributes redirectAttributes,
+            BindException exception) {
+
+        log.warn(exception.getMessage());
+        String errorAlert = exception.getBindingResult()
+                .getAllErrors()
+                .stream()
+                .map(ObjectError::getDefaultMessage)
+                .collect(Collectors.joining("; "));
+        redirectAttributes.addFlashAttribute("errorAlert", errorAlert);
+
+        return "redirect:/timetable/management/university/auditoriums";
+    }
+
+    @ExceptionHandler(ConstraintViolationException.class)
+    public String handleInvalidData(RedirectAttributes redirectAttributes,
+            ConstraintViolationException exception) {
+
+        log.warn(exception.getMessage());
+        String errorAlert = exception.getConstraintViolations()
+                .stream()
+                .map(ConstraintViolation::getMessage)
+                .collect(Collectors.joining("; "));
+        redirectAttributes.addFlashAttribute("errorAlert", errorAlert);
 
         return "redirect:/timetable/management/university/auditoriums";
     }

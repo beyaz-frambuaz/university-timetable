@@ -1,7 +1,9 @@
 package com.foxminded.timetable.forms;
 
+import com.foxminded.timetable.forms.constraints.Date;
 import lombok.Data;
 
+import javax.validation.constraints.Min;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.time.format.FormatStyle;
@@ -10,21 +12,29 @@ import java.time.format.FormatStyle;
 public class ScheduleForm {
 
     private ScheduleOption scheduleOption;
+
+    @Date
     private String date;
+
     private LocalDate localDate;
+
     private boolean filtered;
+
+    @Min(value = 1, message = "ID must not be less than 1")
     private long id;
 
     public String getDateDescription() {
 
-        return localDate.format(
+        return getLocalDate().format(
                 DateTimeFormatter.ofLocalizedDate(FormatStyle.MEDIUM));
     }
 
-    public void setDate(String date) {
+    public LocalDate getLocalDate() {
 
-        this.date = date;
-        this.localDate = LocalDate.parse(date);
+        if (this.localDate == null) {
+            this.localDate = LocalDate.parse(date);
+        }
+        return this.localDate;
     }
 
 }

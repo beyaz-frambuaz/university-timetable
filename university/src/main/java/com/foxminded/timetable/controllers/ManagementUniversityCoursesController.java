@@ -14,17 +14,26 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.validation.BindException;
+import org.springframework.validation.ObjectError;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
+import javax.validation.ConstraintViolation;
+import javax.validation.ConstraintViolationException;
+import javax.validation.Valid;
+import javax.validation.constraints.Min;
 import java.time.LocalDate;
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
-@Slf4j
 @Controller
-@RequiredArgsConstructor
 @RequestMapping("**/university/courses")
+@Validated
+@RequiredArgsConstructor
+@Slf4j
 public class ManagementUniversityCoursesController {
 
     private final ScheduleFormatter scheduleFormatter;
@@ -54,7 +63,7 @@ public class ManagementUniversityCoursesController {
 
     @PostMapping("/schedule")
     public String courseSchedule(Model model,
-            @ModelAttribute("scheduleForm") ScheduleForm scheduleForm,
+            @ModelAttribute("scheduleForm") @Valid ScheduleForm scheduleForm,
             RedirectAttributes redirectAttributes) {
 
         Optional<Course> optionalCourse =
@@ -120,7 +129,7 @@ public class ManagementUniversityCoursesController {
 
     @PostMapping("/rename")
     public String rename(RedirectAttributes redirectAttributes,
-            @ModelAttribute("renameForm") RenameForm renameForm) {
+            @ModelAttribute("renameForm") @Valid RenameForm renameForm) {
 
         Optional<Course> optionalCourse =
                 timetableFacade.getCourse(renameForm.getRenameId());
@@ -148,7 +157,9 @@ public class ManagementUniversityCoursesController {
 
     @GetMapping("/remove")
     public String removeCourse(RedirectAttributes redirectAttributes,
-            @RequestParam("id") long id) {
+            @Min(value = 1,
+                 message = "Course ID must not be less than 1") @RequestParam(
+                    "id") long id) {
 
         Optional<Course> optionalCourse = timetableFacade.getCourse(id);
         if (!optionalCourse.isPresent()) {
@@ -172,7 +183,7 @@ public class ManagementUniversityCoursesController {
 
     @PostMapping("/new")
     public String addNewCourse(RedirectAttributes redirectAttributes,
-            @ModelAttribute("newItemForm") NewItemForm newItemForm) {
+            @ModelAttribute("newItemForm") @Valid NewItemForm newItemForm) {
 
         Course course = new Course(newItemForm.getName());
         course = timetableFacade.saveCourse(course);
@@ -182,6 +193,35 @@ public class ManagementUniversityCoursesController {
                         course.getName(), course.getId()));
         redirectAttributes.addFlashAttribute("editedId", course.getId());
 
+
+        return "redirect:/timetable/management/university/courses";
+    }
+
+    @ExceptionHandler(BindException.class)
+    public String handleInvalidData(RedirectAttributes redirectAttributes,
+            BindException exception) {
+
+        log.warn(exception.getMessage());
+        String errorAlert = exception.getBindingResult()
+                .getAllErrors()
+                .stream()
+                .map(ObjectError::getDefaultMessage)
+                .collect(Collectors.joining("; "));
+        redirectAttributes.addFlashAttribute("errorAlert", errorAlert);
+
+        return "redirect:/timetable/management/university/courses";
+    }
+
+    @ExceptionHandler(ConstraintViolationException.class)
+    public String handleInvalidData(RedirectAttributes redirectAttributes,
+            ConstraintViolationException exception) {
+
+        log.warn(exception.getMessage());
+        String errorAlert = exception.getConstraintViolations()
+                .stream()
+                .map(ConstraintViolation::getMessage)
+                .collect(Collectors.joining("; "));
+        redirectAttributes.addFlashAttribute("errorAlert", errorAlert);
 
         return "redirect:/timetable/management/university/courses";
     }

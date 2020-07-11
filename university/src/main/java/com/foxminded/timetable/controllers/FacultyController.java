@@ -16,20 +16,29 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.validation.BindException;
+import org.springframework.validation.ObjectError;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import javax.servlet.http.HttpSession;
+import javax.validation.ConstraintViolation;
+import javax.validation.ConstraintViolationException;
+import javax.validation.Valid;
+import javax.validation.constraints.Min;
 import java.time.LocalDate;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
-@Slf4j
 @Controller
-@RequiredArgsConstructor
 @RequestMapping("/timetable/faculty")
+@Validated
+@RequiredArgsConstructor
+@Slf4j
 public class FacultyController {
 
     private final TimetableFacade timetableFacade;
@@ -52,8 +61,11 @@ public class FacultyController {
     }
 
     @PostMapping("/list")
-    public String selectProfessor(@RequestParam("professorId") long professorId,
-            HttpSession session, RedirectAttributes redirectAttributes) {
+    public String selectProfessor(@Min(value = 1,
+                                       message = "Professor ID must not "
+                                               + "be less than 1") @RequestParam(
+            "professorId") long professorId, HttpSession session,
+            RedirectAttributes redirectAttributes) {
 
         Optional<Professor> professor =
                 timetableFacade.getProfessor(professorId);
@@ -73,9 +85,8 @@ public class FacultyController {
     @GetMapping("/professor/home")
     public String home(HttpSession httpSession, Model model) {
 
-        if (httpSession.getAttribute("professor") == null) {
-            throw new SessionExpiredException(Professor.class);
-        }
+        validateSession(httpSession);
+
         Professor professor = (Professor) httpSession.getAttribute("professor");
 
         LocalDate today = LocalDate.now();
@@ -90,9 +101,7 @@ public class FacultyController {
     @GetMapping("/professor/two_week")
     public String twoWeekSchedule(Model model, HttpSession httpSession) {
 
-        if (httpSession.getAttribute("professor") == null) {
-            throw new SessionExpiredException(Professor.class);
-        }
+        validateSession(httpSession);
 
         TwoWeekSchedule twoWeekSchedule =
                 scheduleFormatter.prepareTwoWeekSchedule();
@@ -109,11 +118,9 @@ public class FacultyController {
 
     @PostMapping("/professor/schedule")
     public String processForm(Model model, HttpSession httpSession,
-            @ModelAttribute("scheduleForm") ScheduleForm scheduleForm) {
+            @ModelAttribute @Valid ScheduleForm scheduleForm) {
 
-        if (httpSession.getAttribute("professor") == null) {
-            throw new SessionExpiredException(Professor.class);
-        }
+        validateSession(httpSession);
 
         Professor professor = (Professor) httpSession.getAttribute("professor");
         LocalDate date = scheduleForm.getLocalDate();
@@ -156,9 +163,7 @@ public class FacultyController {
     @GetMapping("/professor/courses")
     public String courses(Model model, HttpSession httpSession) {
 
-        if (httpSession.getAttribute("professor") == null) {
-            throw new SessionExpiredException(Professor.class);
-        }
+        validateSession(httpSession);
 
         Professor professor = (Professor) httpSession.getAttribute("professor");
         Map<Course, List<Student>> allCourseAttendees = new HashMap<>();
@@ -169,6 +174,42 @@ public class FacultyController {
         model.addAttribute("allCourseAttendees", allCourseAttendees);
 
         return "faculty/professor/courses";
+    }
+
+    private void validateSession(HttpSession httpSession) {
+
+        if (httpSession.getAttribute("professor") == null) {
+            throw new SessionExpiredException(Professor.class);
+        }
+    }
+
+    @ExceptionHandler(BindException.class)
+    public String handleInvalidData(RedirectAttributes redirectAttributes,
+            BindException exception) {
+
+        log.warn(exception.getMessage());
+        String errorAlert = exception.getBindingResult()
+                .getAllErrors()
+                .stream()
+                .map(ObjectError::getDefaultMessage)
+                .collect(Collectors.joining("; "));
+        redirectAttributes.addFlashAttribute("errorAlert", errorAlert);
+
+        return "redirect:/timetable/faculty/list";
+    }
+
+    @ExceptionHandler(ConstraintViolationException.class)
+    public String handleInvalidData(RedirectAttributes redirectAttributes,
+            ConstraintViolationException exception) {
+
+        log.warn(exception.getMessage());
+        String errorAlert = exception.getConstraintViolations()
+                .stream()
+                .map(ConstraintViolation::getMessage)
+                .collect(Collectors.joining("; "));
+        redirectAttributes.addFlashAttribute("errorAlert", errorAlert);
+
+        return "redirect:/timetable/faculty/list";
     }
 
 }

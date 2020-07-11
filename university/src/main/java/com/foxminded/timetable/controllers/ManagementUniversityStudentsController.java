@@ -15,18 +15,26 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.validation.BindException;
+import org.springframework.validation.ObjectError;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
+import javax.validation.ConstraintViolation;
+import javax.validation.ConstraintViolationException;
+import javax.validation.Valid;
+import javax.validation.constraints.Min;
 import java.time.LocalDate;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
-@Slf4j
 @Controller
-@RequiredArgsConstructor
 @RequestMapping("**/university/students")
+@Validated
+@RequiredArgsConstructor
+@Slf4j
 public class ManagementUniversityStudentsController {
 
     private final ScheduleFormatter scheduleFormatter;
@@ -64,7 +72,7 @@ public class ManagementUniversityStudentsController {
 
     @PostMapping("/schedule")
     public String studentSchedule(Model model,
-            @ModelAttribute("scheduleForm") ScheduleForm scheduleForm,
+            @ModelAttribute @Valid ScheduleForm scheduleForm,
             RedirectAttributes redirectAttributes) {
 
         Optional<Group> optionalGroup =
@@ -129,8 +137,7 @@ public class ManagementUniversityStudentsController {
 
     @PostMapping("/change/group")
     public String changeGroup(RedirectAttributes redirectAttributes,
-            @ModelAttribute(
-                    "changeGroupForm") ChangeGroupForm changeGroupForm) {
+            @ModelAttribute @Valid ChangeGroupForm changeGroupForm) {
 
         Optional<Student> optionalStudent =
                 timetableFacade.getStudent(changeGroupForm.getStudentId());
@@ -172,7 +179,9 @@ public class ManagementUniversityStudentsController {
 
     @GetMapping("/remove")
     public String removeStudent(RedirectAttributes redirectAttributes,
-            @RequestParam("id") long id) {
+            @Min(value = 1,
+                 message = "Student ID must not be less than 1") @RequestParam(
+                    "id") long id) {
 
         Optional<Student> optionalStudent = timetableFacade.getStudent(id);
         if (!optionalStudent.isPresent()) {
@@ -196,7 +205,7 @@ public class ManagementUniversityStudentsController {
 
     @PostMapping("/new")
     public String addNewStudent(RedirectAttributes redirectAttributes,
-            @ModelAttribute("newStudentForm") NewStudentForm newStudentForm) {
+            @ModelAttribute @Valid NewStudentForm newStudentForm) {
 
         Optional<Group> optionalGroup =
                 timetableFacade.getGroup(newStudentForm.getGroupId());
@@ -220,6 +229,35 @@ public class ManagementUniversityStudentsController {
                         newStudent.getFullName(), newStudent.getId(),
                         newStudent.getGroup().getName()));
         redirectAttributes.addFlashAttribute("editedId", newStudent.getId());
+
+        return "redirect:/timetable/management/university/students";
+    }
+
+    @ExceptionHandler(BindException.class)
+    public String handleInvalidData(RedirectAttributes redirectAttributes,
+            BindException exception) {
+
+        log.warn(exception.getMessage());
+        String errorAlert = exception.getBindingResult()
+                .getAllErrors()
+                .stream()
+                .map(ObjectError::getDefaultMessage)
+                .collect(Collectors.joining("; "));
+        redirectAttributes.addFlashAttribute("errorAlert", errorAlert);
+
+        return "redirect:/timetable/management/university/students";
+    }
+
+    @ExceptionHandler(ConstraintViolationException.class)
+    public String handleInvalidData(RedirectAttributes redirectAttributes,
+            ConstraintViolationException exception) {
+
+        log.warn(exception.getMessage());
+        String errorAlert = exception.getConstraintViolations()
+                .stream()
+                .map(ConstraintViolation::getMessage)
+                .collect(Collectors.joining("; "));
+        redirectAttributes.addFlashAttribute("errorAlert", errorAlert);
 
         return "redirect:/timetable/management/university/students";
     }

@@ -22,7 +22,9 @@ import org.springframework.context.annotation.Import;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.MvcResult;
 import org.springframework.test.web.servlet.RequestBuilder;
+import org.springframework.validation.BindException;
 
+import javax.validation.ConstraintViolationException;
 import java.time.DayOfWeek;
 import java.time.LocalDate;
 import java.util.Collections;
@@ -49,13 +51,13 @@ class ManagementControllerTest {
     @MockBean
     private ScheduleFormatter scheduleFormatter;
     @MockBean
-    private OptionsFormatter  optionsFormatter;
+    private OptionsFormatter optionsFormatter;
     @MockBean
-    private DataGenerator     dataGenerator;
+    private DataGenerator dataGenerator;
     @MockBean
-    private TimetableFacade   timetableFacade;
+    private TimetableFacade timetableFacade;
     @MockBean
-    private SemesterCalendar  semesterCalendar;
+    private SemesterCalendar semesterCalendar;
 
     @Test
     public void getHomeShouldClearSessionRequestDayScheduleAndReturnHomeViewWithFlashMessages()
@@ -137,10 +139,12 @@ class ManagementControllerTest {
     public void postScheduleShouldRequestAndDisplayDaySchedulePerFormRequest()
             throws Exception {
 
-        ScheduleForm scheduleForm = mock(ScheduleForm.class);
         LocalDate date = LocalDate.MAX;
-        given(scheduleForm.getLocalDate()).willReturn(date);
-        given(scheduleForm.getScheduleOption()).willReturn(ScheduleOption.DAY);
+        ScheduleForm scheduleForm = new ScheduleForm();
+        scheduleForm.setDate(date.toString());
+        scheduleForm.setScheduleOption(ScheduleOption.DAY);
+        scheduleForm.setId(1L);
+
         SchedulePredicate predicate = new SchedulePredicateNoFilter();
         DaySchedule daySchedule = mock(DaySchedule.class);
         given(scheduleFormatter.prepareDaySchedule(any(SchedulePredicate.class),
@@ -162,10 +166,12 @@ class ManagementControllerTest {
     public void postScheduleShouldRequestAndDisplayWeekSchedulePerFormRequest()
             throws Exception {
 
-        ScheduleForm scheduleForm = mock(ScheduleForm.class);
+        ScheduleForm scheduleForm = new ScheduleForm();
         LocalDate date = LocalDate.MAX;
-        given(scheduleForm.getLocalDate()).willReturn(date);
-        given(scheduleForm.getScheduleOption()).willReturn(ScheduleOption.WEEK);
+        scheduleForm.setDate(date.toString());
+        scheduleForm.setScheduleOption(ScheduleOption.WEEK);
+        scheduleForm.setId(1L);
+
         SchedulePredicate predicate = new SchedulePredicateNoFilter();
         WeekSchedule weekSchedule = mock(WeekSchedule.class);
         given(scheduleFormatter.prepareWeekSchedule(
@@ -188,11 +194,12 @@ class ManagementControllerTest {
     public void postScheduleShouldRequestAndDisplayMonthSchedulePerFormRequest()
             throws Exception {
 
-        ScheduleForm scheduleForm = mock(ScheduleForm.class);
         LocalDate date = LocalDate.MAX;
-        given(scheduleForm.getLocalDate()).willReturn(date);
-        given(scheduleForm.getScheduleOption()).willReturn(
-                ScheduleOption.MONTH);
+        ScheduleForm scheduleForm = new ScheduleForm();
+        scheduleForm.setDate(date.toString());
+        scheduleForm.setScheduleOption(ScheduleOption.MONTH);
+        scheduleForm.setId(1L);
+
         SchedulePredicate predicate = new SchedulePredicateNoFilter();
         MonthSchedule monthSchedule = mock(MonthSchedule.class);
         given(scheduleFormatter.prepareMonthSchedule(
@@ -209,6 +216,33 @@ class ManagementControllerTest {
 
         then(scheduleFormatter).should()
                 .prepareMonthSchedule(predicate, date, false);
+    }
+
+    @Test
+    public void postScheduleShouldValidateFormRedirectToListWithErrorMessageIfInvalid()
+            throws Exception {
+
+        long id = 0L;
+        String date = "invalid date";
+
+        ScheduleForm scheduleForm = new ScheduleForm();
+        scheduleForm.setDate(date);
+        scheduleForm.setId(id);
+
+        RequestBuilder requestBuilder =
+                post("/timetable/management/schedule")
+                        .flashAttr("scheduleForm", scheduleForm);
+        MvcResult mvcResult = mvc.perform(requestBuilder)
+                .andExpect(status().is3xxRedirection())
+                .andExpect(flash().attributeExists("errorAlert"))
+                .andExpect(redirectedUrl("/timetable/management/home"))
+                .andReturn();
+
+        Optional<BindException> exception = Optional.ofNullable(
+                (BindException) mvcResult.getResolvedException());
+
+        assertThat(exception).isPresent()
+                .containsInstanceOf(BindException.class);
     }
 
     @Test
@@ -284,12 +318,33 @@ class ManagementControllerTest {
     }
 
     @Test
+    public void getAvailableShouldValidateScheduleIdAndRedirectToHomeWithErrorMessageIfInvalid()
+            throws Exception {
+
+        long scheduleId = 0L;
+
+        MvcResult mvcResult = mvc.perform(
+                get("/timetable/management/schedule/available").queryParam(
+                        "scheduleId", String.valueOf(scheduleId)))
+                .andExpect(status().is3xxRedirection())
+                .andExpect(flash().attributeExists("errorAlert"))
+                .andExpect(redirectedUrl("/timetable/management/home"))
+                .andReturn();
+
+        Optional<ConstraintViolationException> exception = Optional.ofNullable(
+                (ConstraintViolationException) mvcResult.getResolvedException());
+
+        assertThat(exception).isPresent()
+                .containsInstanceOf(ConstraintViolationException.class);
+    }
+
+    @Test
     public void postAvailableShouldRequestScheduleAndThrowExceptionIfNotPresent()
             throws Exception {
 
         long scheduleId = 1L;
-        ChangeScheduleForm form = mock(ChangeScheduleForm.class);
-        given(form.getScheduleId()).willReturn(scheduleId);
+        ChangeScheduleForm form = new ChangeScheduleForm();
+        form.setScheduleId(scheduleId);
         given(timetableFacade.getSchedule(anyLong())).willReturn(
                 Optional.empty());
 
@@ -310,14 +365,39 @@ class ManagementControllerTest {
     }
 
     @Test
+    public void postAvailableShouldValidateFormAndRedirectToHomeWithErrorMessageIfInvalid()
+            throws Exception {
+
+        long id = 0L;
+        ChangeScheduleForm form = new ChangeScheduleForm();
+        form.setScheduleId(id);
+        form.setProfessorId(id);
+        form.setAuditoriumId(id);
+
+        MvcResult mvcResult = mvc.perform(
+                post("/timetable/management/schedule/available").flashAttr(
+                        "changeScheduleForm", form))
+                .andExpect(status().is3xxRedirection())
+                .andExpect(flash().attributeExists("errorAlert"))
+                .andExpect(redirectedUrl("/timetable/management/home"))
+                .andReturn();
+
+        Optional<BindException> exception = Optional.ofNullable(
+                (BindException) mvcResult.getResolvedException());
+
+        assertThat(exception).isPresent()
+                .containsInstanceOf(BindException.class);
+    }
+
+    @Test
     public void postAvailableShouldRequestNewAuditoriumAndRedirectToAvailableIfNotPresent()
             throws Exception {
 
         long scheduleId = 1L;
         long auditoriumId = 2L;
-        ChangeScheduleForm form = mock(ChangeScheduleForm.class);
-        given(form.getScheduleId()).willReturn(scheduleId);
-        given(form.getAuditoriumId()).willReturn(auditoriumId);
+        ChangeScheduleForm form = new ChangeScheduleForm();
+        form.setScheduleId(scheduleId);
+        form.setAuditoriumId(auditoriumId);
 
         Schedule schedule = mock(Schedule.class);
         given(schedule.getId()).willReturn(scheduleId);
@@ -344,10 +424,10 @@ class ManagementControllerTest {
         long scheduleId = 1L;
         long auditoriumId = 2L;
         Long professorId = null;
-        ChangeScheduleForm form = mock(ChangeScheduleForm.class);
-        given(form.getScheduleId()).willReturn(scheduleId);
-        given(form.getAuditoriumId()).willReturn(auditoriumId);
-        given(form.getProfessorId()).willReturn(professorId);
+        ChangeScheduleForm form = new ChangeScheduleForm();
+        form.setScheduleId(scheduleId);
+        form.setAuditoriumId(auditoriumId);
+        form.setProfessorId(professorId);
 
         Schedule schedule = mock(Schedule.class);
         given(schedule.getId()).willReturn(scheduleId);
@@ -378,10 +458,10 @@ class ManagementControllerTest {
         long scheduleId = 1L;
         Long auditoriumId = null;
         long professorId = 3L;
-        ChangeScheduleForm form = mock(ChangeScheduleForm.class);
-        given(form.getScheduleId()).willReturn(scheduleId);
-        given(form.getAuditoriumId()).willReturn(auditoriumId);
-        given(form.getProfessorId()).willReturn(professorId);
+        ChangeScheduleForm form = new ChangeScheduleForm();
+        form.setScheduleId(scheduleId);
+        form.setAuditoriumId(auditoriumId);
+        form.setProfessorId(professorId);
 
         Schedule schedule = mock(Schedule.class);
         given(schedule.getId()).willReturn(scheduleId);
@@ -408,10 +488,10 @@ class ManagementControllerTest {
         long scheduleId = 1L;
         Long auditoriumId = null;
         long professorId = 3L;
-        ChangeScheduleForm form = mock(ChangeScheduleForm.class);
-        given(form.getScheduleId()).willReturn(scheduleId);
-        given(form.getAuditoriumId()).willReturn(auditoriumId);
-        given(form.getProfessorId()).willReturn(professorId);
+        ChangeScheduleForm form = new ChangeScheduleForm();
+        form.setScheduleId(scheduleId);
+        form.setAuditoriumId(auditoriumId);
+        form.setProfessorId(professorId);
 
         Schedule schedule = mock(Schedule.class);
         given(schedule.getId()).willReturn(scheduleId);
@@ -442,10 +522,10 @@ class ManagementControllerTest {
         long scheduleId = 1L;
         long auditoriumId = 2L;
         long professorId = 3L;
-        ChangeScheduleForm form = mock(ChangeScheduleForm.class);
-        given(form.getScheduleId()).willReturn(scheduleId);
-        given(form.getAuditoriumId()).willReturn(auditoriumId);
-        given(form.getProfessorId()).willReturn(professorId);
+        ChangeScheduleForm form = new ChangeScheduleForm();
+        form.setScheduleId(scheduleId);
+        form.setAuditoriumId(auditoriumId);
+        form.setProfessorId(professorId);
 
         Schedule schedule = mock(Schedule.class);
         given(schedule.getId()).willReturn(scheduleId);
@@ -480,9 +560,9 @@ class ManagementControllerTest {
             throws Exception {
 
         long scheduleId = 1L;
-        FindReschedulingOptionsForm form =
-                mock(FindReschedulingOptionsForm.class);
-        given(form.getScheduleId()).willReturn(scheduleId);
+        FindReschedulingOptionsForm form = new FindReschedulingOptionsForm();
+        form.setScheduleId(scheduleId);
+        form.setDate("2020-06-01");
         given(timetableFacade.getSchedule(anyLong())).willReturn(
                 Optional.empty());
 
@@ -500,6 +580,31 @@ class ManagementControllerTest {
                 .containsInstanceOf(NotFoundException.class);
 
         then(timetableFacade).should().getSchedule(scheduleId);
+    }
+
+    @Test
+    public void postOptionsShouldValidateFormAndRedirectToHomeWithErrorMessageIfInvalid()
+            throws Exception {
+
+        long scheduleId = 0L;
+        String invalidDate = "invalid date";
+        FindReschedulingOptionsForm form = new FindReschedulingOptionsForm();
+        form.setScheduleId(scheduleId);
+        form.setDate(invalidDate);
+
+        MvcResult mvcResult = mvc.perform(
+                post("/timetable/management/schedule/options").flashAttr(
+                        "findReschedulingOptionsForm", form))
+                .andExpect(status().is3xxRedirection())
+                .andExpect(flash().attributeExists("errorAlert"))
+                .andExpect(redirectedUrl("/timetable/management/home"))
+                .andReturn();
+
+        Optional<BindException> exception = Optional.ofNullable(
+                (BindException) mvcResult.getResolvedException());
+
+        assertThat(exception).isPresent()
+                .containsInstanceOf(BindException.class);
     }
 
     @Test
@@ -526,11 +631,10 @@ class ManagementControllerTest {
         given(schedule.getProfessor()).willReturn(professor);
         given(professor.getFullName()).willReturn("");
 
-        FindReschedulingOptionsForm form =
-                mock(FindReschedulingOptionsForm.class);
-        given(form.getScheduleId()).willReturn(scheduleId);
-        given(form.getScheduleOption()).willReturn(ScheduleOption.DAY);
-        given(form.getLocalDate()).willReturn(date);
+        FindReschedulingOptionsForm form = new FindReschedulingOptionsForm();
+        form.setScheduleId(scheduleId);
+        form.setScheduleOption(ScheduleOption.DAY);
+        form.setDate(date.toString());
 
         given(timetableFacade.getSchedule(anyLong())).willReturn(
                 Optional.of(schedule));
@@ -575,11 +679,10 @@ class ManagementControllerTest {
         given(schedule.getProfessor()).willReturn(professor);
         given(professor.getFullName()).willReturn("");
 
-        FindReschedulingOptionsForm form =
-                mock(FindReschedulingOptionsForm.class);
-        given(form.getScheduleId()).willReturn(scheduleId);
-        given(form.getScheduleOption()).willReturn(ScheduleOption.WEEK);
-        given(form.getLocalDate()).willReturn(date);
+        FindReschedulingOptionsForm form = new FindReschedulingOptionsForm();
+        form.setScheduleId(scheduleId);
+        form.setScheduleOption(ScheduleOption.WEEK);
+        form.setDate(date.toString());
 
         given(timetableFacade.getSchedule(anyLong())).willReturn(
                 Optional.of(schedule));
@@ -604,12 +707,41 @@ class ManagementControllerTest {
     }
 
     @Test
+    public void postRescheduleShouldValidateFormAndRedirectToHomeWithErrorMessageIfInvalid()
+            throws Exception {
+
+        long id = 0L;
+        String invalidDate = "invalid date";
+        RescheduleForm form = new RescheduleForm();
+        form.setScheduleId(id);
+        form.setOptionId(id);
+        form.setDate(invalidDate);
+
+        MvcResult mvcResult = mvc.perform(
+                post("/timetable/management/schedule/reschedule").flashAttr(
+                        "rescheduleForm", form))
+                .andExpect(status().is3xxRedirection())
+                .andExpect(flash().attributeExists("errorAlert"))
+                .andExpect(redirectedUrl("/timetable/management/home"))
+                .andReturn();
+
+        Optional<BindException> exception = Optional.ofNullable(
+                (BindException) mvcResult.getResolvedException());
+
+        assertThat(exception).isPresent()
+                .containsInstanceOf(BindException.class);
+    }
+
+    @Test
     public void postRescheduleShouldRequestScheduleAndThrowExceptionIfNotPresent()
             throws Exception {
 
         long scheduleId = 1L;
-        RescheduleForm form = mock(RescheduleForm.class);
-        given(form.getScheduleId()).willReturn(scheduleId);
+        RescheduleForm form = new RescheduleForm();
+        form.setScheduleId(scheduleId);
+        form.setOptionId(scheduleId);
+        form.setDate("2020-06-01");
+
         given(timetableFacade.getSchedule(anyLong())).willReturn(
                 Optional.empty());
 
@@ -635,9 +767,10 @@ class ManagementControllerTest {
 
         long scheduleId = 1L;
         long optionId = 2L;
-        RescheduleForm form = mock(RescheduleForm.class);
-        given(form.getScheduleId()).willReturn(scheduleId);
-        given(form.getOptionId()).willReturn(optionId);
+        RescheduleForm form = new RescheduleForm();
+        form.setScheduleId(scheduleId);
+        form.setOptionId(optionId);
+        form.setDate("2020-06-01");
 
         Schedule schedule = mock(Schedule.class);
         given(timetableFacade.getSchedule(anyLong())).willReturn(
@@ -669,12 +802,11 @@ class ManagementControllerTest {
         long scheduleId = 1L;
         long optionId = 2L;
         LocalDate date = LocalDate.MAX;
-        RescheduleForm form = mock(RescheduleForm.class);
-        given(form.getScheduleId()).willReturn(scheduleId);
-        given(form.getOptionId()).willReturn(optionId);
-        given(form.getRescheduleFormOption()).willReturn(
-                RescheduleFormOption.ONCE);
-        given(form.getLocalDate()).willReturn(date);
+        RescheduleForm form = new RescheduleForm();
+        form.setScheduleId(scheduleId);
+        form.setOptionId(optionId);
+        form.setRescheduleFormOption(RescheduleFormOption.ONCE);
+        form.setDate(date.toString());
 
         Auditorium auditorium = new Auditorium("");
         Course course = new Course("");
@@ -714,12 +846,11 @@ class ManagementControllerTest {
         long scheduleId = 1L;
         long optionId = 2L;
         LocalDate date = LocalDate.MAX;
-        RescheduleForm form = mock(RescheduleForm.class);
-        given(form.getScheduleId()).willReturn(scheduleId);
-        given(form.getOptionId()).willReturn(optionId);
-        given(form.getRescheduleFormOption()).willReturn(
-                RescheduleFormOption.PERMANENTLY);
-        given(form.getLocalDate()).willReturn(date);
+        RescheduleForm form = new RescheduleForm();
+        form.setScheduleId(scheduleId);
+        form.setOptionId(optionId);
+        form.setRescheduleFormOption(RescheduleFormOption.PERMANENTLY);
+        form.setDate(date.toString());
 
         Auditorium auditorium = new Auditorium("");
         Course course = new Course("");
@@ -760,12 +891,11 @@ class ManagementControllerTest {
         long scheduleId = 1L;
         long optionId = 2L;
         LocalDate date = LocalDate.MAX;
-        RescheduleForm form = mock(RescheduleForm.class);
-        given(form.getScheduleId()).willReturn(scheduleId);
-        given(form.getOptionId()).willReturn(optionId);
-        given(form.getRescheduleFormOption()).willReturn(
-                RescheduleFormOption.PERMANENTLY);
-        given(form.getLocalDate()).willReturn(date);
+        RescheduleForm form = new RescheduleForm();
+        form.setScheduleId(scheduleId);
+        form.setOptionId(optionId);
+        form.setRescheduleFormOption(RescheduleFormOption.PERMANENTLY);
+        form.setDate(date.toString());
 
         Auditorium auditorium = new Auditorium("");
         Course course = new Course("");

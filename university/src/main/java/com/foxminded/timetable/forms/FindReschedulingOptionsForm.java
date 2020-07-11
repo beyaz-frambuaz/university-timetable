@@ -1,21 +1,30 @@
 package com.foxminded.timetable.forms;
 
+import com.foxminded.timetable.forms.constraints.Date;
 import lombok.Data;
 
+import javax.validation.constraints.Min;
 import java.time.LocalDate;
 
 @Data
 public class FindReschedulingOptionsForm {
 
-    private ScheduleOption scheduleOption;
+    @Date
     private String date;
+
     private LocalDate localDate;
+
+    @Min(value = 1, message = "Schedule ID must not be less than 1")
     private long scheduleId;
 
-    public void setDate(String date) {
+    private ScheduleOption scheduleOption;
 
-        this.date = date;
-        this.localDate = LocalDate.parse(date);
+    public LocalDate getLocalDate() {
+
+        if (this.localDate == null) {
+            this.localDate = LocalDate.parse(date);
+        }
+        return this.localDate;
     }
 
 }
