@@ -1,5 +1,6 @@
 package com.foxminded.timetable.controllers;
 
+import com.foxminded.timetable.constraints.IdValid;
 import com.foxminded.timetable.exceptions.SessionExpiredException;
 import com.foxminded.timetable.forms.ScheduleForm;
 import com.foxminded.timetable.forms.utility.DaySchedule;
@@ -26,7 +27,6 @@ import javax.servlet.http.HttpSession;
 import javax.validation.ConstraintViolation;
 import javax.validation.ConstraintViolationException;
 import javax.validation.Valid;
-import javax.validation.constraints.Min;
 import java.time.LocalDate;
 import java.util.HashMap;
 import java.util.List;
@@ -61,11 +61,9 @@ public class FacultyController {
     }
 
     @PostMapping("/list")
-    public String selectProfessor(@Min(value = 1,
-                                       message = "Professor ID must not "
-                                               + "be less than 1") @RequestParam(
-            "professorId") long professorId, HttpSession session,
-            RedirectAttributes redirectAttributes) {
+    public String selectProfessor(
+            @RequestParam("professorId") @IdValid("Professor") long professorId,
+            HttpSession session, RedirectAttributes redirectAttributes) {
 
         Optional<Professor> professor =
                 timetableFacade.getProfessor(professorId);

@@ -1,9 +1,9 @@
 package com.foxminded.timetable.forms;
 
-import com.foxminded.timetable.forms.constraints.Date;
+import com.foxminded.timetable.constraints.Date;
+import com.foxminded.timetable.constraints.IdValid;
 import lombok.Data;
 
-import javax.validation.constraints.Min;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.time.format.FormatStyle;
@@ -20,7 +20,7 @@ public class ScheduleForm {
 
     private boolean filtered;
 
-    @Min(value = 1, message = "ID must not be less than 1")
+    @IdValid
     private long id;
 
     public String getDateDescription() {

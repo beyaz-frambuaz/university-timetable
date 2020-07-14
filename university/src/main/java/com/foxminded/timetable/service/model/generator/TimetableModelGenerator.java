@@ -40,7 +40,7 @@ public class TimetableModelGenerator {
                         DayOfWeek.SUNDAY))
                 .flatMap(day -> Arrays.stream(Period.values())
                         .flatMap(period -> auditoriums.stream()
-                                .map(auditorium -> new ReschedulingOption(0,
+                                .map(auditorium -> new ReschedulingOption(null,
                                         day, period, auditorium))))
                 .collect(toList());
         log.debug("Rescheduling options generated");

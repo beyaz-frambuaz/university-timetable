@@ -1,5 +1,6 @@
 package com.foxminded.timetable.controllers;
 
+import com.foxminded.timetable.constraints.IdValid;
 import com.foxminded.timetable.forms.AddCourseForm;
 import com.foxminded.timetable.forms.DropCourseForm;
 import com.foxminded.timetable.forms.NewProfessorForm;
@@ -18,7 +19,6 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindException;
-import org.springframework.validation.BindingResult;
 import org.springframework.validation.ObjectError;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
@@ -27,7 +27,6 @@ import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 import javax.validation.ConstraintViolation;
 import javax.validation.ConstraintViolationException;
 import javax.validation.Valid;
-import javax.validation.constraints.Min;
 import java.time.LocalDate;
 import java.util.HashMap;
 import java.util.List;
@@ -133,9 +132,7 @@ public class ManagementUniversityFacultyController {
 
     @GetMapping("/remove")
     public String removeProfessor(RedirectAttributes redirectAttributes,
-            @Min(value = 1,
-                 message = "Professor ID must not be less than 1") @RequestParam(
-                    "id") long id) {
+            @RequestParam("id") @IdValid("Professor") long id) {
 
         Optional<Professor> optionalProfessor =
                 timetableFacade.getProfessor(id);
@@ -175,10 +172,8 @@ public class ManagementUniversityFacultyController {
     }
 
     @GetMapping("/courses")
-    public String courses(@Min(value = 1,
-                               message = "Professor ID must not be less than "
-                                       + "1") @RequestParam(
-            "professorId") long professorId,
+    public String courses(
+            @RequestParam("professorId") @IdValid("Professor") long professorId,
             @ModelAttribute("successAlert") String successAlert,
             @ModelAttribute("errorAlert") String errorAlert,
             @ModelAttribute("editedId") String editedId, Model model,

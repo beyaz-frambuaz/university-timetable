@@ -1,9 +1,9 @@
 package com.foxminded.timetable.forms;
 
-import com.foxminded.timetable.forms.constraints.Date;
+import com.foxminded.timetable.constraints.Date;
+import com.foxminded.timetable.constraints.IdValid;
 import lombok.Data;
 
-import javax.validation.constraints.Min;
 import java.time.LocalDate;
 
 @Data
@@ -14,7 +14,7 @@ public class FindReschedulingOptionsForm {
 
     private LocalDate localDate;
 
-    @Min(value = 1, message = "Schedule ID must not be less than 1")
+    @IdValid("Schedule")
     private long scheduleId;
 
     private ScheduleOption scheduleOption;

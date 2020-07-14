@@ -1,6 +1,6 @@
-package com.foxminded.timetable.forms.constraints.validators;
+package com.foxminded.timetable.constraints.validators;
 
-import com.foxminded.timetable.forms.constraints.Date;
+import com.foxminded.timetable.constraints.Date;
 
 import javax.validation.ConstraintValidator;
 import javax.validation.ConstraintValidatorContext;

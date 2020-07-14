@@ -1,5 +1,6 @@
 package com.foxminded.timetable.controllers;
 
+import com.foxminded.timetable.constraints.IdValid;
 import com.foxminded.timetable.exceptions.SessionExpiredException;
 import com.foxminded.timetable.forms.ScheduleForm;
 import com.foxminded.timetable.forms.utility.DaySchedule;
@@ -24,7 +25,6 @@ import javax.servlet.http.HttpSession;
 import javax.validation.ConstraintViolation;
 import javax.validation.ConstraintViolationException;
 import javax.validation.Valid;
-import javax.validation.constraints.Min;
 import java.time.LocalDate;
 import java.util.List;
 import java.util.Optional;
@@ -58,9 +58,7 @@ public class StudentController {
 
     @PostMapping("/list")
     public String selectStudent(HttpSession session,
-            @RequestParam("studentId") @Min(value = 1,
-                                            message = "Student ID must not "
-                                                    + "be less than 1") long studentId,
+            @RequestParam("studentId") @IdValid("Student") long studentId,
             RedirectAttributes redirectAttributes) {
 
         Optional<Student> student = timetableFacade.getStudent(studentId);

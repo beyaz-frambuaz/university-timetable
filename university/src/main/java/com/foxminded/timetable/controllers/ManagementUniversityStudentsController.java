@@ -1,5 +1,6 @@
 package com.foxminded.timetable.controllers;
 
+import com.foxminded.timetable.constraints.IdValid;
 import com.foxminded.timetable.forms.ChangeGroupForm;
 import com.foxminded.timetable.forms.NewStudentForm;
 import com.foxminded.timetable.forms.ScheduleForm;
@@ -24,7 +25,6 @@ import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 import javax.validation.ConstraintViolation;
 import javax.validation.ConstraintViolationException;
 import javax.validation.Valid;
-import javax.validation.constraints.Min;
 import java.time.LocalDate;
 import java.util.List;
 import java.util.Optional;
@@ -179,9 +179,7 @@ public class ManagementUniversityStudentsController {
 
     @GetMapping("/remove")
     public String removeStudent(RedirectAttributes redirectAttributes,
-            @Min(value = 1,
-                 message = "Student ID must not be less than 1") @RequestParam(
-                    "id") long id) {
+            @RequestParam("id") @IdValid("Student") long id) {
 
         Optional<Student> optionalStudent = timetableFacade.getStudent(id);
         if (!optionalStudent.isPresent()) {
