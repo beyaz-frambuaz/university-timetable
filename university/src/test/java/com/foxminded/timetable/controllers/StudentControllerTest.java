@@ -24,7 +24,9 @@ import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.MvcResult;
 import org.springframework.test.web.servlet.RequestBuilder;
 import org.springframework.test.web.servlet.ResultActions;
+import org.springframework.validation.BindException;
 
+import javax.validation.ConstraintViolationException;
 import java.time.LocalDate;
 import java.util.Collections;
 import java.util.List;
@@ -47,7 +49,7 @@ class StudentControllerTest {
     private MockMvc mvc;
 
     @MockBean
-    private TimetableFacade   timetableFacade;
+    private TimetableFacade timetableFacade;
     @MockBean
     private ScheduleFormatter scheduleFormatter;
 
@@ -120,6 +122,26 @@ class StudentControllerTest {
     }
 
     @Test
+    public void postListShouldValidateIdAndRedirectToListWithErrorMessageIfInvalid()
+            throws Exception {
+
+        long id = 0;
+        MvcResult mvcResult = mvc.perform(
+                post("/timetable/students/list").param("studentId",
+                        String.valueOf(id)))
+                .andExpect(status().is3xxRedirection())
+                .andExpect(flash().attributeExists("errorAlert"))
+                .andExpect(redirectedUrl("/timetable/students/list"))
+                .andReturn();
+
+        Optional<ConstraintViolationException> exception = Optional.ofNullable(
+                (ConstraintViolationException) mvcResult.getResolvedException());
+
+        assertThat(exception).isPresent()
+                .containsInstanceOf(ConstraintViolationException.class);
+    }
+
+    @Test
     public void getHomeShouldRequestTodaysScheduleFromFormatterAndReturnHomeView()
             throws Exception {
 
@@ -181,17 +203,19 @@ class StudentControllerTest {
 
         boolean filtered = true;
         long id = 1L;
+        LocalDate date = LocalDate.of(2020, 6, 1);
+
+        ScheduleForm scheduleForm = new ScheduleForm();
+        scheduleForm.setDate(date.toString());
+        scheduleForm.setId(id);
+        scheduleForm.setScheduleOption(ScheduleOption.DAY);
+        scheduleForm.setFiltered(filtered);
+
         Group group = mock(Group.class);
         Student student = mock(Student.class);
         given(student.getGroup()).willReturn(group);
         given(group.getName()).willReturn("");
-        ScheduleForm scheduleForm = mock(ScheduleForm.class);
-        LocalDate date = LocalDate.MAX;
-        given(scheduleForm.getLocalDate()).willReturn(date);
-        given(scheduleForm.getDateDescription()).willReturn("");
-        given(scheduleForm.getScheduleOption()).willReturn(ScheduleOption.DAY);
-        given(scheduleForm.getId()).willReturn(id);
-        given(scheduleForm.isFiltered()).willReturn(filtered);
+
         SchedulePredicate predicate = new SchedulePredicateGroupId(id);
         DaySchedule daySchedule = mock(DaySchedule.class);
         given(scheduleFormatter.prepareDaySchedule(any(SchedulePredicate.class),
@@ -216,17 +240,19 @@ class StudentControllerTest {
 
         boolean filtered = true;
         long id = 1L;
+        LocalDate date = LocalDate.of(2020, 6, 1);
+
+        ScheduleForm scheduleForm = new ScheduleForm();
+        scheduleForm.setDate(date.toString());
+        scheduleForm.setId(id);
+        scheduleForm.setScheduleOption(ScheduleOption.WEEK);
+        scheduleForm.setFiltered(filtered);
+
         Group group = mock(Group.class);
         Student student = mock(Student.class);
         given(student.getGroup()).willReturn(group);
         given(group.getName()).willReturn("");
-        ScheduleForm scheduleForm = mock(ScheduleForm.class);
-        LocalDate date = LocalDate.MAX;
-        given(scheduleForm.getLocalDate()).willReturn(date);
-        given(scheduleForm.getDateDescription()).willReturn("");
-        given(scheduleForm.getScheduleOption()).willReturn(ScheduleOption.WEEK);
-        given(scheduleForm.getId()).willReturn(id);
-        given(scheduleForm.isFiltered()).willReturn(filtered);
+
         SchedulePredicate predicate = new SchedulePredicateGroupId(id);
         WeekSchedule weekSchedule = mock(WeekSchedule.class);
         given(scheduleFormatter.prepareWeekSchedule(
@@ -252,18 +278,19 @@ class StudentControllerTest {
 
         boolean filtered = true;
         long id = 1L;
+        LocalDate date = LocalDate.of(2020, 6, 1);
+
+        ScheduleForm scheduleForm = new ScheduleForm();
+        scheduleForm.setDate(date.toString());
+        scheduleForm.setId(id);
+        scheduleForm.setScheduleOption(ScheduleOption.MONTH);
+        scheduleForm.setFiltered(filtered);
+
         Group group = mock(Group.class);
         Student student = mock(Student.class);
         given(student.getGroup()).willReturn(group);
         given(group.getName()).willReturn("");
-        ScheduleForm scheduleForm = mock(ScheduleForm.class);
-        LocalDate date = LocalDate.MAX;
-        given(scheduleForm.getLocalDate()).willReturn(date);
-        given(scheduleForm.getDateDescription()).willReturn("");
-        given(scheduleForm.getScheduleOption()).willReturn(
-                ScheduleOption.MONTH);
-        given(scheduleForm.getId()).willReturn(id);
-        given(scheduleForm.isFiltered()).willReturn(filtered);
+
         SchedulePredicate predicate = new SchedulePredicateGroupId(id);
         MonthSchedule monthSchedule = mock(MonthSchedule.class);
         given(scheduleFormatter.prepareMonthSchedule(
@@ -307,12 +334,17 @@ class StudentControllerTest {
     public void postScheduleShouldThrowExceptionIfNoStudentInSession()
             throws Exception {
 
-        MvcResult mvcResult =
-                mvc.perform(post("/timetable/students/student/schedule"))
-                        .andExpect(status().is3xxRedirection())
-                        .andExpect(flash().attributeExists("sessionExpired"))
-                        .andExpect(redirectedUrl("/timetable/students/list"))
-                        .andReturn();
+        ScheduleForm scheduleForm = new ScheduleForm();
+        scheduleForm.setDate("2020-01-01");
+        scheduleForm.setId(1L);
+
+        MvcResult mvcResult = mvc.perform(
+                post("/timetable/students/student/schedule").flashAttr(
+                        "scheduleForm", scheduleForm))
+                .andExpect(status().is3xxRedirection())
+                .andExpect(flash().attributeExists("sessionExpired"))
+                .andExpect(redirectedUrl("/timetable/students/list"))
+                .andReturn();
 
         Optional<SessionExpiredException> sessionExpiredException =
                 Optional.ofNullable(
@@ -320,6 +352,36 @@ class StudentControllerTest {
 
         assertThat(sessionExpiredException).isPresent()
                 .containsInstanceOf(SessionExpiredException.class);
+    }
+
+    @Test
+    public void postScheduleShouldValidateFormAndRedirectToListWithErrorMessageIfInvalid()
+            throws Exception {
+
+        long id = 0L;
+        String date = "invalid date";
+
+        ScheduleForm scheduleForm = new ScheduleForm();
+        scheduleForm.setDate(date);
+        scheduleForm.setId(id);
+
+        Student student = mock(Student.class);
+
+        RequestBuilder requestBuilder =
+                post("/timetable/students/student/schedule").sessionAttr(
+                        "student", student)
+                        .flashAttr("scheduleForm", scheduleForm);
+        MvcResult mvcResult = mvc.perform(requestBuilder)
+                .andExpect(status().is3xxRedirection())
+                .andExpect(flash().attributeExists("errorAlert"))
+                .andExpect(redirectedUrl("/timetable/students/list"))
+                .andReturn();
+
+        Optional<BindException> exception = Optional.ofNullable(
+                (BindException) mvcResult.getResolvedException());
+
+        assertThat(exception).isPresent()
+                .containsInstanceOf(BindException.class);
     }
 
 }

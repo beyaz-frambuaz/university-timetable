@@ -1,10 +1,13 @@
 package com.foxminded.timetable.model;
 
+import com.foxminded.timetable.constraints.IdValid;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import javax.persistence.*;
+import javax.validation.Valid;
+import javax.validation.constraints.NotBlank;
 import java.io.Serializable;
 import java.util.HashSet;
 import java.util.Set;
@@ -19,15 +22,18 @@ public class Professor implements Comparable<Professor>, Serializable {
     @Id
     @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "p_seq")
     @SequenceGenerator(name = "p_seq", sequenceName = "professor_id_seq")
+    @IdValid("Professor")
     private Long id;
 
+    @NotBlank
     private String firstName;
 
+    @NotBlank
     private String lastName;
 
     @ManyToMany(fetch = FetchType.EAGER)
     @JoinTable(name = "professors_courses")
-    private Set<Course> courses = new HashSet<>();
+    private Set<@Valid Course> courses = new HashSet<>();
 
     public Professor(String firstName, String lastName) {
 

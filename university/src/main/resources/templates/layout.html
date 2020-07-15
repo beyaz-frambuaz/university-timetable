@@ -544,6 +544,8 @@
 							</div>
 						</div>
 
+						<input type="hidden" id="management-schedule-hidden-id" name="id" value="1">
+
 					</div>
 
 					<!--Submit-->
@@ -1114,9 +1116,11 @@
 
         let title = $(e.relatedTarget).data('title');
         let optionId = $(e.relatedTarget).data('option-id');
+        let date = $(e.relatedTarget).data('date');
 
-        $(e.currentTarget).find('#option-id').val(optionId);
         $(e.currentTarget).find('#reschedule-form-title').text(title);
+        $(e.currentTarget).find('#option-id').val(optionId);
+        $(e.currentTarget).find('#date').val(date);
     });
 
     // find rescheduling options injection

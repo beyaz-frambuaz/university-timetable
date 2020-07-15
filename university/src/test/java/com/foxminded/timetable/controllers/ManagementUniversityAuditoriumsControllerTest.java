@@ -18,12 +18,17 @@ import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.context.annotation.Import;
 import org.springframework.test.web.servlet.MockMvc;
+import org.springframework.test.web.servlet.MvcResult;
+import org.springframework.test.web.servlet.RequestBuilder;
+import org.springframework.validation.BindException;
 
+import javax.validation.ConstraintViolationException;
 import java.time.LocalDate;
 import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
 
+import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.ArgumentMatchers.*;
 import static org.mockito.BDDMockito.given;
 import static org.mockito.BDDMockito.then;
@@ -36,16 +41,16 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 @WebMvcTest(ManagementUniversityAuditoriumsController.class)
 class ManagementUniversityAuditoriumsControllerTest {
 
-    private final String baseUrl  =
+    private final String baseUrl =
             "/timetable/management/university/auditoriums";
     private final String baseView = "management/university/auditoriums";
 
     @Autowired
-    private MockMvc           mvc;
+    private MockMvc mvc;
     @MockBean
     private ScheduleFormatter scheduleFormatter;
     @MockBean
-    private TimetableFacade   timetableFacade;
+    private TimetableFacade timetableFacade;
 
     @Test
     public void getAuditoriumsShouldRequestFromServiceAndDisplay()
@@ -65,16 +70,45 @@ class ManagementUniversityAuditoriumsControllerTest {
     }
 
     @Test
+    public void postScheduleShouldValidateFormAndRedirectToAuditoriumsWithErrorMessageIfInvalid()
+            throws Exception {
+
+        long id = 0L;
+        String date = "invalid date";
+
+        ScheduleForm scheduleForm = new ScheduleForm();
+        scheduleForm.setDate(date);
+        scheduleForm.setId(id);
+
+        RequestBuilder requestBuilder =
+                post(baseUrl + "/schedule").flashAttr("scheduleForm",
+                        scheduleForm);
+        MvcResult mvcResult = mvc.perform(requestBuilder)
+                .andExpect(status().is3xxRedirection())
+                .andExpect(flash().attributeExists("errorAlert"))
+                .andExpect(redirectedUrl(baseUrl))
+                .andReturn();
+
+        Optional<BindException> exception = Optional.ofNullable(
+                (BindException) mvcResult.getResolvedException());
+
+        assertThat(exception).isPresent()
+                .containsInstanceOf(BindException.class);
+    }
+
+    @Test
     public void postScheduleShouldRequestAuditoriumFromServiceAndRedirectToAuditoriumsIfNotPresent()
             throws Exception {
 
-        ScheduleForm form = mock(ScheduleForm.class);
         long id = 1L;
-        given(form.getId()).willReturn(id);
+        ScheduleForm scheduleForm = new ScheduleForm();
+        scheduleForm.setDate("2020-06-01");
+        scheduleForm.setId(id);
         given(timetableFacade.getAuditorium(anyLong())).willReturn(
                 Optional.empty());
 
-        mvc.perform(post(baseUrl + "/schedule").flashAttr("scheduleForm", form))
+        mvc.perform(post(baseUrl + "/schedule").flashAttr("scheduleForm",
+                scheduleForm))
                 .andExpect(status().is3xxRedirection())
                 .andExpect(flash().attributeExists("errorAlert"))
                 .andExpect(redirectedUrl(baseUrl));
@@ -92,13 +126,15 @@ class ManagementUniversityAuditoriumsControllerTest {
         given(timetableFacade.getAuditorium(anyLong())).willReturn(
                 Optional.of(auditorium));
 
-        ScheduleForm scheduleForm = mock(ScheduleForm.class);
         boolean filtered = true;
         LocalDate date = LocalDate.MAX;
-        given(scheduleForm.getScheduleOption()).willReturn(ScheduleOption.DAY);
-        given(scheduleForm.getLocalDate()).willReturn(date);
-        given(scheduleForm.getId()).willReturn(id);
-        given(scheduleForm.isFiltered()).willReturn(filtered);
+
+        ScheduleForm scheduleForm = new ScheduleForm();
+        scheduleForm.setDate(date.toString());
+        scheduleForm.setId(id);
+        scheduleForm.setScheduleOption(ScheduleOption.DAY);
+        scheduleForm.setFiltered(filtered);
+
         SchedulePredicate predicate = new SchedulePredicateAuditoriumId(id);
 
         DaySchedule daySchedule = mock(DaySchedule.class);
@@ -127,13 +163,15 @@ class ManagementUniversityAuditoriumsControllerTest {
         given(timetableFacade.getAuditorium(anyLong())).willReturn(
                 Optional.of(auditorium));
 
-        ScheduleForm scheduleForm = mock(ScheduleForm.class);
         boolean filtered = true;
         LocalDate date = LocalDate.MAX;
-        given(scheduleForm.getScheduleOption()).willReturn(ScheduleOption.WEEK);
-        given(scheduleForm.getLocalDate()).willReturn(date);
-        given(scheduleForm.getId()).willReturn(id);
-        given(scheduleForm.isFiltered()).willReturn(filtered);
+
+        ScheduleForm scheduleForm = new ScheduleForm();
+        scheduleForm.setDate(date.toString());
+        scheduleForm.setId(id);
+        scheduleForm.setScheduleOption(ScheduleOption.WEEK);
+        scheduleForm.setFiltered(filtered);
+
         SchedulePredicate predicate = new SchedulePredicateAuditoriumId(id);
 
         WeekSchedule weekSchedule = mock(WeekSchedule.class);
@@ -163,14 +201,15 @@ class ManagementUniversityAuditoriumsControllerTest {
         given(timetableFacade.getAuditorium(anyLong())).willReturn(
                 Optional.of(auditorium));
 
-        ScheduleForm scheduleForm = mock(ScheduleForm.class);
         boolean filtered = true;
         LocalDate date = LocalDate.MAX;
-        given(scheduleForm.getScheduleOption()).willReturn(
-                ScheduleOption.MONTH);
-        given(scheduleForm.getLocalDate()).willReturn(date);
-        given(scheduleForm.getId()).willReturn(id);
-        given(scheduleForm.isFiltered()).willReturn(filtered);
+
+        ScheduleForm scheduleForm = new ScheduleForm();
+        scheduleForm.setDate(date.toString());
+        scheduleForm.setId(id);
+        scheduleForm.setScheduleOption(ScheduleOption.MONTH);
+        scheduleForm.setFiltered(filtered);
+
         SchedulePredicate predicate = new SchedulePredicateAuditoriumId(id);
 
         MonthSchedule monthSchedule = mock(MonthSchedule.class);
@@ -199,12 +238,36 @@ class ManagementUniversityAuditoriumsControllerTest {
     }
 
     @Test
+    public void postRenameShouldValidateFormAndRedirectToAuditoriumsWithErrorMessageIfInvalid()
+            throws Exception {
+
+        RenameForm renameForm = new RenameForm();
+        renameForm.setNewName(" ");
+        renameForm.setRenameId(0L);
+
+        RequestBuilder requestBuilder =
+                post(baseUrl + "/rename").flashAttr("renameForm", renameForm);
+        MvcResult mvcResult = mvc.perform(requestBuilder)
+                .andExpect(status().is3xxRedirection())
+                .andExpect(flash().attributeExists("errorAlert"))
+                .andExpect(redirectedUrl(baseUrl))
+                .andReturn();
+
+        Optional<BindException> exception = Optional.ofNullable(
+                (BindException) mvcResult.getResolvedException());
+
+        assertThat(exception).isPresent()
+                .containsInstanceOf(BindException.class);
+    }
+
+    @Test
     public void postRenameShouldRequestAuditoriumFromServiceAndRedirectToAuditoriumsIfNotPresent()
             throws Exception {
 
-        RenameForm form = mock(RenameForm.class);
         long id = 1L;
-        given(form.getRenameId()).willReturn(id);
+        RenameForm form = new RenameForm();
+        form.setRenameId(id);
+        form.setNewName("test");
         given(timetableFacade.getAuditorium(anyLong())).willReturn(
                 Optional.empty());
 
@@ -228,9 +291,9 @@ class ManagementUniversityAuditoriumsControllerTest {
         given(auditorium.getId()).willReturn(id);
         given(auditorium.getName()).willReturn(name);
 
-        RenameForm form = mock(RenameForm.class);
-        given(form.getRenameId()).willReturn(id);
-        given(form.getNewName()).willReturn(name);
+        RenameForm form = new RenameForm();
+        form.setRenameId(id);
+        form.setNewName(name);
 
         mvc.perform(post(baseUrl + "/rename").flashAttr("renameForm", form))
                 .andExpect(status().is3xxRedirection())
@@ -244,6 +307,26 @@ class ManagementUniversityAuditoriumsControllerTest {
     }
 
     @Test
+    public void getRemoveShouldValidateIdAndRedirectToAuditoriumsIfInvalid()
+            throws Exception {
+
+        long id = 0L;
+
+        MvcResult mvcResult = mvc.perform(
+                get(baseUrl + "/remove").queryParam("id", String.valueOf(id)))
+                .andExpect(status().is3xxRedirection())
+                .andExpect(flash().attributeExists("errorAlert"))
+                .andExpect(redirectedUrl(baseUrl))
+                .andReturn();
+
+        Optional<ConstraintViolationException> exception = Optional.ofNullable(
+                (ConstraintViolationException) mvcResult.getResolvedException());
+
+        assertThat(exception).isPresent()
+                .containsInstanceOf(ConstraintViolationException.class);
+    }
+
+    @Test
     public void getRemoveShouldRequestAuditoriumFromServiceAndRedirectToAuditoriumsIfNotPresent()
             throws Exception {
 
@@ -251,8 +334,8 @@ class ManagementUniversityAuditoriumsControllerTest {
         given(timetableFacade.getAuditorium(anyLong())).willReturn(
                 Optional.empty());
 
-        mvc.perform(get(baseUrl + "/remove").queryParam("id",
-                String.valueOf(id)))
+        mvc.perform(
+                get(baseUrl + "/remove").queryParam("id", String.valueOf(id)))
                 .andExpect(status().is3xxRedirection())
                 .andExpect(flash().attributeExists("errorAlert"))
                 .andExpect(redirectedUrl(baseUrl));
@@ -269,8 +352,8 @@ class ManagementUniversityAuditoriumsControllerTest {
         given(timetableFacade.getAuditorium(anyLong())).willReturn(
                 Optional.of(auditorium));
 
-        mvc.perform(get(baseUrl + "/remove").queryParam("id",
-                String.valueOf(id)))
+        mvc.perform(
+                get(baseUrl + "/remove").queryParam("id", String.valueOf(id)))
                 .andExpect(status().is3xxRedirection())
                 .andExpect(flash().attributeExists("successAlert"))
                 .andExpect(flash().attribute("editedId", id))
@@ -278,6 +361,28 @@ class ManagementUniversityAuditoriumsControllerTest {
 
         then(timetableFacade).should().getAuditorium(id);
         then(timetableFacade).should().deleteAuditorium(auditorium);
+    }
+
+    @Test
+    public void postNewShouldValidateFormAndRedirectToAuditoriumsWithErrorMessageIfInvalid()
+            throws Exception {
+
+        NewItemForm newItemForm = new NewItemForm();
+        newItemForm.setName(" ");
+
+        RequestBuilder requestBuilder =
+                post(baseUrl + "/new").flashAttr("newItemForm", newItemForm);
+        MvcResult mvcResult = mvc.perform(requestBuilder)
+                .andExpect(status().is3xxRedirection())
+                .andExpect(flash().attributeExists("errorAlert"))
+                .andExpect(redirectedUrl(baseUrl))
+                .andReturn();
+
+        Optional<BindException> exception = Optional.ofNullable(
+                (BindException) mvcResult.getResolvedException());
+
+        assertThat(exception).isPresent()
+                .containsInstanceOf(BindException.class);
     }
 
     @Test
@@ -294,8 +399,8 @@ class ManagementUniversityAuditoriumsControllerTest {
 
         Auditorium newAuditorium = new Auditorium(name);
 
-        NewItemForm form = mock(NewItemForm.class);
-        given(form.getName()).willReturn(name);
+        NewItemForm form = new NewItemForm();
+        form.setName(name);
 
         mvc.perform(post(baseUrl + "/new").flashAttr("newItemForm", form))
                 .andExpect(status().is3xxRedirection())

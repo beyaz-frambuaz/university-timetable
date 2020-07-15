@@ -19,12 +19,17 @@ import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.context.annotation.Import;
 import org.springframework.test.web.servlet.MockMvc;
+import org.springframework.test.web.servlet.MvcResult;
+import org.springframework.test.web.servlet.RequestBuilder;
+import org.springframework.validation.BindException;
 
+import javax.validation.ConstraintViolationException;
 import java.time.LocalDate;
 import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
 
+import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.ArgumentMatchers.*;
 import static org.mockito.BDDMockito.given;
 import static org.mockito.BDDMockito.then;
@@ -65,12 +70,40 @@ class ManagementUniversityStudentsControllerTest {
     }
 
     @Test
+    public void postScheduleShouldValidateFormAndRedirectToStudentsWithErrorMessageIfInvalid()
+            throws Exception {
+
+        long id = 0L;
+        String date = "invalid date";
+
+        ScheduleForm scheduleForm = new ScheduleForm();
+        scheduleForm.setDate(date);
+        scheduleForm.setId(id);
+
+        RequestBuilder requestBuilder =
+                post(baseUrl + "/schedule").flashAttr("scheduleForm",
+                        scheduleForm);
+        MvcResult mvcResult = mvc.perform(requestBuilder)
+                .andExpect(status().is3xxRedirection())
+                .andExpect(flash().attributeExists("errorAlert"))
+                .andExpect(redirectedUrl(baseUrl))
+                .andReturn();
+
+        Optional<BindException> exception = Optional.ofNullable(
+                (BindException) mvcResult.getResolvedException());
+
+        assertThat(exception).isPresent()
+                .containsInstanceOf(BindException.class);
+    }
+
+    @Test
     public void postScheduleShouldRequestStudentsGroupFromServiceAndRedirectToStudentsIfNotPresent()
             throws Exception {
 
-        ScheduleForm form = mock(ScheduleForm.class);
         long id = 1L;
-        given(form.getId()).willReturn(id);
+        ScheduleForm form = new ScheduleForm();
+        form.setId(id);
+        form.setDate("2020-06-01");
         given(timetableFacade.getGroup(anyLong())).willReturn(Optional.empty());
 
         mvc.perform(post(baseUrl + "/schedule").flashAttr("scheduleForm", form))
@@ -91,13 +124,15 @@ class ManagementUniversityStudentsControllerTest {
         given(timetableFacade.getGroup(anyLong())).willReturn(
                 Optional.of(group));
 
-        ScheduleForm scheduleForm = mock(ScheduleForm.class);
         boolean filtered = true;
         LocalDate date = LocalDate.MAX;
-        given(scheduleForm.getScheduleOption()).willReturn(ScheduleOption.DAY);
-        given(scheduleForm.getLocalDate()).willReturn(date);
-        given(scheduleForm.getId()).willReturn(id);
-        given(scheduleForm.isFiltered()).willReturn(filtered);
+
+        ScheduleForm scheduleForm = new ScheduleForm();
+        scheduleForm.setDate(date.toString());
+        scheduleForm.setId(id);
+        scheduleForm.setScheduleOption(ScheduleOption.DAY);
+        scheduleForm.setFiltered(filtered);
+
         SchedulePredicate predicate = new SchedulePredicateGroupId(id);
 
         DaySchedule daySchedule = mock(DaySchedule.class);
@@ -126,13 +161,15 @@ class ManagementUniversityStudentsControllerTest {
         given(timetableFacade.getGroup(anyLong())).willReturn(
                 Optional.of(group));
 
-        ScheduleForm scheduleForm = mock(ScheduleForm.class);
         boolean filtered = true;
         LocalDate date = LocalDate.MAX;
-        given(scheduleForm.getScheduleOption()).willReturn(ScheduleOption.WEEK);
-        given(scheduleForm.getLocalDate()).willReturn(date);
-        given(scheduleForm.getId()).willReturn(id);
-        given(scheduleForm.isFiltered()).willReturn(filtered);
+
+        ScheduleForm scheduleForm = new ScheduleForm();
+        scheduleForm.setDate(date.toString());
+        scheduleForm.setId(id);
+        scheduleForm.setScheduleOption(ScheduleOption.WEEK);
+        scheduleForm.setFiltered(filtered);
+
         SchedulePredicate predicate = new SchedulePredicateGroupId(id);
 
         WeekSchedule weekSchedule = mock(WeekSchedule.class);
@@ -162,14 +199,15 @@ class ManagementUniversityStudentsControllerTest {
         given(timetableFacade.getGroup(anyLong())).willReturn(
                 Optional.of(group));
 
-        ScheduleForm scheduleForm = mock(ScheduleForm.class);
         boolean filtered = true;
         LocalDate date = LocalDate.MAX;
-        given(scheduleForm.getScheduleOption()).willReturn(
-                ScheduleOption.MONTH);
-        given(scheduleForm.getLocalDate()).willReturn(date);
-        given(scheduleForm.getId()).willReturn(id);
-        given(scheduleForm.isFiltered()).willReturn(filtered);
+
+        ScheduleForm scheduleForm = new ScheduleForm();
+        scheduleForm.setDate(date.toString());
+        scheduleForm.setId(id);
+        scheduleForm.setScheduleOption(ScheduleOption.MONTH);
+        scheduleForm.setFiltered(filtered);
+
         SchedulePredicate predicate = new SchedulePredicateGroupId(id);
 
         MonthSchedule monthSchedule = mock(MonthSchedule.class);
@@ -198,12 +236,39 @@ class ManagementUniversityStudentsControllerTest {
     }
 
     @Test
+    public void postNewShouldValidateFormAndRedirectToStudentsWithErrorMessageIfInvalid()
+            throws Exception {
+
+        NewStudentForm newStudentForm = new NewStudentForm();
+        newStudentForm.setFirstName(" ");
+        newStudentForm.setLastName(" ");
+        newStudentForm.setGroupId(0L);
+
+        RequestBuilder requestBuilder =
+                post(baseUrl + "/new").flashAttr("newStudentForm",
+                        newStudentForm);
+        MvcResult mvcResult = mvc.perform(requestBuilder)
+                .andExpect(status().is3xxRedirection())
+                .andExpect(flash().attributeExists("errorAlert"))
+                .andExpect(redirectedUrl(baseUrl))
+                .andReturn();
+
+        Optional<BindException> exception = Optional.ofNullable(
+                (BindException) mvcResult.getResolvedException());
+
+        assertThat(exception).isPresent()
+                .containsInstanceOf(BindException.class);
+    }
+
+    @Test
     public void postNewShouldRequestGroupFromServiceAndRedirectToStudentsIfNotPresent()
             throws Exception {
 
-        NewStudentForm form = mock(NewStudentForm.class);
         long id = 1L;
-        given(form.getGroupId()).willReturn(id);
+        NewStudentForm form = new NewStudentForm();
+        form.setGroupId(id);
+        form.setFirstName("test");
+        form.setLastName("test");
         given(timetableFacade.getGroup(anyLong())).willReturn(Optional.empty());
 
         mvc.perform(post(baseUrl + "/new").flashAttr("newStudentForm", form))
@@ -236,10 +301,10 @@ class ManagementUniversityStudentsControllerTest {
 
         Student newStudent = new Student(name, name, group);
 
-        NewStudentForm form = mock(NewStudentForm.class);
-        given(form.getFirstName()).willReturn(name);
-        given(form.getLastName()).willReturn(name);
-        given(form.getGroupId()).willReturn(groupId);
+        NewStudentForm form = new NewStudentForm();
+        form.setGroupId(groupId);
+        form.setFirstName(name);
+        form.setLastName(name);
 
         mvc.perform(post(baseUrl + "/new").flashAttr("newStudentForm", form))
                 .andExpect(status().is3xxRedirection())
@@ -252,12 +317,37 @@ class ManagementUniversityStudentsControllerTest {
     }
 
     @Test
+    public void postChangeGroupShouldValidateFormAndRedirectToStudentsWithErrorMessageIfInvalid()
+            throws Exception {
+
+        ChangeGroupForm changeGroupForm = new ChangeGroupForm();
+        changeGroupForm.setStudentId(0L);
+        changeGroupForm.setNewGroupId(0L);
+
+        RequestBuilder requestBuilder =
+                post(baseUrl + "/change/group").flashAttr("changeGroupForm",
+                        changeGroupForm);
+        MvcResult mvcResult = mvc.perform(requestBuilder)
+                .andExpect(status().is3xxRedirection())
+                .andExpect(flash().attributeExists("errorAlert"))
+                .andExpect(redirectedUrl(baseUrl))
+                .andReturn();
+
+        Optional<BindException> exception = Optional.ofNullable(
+                (BindException) mvcResult.getResolvedException());
+
+        assertThat(exception).isPresent()
+                .containsInstanceOf(BindException.class);
+    }
+
+    @Test
     public void postChangeGroupShouldRequestStudentFromServiceAndRedirectToStudentsIfNotPresent()
             throws Exception {
 
-        ChangeGroupForm form = mock(ChangeGroupForm.class);
         long studentId = 1L;
-        given(form.getStudentId()).willReturn(studentId);
+        ChangeGroupForm form = new ChangeGroupForm();
+        form.setStudentId(studentId);
+        form.setNewGroupId(studentId);
         given(timetableFacade.getStudent(anyLong())).willReturn(
                 Optional.empty());
 
@@ -274,11 +364,11 @@ class ManagementUniversityStudentsControllerTest {
     public void postChangeGroupShouldRequestGroupFromServiceAndRedirectToStudentsIfNotPresent()
             throws Exception {
 
-        ChangeGroupForm form = mock(ChangeGroupForm.class);
         long studentId = 1L;
         long groupId = 2L;
-        given(form.getStudentId()).willReturn(studentId);
-        given(form.getNewGroupId()).willReturn(groupId);
+        ChangeGroupForm form = new ChangeGroupForm();
+        form.setStudentId(studentId);
+        form.setNewGroupId(groupId);
 
         Student student = mock(Student.class);
         given(timetableFacade.getStudent(anyLong())).willReturn(
@@ -293,6 +383,26 @@ class ManagementUniversityStudentsControllerTest {
 
         then(timetableFacade).should().getStudent(studentId);
         then(timetableFacade).should().getGroup(groupId);
+    }
+
+    @Test
+    public void getRemoveShouldValidateIdAndRedirectToStudentsIfInvalid()
+            throws Exception {
+
+        long id = 0L;
+
+        MvcResult mvcResult = mvc.perform(
+                get(baseUrl + "/remove").queryParam("id", String.valueOf(id)))
+                .andExpect(status().is3xxRedirection())
+                .andExpect(flash().attributeExists("errorAlert"))
+                .andExpect(redirectedUrl(baseUrl))
+                .andReturn();
+
+        Optional<ConstraintViolationException> exception = Optional.ofNullable(
+                (ConstraintViolationException) mvcResult.getResolvedException());
+
+        assertThat(exception).isPresent()
+                .containsInstanceOf(ConstraintViolationException.class);
     }
 
     @Test
@@ -336,11 +446,11 @@ class ManagementUniversityStudentsControllerTest {
     public void postChangeGroupShouldResetStudentGroupRequestServiceToSaveStudentAndRedirectToStudentsWithMessage()
             throws Exception {
 
-        ChangeGroupForm form = mock(ChangeGroupForm.class);
         long studentId = 1L;
         long groupId = 2L;
-        given(form.getStudentId()).willReturn(studentId);
-        given(form.getNewGroupId()).willReturn(groupId);
+        ChangeGroupForm form = new ChangeGroupForm();
+        form.setStudentId(studentId);
+        form.setNewGroupId(groupId);
 
         Group group = mock(Group.class);
         given(timetableFacade.getGroup(anyLong())).willReturn(

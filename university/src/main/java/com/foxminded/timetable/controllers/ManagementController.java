@@ -18,19 +18,28 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.validation.BindException;
+import org.springframework.validation.ObjectError;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import javax.servlet.http.HttpSession;
+import javax.validation.ConstraintViolation;
+import javax.validation.ConstraintViolationException;
+import javax.validation.Valid;
+import javax.validation.constraints.Min;
 import java.time.LocalDate;
 import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
-@Slf4j
 @Controller
-@RequiredArgsConstructor
 @RequestMapping("/timetable/management")
+@Validated
+@RequiredArgsConstructor
+@Slf4j
 public class ManagementController {
 
     private final ScheduleFormatter scheduleFormatter;
@@ -76,7 +85,7 @@ public class ManagementController {
 
     @PostMapping("/schedule")
     public String processForm(Model model,
-            @ModelAttribute("scheduleForm") ScheduleForm scheduleForm) {
+            @ModelAttribute @Valid ScheduleForm scheduleForm) {
 
         LocalDate date = scheduleForm.getLocalDate();
 
@@ -111,7 +120,9 @@ public class ManagementController {
 
     @GetMapping("/schedule/available")
     public String displayAvailableAuditoriumsProfessors(Model model,
-            @RequestParam("scheduleId") long scheduleId,
+            @RequestParam("scheduleId") @Min(value = 1,
+                                             message = "Schedule ID must not "
+                                                     + "be less than 1") long scheduleId,
             @ModelAttribute("successAlert") String successAlert,
             @ModelAttribute("errorAlert") String errorAlert) {
 
@@ -149,8 +160,7 @@ public class ManagementController {
 
     @PostMapping("/schedule/available")
     public String changeSchedule(RedirectAttributes redirectAttributes,
-            @ModelAttribute(
-                    "changeScheduleForm") ChangeScheduleForm changeScheduleForm) {
+            @ModelAttribute @Valid ChangeScheduleForm changeScheduleForm) {
 
         Optional<Schedule> optionalSchedule =
                 timetableFacade.getSchedule(changeScheduleForm.getScheduleId());
@@ -214,8 +224,8 @@ public class ManagementController {
     }
 
     @PostMapping("/schedule/options")
-    public String displayReschedulingOptions(Model model, @ModelAttribute(
-            "findReschedulingOptionsForm") FindReschedulingOptionsForm findReschedulingOptionsForm) {
+    public String displayReschedulingOptions(Model model,
+            @ModelAttribute @Valid FindReschedulingOptionsForm findReschedulingOptionsForm) {
 
         Optional<Schedule> optionalSchedule = timetableFacade.getSchedule(
                 findReschedulingOptionsForm.getScheduleId());
@@ -251,6 +261,7 @@ public class ManagementController {
 
         RescheduleForm rescheduleForm = new RescheduleForm();
         rescheduleForm.setRescheduleFormOption(RescheduleFormOption.ONCE);
+        rescheduleForm.setDate("2020-01-01");
         model.addAttribute("rescheduleForm", rescheduleForm);
 
         return "management/schedule/options";
@@ -258,7 +269,7 @@ public class ManagementController {
 
     @PostMapping("/schedule/reschedule")
     public String reschedule(Model model,
-            @ModelAttribute("rescheduleForm") RescheduleForm rescheduleForm) {
+            @ModelAttribute @Valid RescheduleForm rescheduleForm) {
 
         Optional<Schedule> optionalSchedule =
                 timetableFacade.getSchedule(rescheduleForm.getScheduleId());
@@ -346,6 +357,35 @@ public class ManagementController {
             RedirectAttributes redirectAttributes) {
 
         redirectAttributes.addFlashAttribute("errorAlert", e.getMessage());
+        return "redirect:/timetable/management/home";
+    }
+
+    @ExceptionHandler(BindException.class)
+    public String handleInvalidData(RedirectAttributes redirectAttributes,
+            BindException exception) {
+
+        log.warn(exception.getMessage());
+        String errorAlert = exception.getBindingResult()
+                .getAllErrors()
+                .stream()
+                .map(ObjectError::getDefaultMessage)
+                .collect(Collectors.joining("; "));
+        redirectAttributes.addFlashAttribute("errorAlert", errorAlert);
+
+        return "redirect:/timetable/management/home";
+    }
+
+    @ExceptionHandler(ConstraintViolationException.class)
+    public String handleInvalidData(RedirectAttributes redirectAttributes,
+            ConstraintViolationException exception) {
+
+        log.warn(exception.getMessage());
+        String errorAlert = exception.getConstraintViolations()
+                .stream()
+                .map(ConstraintViolation::getMessage)
+                .collect(Collectors.joining("; "));
+        redirectAttributes.addFlashAttribute("errorAlert", errorAlert);
+
         return "redirect:/timetable/management/home";
     }
 

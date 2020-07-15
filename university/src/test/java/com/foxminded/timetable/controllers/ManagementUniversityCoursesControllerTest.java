@@ -18,12 +18,17 @@ import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.context.annotation.Import;
 import org.springframework.test.web.servlet.MockMvc;
+import org.springframework.test.web.servlet.MvcResult;
+import org.springframework.test.web.servlet.RequestBuilder;
+import org.springframework.validation.BindException;
 
+import javax.validation.ConstraintViolationException;
 import java.time.LocalDate;
 import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
 
+import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.ArgumentMatchers.*;
 import static org.mockito.BDDMockito.given;
 import static org.mockito.BDDMockito.then;
@@ -64,16 +69,45 @@ class ManagementUniversityCoursesControllerTest {
     }
 
     @Test
+    public void postScheduleShouldValidateFormAndRedirectToCoursesWithErrorMessageIfInvalid()
+            throws Exception {
+
+        long id = 0L;
+        String date = "invalid date";
+
+        ScheduleForm scheduleForm = new ScheduleForm();
+        scheduleForm.setDate(date);
+        scheduleForm.setId(id);
+
+        RequestBuilder requestBuilder =
+                post(baseUrl + "/schedule").flashAttr("scheduleForm",
+                        scheduleForm);
+        MvcResult mvcResult = mvc.perform(requestBuilder)
+                .andExpect(status().is3xxRedirection())
+                .andExpect(flash().attributeExists("errorAlert"))
+                .andExpect(redirectedUrl(baseUrl))
+                .andReturn();
+
+        Optional<BindException> exception = Optional.ofNullable(
+                (BindException) mvcResult.getResolvedException());
+
+        assertThat(exception).isPresent()
+                .containsInstanceOf(BindException.class);
+    }
+
+    @Test
     public void postScheduleShouldRequestCourseFromServiceAndRedirectToCoursesIfNotPresent()
             throws Exception {
 
-        ScheduleForm form = mock(ScheduleForm.class);
         long id = 1L;
-        given(form.getId()).willReturn(id);
+        ScheduleForm scheduleForm = new ScheduleForm();
+        scheduleForm.setDate("2020-06-01");
+        scheduleForm.setId(id);
         given(timetableFacade.getCourse(anyLong())).willReturn(
                 Optional.empty());
 
-        mvc.perform(post(baseUrl + "/schedule").flashAttr("scheduleForm", form))
+        mvc.perform(post(baseUrl + "/schedule").flashAttr("scheduleForm",
+                scheduleForm))
                 .andExpect(status().is3xxRedirection())
                 .andExpect(flash().attributeExists("errorAlert"))
                 .andExpect(redirectedUrl(baseUrl));
@@ -91,13 +125,15 @@ class ManagementUniversityCoursesControllerTest {
         given(timetableFacade.getCourse(anyLong())).willReturn(
                 Optional.of(course));
 
-        ScheduleForm scheduleForm = mock(ScheduleForm.class);
         boolean filtered = true;
         LocalDate date = LocalDate.MAX;
-        given(scheduleForm.getScheduleOption()).willReturn(ScheduleOption.DAY);
-        given(scheduleForm.getLocalDate()).willReturn(date);
-        given(scheduleForm.getId()).willReturn(id);
-        given(scheduleForm.isFiltered()).willReturn(filtered);
+
+        ScheduleForm scheduleForm = new ScheduleForm();
+        scheduleForm.setDate(date.toString());
+        scheduleForm.setId(id);
+        scheduleForm.setScheduleOption(ScheduleOption.DAY);
+        scheduleForm.setFiltered(filtered);
+
         SchedulePredicate predicate = new SchedulePredicateCourseId(id);
 
         DaySchedule daySchedule = mock(DaySchedule.class);
@@ -126,13 +162,15 @@ class ManagementUniversityCoursesControllerTest {
         given(timetableFacade.getCourse(anyLong())).willReturn(
                 Optional.of(course));
 
-        ScheduleForm scheduleForm = mock(ScheduleForm.class);
         boolean filtered = true;
         LocalDate date = LocalDate.MAX;
-        given(scheduleForm.getScheduleOption()).willReturn(ScheduleOption.WEEK);
-        given(scheduleForm.getLocalDate()).willReturn(date);
-        given(scheduleForm.getId()).willReturn(id);
-        given(scheduleForm.isFiltered()).willReturn(filtered);
+
+        ScheduleForm scheduleForm = new ScheduleForm();
+        scheduleForm.setDate(date.toString());
+        scheduleForm.setId(id);
+        scheduleForm.setScheduleOption(ScheduleOption.WEEK);
+        scheduleForm.setFiltered(filtered);
+
         SchedulePredicate predicate = new SchedulePredicateCourseId(id);
 
         WeekSchedule weekSchedule = mock(WeekSchedule.class);
@@ -162,14 +200,15 @@ class ManagementUniversityCoursesControllerTest {
         given(timetableFacade.getCourse(anyLong())).willReturn(
                 Optional.of(course));
 
-        ScheduleForm scheduleForm = mock(ScheduleForm.class);
         boolean filtered = true;
         LocalDate date = LocalDate.MAX;
-        given(scheduleForm.getScheduleOption()).willReturn(
-                ScheduleOption.MONTH);
-        given(scheduleForm.getLocalDate()).willReturn(date);
-        given(scheduleForm.getId()).willReturn(id);
-        given(scheduleForm.isFiltered()).willReturn(filtered);
+
+        ScheduleForm scheduleForm = new ScheduleForm();
+        scheduleForm.setDate(date.toString());
+        scheduleForm.setId(id);
+        scheduleForm.setScheduleOption(ScheduleOption.MONTH);
+        scheduleForm.setFiltered(filtered);
+
         SchedulePredicate predicate = new SchedulePredicateCourseId(id);
 
         MonthSchedule monthSchedule = mock(MonthSchedule.class);
@@ -198,12 +237,36 @@ class ManagementUniversityCoursesControllerTest {
     }
 
     @Test
+    public void postRenameShouldValidateFormAndRedirectToCoursesWithErrorMessageIfInvalid()
+            throws Exception {
+
+        RenameForm renameForm = new RenameForm();
+        renameForm.setNewName(" ");
+        renameForm.setRenameId(0L);
+
+        RequestBuilder requestBuilder =
+                post(baseUrl + "/rename").flashAttr("renameForm", renameForm);
+        MvcResult mvcResult = mvc.perform(requestBuilder)
+                .andExpect(status().is3xxRedirection())
+                .andExpect(flash().attributeExists("errorAlert"))
+                .andExpect(redirectedUrl(baseUrl))
+                .andReturn();
+
+        Optional<BindException> exception = Optional.ofNullable(
+                (BindException) mvcResult.getResolvedException());
+
+        assertThat(exception).isPresent()
+                .containsInstanceOf(BindException.class);
+    }
+
+    @Test
     public void postRenameShouldRequestCourseFromServiceAndRedirectToCoursesIfNotPresent()
             throws Exception {
 
-        RenameForm form = mock(RenameForm.class);
         long id = 1L;
-        given(form.getRenameId()).willReturn(id);
+        RenameForm form = new RenameForm();
+        form.setRenameId(id);
+        form.setNewName("test");
         given(timetableFacade.getCourse(anyLong())).willReturn(
                 Optional.empty());
 
@@ -227,9 +290,9 @@ class ManagementUniversityCoursesControllerTest {
         given(course.getId()).willReturn(id);
         given(course.getName()).willReturn(name);
 
-        RenameForm form = mock(RenameForm.class);
-        given(form.getRenameId()).willReturn(id);
-        given(form.getNewName()).willReturn(name);
+        RenameForm form = new RenameForm();
+        form.setRenameId(id);
+        form.setNewName(name);
 
         mvc.perform(post(baseUrl + "/rename").flashAttr("renameForm", form))
                 .andExpect(status().is3xxRedirection())
@@ -240,6 +303,26 @@ class ManagementUniversityCoursesControllerTest {
         then(timetableFacade).should().getCourse(id);
         then(course).should().setName(name);
         then(timetableFacade).should().saveCourse(course);
+    }
+
+    @Test
+    public void getRemoveShouldValidateIdAndRedirectToCoursesIfInvalid()
+            throws Exception {
+
+        long id = 0L;
+
+        MvcResult mvcResult = mvc.perform(
+                get(baseUrl + "/remove").queryParam("id", String.valueOf(id)))
+                .andExpect(status().is3xxRedirection())
+                .andExpect(flash().attributeExists("errorAlert"))
+                .andExpect(redirectedUrl(baseUrl))
+                .andReturn();
+
+        Optional<ConstraintViolationException> exception = Optional.ofNullable(
+                (ConstraintViolationException) mvcResult.getResolvedException());
+
+        assertThat(exception).isPresent()
+                .containsInstanceOf(ConstraintViolationException.class);
     }
 
     @Test
@@ -280,6 +363,28 @@ class ManagementUniversityCoursesControllerTest {
     }
 
     @Test
+    public void postNewShouldValidateFormAndRedirectToCoursesWithErrorMessageIfInvalid()
+            throws Exception {
+
+        NewItemForm newItemForm = new NewItemForm();
+        newItemForm.setName(" ");
+
+        RequestBuilder requestBuilder =
+                post(baseUrl + "/new").flashAttr("newItemForm", newItemForm);
+        MvcResult mvcResult = mvc.perform(requestBuilder)
+                .andExpect(status().is3xxRedirection())
+                .andExpect(flash().attributeExists("errorAlert"))
+                .andExpect(redirectedUrl(baseUrl))
+                .andReturn();
+
+        Optional<BindException> exception = Optional.ofNullable(
+                (BindException) mvcResult.getResolvedException());
+
+        assertThat(exception).isPresent()
+                .containsInstanceOf(BindException.class);
+    }
+
+    @Test
     public void postNewShouldCreateCourseRequestServiceToSaveAndRedirectToCoursesWithMessage()
             throws Exception {
 
@@ -293,8 +398,8 @@ class ManagementUniversityCoursesControllerTest {
 
         Course newCourse = new Course(name);
 
-        NewItemForm form = mock(NewItemForm.class);
-        given(form.getName()).willReturn(name);
+        NewItemForm form = new NewItemForm();
+        form.setName(name);
 
         mvc.perform(post(baseUrl + "/new").flashAttr("newItemForm", form))
                 .andExpect(status().is3xxRedirection())

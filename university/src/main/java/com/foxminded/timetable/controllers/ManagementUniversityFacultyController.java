@@ -1,5 +1,6 @@
 package com.foxminded.timetable.controllers;
 
+import com.foxminded.timetable.constraints.IdValid;
 import com.foxminded.timetable.forms.AddCourseForm;
 import com.foxminded.timetable.forms.DropCourseForm;
 import com.foxminded.timetable.forms.NewProfessorForm;
@@ -17,19 +18,27 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.validation.BindException;
+import org.springframework.validation.ObjectError;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
+import javax.validation.ConstraintViolation;
+import javax.validation.ConstraintViolationException;
+import javax.validation.Valid;
 import java.time.LocalDate;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
-@Slf4j
 @Controller
-@RequiredArgsConstructor
 @RequestMapping("**/university/faculty")
+@Validated
+@RequiredArgsConstructor
+@Slf4j
 public class ManagementUniversityFacultyController {
 
     private final ScheduleFormatter scheduleFormatter;
@@ -56,7 +65,7 @@ public class ManagementUniversityFacultyController {
 
     @PostMapping("/schedule")
     public String professorSchedule(Model model,
-            @ModelAttribute("scheduleForm") ScheduleForm scheduleForm,
+            @ModelAttribute @Valid ScheduleForm scheduleForm,
             RedirectAttributes redirectAttributes) {
 
         Optional<Professor> optionalProfessor =
@@ -123,7 +132,7 @@ public class ManagementUniversityFacultyController {
 
     @GetMapping("/remove")
     public String removeProfessor(RedirectAttributes redirectAttributes,
-            @RequestParam("id") long id) {
+            @RequestParam("id") @IdValid("Professor") long id) {
 
         Optional<Professor> optionalProfessor =
                 timetableFacade.getProfessor(id);
@@ -148,8 +157,7 @@ public class ManagementUniversityFacultyController {
 
     @PostMapping("/new")
     public String addNewProfessor(RedirectAttributes redirectAttributes,
-            @ModelAttribute(
-                    "newProfessorForm") NewProfessorForm newProfessorForm) {
+            @ModelAttribute @Valid NewProfessorForm newProfessorForm) {
 
         Professor newProfessor = new Professor(newProfessorForm.getFirstName(),
                 newProfessorForm.getLastName());
@@ -164,7 +172,8 @@ public class ManagementUniversityFacultyController {
     }
 
     @GetMapping("/courses")
-    public String courses(@RequestParam("professorId") long professorId,
+    public String courses(
+            @RequestParam("professorId") @IdValid("Professor") long professorId,
             @ModelAttribute("successAlert") String successAlert,
             @ModelAttribute("errorAlert") String errorAlert,
             @ModelAttribute("editedId") String editedId, Model model,
@@ -208,7 +217,7 @@ public class ManagementUniversityFacultyController {
 
     @PostMapping("/courses/add")
     public String addCourse(RedirectAttributes redirectAttributes,
-            @ModelAttribute("addCourseForm") AddCourseForm addCourseForm) {
+            @ModelAttribute @Valid AddCourseForm addCourseForm) {
 
         Optional<Professor> optionalProfessor =
                 timetableFacade.getProfessor(addCourseForm.getProfessorId());
@@ -252,7 +261,7 @@ public class ManagementUniversityFacultyController {
 
     @PostMapping("/courses/drop")
     public String dropCourse(RedirectAttributes redirectAttributes,
-            @ModelAttribute("dropCourseForm") DropCourseForm dropCourseForm) {
+            @ModelAttribute @Valid DropCourseForm dropCourseForm) {
 
         Optional<Professor> optionalProfessor =
                 timetableFacade.getProfessor(dropCourseForm.getProfessorId());
@@ -290,6 +299,35 @@ public class ManagementUniversityFacultyController {
 
         return "redirect:/timetable/management/university/faculty/courses"
                 + "?professorId=" + professor.getId();
+    }
+
+    @ExceptionHandler(BindException.class)
+    public String handleInvalidData(RedirectAttributes redirectAttributes,
+            BindException exception) {
+
+        log.warn(exception.getMessage());
+        String errorAlert = exception.getBindingResult()
+                .getAllErrors()
+                .stream()
+                .map(ObjectError::getDefaultMessage)
+                .collect(Collectors.joining("; "));
+        redirectAttributes.addFlashAttribute("errorAlert", errorAlert);
+
+        return "redirect:/timetable/management/university/faculty";
+    }
+
+    @ExceptionHandler(ConstraintViolationException.class)
+    public String handleInvalidData(RedirectAttributes redirectAttributes,
+            ConstraintViolationException exception) {
+
+        log.warn(exception.getMessage());
+        String errorAlert = exception.getConstraintViolations()
+                .stream()
+                .map(ConstraintViolation::getMessage)
+                .collect(Collectors.joining("; "));
+        redirectAttributes.addFlashAttribute("errorAlert", errorAlert);
+
+        return "redirect:/timetable/management/university/faculty";
     }
 
 }
