@@ -50,8 +50,8 @@ As this is an educational project it started off small and underwent a series of
 * Added UI with Spring MVC, Thymeleaf and Bootstrap
 * Upgraded DAO layer from JDBC to Hibernate
 * Further transformation of DAO to Spring Data JPA
+* Validation in controllers and service facade
 
 Work in progress:
-* Validation
 * REST
 * Swagger 
