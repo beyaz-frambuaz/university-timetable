@@ -1,5 +1,6 @@
 package com.foxminded.timetable.service;
 
+import com.foxminded.timetable.constraints.IdValid;
 import com.foxminded.timetable.exceptions.ServiceException;
 import com.foxminded.timetable.model.*;
 import com.foxminded.timetable.service.utility.SemesterCalendar;
@@ -7,17 +8,22 @@ import com.foxminded.timetable.service.utility.predicates.SchedulePredicate;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
+import org.springframework.validation.annotation.Validated;
 
 import javax.transaction.Transactional;
+import javax.validation.Valid;
+import javax.validation.constraints.NotNull;
 import java.time.LocalDate;
 import java.util.*;
+import java.util.function.Function;
 import java.util.function.Predicate;
 import java.util.stream.Collectors;
 
 @Service
 @Transactional
-@Slf4j
+@Validated
 @RequiredArgsConstructor
+@Slf4j
 public class TimetableFacade {
 
     private final SemesterCalendar semesterCalendar;
@@ -35,17 +41,18 @@ public class TimetableFacade {
         return auditoriumService.count();
     }
 
-    public Auditorium saveAuditorium(Auditorium auditorium) {
+    public Auditorium saveAuditorium(@NotNull @Valid Auditorium auditorium) {
 
         return auditoriumService.save(auditorium);
     }
 
-    public List<Auditorium> saveAuditoriums(List<Auditorium> auditoriums) {
+    public List<Auditorium> saveAuditoriums(
+            List<@Valid Auditorium> auditoriums) {
 
         return auditoriumService.saveAll(auditoriums);
     }
 
-    public Optional<Auditorium> getAuditorium(long id) {
+    public Optional<Auditorium> getAuditorium(@IdValid("Auditorium") long id) {
 
         return auditoriumService.findById(id);
     }
@@ -55,13 +62,13 @@ public class TimetableFacade {
         return auditoriumService.findAll();
     }
 
-    public List<Auditorium> getAvailableAuditoriums(LocalDate date,
-            Period period) {
+    public List<Auditorium> getAvailableAuditoriums(@NotNull LocalDate date,
+            @NotNull Period period) {
 
         return auditoriumService.findAvailableFor(date, period);
     }
 
-    public void deleteAuditorium(Auditorium auditorium) {
+    public void deleteAuditorium(@NotNull @Valid Auditorium auditorium) {
 
         auditoriumService.delete(auditorium);
     }
@@ -76,17 +83,17 @@ public class TimetableFacade {
         return courseService.count();
     }
 
-    public Course saveCourse(Course course) {
+    public Course saveCourse(@NotNull @Valid Course course) {
 
         return courseService.save(course);
     }
 
-    public List<Course> saveCourses(List<Course> courses) {
+    public List<Course> saveCourses(List<@Valid Course> courses) {
 
         return courseService.saveAll(courses);
     }
 
-    public Optional<Course> getCourse(long id) {
+    public Optional<Course> getCourse(@IdValid("Course") long id) {
 
         return courseService.findById(id);
     }
@@ -96,7 +103,7 @@ public class TimetableFacade {
         return courseService.findAll();
     }
 
-    public void deleteCourse(Course course) {
+    public void deleteCourse(@NotNull @Valid Course course) {
 
         courseService.delete(course);
     }
@@ -111,17 +118,17 @@ public class TimetableFacade {
         return groupService.count();
     }
 
-    public Group saveGroup(Group group) {
+    public Group saveGroup(@NotNull @Valid Group group) {
 
         return groupService.save(group);
     }
 
-    public List<Group> saveGroups(List<Group> groups) {
+    public List<Group> saveGroups(List<@Valid Group> groups) {
 
         return groupService.saveAll(groups);
     }
 
-    public Optional<Group> getGroup(long id) {
+    public Optional<Group> getGroup(@IdValid("Group") long id) {
 
         return groupService.findById(id);
     }
@@ -136,21 +143,17 @@ public class TimetableFacade {
         List<Student> students = studentService.findAll();
         List<Group> groups = groupService.findAll();
 
-        Map<Group, List<Student>> groupedStudents = new LinkedHashMap<>();
-
-        for (Group group : groups) {
-
-            List<Student> groupStudents = students.stream()
-                    .filter(student -> student.getGroup().equals(group))
-                    .sorted(Comparator.comparing(Student::getId))
-                    .collect(Collectors.toList());
-            groupedStudents.put(group, groupStudents);
-        }
-
-        return groupedStudents;
+        return groups.stream()
+                .collect(Collectors.toMap(Function.identity(), group -> students
+                                .stream()
+                                .filter(student -> student.getGroup().equals(group))
+                                .sorted(Comparator.comparing(Student::getId))
+                                .collect(Collectors.toList()),
+                        (list1, list2) -> list1,
+                        LinkedHashMap::new));
     }
 
-    public void deleteGroup(Group group) {
+    public void deleteGroup(@NotNull @Valid Group group) {
 
         groupService.delete(group);
     }
@@ -165,17 +168,17 @@ public class TimetableFacade {
         return professorService.count();
     }
 
-    public Professor saveProfessor(Professor professor) {
+    public Professor saveProfessor(@NotNull @Valid Professor professor) {
 
         return professorService.save(professor);
     }
 
-    public List<Professor> saveProfessors(List<Professor> professors) {
+    public List<Professor> saveProfessors(List<@Valid Professor> professors) {
 
         return professorService.saveAll(professors);
     }
 
-    public Optional<Professor> getProfessor(long id) {
+    public Optional<Professor> getProfessor(@IdValid("Professor") long id) {
 
         return professorService.findById(id);
     }
@@ -185,13 +188,13 @@ public class TimetableFacade {
         return professorService.findAll();
     }
 
-    public List<Professor> getAvailableProfessors(LocalDate date,
-            Period period) {
+    public List<Professor> getAvailableProfessors(@NotNull LocalDate date,
+            @NotNull Period period) {
 
         return professorService.findAvailableFor(date, period);
     }
 
-    public void deleteProfessor(Professor professor) {
+    public void deleteProfessor(@NotNull @Valid Professor professor) {
 
         professorService.delete(professor);
     }
@@ -207,12 +210,12 @@ public class TimetableFacade {
     }
 
     public List<ReschedulingOption> saveOptions(
-            List<ReschedulingOption> reschedulingOptions) {
+            List<@Valid ReschedulingOption> reschedulingOptions) {
 
         return optionService.saveAll(reschedulingOptions);
     }
 
-    public Optional<ReschedulingOption> getOption(long id) {
+    public Optional<ReschedulingOption> getOption(@IdValid("Option") long id) {
 
         return optionService.findById(id);
     }
@@ -222,8 +225,8 @@ public class TimetableFacade {
         return optionService.findAll();
     }
 
-    public List<ReschedulingOption> getOptionsForWeek(Schedule candidate,
-            int semesterWeek) {
+    public List<ReschedulingOption> getOptionsForWeek(
+            @NotNull @Valid Schedule candidate, int semesterWeek) {
 
         if (!semesterCalendar.isSemesterWeek(semesterWeek)) {
             return Collections.emptyList();
@@ -242,8 +245,8 @@ public class TimetableFacade {
                 .collect(Collectors.toList());
     }
 
-    public List<ReschedulingOption> getOptionsForDate(Schedule candidate,
-            LocalDate date) {
+    public List<ReschedulingOption> getOptionsForDate(
+            @NotNull @Valid Schedule candidate, @NotNull LocalDate date) {
 
         if (!semesterCalendar.isSemesterDate(date)) {
             return Collections.emptyList();
@@ -299,17 +302,17 @@ public class TimetableFacade {
         optionService.deleteAll();
     }
 
-    public Schedule saveSchedule(Schedule schedule) {
+    public Schedule saveSchedule(@NotNull @Valid Schedule schedule) {
 
         return scheduleService.save(schedule);
     }
 
-    public List<Schedule> saveSchedules(List<Schedule> schedules) {
+    public List<Schedule> saveSchedules(List<@Valid Schedule> schedules) {
 
         return scheduleService.saveAll(schedules);
     }
 
-    public Optional<Schedule> getSchedule(long id) {
+    public Optional<Schedule> getSchedule(@IdValid("Schedule") long id) {
 
         return scheduleService.findById(id);
     }
@@ -319,14 +322,14 @@ public class TimetableFacade {
         return scheduleService.findAll();
     }
 
-    public List<Schedule> getScheduleFor(SchedulePredicate predicate,
-            LocalDate startDate, LocalDate endDate) {
+    public List<Schedule> getScheduleFor(@NotNull SchedulePredicate predicate,
+            @NotNull LocalDate startDate, @NotNull LocalDate endDate) {
 
         return scheduleService.findAllFor(predicate, startDate, endDate);
     }
 
-    public List<Schedule> getScheduleInRange(LocalDate startDate,
-            LocalDate endDate) {
+    public List<Schedule> getScheduleInRange(@NotNull LocalDate startDate,
+            @NotNull LocalDate endDate) {
 
         return scheduleService.findAllInRange(startDate, endDate);
     }
@@ -341,18 +344,20 @@ public class TimetableFacade {
         return templateService.count();
     }
 
-    public ScheduleTemplate saveTemplate(ScheduleTemplate template) {
+    public ScheduleTemplate saveTemplate(
+            @NotNull @Valid ScheduleTemplate template) {
 
         return templateService.save(template);
     }
 
     public List<ScheduleTemplate> saveTemplates(
-            List<ScheduleTemplate> templates) {
+            List<@Valid ScheduleTemplate> templates) {
 
         return templateService.saveAll(templates);
     }
 
-    public Optional<ScheduleTemplate> getTemplate(long id) {
+    public Optional<ScheduleTemplate> getTemplate(
+            @IdValid("Template") long id) {
 
         return templateService.findById(id);
     }
@@ -372,17 +377,17 @@ public class TimetableFacade {
         return studentService.count();
     }
 
-    public Student saveStudent(Student student) {
+    public Student saveStudent(@NotNull @Valid Student student) {
 
         return studentService.save(student);
     }
 
-    public List<Student> saveStudents(List<Student> students) {
+    public List<Student> saveStudents(List<@Valid Student> students) {
 
         return studentService.saveAll(students);
     }
 
-    public Optional<Student> getStudent(long id) {
+    public Optional<Student> getStudent(@IdValid("Student") long id) {
 
         return studentService.findById(id);
     }
@@ -392,15 +397,15 @@ public class TimetableFacade {
         return studentService.findAll();
     }
 
-    public List<Student> getCourseAttendees(Course course,
-            Professor professor) {
+    public List<Student> getCourseAttendees(@NotNull @Valid Course course,
+            @NotNull @Valid Professor professor) {
 
         List<Group> professorGroups =
                 groupService.findAllAttendingProfessorCourse(course, professor);
         return studentService.findAllInGroups(professorGroups);
     }
 
-    public void deleteStudent(Student student) {
+    public void deleteStudent(@NotNull @Valid Student student) {
 
         studentService.delete(student);
     }
@@ -410,15 +415,16 @@ public class TimetableFacade {
         studentService.deleteAll();
     }
 
-    public Schedule substituteProfessor(Schedule schedule,
-            Professor substitute) {
+    public Schedule substituteProfessor(@NotNull @Valid Schedule schedule,
+            @NotNull @Valid Professor substitute) {
 
         schedule.setProfessor(substitute);
         return scheduleService.save(schedule);
     }
 
-    public Schedule rescheduleOnce(Schedule candidate, LocalDate targetDate,
-            ReschedulingOption targetOption) {
+    public Schedule rescheduleOnce(@NotNull @Valid Schedule candidate,
+            @NotNull LocalDate targetDate,
+            @NotNull @Valid ReschedulingOption targetOption) {
 
         log.debug("Calling repository to reschedule once");
         candidate.setDate(targetDate);
@@ -429,8 +435,9 @@ public class TimetableFacade {
         return scheduleService.save(candidate);
     }
 
-    public List<Schedule> reschedulePermanently(Schedule candidate,
-            LocalDate targetDate, ReschedulingOption targetOption)
+    public List<Schedule> reschedulePermanently(
+            @NotNull @Valid Schedule candidate, @NotNull LocalDate targetDate,
+            @NotNull @Valid ReschedulingOption targetOption)
             throws ServiceException {
 
         log.debug("Getting underlying template to reschedule permanently");

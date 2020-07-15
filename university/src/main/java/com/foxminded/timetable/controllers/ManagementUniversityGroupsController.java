@@ -1,5 +1,6 @@
 package com.foxminded.timetable.controllers;
 
+import com.foxminded.timetable.constraints.IdValid;
 import com.foxminded.timetable.forms.NewItemForm;
 import com.foxminded.timetable.forms.RenameForm;
 import com.foxminded.timetable.forms.ScheduleForm;
@@ -15,18 +16,26 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.validation.BindException;
+import org.springframework.validation.ObjectError;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
+import javax.validation.ConstraintViolation;
+import javax.validation.ConstraintViolationException;
+import javax.validation.Valid;
 import java.time.LocalDate;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
-@Slf4j
 @Controller
-@RequiredArgsConstructor
 @RequestMapping("**/university/groups")
+@Validated
+@RequiredArgsConstructor
+@Slf4j
 public class ManagementUniversityGroupsController {
 
     private final ScheduleFormatter scheduleFormatter;
@@ -57,7 +66,7 @@ public class ManagementUniversityGroupsController {
 
     @PostMapping("/schedule")
     public String groupSchedule(Model model,
-            @ModelAttribute("scheduleForm") ScheduleForm scheduleForm,
+            @ModelAttribute @Valid ScheduleForm scheduleForm,
             RedirectAttributes redirectAttributes) {
 
         Optional<Group> optionalGroup =
@@ -123,7 +132,7 @@ public class ManagementUniversityGroupsController {
 
     @PostMapping("/rename")
     public String rename(RedirectAttributes redirectAttributes,
-            @ModelAttribute("renameForm") RenameForm renameForm) {
+            @ModelAttribute @Valid RenameForm renameForm) {
 
         Optional<Group> optionalGroup =
                 timetableFacade.getGroup(renameForm.getRenameId());
@@ -151,7 +160,7 @@ public class ManagementUniversityGroupsController {
 
     @GetMapping("/remove")
     public String removeGroup(RedirectAttributes redirectAttributes,
-            @RequestParam("id") long id) {
+            @RequestParam("id") @IdValid("Group") long id) {
 
         Optional<Group> optionalGroup = timetableFacade.getGroup(id);
         if (!optionalGroup.isPresent()) {
@@ -175,7 +184,7 @@ public class ManagementUniversityGroupsController {
 
     @PostMapping("/new")
     public String addNewGroup(RedirectAttributes redirectAttributes,
-            @ModelAttribute("newItemForm") NewItemForm newItemForm) {
+            @ModelAttribute @Valid NewItemForm newItemForm) {
 
         Group group = new Group(newItemForm.getName());
         group = timetableFacade.saveGroup(group);
@@ -185,6 +194,35 @@ public class ManagementUniversityGroupsController {
                         group.getName(), group.getId()));
         redirectAttributes.addFlashAttribute("editedId", group.getId());
 
+
+        return "redirect:/timetable/management/university/groups";
+    }
+
+    @ExceptionHandler(BindException.class)
+    public String handleInvalidData(RedirectAttributes redirectAttributes,
+            BindException exception) {
+
+        log.warn(exception.getMessage());
+        String errorAlert = exception.getBindingResult()
+                .getAllErrors()
+                .stream()
+                .map(ObjectError::getDefaultMessage)
+                .collect(Collectors.joining("; "));
+        redirectAttributes.addFlashAttribute("errorAlert", errorAlert);
+
+        return "redirect:/timetable/management/university/groups";
+    }
+
+    @ExceptionHandler(ConstraintViolationException.class)
+    public String handleInvalidData(RedirectAttributes redirectAttributes,
+            ConstraintViolationException exception) {
+
+        log.warn(exception.getMessage());
+        String errorAlert = exception.getConstraintViolations()
+                .stream()
+                .map(ConstraintViolation::getMessage)
+                .collect(Collectors.joining("; "));
+        redirectAttributes.addFlashAttribute("errorAlert", errorAlert);
 
         return "redirect:/timetable/management/university/groups";
     }

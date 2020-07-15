@@ -1,5 +1,7 @@
 package com.foxminded.timetable.forms;
 
+import com.foxminded.timetable.constraints.Date;
+import com.foxminded.timetable.constraints.IdValid;
 import lombok.Data;
 
 import java.time.LocalDate;
@@ -7,16 +9,25 @@ import java.time.LocalDate;
 @Data
 public class RescheduleForm {
 
-    private RescheduleFormOption rescheduleFormOption;
+    @IdValid("Option")
     private long optionId;
+
+    @IdValid("Schedule")
     private long scheduleId;
+
+    @Date
     private String date;
+
     private LocalDate localDate;
 
-    public void setDate(String date) {
+    private RescheduleFormOption rescheduleFormOption;
 
-        this.date = date;
-        this.localDate = LocalDate.parse(date);
+    public LocalDate getLocalDate() {
+
+        if (this.localDate == null) {
+            this.localDate = LocalDate.parse(date);
+        }
+        return this.localDate;
     }
 
 }

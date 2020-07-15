@@ -1,4 +1,4 @@
-2020-06-26 18:34:48.663  INFO 68746 --- [restartedMain] o.s.boot.SpringApplication               : 
+2020-07-14 00:45:25.979  INFO 63798 --- [restartedMain] o.s.boot.SpringApplication               : 
   .   ____          _            __ _ _
  /\\ / ___'_ __ _ _(_)_ __  __ _ \ \ \ \
 ( ( )\___ | '_ | '_| | '_ \/ _` | \ \ \ \
@@ -8,87 +8,81 @@
 [32m :: Spring Boot :: [39m      [2m (v2.2.6.RELEASE)[0;39m
 
 
-2020-06-26 18:34:48.814  INFO 68746 --- [restartedMain] com.foxminded.timetable.TimetableApp     : Starting TimetableApp on Tarass-MacBook-Air.local with PID 68746 (/Users/tarasshablii/Desktop/java/foxminded/workspace/university/university/target/classes started by tarasshablii in /Users/tarasshablii/Desktop/java/foxminded/workspace/university/university)
-2020-06-26 18:34:48.815 DEBUG 68746 --- [restartedMain] com.foxminded.timetable.TimetableApp     : Running with Spring Boot v2.2.6.RELEASE, Spring v5.2.5.RELEASE
-2020-06-26 18:34:48.816  INFO 68746 --- [restartedMain] com.foxminded.timetable.TimetableApp     : No active profile set, falling back to default profiles: default
-2020-06-26 18:34:49.043  INFO 68746 --- [restartedMain] o.s.b.devtools.restart.ChangeableUrls    : The Class-Path manifest attribute in /Users/tarasshablii/.m2/repository/org/glassfish/jaxb/jaxb-runtime/2.3.2/jaxb-runtime-2.3.2.jar referenced one or more files that do not exist: file:/Users/tarasshablii/.m2/repository/org/glassfish/jaxb/jaxb-runtime/2.3.2/jakarta.xml.bind-api-2.3.2.jar,file:/Users/tarasshablii/.m2/repository/org/glassfish/jaxb/jaxb-runtime/2.3.2/txw2-2.3.2.jar,file:/Users/tarasshablii/.m2/repository/org/glassfish/jaxb/jaxb-runtime/2.3.2/istack-commons-runtime-3.0.8.jar,file:/Users/tarasshablii/.m2/repository/org/glassfish/jaxb/jaxb-runtime/2.3.2/stax-ex-1.8.1.jar,file:/Users/tarasshablii/.m2/repository/org/glassfish/jaxb/jaxb-runtime/2.3.2/FastInfoset-1.2.16.jar,file:/Users/tarasshablii/.m2/repository/org/glassfish/jaxb/jaxb-runtime/2.3.2/jakarta.activation-api-1.2.1.jar
-2020-06-26 18:34:49.044  INFO 68746 --- [restartedMain] .e.DevToolsPropertyDefaultsPostProcessor : Devtools property defaults active! Set 'spring.devtools.add-properties' to 'false' to disable
-2020-06-26 18:34:49.045  INFO 68746 --- [restartedMain] .e.DevToolsPropertyDefaultsPostProcessor : For additional web related logging consider setting the 'logging.level.web' property to 'DEBUG'
-2020-06-26 18:34:50.144  INFO 68746 --- [restartedMain] .s.d.r.c.RepositoryConfigurationDelegate : Bootstrapping Spring Data JPA repositories in DEFAULT mode.
-2020-06-26 18:34:50.261  INFO 68746 --- [restartedMain] .s.d.r.c.RepositoryConfigurationDelegate : Finished Spring Data repository scanning in 106ms. Found 8 JPA repository interfaces.
-2020-06-26 18:34:50.967  INFO 68746 --- [restartedMain] o.s.b.w.embedded.tomcat.TomcatWebServer  : Tomcat initialized with port(s): 8080 (http)
-2020-06-26 18:34:50.975  INFO 68746 --- [restartedMain] o.apache.catalina.core.StandardService   : Starting service [Tomcat]
-2020-06-26 18:34:50.976  INFO 68746 --- [restartedMain] org.apache.catalina.core.StandardEngine  : Starting Servlet engine: [Apache Tomcat/9.0.33]
-2020-06-26 18:34:51.065  INFO 68746 --- [restartedMain] o.a.c.c.C.[Tomcat].[localhost].[/]       : Initializing Spring embedded WebApplicationContext
-2020-06-26 18:34:51.065  INFO 68746 --- [restartedMain] o.s.web.context.ContextLoader            : Root WebApplicationContext: initialization completed in 2019 ms
-2020-06-26 18:34:51.107  INFO 68746 --- [restartedMain] com.zaxxer.hikari.HikariDataSource       : HikariPool-1 - Starting...
-2020-06-26 18:34:51.369  INFO 68746 --- [restartedMain] com.zaxxer.hikari.HikariDataSource       : HikariPool-1 - Start completed.
-2020-06-26 18:34:51.376  INFO 68746 --- [restartedMain] o.s.b.a.h2.H2ConsoleAutoConfiguration    : H2 console available at '/h2-console'. Database available at 'jdbc:h2:~/temp/data'
-2020-06-26 18:34:51.465  INFO 68746 --- [restartedMain] o.f.c.internal.license.VersionPrinter    : Flyway Community Edition 6.0.8 by Redgate
-2020-06-26 18:34:51.475  INFO 68746 --- [restartedMain] o.f.c.internal.database.DatabaseFactory  : Database: jdbc:h2:~/temp/data (H2 1.4)
-2020-06-26 18:34:51.503  WARN 68746 --- [restartedMain] o.f.c.internal.database.base.Database    : Flyway upgrade recommended: H2 1.4.200 is newer than this version of Flyway and support has not been tested. The latest supported version of H2 is 1.4.199.
-2020-06-26 18:34:51.553  INFO 68746 --- [restartedMain] o.f.core.internal.command.DbValidate     : Successfully validated 3 migrations (execution time 00:00.039s)
-2020-06-26 18:34:51.568  INFO 68746 --- [restartedMain] o.f.core.internal.command.DbMigrate      : Current version of schema "public": 1.2
-2020-06-26 18:34:51.570  INFO 68746 --- [restartedMain] o.f.core.internal.command.DbMigrate      : Schema "public" is up to date. No migration necessary.
-2020-06-26 18:34:51.686  INFO 68746 --- [restartedMain] o.hibernate.jpa.internal.util.LogHelper  : HHH000204: Processing PersistenceUnitInfo [name: default]
-2020-06-26 18:34:51.756  INFO 68746 --- [restartedMain] org.hibernate.Version                    : HHH000412: Hibernate ORM core version 5.4.12.Final
-2020-06-26 18:34:51.855  INFO 68746 --- [restartedMain] o.hibernate.annotations.common.Version   : HCANN000001: Hibernate Commons Annotations {5.1.0.Final}
-2020-06-26 18:34:51.977  INFO 68746 --- [restartedMain] org.hibernate.dialect.Dialect            : HHH000400: Using dialect: org.hibernate.dialect.H2Dialect
-2020-06-26 18:34:52.881  INFO 68746 --- [restartedMain] o.h.e.t.j.p.i.JtaPlatformInitiator       : HHH000490: Using JtaPlatform implementation: [org.hibernate.engine.transaction.jta.platform.internal.NoJtaPlatform]
-2020-06-26 18:34:52.890  INFO 68746 --- [restartedMain] j.LocalContainerEntityManagerFactoryBean : Initialized JPA EntityManagerFactory for persistence unit 'default'
-2020-06-26 18:34:53.619  WARN 68746 --- [restartedMain] JpaBaseConfiguration$JpaWebConfiguration : spring.jpa.open-in-view is enabled by default. Therefore, database queries may be performed during view rendering. Explicitly configure spring.jpa.open-in-view to disable this warning
-2020-06-26 18:34:53.748  INFO 68746 --- [restartedMain] o.s.s.concurrent.ThreadPoolTaskExecutor  : Initializing ExecutorService 'applicationTaskExecutor'
-2020-06-26 18:34:53.846  INFO 68746 --- [restartedMain] o.s.b.a.w.s.WelcomePageHandlerMapping    : Adding welcome page template: index
-2020-06-26 18:34:54.247  INFO 68746 --- [restartedMain] o.s.b.d.a.OptionalLiveReloadServer       : LiveReload server is running on port 35729
-2020-06-26 18:34:54.296  INFO 68746 --- [restartedMain] c.f.t.s.model.generator.DataGenerator    : Resetting sequences...
-2020-06-26 18:34:54.331  INFO 68746 --- [restartedMain] c.f.t.s.model.generator.DataGenerator    : Refreshing all data...
-2020-06-26 18:34:54.341 DEBUG 68746 --- [restartedMain] c.f.t.service.ReschedulingOptionService  : Removing all options
-2020-06-26 18:34:54.370 DEBUG 68746 --- [restartedMain] c.f.timetable.service.ScheduleService    : Removing all schedules
-2020-06-26 18:34:54.372 DEBUG 68746 --- [restartedMain] c.f.t.service.ScheduleTemplateService    : Removing all templates
-2020-06-26 18:34:54.398 DEBUG 68746 --- [restartedMain] c.f.timetable.service.AuditoriumService  : Removing all auditoriums
-2020-06-26 18:34:54.403 DEBUG 68746 --- [restartedMain] c.f.timetable.service.CourseService      : Removing all courses
-2020-06-26 18:34:54.408 DEBUG 68746 --- [restartedMain] c.f.timetable.service.GroupService       : Removing all groups
-2020-06-26 18:34:54.424 DEBUG 68746 --- [restartedMain] c.f.timetable.service.ProfessorService   : Removing all professors
-2020-06-26 18:34:54.429 DEBUG 68746 --- [restartedMain] c.f.timetable.service.StudentService     : Removing all students
-2020-06-26 18:34:54.431  INFO 68746 --- [restartedMain] c.f.t.s.m.g.UniversityModelGenerator     : Generating university model...
-2020-06-26 18:34:54.431 DEBUG 68746 --- [restartedMain] c.f.t.s.m.g.UniversityModelGenerator     : Auditoriums generated
-2020-06-26 18:34:54.432 DEBUG 68746 --- [restartedMain] c.f.timetable.service.AuditoriumService  : Saving auditoriums to repository
-2020-06-26 18:34:54.457 DEBUG 68746 --- [restartedMain] c.f.t.s.m.g.UniversityModelGenerator     : Courses generated
-2020-06-26 18:34:54.457 DEBUG 68746 --- [restartedMain] c.f.timetable.service.CourseService      : Saving courses to repository
-2020-06-26 18:34:54.462 DEBUG 68746 --- [restartedMain] c.f.t.s.m.g.UniversityModelGenerator     : Professors generated
-2020-06-26 18:34:54.467 DEBUG 68746 --- [restartedMain] c.f.t.s.m.g.UniversityModelGenerator     : Courses assigned to professors
-2020-06-26 18:34:54.467 DEBUG 68746 --- [restartedMain] c.f.timetable.service.ProfessorService   : Saving professors to repository
-2020-06-26 18:34:54.483 DEBUG 68746 --- [restartedMain] c.f.t.s.m.g.UniversityModelGenerator     : Groups generated
-2020-06-26 18:34:54.483 DEBUG 68746 --- [restartedMain] c.f.timetable.service.GroupService       : Saving groups to repository
-2020-06-26 18:34:54.490 DEBUG 68746 --- [restartedMain] c.f.t.s.m.g.UniversityModelGenerator     : Students generated
-2020-06-26 18:34:54.498 DEBUG 68746 --- [restartedMain] c.f.t.s.m.g.UniversityModelGenerator     : Students grouped
-2020-06-26 18:34:54.500 DEBUG 68746 --- [restartedMain] c.f.timetable.service.StudentService     : Saving students to repository
-2020-06-26 18:34:54.559  INFO 68746 --- [restartedMain] c.f.t.s.m.g.UniversityModelGenerator     : University model generated
-2020-06-26 18:34:54.559  INFO 68746 --- [restartedMain] c.f.t.s.m.g.TimetableModelGenerator      : Generating timetable model...
-2020-06-26 18:34:54.560 DEBUG 68746 --- [restartedMain] c.f.timetable.service.GroupService       : Fetching groups from repository
-2020-06-26 18:34:54.679 DEBUG 68746 --- [restartedMain] c.f.timetable.service.CourseService      : Fetching courses from repository
-2020-06-26 18:34:54.696 DEBUG 68746 --- [restartedMain] c.f.timetable.service.ProfessorService   : Fetching professors from repository
-2020-06-26 18:34:54.712 DEBUG 68746 --- [restartedMain] c.f.timetable.service.AuditoriumService  : Fetching auditoriums from repository
-2020-06-26 18:34:54.719 DEBUG 68746 --- [restartedMain] c.f.t.s.m.g.TimetableModelGenerator      : Rescheduling options generated
-2020-06-26 18:34:54.720 DEBUG 68746 --- [restartedMain] c.f.t.service.ReschedulingOptionService  : Saving options to repository
-2020-06-26 18:34:54.759 DEBUG 68746 --- [restartedMain] c.f.t.s.m.g.TimetableModelGenerator      : Schedule templates generated
-2020-06-26 18:34:54.760 DEBUG 68746 --- [restartedMain] c.f.t.service.ScheduleTemplateService    : Saving templates to repository
-2020-06-26 18:34:54.774  INFO 68746 --- [restartedMain] c.f.t.s.m.g.TimetableModelGenerator      : Timetable model generated
-2020-06-26 18:34:54.853  INFO 68746 --- [restartedMain] o.s.b.w.embedded.tomcat.TomcatWebServer  : Tomcat started on port(s): 8080 (http) with context path ''
-2020-06-26 18:34:54.858  INFO 68746 --- [restartedMain] com.foxminded.timetable.TimetableApp     : Started TimetableApp in 6.845 seconds (JVM running for 8.17)
-2020-06-26 18:34:57.504  INFO 68746 --- [http-nio-8080-exec-1] o.a.c.c.C.[Tomcat].[localhost].[/]       : Initializing Spring DispatcherServlet 'dispatcherServlet'
-2020-06-26 18:34:57.504  INFO 68746 --- [http-nio-8080-exec-1] o.s.web.servlet.DispatcherServlet        : Initializing Servlet 'dispatcherServlet'
-2020-06-26 18:34:57.511  INFO 68746 --- [http-nio-8080-exec-1] o.s.web.servlet.DispatcherServlet        : Completed initialization in 7 ms
-2020-06-26 18:34:57.555 DEBUG 68746 --- [http-nio-8080-exec-1] c.f.timetable.service.StudentService     : Fetching students from repository
-2020-06-26 18:34:57.595 DEBUG 68746 --- [http-nio-8080-exec-1] c.f.timetable.service.GroupService       : Fetching groups from repository
-2020-06-26 18:35:13.458 DEBUG 68746 --- [http-nio-8080-exec-10] c.f.timetable.service.ScheduleService    : Fetching schedules in range 2020-06-26-2020-06-26 from repository
-2020-06-26 18:35:25.901 DEBUG 68746 --- [http-nio-8080-exec-2] c.f.timetable.service.ScheduleService    : Fetching schedules in range 2020-06-26-2020-06-26 from repository
-2020-06-26 18:35:29.569 DEBUG 68746 --- [http-nio-8080-exec-8] c.f.timetable.service.StudentService     : Fetching students from repository
-2020-06-26 18:35:29.602 DEBUG 68746 --- [http-nio-8080-exec-8] c.f.timetable.service.GroupService       : Fetching groups from repository
-2020-06-26 18:35:34.426 DEBUG 68746 --- [http-nio-8080-exec-2] c.f.timetable.service.GroupService       : Saving group Group(id=null, name=asdf)
-2020-06-26 18:35:34.482 DEBUG 68746 --- [http-nio-8080-exec-4] c.f.timetable.service.StudentService     : Fetching students from repository
-2020-06-26 18:35:34.502 DEBUG 68746 --- [http-nio-8080-exec-4] c.f.timetable.service.GroupService       : Fetching groups from repository
-2020-06-26 18:35:47.956  INFO 68746 --- [SpringContextShutdownHook] o.s.s.concurrent.ThreadPoolTaskExecutor  : Shutting down ExecutorService 'applicationTaskExecutor'
-2020-06-26 18:35:47.959  INFO 68746 --- [SpringContextShutdownHook] j.LocalContainerEntityManagerFactoryBean : Closing JPA EntityManagerFactory for persistence unit 'default'
-2020-06-26 18:35:47.966  INFO 68746 --- [SpringContextShutdownHook] com.zaxxer.hikari.HikariDataSource       : HikariPool-1 - Shutdown initiated...
-2020-06-26 18:35:47.969  INFO 68746 --- [SpringContextShutdownHook] com.zaxxer.hikari.HikariDataSource       : HikariPool-1 - Shutdown completed.
+2020-07-14 00:45:26.128  INFO 63798 --- [restartedMain] com.foxminded.timetable.TimetableApp     : Starting TimetableApp on Tarass-MacBook-Air.local with PID 63798 (/Users/tarasshablii/Desktop/java/foxminded/workspace/university/university/target/classes started by tarasshablii in /Users/tarasshablii/Desktop/java/foxminded/workspace/university/university)
+2020-07-14 00:45:26.131 DEBUG 63798 --- [restartedMain] com.foxminded.timetable.TimetableApp     : Running with Spring Boot v2.2.6.RELEASE, Spring v5.2.5.RELEASE
+2020-07-14 00:45:26.147  INFO 63798 --- [restartedMain] com.foxminded.timetable.TimetableApp     : No active profile set, falling back to default profiles: default
+2020-07-14 00:45:26.380  INFO 63798 --- [restartedMain] o.s.b.devtools.restart.ChangeableUrls    : The Class-Path manifest attribute in /Users/tarasshablii/.m2/repository/org/glassfish/jaxb/jaxb-runtime/2.3.2/jaxb-runtime-2.3.2.jar referenced one or more files that do not exist: file:/Users/tarasshablii/.m2/repository/org/glassfish/jaxb/jaxb-runtime/2.3.2/jakarta.xml.bind-api-2.3.2.jar,file:/Users/tarasshablii/.m2/repository/org/glassfish/jaxb/jaxb-runtime/2.3.2/txw2-2.3.2.jar,file:/Users/tarasshablii/.m2/repository/org/glassfish/jaxb/jaxb-runtime/2.3.2/istack-commons-runtime-3.0.8.jar,file:/Users/tarasshablii/.m2/repository/org/glassfish/jaxb/jaxb-runtime/2.3.2/stax-ex-1.8.1.jar,file:/Users/tarasshablii/.m2/repository/org/glassfish/jaxb/jaxb-runtime/2.3.2/FastInfoset-1.2.16.jar,file:/Users/tarasshablii/.m2/repository/org/glassfish/jaxb/jaxb-runtime/2.3.2/jakarta.activation-api-1.2.1.jar
+2020-07-14 00:45:26.381  INFO 63798 --- [restartedMain] .e.DevToolsPropertyDefaultsPostProcessor : Devtools property defaults active! Set 'spring.devtools.add-properties' to 'false' to disable
+2020-07-14 00:45:26.483  INFO 63798 --- [restartedMain] .e.DevToolsPropertyDefaultsPostProcessor : For additional web related logging consider setting the 'logging.level.web' property to 'DEBUG'
+2020-07-14 00:45:27.702  INFO 63798 --- [restartedMain] .s.d.r.c.RepositoryConfigurationDelegate : Bootstrapping Spring Data JPA repositories in DEFAULT mode.
+2020-07-14 00:45:27.846  INFO 63798 --- [restartedMain] .s.d.r.c.RepositoryConfigurationDelegate : Finished Spring Data repository scanning in 128ms. Found 8 JPA repository interfaces.
+2020-07-14 00:45:28.643  INFO 63798 --- [restartedMain] o.s.b.w.embedded.tomcat.TomcatWebServer  : Tomcat initialized with port(s): 8080 (http)
+2020-07-14 00:45:28.652  INFO 63798 --- [restartedMain] o.apache.catalina.core.StandardService   : Starting service [Tomcat]
+2020-07-14 00:45:28.652  INFO 63798 --- [restartedMain] org.apache.catalina.core.StandardEngine  : Starting Servlet engine: [Apache Tomcat/9.0.33]
+2020-07-14 00:45:28.749  INFO 63798 --- [restartedMain] o.a.c.c.C.[Tomcat].[localhost].[/]       : Initializing Spring embedded WebApplicationContext
+2020-07-14 00:45:28.750  INFO 63798 --- [restartedMain] o.s.web.context.ContextLoader            : Root WebApplicationContext: initialization completed in 2266 ms
+2020-07-14 00:45:28.793  INFO 63798 --- [restartedMain] com.zaxxer.hikari.HikariDataSource       : HikariPool-1 - Starting...
+2020-07-14 00:45:29.106  INFO 63798 --- [restartedMain] com.zaxxer.hikari.HikariDataSource       : HikariPool-1 - Start completed.
+2020-07-14 00:45:29.112  INFO 63798 --- [restartedMain] o.s.b.a.h2.H2ConsoleAutoConfiguration    : H2 console available at '/h2-console'. Database available at 'jdbc:h2:~/temp/data'
+2020-07-14 00:45:29.199  INFO 63798 --- [restartedMain] o.f.c.internal.license.VersionPrinter    : Flyway Community Edition 6.0.8 by Redgate
+2020-07-14 00:45:29.209  INFO 63798 --- [restartedMain] o.f.c.internal.database.DatabaseFactory  : Database: jdbc:h2:~/temp/data (H2 1.4)
+2020-07-14 00:45:29.239  WARN 63798 --- [restartedMain] o.f.c.internal.database.base.Database    : Flyway upgrade recommended: H2 1.4.200 is newer than this version of Flyway and support has not been tested. The latest supported version of H2 is 1.4.199.
+2020-07-14 00:45:29.287  INFO 63798 --- [restartedMain] o.f.core.internal.command.DbValidate     : Successfully validated 3 migrations (execution time 00:00.037s)
+2020-07-14 00:45:29.304  INFO 63798 --- [restartedMain] o.f.core.internal.command.DbMigrate      : Current version of schema "public": 1.2
+2020-07-14 00:45:29.306  INFO 63798 --- [restartedMain] o.f.core.internal.command.DbMigrate      : Schema "public" is up to date. No migration necessary.
+2020-07-14 00:45:29.415  INFO 63798 --- [restartedMain] o.hibernate.jpa.internal.util.LogHelper  : HHH000204: Processing PersistenceUnitInfo [name: default]
+2020-07-14 00:45:29.478  INFO 63798 --- [restartedMain] org.hibernate.Version                    : HHH000412: Hibernate ORM core version 5.4.12.Final
+2020-07-14 00:45:29.588  INFO 63798 --- [restartedMain] o.hibernate.annotations.common.Version   : HCANN000001: Hibernate Commons Annotations {5.1.0.Final}
+2020-07-14 00:45:29.692  INFO 63798 --- [restartedMain] org.hibernate.dialect.Dialect            : HHH000400: Using dialect: org.hibernate.dialect.H2Dialect
+2020-07-14 00:45:30.560  INFO 63798 --- [restartedMain] o.h.e.t.j.p.i.JtaPlatformInitiator       : HHH000490: Using JtaPlatform implementation: [org.hibernate.engine.transaction.jta.platform.internal.NoJtaPlatform]
+2020-07-14 00:45:30.569  INFO 63798 --- [restartedMain] j.LocalContainerEntityManagerFactoryBean : Initialized JPA EntityManagerFactory for persistence unit 'default'
+2020-07-14 00:45:31.312  WARN 63798 --- [restartedMain] JpaBaseConfiguration$JpaWebConfiguration : spring.jpa.open-in-view is enabled by default. Therefore, database queries may be performed during view rendering. Explicitly configure spring.jpa.open-in-view to disable this warning
+2020-07-14 00:45:31.436  INFO 63798 --- [restartedMain] o.s.s.concurrent.ThreadPoolTaskExecutor  : Initializing ExecutorService 'applicationTaskExecutor'
+2020-07-14 00:45:31.750  INFO 63798 --- [restartedMain] o.s.b.a.w.s.WelcomePageHandlerMapping    : Adding welcome page template: index
+2020-07-14 00:45:31.924  INFO 63798 --- [restartedMain] o.s.b.d.a.OptionalLiveReloadServer       : LiveReload server is running on port 35729
+2020-07-14 00:45:31.971  INFO 63798 --- [restartedMain] c.f.t.s.model.generator.DataGenerator    : Resetting sequences...
+2020-07-14 00:45:32.004  INFO 63798 --- [restartedMain] c.f.t.s.model.generator.DataGenerator    : Refreshing all data...
+2020-07-14 00:45:32.056 DEBUG 63798 --- [restartedMain] c.f.t.service.ReschedulingOptionService  : Removing all options
+2020-07-14 00:45:32.089 DEBUG 63798 --- [restartedMain] c.f.timetable.service.ScheduleService    : Removing all schedules
+2020-07-14 00:45:32.091 DEBUG 63798 --- [restartedMain] c.f.t.service.ScheduleTemplateService    : Removing all templates
+2020-07-14 00:45:32.113 DEBUG 63798 --- [restartedMain] c.f.timetable.service.AuditoriumService  : Removing all auditoriums
+2020-07-14 00:45:32.117 DEBUG 63798 --- [restartedMain] c.f.timetable.service.CourseService      : Removing all courses
+2020-07-14 00:45:32.121 DEBUG 63798 --- [restartedMain] c.f.timetable.service.GroupService       : Removing all groups
+2020-07-14 00:45:32.134 DEBUG 63798 --- [restartedMain] c.f.timetable.service.ProfessorService   : Removing all professors
+2020-07-14 00:45:32.138 DEBUG 63798 --- [restartedMain] c.f.timetable.service.StudentService     : Removing all students
+2020-07-14 00:45:32.139  INFO 63798 --- [restartedMain] c.f.t.s.m.g.UniversityModelGenerator     : Generating university model...
+2020-07-14 00:45:32.140 DEBUG 63798 --- [restartedMain] c.f.t.s.m.g.UniversityModelGenerator     : Auditoriums generated
+2020-07-14 00:45:32.163 DEBUG 63798 --- [restartedMain] c.f.timetable.service.AuditoriumService  : Saving auditoriums to repository
+2020-07-14 00:45:32.233 DEBUG 63798 --- [restartedMain] c.f.t.s.m.g.UniversityModelGenerator     : Courses generated
+2020-07-14 00:45:32.238 DEBUG 63798 --- [restartedMain] c.f.timetable.service.CourseService      : Saving courses to repository
+2020-07-14 00:45:32.246 DEBUG 63798 --- [restartedMain] c.f.t.s.m.g.UniversityModelGenerator     : Professors generated
+2020-07-14 00:45:32.249 DEBUG 63798 --- [restartedMain] c.f.t.s.m.g.UniversityModelGenerator     : Courses assigned to professors
+2020-07-14 00:45:32.255 DEBUG 63798 --- [restartedMain] c.f.timetable.service.ProfessorService   : Saving professors to repository
+2020-07-14 00:45:32.268 DEBUG 63798 --- [restartedMain] c.f.t.s.m.g.UniversityModelGenerator     : Groups generated
+2020-07-14 00:45:32.273 DEBUG 63798 --- [restartedMain] c.f.timetable.service.GroupService       : Saving groups to repository
+2020-07-14 00:45:32.280 DEBUG 63798 --- [restartedMain] c.f.t.s.m.g.UniversityModelGenerator     : Students generated
+2020-07-14 00:45:32.286 DEBUG 63798 --- [restartedMain] c.f.t.s.m.g.UniversityModelGenerator     : Students grouped
+2020-07-14 00:45:32.319 DEBUG 63798 --- [restartedMain] c.f.timetable.service.StudentService     : Saving students to repository
+2020-07-14 00:45:32.350  INFO 63798 --- [restartedMain] c.f.t.s.m.g.UniversityModelGenerator     : University model generated
+2020-07-14 00:45:32.350  INFO 63798 --- [restartedMain] c.f.t.s.m.g.TimetableModelGenerator      : Generating timetable model...
+2020-07-14 00:45:32.351 DEBUG 63798 --- [restartedMain] c.f.timetable.service.GroupService       : Fetching groups from repository
+2020-07-14 00:45:32.511 DEBUG 63798 --- [restartedMain] c.f.timetable.service.CourseService      : Fetching courses from repository
+2020-07-14 00:45:32.524 DEBUG 63798 --- [restartedMain] c.f.timetable.service.ProfessorService   : Fetching professors from repository
+2020-07-14 00:45:32.534 DEBUG 63798 --- [restartedMain] c.f.timetable.service.AuditoriumService  : Fetching auditoriums from repository
+2020-07-14 00:45:32.541 DEBUG 63798 --- [restartedMain] c.f.t.s.m.g.TimetableModelGenerator      : Rescheduling options generated
+2020-07-14 00:45:32.556 DEBUG 63798 --- [restartedMain] c.f.t.service.ReschedulingOptionService  : Saving options to repository
+2020-07-14 00:45:32.583 DEBUG 63798 --- [restartedMain] c.f.t.s.m.g.TimetableModelGenerator      : Schedule templates generated
+2020-07-14 00:45:32.595 DEBUG 63798 --- [restartedMain] c.f.t.service.ScheduleTemplateService    : Saving templates to repository
+2020-07-14 00:45:32.603  INFO 63798 --- [restartedMain] c.f.t.s.m.g.TimetableModelGenerator      : Timetable model generated
+2020-07-14 00:45:32.684  INFO 63798 --- [restartedMain] o.s.b.w.embedded.tomcat.TomcatWebServer  : Tomcat started on port(s): 8080 (http) with context path ''
+2020-07-14 00:45:32.688  INFO 63798 --- [restartedMain] com.foxminded.timetable.TimetableApp     : Started TimetableApp in 7.303 seconds (JVM running for 8.807)
+2020-07-14 00:45:36.611  INFO 63798 --- [http-nio-8080-exec-1] o.a.c.c.C.[Tomcat].[localhost].[/]       : Initializing Spring DispatcherServlet 'dispatcherServlet'
+2020-07-14 00:45:36.611  INFO 63798 --- [http-nio-8080-exec-1] o.s.web.servlet.DispatcherServlet        : Initializing Servlet 'dispatcherServlet'
+2020-07-14 00:45:36.620  INFO 63798 --- [http-nio-8080-exec-1] o.s.web.servlet.DispatcherServlet        : Completed initialization in 8 ms
+2020-07-14 00:45:40.732 DEBUG 63798 --- [http-nio-8080-exec-5] c.f.timetable.service.ScheduleService    : Fetching schedules in range 2020-07-14-2020-07-14 from repository
+2020-07-14 00:45:42.981 DEBUG 63798 --- [http-nio-8080-exec-9] c.f.timetable.service.StudentService     : Fetching students from repository
+2020-07-14 00:45:43.027 DEBUG 63798 --- [http-nio-8080-exec-9] c.f.timetable.service.GroupService       : Fetching groups from repository
+2020-07-14 00:46:11.409  INFO 63798 --- [SpringContextShutdownHook] o.s.s.concurrent.ThreadPoolTaskExecutor  : Shutting down ExecutorService 'applicationTaskExecutor'
+2020-07-14 00:46:11.412  INFO 63798 --- [SpringContextShutdownHook] j.LocalContainerEntityManagerFactoryBean : Closing JPA EntityManagerFactory for persistence unit 'default'
+2020-07-14 00:46:11.417  INFO 63798 --- [SpringContextShutdownHook] com.zaxxer.hikari.HikariDataSource       : HikariPool-1 - Shutdown initiated...
+2020-07-14 00:46:11.422  INFO 63798 --- [SpringContextShutdownHook] com.zaxxer.hikari.HikariDataSource       : HikariPool-1 - Shutdown completed.
