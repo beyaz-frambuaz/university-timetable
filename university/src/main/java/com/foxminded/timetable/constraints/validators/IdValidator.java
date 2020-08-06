@@ -2,8 +2,7 @@ package com.foxminded.timetable.constraints.validators;
 
 import com.foxminded.timetable.constraints.IdValid;
 
-import javax.validation.ConstraintValidator;
-import javax.validation.ConstraintValidatorContext;
+import javax.validation.*;
 
 public class IdValidator implements ConstraintValidator<IdValid, Long> {
 

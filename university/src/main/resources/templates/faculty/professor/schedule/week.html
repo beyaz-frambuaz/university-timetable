@@ -19,7 +19,7 @@
 
 			<h1 th:text="${scheduleForm.filtered}? 'Your schedule' : 'Entire schedule'">Schedule</h1>
 			<h6 th:text="'Week of ' + ${weekSchedule.weekDescription}">For week ...</h6>
-			<p th:text="${weekSchedule.daySchedules.isEmpty()}? 'No classes!' : _" class="text-warning"></p>
+			<p class="text-warning" th:text="${weekSchedule.daySchedules.isEmpty()}? 'No classes!' : _"></p>
 			<br>
 
 			<div th:replace="layout :: weekSchedule"></div>

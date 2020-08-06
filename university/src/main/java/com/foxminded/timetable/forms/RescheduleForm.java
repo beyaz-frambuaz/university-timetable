@@ -1,7 +1,6 @@
 package com.foxminded.timetable.forms;
 
-import com.foxminded.timetable.constraints.Date;
-import com.foxminded.timetable.constraints.IdValid;
+import com.foxminded.timetable.constraints.*;
 import lombok.Data;
 
 import java.time.LocalDate;

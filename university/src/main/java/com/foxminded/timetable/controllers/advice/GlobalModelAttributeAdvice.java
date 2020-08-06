@@ -2,8 +2,7 @@ package com.foxminded.timetable.controllers.advice;
 
 import com.foxminded.timetable.forms.*;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.web.bind.annotation.ControllerAdvice;
-import org.springframework.web.bind.annotation.ModelAttribute;
+import org.springframework.web.bind.annotation.*;
 
 @ControllerAdvice
 public class GlobalModelAttributeAdvice {

@@ -1,9 +1,7 @@
 package com.foxminded.timetable.model;
 
 import com.foxminded.timetable.constraints.IdValid;
-import lombok.AllArgsConstructor;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import lombok.*;
 
 import javax.persistence.*;
 import javax.validation.constraints.NotBlank;

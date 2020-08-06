@@ -10,9 +10,7 @@ import org.springframework.test.annotation.DirtiesContext;
 import org.springframework.test.annotation.DirtiesContext.MethodMode;
 
 import java.time.DayOfWeek;
-import java.util.Arrays;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 import static java.util.stream.Collectors.*;
 import static org.assertj.core.api.Assertions.assertThat;
@@ -52,9 +50,9 @@ class TimetableModelGeneratorTest {
     @Test
     public void repositoryShouldHaveTwentyFiveReschedulingOptionsPerDay() {
 
-        Map<DayOfWeek, Long> daysOptions =
-                timetableFacade.getOptions().stream().collect(
-                        groupingBy(ReschedulingOption::getDay, counting()));
+        Map<DayOfWeek, Long> daysOptions = timetableFacade.getOptions()
+                .stream()
+                .collect(groupingBy(ReschedulingOption::getDay, counting()));
 
         assertThat(daysOptions.values()).containsOnly(25L);
     }
@@ -62,17 +60,14 @@ class TimetableModelGeneratorTest {
     @Test
     public void repositoryShouldHaveFiveReschedulingOptionsPerPeriod() {
 
-        List<Long> optionsPerDayPerPeriod =
-                timetableFacade.getOptions()
-                        .stream()
-                        .collect(groupingBy(ReschedulingOption::getDay,
-                                groupingBy(ReschedulingOption::getPeriod,
-                                        counting())))
-                        .values()
-                        .stream()
-                        .flatMap(periodOptions -> periodOptions.values()
-                                .stream())
-                        .collect(toList());
+        List<Long> optionsPerDayPerPeriod = timetableFacade.getOptions()
+                .stream()
+                .collect(groupingBy(ReschedulingOption::getDay,
+                        groupingBy(ReschedulingOption::getPeriod, counting())))
+                .values()
+                .stream()
+                .flatMap(periodOptions -> periodOptions.values().stream())
+                .collect(toList());
 
         assertThat(optionsPerDayPerPeriod).containsOnly(5L);
     }
@@ -92,8 +87,11 @@ class TimetableModelGeneratorTest {
 
         List<Group> expected = timetableFacade.getGroups();
 
-        List<Group> actual = timetableFacade.getTwoWeekSchedule().stream().map(
-                ScheduleTemplate::getGroup).distinct().collect(toList());
+        List<Group> actual = timetableFacade.getTwoWeekSchedule()
+                .stream()
+                .map(ScheduleTemplate::getGroup)
+                .distinct()
+                .collect(toList());
 
         assertThat(actual).hasSameElementsAs(expected);
     }
@@ -103,8 +101,11 @@ class TimetableModelGeneratorTest {
 
         List<Course> expected = timetableFacade.getCourses();
 
-        List<Course> actual = timetableFacade.getTwoWeekSchedule().stream().map(
-                ScheduleTemplate::getCourse).distinct().collect(toList());
+        List<Course> actual = timetableFacade.getTwoWeekSchedule()
+                .stream()
+                .map(ScheduleTemplate::getCourse)
+                .distinct()
+                .collect(toList());
 
         assertThat(actual).hasSameElementsAs(expected);
     }
@@ -115,8 +116,9 @@ class TimetableModelGeneratorTest {
         List<Course> expected = timetableFacade.getCourses();
 
         Map<Group, List<Course>> eachGroupCourses =
-                timetableFacade.getTwoWeekSchedule().stream().collect(
-                        groupingBy(ScheduleTemplate::getGroup,
+                timetableFacade.getTwoWeekSchedule()
+                        .stream()
+                        .collect(groupingBy(ScheduleTemplate::getGroup,
                                 mapping(ScheduleTemplate::getCourse,
                                         toList())));
 
@@ -130,10 +132,11 @@ class TimetableModelGeneratorTest {
 
         List<Professor> expected = timetableFacade.getProfessors();
 
-        List<Professor> actual =
-                timetableFacade.getTwoWeekSchedule().stream().map(
-                        ScheduleTemplate::getProfessor).distinct().collect(
-                        toList());
+        List<Professor> actual = timetableFacade.getTwoWeekSchedule()
+                .stream()
+                .map(ScheduleTemplate::getProfessor)
+                .distinct()
+                .collect(toList());
 
         assertThat(actual).usingElementComparatorIgnoringFields("courses")
                 .hasSameElementsAs(expected);
@@ -144,9 +147,10 @@ class TimetableModelGeneratorTest {
 
         List<ScheduleTemplate> templates = timetableFacade.getTwoWeekSchedule();
 
-        List<DayOfWeek> workDays = Arrays.asList(DayOfWeek.MONDAY,
-                DayOfWeek.TUESDAY, DayOfWeek.WEDNESDAY, DayOfWeek.THURSDAY,
-                DayOfWeek.FRIDAY);
+        List<DayOfWeek> workDays =
+                Arrays.asList(DayOfWeek.MONDAY, DayOfWeek.TUESDAY,
+                        DayOfWeek.WEDNESDAY, DayOfWeek.THURSDAY,
+                        DayOfWeek.FRIDAY);
 
         for (boolean weekParity : Arrays.asList(Boolean.FALSE, Boolean.TRUE)) {
             for (DayOfWeek day : workDays) {
@@ -168,9 +172,10 @@ class TimetableModelGeneratorTest {
 
         List<ScheduleTemplate> templates = timetableFacade.getTwoWeekSchedule();
 
-        List<DayOfWeek> workDays = Arrays.asList(DayOfWeek.MONDAY,
-                DayOfWeek.TUESDAY, DayOfWeek.WEDNESDAY, DayOfWeek.THURSDAY,
-                DayOfWeek.FRIDAY);
+        List<DayOfWeek> workDays =
+                Arrays.asList(DayOfWeek.MONDAY, DayOfWeek.TUESDAY,
+                        DayOfWeek.WEDNESDAY, DayOfWeek.THURSDAY,
+                        DayOfWeek.FRIDAY);
 
         for (boolean weekParity : Arrays.asList(Boolean.FALSE, Boolean.TRUE)) {
             for (DayOfWeek day : workDays) {
@@ -192,9 +197,10 @@ class TimetableModelGeneratorTest {
 
         List<ScheduleTemplate> templates = timetableFacade.getTwoWeekSchedule();
 
-        List<DayOfWeek> workDays = Arrays.asList(DayOfWeek.MONDAY,
-                DayOfWeek.TUESDAY, DayOfWeek.WEDNESDAY, DayOfWeek.THURSDAY,
-                DayOfWeek.FRIDAY);
+        List<DayOfWeek> workDays =
+                Arrays.asList(DayOfWeek.MONDAY, DayOfWeek.TUESDAY,
+                        DayOfWeek.WEDNESDAY, DayOfWeek.THURSDAY,
+                        DayOfWeek.FRIDAY);
 
         for (boolean weekParity : Arrays.asList(Boolean.FALSE, Boolean.TRUE)) {
             for (DayOfWeek day : workDays) {

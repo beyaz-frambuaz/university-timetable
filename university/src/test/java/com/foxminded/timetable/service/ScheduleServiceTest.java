@@ -1,53 +1,44 @@
 package com.foxminded.timetable.service;
 
-import com.foxminded.timetable.dao.ScheduleRepository;
-import com.foxminded.timetable.dao.ScheduleTemplateRepository;
+import com.foxminded.timetable.dao.*;
+import com.foxminded.timetable.model.Period;
 import com.foxminded.timetable.model.*;
 import com.foxminded.timetable.service.utility.SemesterCalendar;
-import com.foxminded.timetable.service.utility.predicates.SchedulePredicate;
-import com.foxminded.timetable.service.utility.predicates.SchedulePredicateGroupId;
-import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.api.Test;
+import com.foxminded.timetable.service.utility.predicates.*;
+import org.junit.jupiter.api.*;
 import org.junit.jupiter.api.extension.ExtendWith;
-import org.mockito.InjectMocks;
-import org.mockito.Mock;
+import org.mockito.*;
 import org.mockito.junit.jupiter.MockitoExtension;
 
-import java.time.DayOfWeek;
-import java.time.LocalDate;
-import java.util.Arrays;
-import java.util.Collections;
-import java.util.List;
-import java.util.Optional;
+import java.time.*;
+import java.util.*;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.ArgumentMatchers.*;
-import static org.mockito.BDDMockito.given;
-import static org.mockito.BDDMockito.then;
-import static org.mockito.Mockito.atLeastOnce;
-import static org.mockito.Mockito.mock;
+import static org.mockito.BDDMockito.*;
+import static org.mockito.Mockito.*;
 
 @ExtendWith(MockitoExtension.class)
 class ScheduleServiceTest {
 
-    private final Long             id         = 1L;
-    private final LocalDate        date       = LocalDate.of(2020, 6, 1);
-    private final DayOfWeek        day        = DayOfWeek.MONDAY;
-    private final Period           period     = Period.FIRST;
-    private final Auditorium       auditorium = new Auditorium(1L, "A-01");
-    private final Course           course     = new Course(1L, "course");
-    private final Group            group      = new Group(1L, "G-01");
-    private final Professor        professor  = new Professor(1L, "one", "one");
-    private       Schedule         schedule;
+    private final Long id = 1L;
+    private final LocalDate date = LocalDate.of(2020, 6, 1);
+    private final DayOfWeek day = DayOfWeek.MONDAY;
+    private final Period period = Period.FIRST;
+    private final Auditorium auditorium = new Auditorium(1L, "A-01");
+    private final Course course = new Course(1L, "course");
+    private final Group group = new Group(1L, "G-01");
+    private final Professor professor = new Professor(1L, "one", "one");
+    private Schedule schedule;
 
     @Mock
     private ScheduleRepository repository;
     @Mock
-    private SemesterCalendar    semesterCalendar;
+    private SemesterCalendar semesterCalendar;
     @Mock
     private ScheduleTemplateRepository templateRepository;
     @InjectMocks
-    private ScheduleService     service;
+    private ScheduleService service;
 
     @BeforeEach
     private void createSchedule() {

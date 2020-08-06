@@ -1,20 +1,14 @@
 package com.foxminded.timetable.forms.utility.formatter;
 
-import com.foxminded.timetable.forms.utility.DayOptions;
-import com.foxminded.timetable.forms.utility.WeekOptions;
-import com.foxminded.timetable.model.Period;
-import com.foxminded.timetable.model.ReschedulingOption;
-import com.foxminded.timetable.model.Schedule;
+import com.foxminded.timetable.forms.utility.*;
+import com.foxminded.timetable.model.*;
 import com.foxminded.timetable.service.TimetableFacade;
 import com.foxminded.timetable.service.utility.SemesterCalendar;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
 
 import java.time.LocalDate;
-import java.util.ArrayList;
-import java.util.LinkedHashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 import java.util.stream.Collectors;
 
 @Component

@@ -3,10 +3,7 @@ package com.foxminded.timetable.controllers;
 import com.foxminded.timetable.constraints.IdValid;
 import com.foxminded.timetable.exceptions.SessionExpiredException;
 import com.foxminded.timetable.forms.ScheduleForm;
-import com.foxminded.timetable.forms.utility.DaySchedule;
-import com.foxminded.timetable.forms.utility.MonthSchedule;
-import com.foxminded.timetable.forms.utility.TwoWeekSchedule;
-import com.foxminded.timetable.forms.utility.WeekSchedule;
+import com.foxminded.timetable.forms.utility.*;
 import com.foxminded.timetable.forms.utility.formatter.ScheduleFormatter;
 import com.foxminded.timetable.model.Student;
 import com.foxminded.timetable.service.TimetableFacade;
@@ -15,19 +12,15 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.validation.BindException;
-import org.springframework.validation.ObjectError;
+import org.springframework.validation.*;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import javax.servlet.http.HttpSession;
-import javax.validation.ConstraintViolation;
-import javax.validation.ConstraintViolationException;
-import javax.validation.Valid;
+import javax.validation.*;
 import java.time.LocalDate;
-import java.util.List;
-import java.util.Optional;
+import java.util.*;
 import java.util.stream.Collectors;
 
 @Controller

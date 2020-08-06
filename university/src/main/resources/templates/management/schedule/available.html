@@ -6,18 +6,18 @@
 <body>
 
 <!-- Change auditorium form modal -->
-<div class="modal fade" id="change-auditorium-modal" tabindex="-1" role="dialog"
-     aria-labelledby="change-auditorium-label" aria-hidden="true">
+<div aria-hidden="true" aria-labelledby="change-auditorium-label" class="modal fade" id="change-auditorium-modal"
+     role="dialog" tabindex="-1">
 	<div class="modal-dialog modal-dialog-centered" role="document">
 		<div class="modal-content">
 
 			<!--Header-->
 			<div class="modal-header">
-				<h5 id="change-auditorium-label" class="modal-title">
+				<h5 class="modal-title" id="change-auditorium-label">
 					<i class="fas fa-angle-double-right"></i>
 					Change auditorium
 				</h5>
-				<button type="button" class="close" data-dismiss="modal" aria-label="Close">
+				<button aria-label="Close" class="close" data-dismiss="modal" type="button">
 					<span aria-hidden="true">&times;</span>
 				</button>
 			</div>
@@ -27,8 +27,8 @@
 
 				<p>Pick from the list of available auditoriums to move this schedule occurrence (one-time change).</p>
 
-				<form class="needs-validation" action="#" th:action="@{/timetable/management/schedule/available}"
-				      th:object="${changeScheduleForm}" method="post" novalidate>
+				<form action="#" class="needs-validation" method="post"
+				      novalidate th:action="@{/timetable/management/schedule/available}" th:object="${changeScheduleForm}">
 
 					<div class="container">
 
@@ -36,21 +36,21 @@
 							<label class="form-control-label col-sm-4" for="new-auditorium">New auditorium:</label>
 							<div class="col-sm-8">
 								<select class="custom-select" id="new-auditorium" name="auditoriumId" required>
-									<option value="" hidden disabled selected>Select new auditorium...</option>
-									<option th:each="auditorium : ${auditoriums}" value="1" th:value="${auditorium.id}"
-									        th:text="${auditorium.name}">G-01
+									<option disabled hidden selected value="">Select new auditorium...</option>
+									<option th:each="auditorium : ${auditoriums}" th:text="${auditorium.name}" th:value="${auditorium.id}"
+									        value="1">G-01
 									</option>
 								</select>
 								<div class="invalid-feedback">Auditorium required</div>
 							</div>
 						</div>
 
-						<input type="hidden" name="scheduleId" value="" th:value="${schedule.id}">
+						<input name="scheduleId" th:value="${schedule.id}" type="hidden" value="">
 
 						<!--Submit-->
 
 						<div class="modal-footer">
-							<button type="submit" class="btn btn-outline-primary">Move</button>
+							<button class="btn btn-outline-primary" type="submit">Move</button>
 						</div>
 
 					</div>
@@ -62,18 +62,18 @@
 </div>
 
 <!-- Substitute professor form modal -->
-<div class="modal fade" id="substitute-professor-modal" tabindex="-1" role="dialog"
-     aria-labelledby="substitute-professor-label" aria-hidden="true">
+<div aria-hidden="true" aria-labelledby="substitute-professor-label" class="modal fade" id="substitute-professor-modal"
+     role="dialog" tabindex="-1">
 	<div class="modal-dialog modal-dialog-centered" role="document">
 		<div class="modal-content">
 
 			<!--Header-->
 			<div class="modal-header">
-				<h5 id="substitute-professor-label" class="modal-title">
+				<h5 class="modal-title" id="substitute-professor-label">
 					<i class="fas fa-chalkboard-teacher"></i>
 					Substitute professor
 				</h5>
-				<button type="button" class="close" data-dismiss="modal" aria-label="Close">
+				<button aria-label="Close" class="close" data-dismiss="modal" type="button">
 					<span aria-hidden="true">&times;</span>
 				</button>
 			</div>
@@ -83,8 +83,8 @@
 
 				<p>Pick from the list of available professors to substitute this schedule occurrence (one-time change).</p>
 
-				<form class="needs-validation" action="#" th:action="@{/timetable/management/schedule/available}"
-				      th:object="${changeScheduleForm}" method="post" novalidate>
+				<form action="#" class="needs-validation" method="post"
+				      novalidate th:action="@{/timetable/management/schedule/available}" th:object="${changeScheduleForm}">
 
 					<div class="container">
 
@@ -92,21 +92,21 @@
 							<label class="form-control-label col-sm-4" for="new-professor">New professor:</label>
 							<div class="col-sm-8">
 								<select class="custom-select" id="new-professor" name="professorId" required>
-									<option value="" hidden disabled selected>Select new professor...</option>
-									<option th:each="professor : ${professors}" value="1" th:value="${professor.id}"
-									        th:text="${professor.fullName}">Professor name
+									<option disabled hidden selected value="">Select new professor...</option>
+									<option th:each="professor : ${professors}" th:text="${professor.fullName}" th:value="${professor.id}"
+									        value="1">Professor name
 									</option>
 								</select>
 								<div class="invalid-feedback">Professor required</div>
 							</div>
 						</div>
 
-						<input type="hidden" name="scheduleId" value="" th:value="${schedule.id}">
+						<input name="scheduleId" th:value="${schedule.id}" type="hidden" value="">
 
 						<!--Submit-->
 
 						<div class="modal-footer">
-							<button type="submit" class="btn btn-outline-primary">Substitute</button>
+							<button class="btn btn-outline-primary" type="submit">Substitute</button>
 						</div>
 
 					</div>
@@ -118,18 +118,18 @@
 </div>
 
 <!-- Change professor and auditorium form modal -->
-<div class="modal fade" id="change-schedule-modal" tabindex="-1" role="dialog"
-     aria-labelledby="change-schedule-label" aria-hidden="true">
+<div aria-hidden="true" aria-labelledby="change-schedule-label" class="modal fade" id="change-schedule-modal"
+     role="dialog" tabindex="-1">
 	<div class="modal-dialog modal-dialog-centered" role="document">
 		<div class="modal-content">
 
 			<!--Header-->
 			<div class="modal-header">
-				<h5 id="change-schedule-label" class="modal-title">
+				<h5 class="modal-title" id="change-schedule-label">
 					<i class="fas fa-edit"></i>
 					Change professor and auditorium
 				</h5>
-				<button type="button" class="close" data-dismiss="modal" aria-label="Close">
+				<button aria-label="Close" class="close" data-dismiss="modal" type="button">
 					<span aria-hidden="true">&times;</span>
 				</button>
 			</div>
@@ -140,8 +140,8 @@
 				<p>Pick from the list of available professors and auditoriums to edit this schedule occurrence (one-time
 					change).</p>
 
-				<form class="needs-validation" action="#" th:action="@{/timetable/management/schedule/available}"
-				      th:object="${changeScheduleForm}" method="post" novalidate>
+				<form action="#" class="needs-validation" method="post"
+				      novalidate th:action="@{/timetable/management/schedule/available}" th:object="${changeScheduleForm}">
 
 					<div class="container">
 
@@ -149,9 +149,9 @@
 							<label class="form-control-label col-sm-4" for="new-professor">New professor:</label>
 							<div class="col-sm-8">
 								<select class="custom-select" id="new-professor" name="professorId" required>
-									<option value="" hidden disabled selected>Select new professor...</option>
-									<option th:each="professor : ${professors}" value="1" th:value="${professor.id}"
-									        th:text="${professor.fullName}">Professor name
+									<option disabled hidden selected value="">Select new professor...</option>
+									<option th:each="professor : ${professors}" th:text="${professor.fullName}" th:value="${professor.id}"
+									        value="1">Professor name
 									</option>
 								</select>
 								<div class="invalid-feedback">Professor required</div>
@@ -162,21 +162,21 @@
 							<label class="form-control-label col-sm-4" for="new-auditorium">New auditorium:</label>
 							<div class="col-sm-8">
 								<select class="custom-select" id="new-auditorium" name="auditoriumId" required>
-									<option value="" hidden disabled selected>Select new auditorium...</option>
-									<option th:each="auditorium : ${auditoriums}" value="1" th:value="${auditorium.id}"
-									        th:text="${auditorium.name}">G-01
+									<option disabled hidden selected value="">Select new auditorium...</option>
+									<option th:each="auditorium : ${auditoriums}" th:text="${auditorium.name}" th:value="${auditorium.id}"
+									        value="1">G-01
 									</option>
 								</select>
 								<div class="invalid-feedback">Auditorium required</div>
 							</div>
 						</div>
 
-						<input type="hidden" name="scheduleId" value="" th:value="${schedule.id}">
+						<input name="scheduleId" th:value="${schedule.id}" type="hidden" value="">
 
 						<!--Submit-->
 
 						<div class="modal-footer">
-							<button type="submit" class="btn btn-outline-primary">Change</button>
+							<button class="btn btn-outline-primary" type="submit">Change</button>
 						</div>
 
 					</div>
@@ -196,23 +196,23 @@
 		<div class="col">
 
 			<!-- Alert Success -->
-			<div th:if="${!successAlert.isEmpty()}" class="alert alert-dismissible alert-success">
-				<button type="button" class="close" data-dismiss="alert">&times;</button>
+			<div class="alert alert-dismissible alert-success" th:if="${!successAlert.isEmpty()}">
+				<button class="close" data-dismiss="alert" type="button">&times;</button>
 				<h4 class="alert-heading">
 					<i class="fas fa-check-circle"></i>
 					Done!
 				</h4>
-				<p th:text="${successAlert}" class="mb-0">Message</p>
+				<p class="mb-0" th:text="${successAlert}">Message</p>
 			</div>
 
 			<!-- Alert Error -->
-			<div th:if="${!errorAlert.isEmpty()}" class="alert alert-dismissible alert-danger">
-				<button type="button" class="close" data-dismiss="alert">&times;</button>
+			<div class="alert alert-dismissible alert-danger" th:if="${!errorAlert.isEmpty()}">
+				<button class="close" data-dismiss="alert" type="button">&times;</button>
 				<h4 class="alert-heading">
 					<i class="fas fa-exclamation-circle"></i>
 					Error!
 				</h4>
-				<p th:text="${errorAlert}" class="mb-0">Message</p>
+				<p class="mb-0" th:text="${errorAlert}">Message</p>
 			</div>
 
 			<h3>Schedule item:</h3>
@@ -275,9 +275,9 @@
 						</div>
 					</div>
 				</div>
-				<div th:unless="${professors.isEmpty()} or ${auditoriums.isEmpty()}" class="col-4">
-					<button type="button" class="btn btn-outline-warning" data-toggle="modal"
-					        data-target="#change-schedule-modal">
+				<div class="col-4" th:unless="${professors.isEmpty()} or ${auditoriums.isEmpty()}">
+					<button class="btn btn-outline-warning" data-target="#change-schedule-modal" data-toggle="modal"
+					        type="button">
 						Change both professor and auditorium
 					</button>
 				</div>
@@ -287,8 +287,8 @@
 			<hr class="my-4">
 			<h1>
 				Available professors
-				<button th:unless="${professors.isEmpty()}" type="button" class="btn btn-outline-warning ml-4"
-				        data-toggle="modal" data-target="#substitute-professor-modal">
+				<button class="btn btn-outline-warning ml-4" data-target="#substitute-professor-modal" data-toggle="modal"
+				        th:unless="${professors.isEmpty()}" type="button">
 					Substitute
 				</button>
 			</h1>
@@ -297,17 +297,17 @@
 			<p th:if="${professors.isEmpty()}">None available for this period.</p>
 
 			<!-- List of professors -->
-			<div th:unless="${professors.isEmpty()}" class="student-select-container shadow">
+			<div class="student-select-container shadow" th:unless="${professors.isEmpty()}">
 				<div class="list-group">
 
 					<!-- Each professor	-->
-					<div th:each="professor : ${professors}" class="schedule-row no-border">
+					<div class="schedule-row no-border" th:each="professor : ${professors}">
 
 						<div class="col list-group-item d-flex justify-content-between">
 
 							<div>
-								<span th:text="'ID: ' + *{professor.id}" class="badge badge-pill badge-light">ID: 1</span>
-								<span th:text="*{professor.fullName}" class="pl-2">Name One</span>
+								<span class="badge badge-pill badge-light" th:text="'ID: ' + *{professor.id}">ID: 1</span>
+								<span class="pl-2" th:text="*{professor.fullName}">Name One</span>
 							</div>
 						</div>
 
@@ -320,8 +320,8 @@
 			<hr class="my-4">
 			<h1>
 				Available auditoriums
-				<button th:unless="${auditoriums.isEmpty()}" type="button" class="btn btn-outline-warning ml-4"
-				        data-toggle="modal" data-target="#change-auditorium-modal">
+				<button class="btn btn-outline-warning ml-4" data-target="#change-auditorium-modal" data-toggle="modal"
+				        th:unless="${auditoriums.isEmpty()}" type="button">
 					Move
 				</button>
 			</h1>
@@ -330,17 +330,17 @@
 			<p th:if="${auditoriums.isEmpty()}">None available for this period.</p>
 
 			<!-- List of auditoriums -->
-			<div th:unless="${auditoriums.isEmpty()}" class="student-select-container shadow">
+			<div class="student-select-container shadow" th:unless="${auditoriums.isEmpty()}">
 				<div class="list-group">
 
 					<!-- Each auditorium	-->
-					<div th:each="auditorium : ${auditoriums}" class="schedule-row no-border">
+					<div class="schedule-row no-border" th:each="auditorium : ${auditoriums}">
 
 						<div class="col list-group-item d-flex justify-content-between">
 
 							<div>
-								<span th:text="'ID: ' + *{auditorium.id}" class="badge badge-pill badge-light">ID: 1</span>
-								<span th:text="*{auditorium.name}" class="pl-2">Name One</span>
+								<span class="badge badge-pill badge-light" th:text="'ID: ' + *{auditorium.id}">ID: 1</span>
+								<span class="pl-2" th:text="*{auditorium.name}">Name One</span>
 							</div>
 						</div>
 

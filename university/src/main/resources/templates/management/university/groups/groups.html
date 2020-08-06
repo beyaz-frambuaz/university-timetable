@@ -22,28 +22,28 @@
 		<div class="col">
 
 			<!-- Alert Success -->
-			<div th:if="${!successAlert.isEmpty()}" class="alert alert-dismissible alert-success">
-				<button type="button" class="close" data-dismiss="alert">&times;</button>
+			<div class="alert alert-dismissible alert-success" th:if="${!successAlert.isEmpty()}">
+				<button class="close" data-dismiss="alert" type="button">&times;</button>
 				<h4 class="alert-heading">
 					<i class="fas fa-check-circle"></i>
 					Done!
 				</h4>
-				<p th:text="${successAlert}" class="mb-0">Message</p>
+				<p class="mb-0" th:text="${successAlert}">Message</p>
 			</div>
 
 			<!-- Alert Error -->
-			<div th:if="${!errorAlert.isEmpty()}" class="alert alert-dismissible alert-danger">
-				<button type="button" class="close" data-dismiss="alert">&times;</button>
+			<div class="alert alert-dismissible alert-danger" th:if="${!errorAlert.isEmpty()}">
+				<button class="close" data-dismiss="alert" type="button">&times;</button>
 				<h4 class="alert-heading">
 					<i class="fas fa-exclamation-circle"></i>
 					Error!
 				</h4>
-				<p th:text="${errorAlert}" class="mb-0">Message</p>
+				<p class="mb-0" th:text="${errorAlert}">Message</p>
 			</div>
 
 			<h1>Groups
-				<span type="button" class="text-body ml-4" data-toggle="modal" data-target="#new-item-modal">
-					<h3 class="fas fa-plus-circle icon-hover" data-toggle="tooltip" data-placement="right" data-container="body"
+				<span class="text-body ml-4" data-target="#new-item-modal" data-toggle="modal" type="button">
+					<h3 class="fas fa-plus-circle icon-hover" data-container="body" data-placement="right" data-toggle="tooltip"
 					    title="Add new group"></h3>
 				</span>
 			</h1>
@@ -55,48 +55,48 @@
 				<div th:each="group : ${groupedStudents}">
 					<div class="schedule-row no-border">
 
-						<button class="col list-group-item list-group-item-action btn" id="group1"
+						<button aria-controls="studentsGroup1" class="col list-group-item list-group-item-action btn"
+						        data-target="#studentsGroup1"
+						        data-toggle="collapse"
+						        id="group1"
+						        th:attr="data-target='#studentsGroup' + *{group.key.id},
+					                 aria-controls='studentsGroup' + *{group.key.id}"
 						        th:classappend="${group.key.id.toString() == editedId}? 'btn-success'"
 						        th:id="'group' + *{group.key.id}"
-						        type="button"
-						        data-toggle="collapse"
-						        data-target="#studentsGroup1"
-						        aria-controls="studentsGroup1"
-						        th:attr="data-target='#studentsGroup' + *{group.key.id},
-					                 aria-controls='studentsGroup' + *{group.key.id}">
+						        type="button">
 							<div>
-								<span th:text="'ID: ' + *{group.key.id}" class="badge badge-pill badge-light">ID: 1</span>
-								<span th:text="*{group.key.name}" class="pl-2">Name One</span>
-								<small th:text="|(*{group.value.size()} students)|" class="text-muted ml-4">
+								<span class="badge badge-pill badge-light" th:text="'ID: ' + *{group.key.id}">ID: 1</span>
+								<span class="pl-2" th:text="*{group.key.name}">Name One</span>
+								<small class="text-muted ml-4" th:text="|(*{group.value.size()} students)|">
 									(30 students)
 								</small>
 							</div>
 						</button>
 
-						<button type="button" class="btn btn-outline-secondary toggle-button" data-toggle="modal"
-						        data-target="#filtered-schedule-modal" data-title="Name One" data-id="1"
-						        th:attr="data-title=${group.key.name}, data-id=${group.key.id}">
+						<button class="btn btn-outline-secondary toggle-button" data-id="1" data-target="#filtered-schedule-modal"
+						        data-title="Name One" data-toggle="modal" th:attr="data-title=${group.key.name}, data-id=${group.key.id}"
+						        type="button">
 							View schedule
 						</button>
 
-						<button type="button" class="btn btn-outline-warning toggle-button" data-toggle="modal"
-						        data-target="#rename-modal" data-title="Name One" data-rename-id="1"
-						        th:attr="data-title=${group.key.name}, data-rename-id=${group.key.id}">
+						<button class="btn btn-outline-warning toggle-button" data-rename-id="1" data-target="#rename-modal"
+						        data-title="Name One" data-toggle="modal" th:attr="data-title=${group.key.name}, data-rename-id=${group.key.id}"
+						        type="button">
 							Rename
 						</button>
 
-						<button type="button" class="btn btn-outline-danger toggle-button" data-toggle="modal"
-						        data-target="#delete-modal" data-title="Name One" data-delete-id="1"
-						        th:attr="data-title=${group.key.name}, data-delete-id=${group.key.id}">
+						<button class="btn btn-outline-danger toggle-button" data-delete-id="1" data-target="#delete-modal"
+						        data-title="Name One" data-toggle="modal" th:attr="data-title=${group.key.name}, data-delete-id=${group.key.id}"
+						        type="button">
 							Delete
 						</button>
 
 					</div>
 
-					<div id="studentsGroup1" th:id="'studentsGroup' + *{group.key.id}"
-					     class="collapse course-attendees-container list-group"
-					     aria-labelledby="group1" th:attr="aria-labelledby='group' + *{group.key.id}"
-					     data-parent="#groupList">
+					<div aria-labelledby="group1" class="collapse course-attendees-container list-group"
+					     data-parent="#groupList"
+					     id="studentsGroup1" th:attr="aria-labelledby='group' + *{group.key.id}"
+					     th:id="'studentsGroup' + *{group.key.id}">
 
 						<div class="schedule-row no-border my-2">
 
@@ -104,11 +104,11 @@
 
 								<div class="list-group-item d-flex justify-content-between">
 									<div>
-										<span th:text="|ID: *{student.id}|" class="badge badge-pill badge-light">ID: 1</span>
-										<span th:text="*{student.fullName}" class="pl-2">Name One</span>
+										<span class="badge badge-pill badge-light" th:text="|ID: *{student.id}|">ID: 1</span>
+										<span class="pl-2" th:text="*{student.fullName}">Name One</span>
 									</div>
 									<div>
-										<span th:text="*{student.group.name}" class="badge badge-pill badge-secondary">G-01</span>
+										<span class="badge badge-pill badge-secondary" th:text="*{student.group.name}">G-01</span>
 									</div>
 								</div>
 

@@ -4,8 +4,7 @@ import com.foxminded.timetable.dao.ResetSequencesDao;
 import com.foxminded.timetable.service.TimetableFacade;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
-import org.mockito.InjectMocks;
-import org.mockito.Mock;
+import org.mockito.*;
 import org.mockito.junit.jupiter.MockitoExtension;
 
 import static org.mockito.BDDMockito.then;
@@ -16,7 +15,7 @@ class DataGeneratorTest {
     @Mock
     private TimetableFacade timetableFacade;
     @Mock
-    private TimetableModelGenerator  timetableModelGenerator;
+    private TimetableModelGenerator timetableModelGenerator;
     @Mock
     private UniversityModelGenerator universityModelGenerator;
     @Mock

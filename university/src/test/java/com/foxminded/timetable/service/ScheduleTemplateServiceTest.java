@@ -4,40 +4,34 @@ import com.foxminded.timetable.dao.ScheduleTemplateRepository;
 import com.foxminded.timetable.model.*;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
-import org.mockito.InjectMocks;
-import org.mockito.Mock;
+import org.mockito.*;
 import org.mockito.junit.jupiter.MockitoExtension;
 
 import java.time.DayOfWeek;
-import java.util.Collections;
-import java.util.List;
-import java.util.Optional;
+import java.util.*;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.ArgumentMatchers.*;
-import static org.mockito.BDDMockito.given;
-import static org.mockito.BDDMockito.then;
+import static org.mockito.BDDMockito.*;
 
 @ExtendWith(MockitoExtension.class)
 class ScheduleTemplateServiceTest {
 
-    private final Long                    id         = 1L;
-    private final boolean                 weekParity = false;
-    private final DayOfWeek               day        = DayOfWeek.MONDAY;
-    private final Period                  period     = Period.FIRST;
-    private final Auditorium              auditorium =
-            new Auditorium(1L, "A-01");
-    private final Course                  course     = new Course(1L, "course");
-    private final Group                   group      = new Group(1L, "G-01");
-    private final Professor               professor  =
-            new Professor(1L, "one", "one");
-    private final ScheduleTemplate        template   =
+    private final Long id = 1L;
+    private final boolean weekParity = false;
+    private final DayOfWeek day = DayOfWeek.MONDAY;
+    private final Period period = Period.FIRST;
+    private final Auditorium auditorium = new Auditorium(1L, "A-01");
+    private final Course course = new Course(1L, "course");
+    private final Group group = new Group(1L, "G-01");
+    private final Professor professor = new Professor(1L, "one", "one");
+    private final ScheduleTemplate template =
             new ScheduleTemplate(id, weekParity, day, period, auditorium,
                     course, group, professor);
     @Mock
     private ScheduleTemplateRepository repository;
     @InjectMocks
-    private       ScheduleTemplateService service;
+    private ScheduleTemplateService service;
 
     @Test
     public void countShouldDelegateToRepository() {
@@ -119,7 +113,8 @@ class ScheduleTemplateServiceTest {
     public void findAllForWeekShouldDelegateToRepository() {
 
         List<ScheduleTemplate> expected = Collections.singletonList(template);
-        given(repository.findAllByWeekParity(anyBoolean())).willReturn(expected);
+        given(repository.findAllByWeekParity(anyBoolean())).willReturn(
+                expected);
 
         List<ScheduleTemplate> actual = service.findAllForWeek(true);
 

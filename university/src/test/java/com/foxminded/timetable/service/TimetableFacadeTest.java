@@ -1,26 +1,23 @@
 package com.foxminded.timetable.service;
 
-import com.foxminded.timetable.exceptions.ServiceException;
+import com.foxminded.timetable.exceptions.*;
+import com.foxminded.timetable.model.Period;
 import com.foxminded.timetable.model.*;
 import com.foxminded.timetable.service.utility.SemesterCalendar;
-import com.foxminded.timetable.service.utility.predicates.SchedulePredicate;
-import com.foxminded.timetable.service.utility.predicates.SchedulePredicateNoFilter;
+import com.foxminded.timetable.service.utility.predicates.*;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 
 import javax.validation.ConstraintViolationException;
-import java.time.DayOfWeek;
-import java.time.LocalDate;
+import java.time.*;
 import java.util.*;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.AssertionsForClassTypes.assertThatExceptionOfType;
-import static org.junit.jupiter.api.Assertions.fail;
 import static org.mockito.ArgumentMatchers.*;
-import static org.mockito.BDDMockito.given;
-import static org.mockito.BDDMockito.then;
+import static org.mockito.BDDMockito.*;
 import static org.mockito.Mockito.mock;
 
 @SpringBootTest
@@ -535,6 +532,14 @@ public class TimetableFacadeTest {
 
         then(professorService).should().findAll();
         assertThat(actual).isEqualTo(expected);
+    }
+
+    @Test
+    public void getProfessorsTeachingShouldValidate() {
+
+        assertThatExceptionOfType(
+                ConstraintViolationException.class).isThrownBy(
+                () -> timetableFacade.getProfessorsTeaching(invalidCourse));
     }
 
     @Test
@@ -1277,7 +1282,7 @@ public class TimetableFacadeTest {
 
         assertThatExceptionOfType(
                 ConstraintViolationException.class).isThrownBy(
-                () -> timetableFacade.rescheduleOnce(invalidSchedule, null,
+                () -> timetableFacade.rescheduleSingle(invalidSchedule, null,
                         invalidOption));
     }
 
@@ -1295,7 +1300,7 @@ public class TimetableFacadeTest {
         given(scheduleService.save(any(Schedule.class))).willReturn(expected);
 
         Schedule actual =
-                timetableFacade.rescheduleOnce(expected, date, option);
+                timetableFacade.rescheduleSingle(expected, date, option);
 
         then(scheduleService).should().save(expected);
         assertThat(actual).isEqualTo(expected);
@@ -1310,8 +1315,8 @@ public class TimetableFacadeTest {
 
         assertThatExceptionOfType(
                 ConstraintViolationException.class).isThrownBy(
-                () -> timetableFacade.reschedulePermanently(invalidSchedule,
-                        null, invalidOption));
+                () -> timetableFacade.rescheduleRecurring(invalidSchedule, null,
+                        invalidOption));
     }
 
     /*
@@ -1347,12 +1352,7 @@ public class TimetableFacadeTest {
                 any(LocalDate.class))).willReturn(expected);
 
         List<Schedule> actual = null;
-        try {
-            actual = timetableFacade.reschedulePermanently(candidate, date,
-                    option);
-        } catch (ServiceException e) {
-            fail();
-        }
+        actual = timetableFacade.rescheduleRecurring(candidate, date, option);
 
         then(templateService).should().findById(id);
         assertThat(underlyingTemplate.getWeekParity()).isFalse();
@@ -1370,12 +1370,12 @@ public class TimetableFacadeTest {
     }
 
     @Test
-    public void reschedulePermanentlyShouldThrowServiceExceptionIfTemplateNotFound() {
+    public void reschedulePermanentlyShouldThrowNotFoundExceptionIfTemplateNotFound() {
 
         given(templateService.findById(anyLong())).willReturn(Optional.empty());
 
-        assertThatExceptionOfType(ServiceException.class).isThrownBy(
-                () -> timetableFacade.reschedulePermanently(schedule,
+        assertThatExceptionOfType(NotFoundException.class).isThrownBy(
+                () -> timetableFacade.rescheduleRecurring(schedule,
                         LocalDate.MAX, option))
                 .withMessage("Template with ID(1) could not be found");
     }

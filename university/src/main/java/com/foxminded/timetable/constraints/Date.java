@@ -2,8 +2,7 @@ package com.foxminded.timetable.constraints;
 
 import com.foxminded.timetable.constraints.validators.DateValidator;
 
-import javax.validation.Constraint;
-import javax.validation.Payload;
+import javax.validation.*;
 import java.lang.annotation.*;
 
 /**

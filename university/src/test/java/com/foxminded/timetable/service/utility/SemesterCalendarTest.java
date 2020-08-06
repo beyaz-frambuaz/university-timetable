@@ -1,13 +1,10 @@
 package com.foxminded.timetable.service.utility;
 
-import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.*;
 import org.junit.jupiter.params.ParameterizedTest;
-import org.junit.jupiter.params.provider.CsvSource;
-import org.junit.jupiter.params.provider.ValueSource;
+import org.junit.jupiter.params.provider.*;
 
-import java.time.DayOfWeek;
-import java.time.LocalDate;
+import java.time.*;
 
 import static org.assertj.core.api.Assertions.assertThat;
 

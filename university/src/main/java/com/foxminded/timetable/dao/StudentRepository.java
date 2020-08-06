@@ -1,7 +1,6 @@
 package com.foxminded.timetable.dao;
 
-import com.foxminded.timetable.model.Group;
-import com.foxminded.timetable.model.Student;
+import com.foxminded.timetable.model.*;
 import org.springframework.data.jpa.repository.JpaRepository;
 
 import java.util.List;

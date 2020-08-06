@@ -6,18 +6,18 @@
 <body>
 
 <!-- Rebuild timetable form modal -->
-<div class="modal fade" id="rebuild-timetable-modal" tabindex="-1" role="dialog"
-     aria-labelledby="rebuild-timetable-label" aria-hidden="true">
+<div aria-hidden="true" aria-labelledby="rebuild-timetable-label" class="modal fade" id="rebuild-timetable-modal"
+     role="dialog" tabindex="-1">
 	<div class="modal-dialog modal-dialog-centered" role="document">
 		<div class="modal-content">
 
 			<!--Header-->
 			<div class="modal-header">
-				<h5 id="rebuild-timetable-label" class="modal-title">
+				<h5 class="modal-title" id="rebuild-timetable-label">
 					<i class="fas fa-hammer"></i>
 					Rebuild timetable confirmation
 				</h5>
-				<button type="button" class="close" data-dismiss="modal" aria-label="Close">
+				<button aria-label="Close" class="close" data-dismiss="modal" type="button">
 					<span aria-hidden="true">&times;</span>
 				</button>
 			</div>
@@ -36,8 +36,8 @@
 
 			<!--Submit-->
 			<div class="modal-footer">
-				<form action="#" th:action="@{/timetable/management/rebuild-timetable}" method="post">
-					<button type="submit" class="btn btn-outline-primary">Confirm</button>
+				<form action="#" method="post" th:action="@{/timetable/management/rebuild-timetable}">
+					<button class="btn btn-outline-primary" type="submit">Confirm</button>
 				</form>
 			</div>
 
@@ -47,18 +47,18 @@
 </div>
 
 <!-- Refresh all data form modal -->
-<div class="modal fade" id="refresh-all-data-modal" tabindex="-1" role="dialog"
-     aria-labelledby="refresh-all-data-label" aria-hidden="true">
+<div aria-hidden="true" aria-labelledby="refresh-all-data-label" class="modal fade" id="refresh-all-data-modal"
+     role="dialog" tabindex="-1">
 	<div class="modal-dialog modal-dialog-centered" role="document">
 		<div class="modal-content">
 
 			<!--Header-->
 			<div class="modal-header">
-				<h5 id="refresh-all-data-label" class="modal-title">
+				<h5 class="modal-title" id="refresh-all-data-label">
 					<i class="fas fa-sync-alt"></i>
 					Refresh all data confirmation
 				</h5>
-				<button type="button" class="close" data-dismiss="modal" aria-label="Close">
+				<button aria-label="Close" class="close" data-dismiss="modal" type="button">
 					<span aria-hidden="true">&times;</span>
 				</button>
 			</div>
@@ -74,8 +74,8 @@
 
 			<!--Submit-->
 			<div class="modal-footer">
-				<form action="#" th:action="@{/timetable/management/refresh-all-data}" method="post">
-					<button type="submit" class="btn btn-outline-primary">Confirm</button>
+				<form action="#" method="post" th:action="@{/timetable/management/refresh-all-data}">
+					<button class="btn btn-outline-primary" type="submit">Confirm</button>
 				</form>
 			</div>
 
@@ -85,7 +85,7 @@
 </div>
 
 <!--Info alert modal-->
-<div class="modal fade" id="infoAlert" tabindex="-1" role="dialog" aria-labelledby="info-alert" aria-hidden="true">
+<div aria-hidden="true" aria-labelledby="info-alert" class="modal fade" id="infoAlert" role="dialog" tabindex="-1">
 	<div class="modal-dialog modal-dialog-centered" role="document">
 		<div class="modal-content">
 
@@ -95,7 +95,7 @@
 					<i class="fas fa-info-circle"></i>
 					Info
 				</h5>
-				<button type="button" class="close" data-dismiss="modal" aria-label="Close">
+				<button aria-label="Close" class="close" data-dismiss="modal" type="button">
 					<span aria-hidden="true">&times;</span>
 				</button>
 			</div>
@@ -135,30 +135,30 @@
 		<div class="col">
 
 			<!-- Alert Success -->
-			<div th:if="${!successAlert.isEmpty()}" class="alert alert-dismissible alert-success">
-				<button type="button" class="close" data-dismiss="alert">&times;</button>
+			<div class="alert alert-dismissible alert-success" th:if="${!successAlert.isEmpty()}">
+				<button class="close" data-dismiss="alert" type="button">&times;</button>
 				<h4 class="alert-heading">
 					<i class="fas fa-check-circle"></i>
 					Done!
 				</h4>
-				<p th:text="${successAlert}" class="mb-0">Message</p>
+				<p class="mb-0" th:text="${successAlert}">Message</p>
 			</div>
 
 			<!-- Alert Error -->
-			<div th:if="${!errorAlert.isEmpty()}" class="alert alert-dismissible alert-danger">
-				<button type="button" class="close" data-dismiss="alert">&times;</button>
+			<div class="alert alert-dismissible alert-danger" th:if="${!errorAlert.isEmpty()}">
+				<button class="close" data-dismiss="alert" type="button">&times;</button>
 				<h4 class="alert-heading">
 					<i class="fas fa-exclamation-circle"></i>
 					Error!
 				</h4>
-				<p th:text="${errorAlert}" class="mb-0">Message</p>
+				<p class="mb-0" th:text="${errorAlert}">Message</p>
 				<p>We've logged the error and will resolve it ASAP. In the meantime, please try to submit the form again.</p>
 			</div>
 
 			<h1>Welcome!
-				<span type="button" data-toggle="modal" data-target="#infoAlert">
-					<h3 class="fas fa-info-circle icon-hover ml-2" data-toggle="tooltip" data-placement="right"
-					    data-container="body" title="Info"></h3>
+				<span data-target="#infoAlert" data-toggle="modal" type="button">
+					<h3 class="fas fa-info-circle icon-hover ml-2" data-container="body" data-placement="right"
+					    data-toggle="tooltip" title="Info"></h3>
 				</span>
 			</h1>
 			<p class="text-warning">
@@ -169,18 +169,18 @@
 
 			<!-- Rebuild/refresh data buttons -->
 			<div class="row">
-				<div class="col-auto" data-toggle="modal" data-target="#rebuild-timetable-modal">
-					<button type="button" class="btn btn-outline-warning" data-toggle="tooltip" data-placement="bottom"
-					        data-container="body"
-					        title="Erase all timetable data and generate afresh">
+				<div class="col-auto" data-target="#rebuild-timetable-modal" data-toggle="modal">
+					<button class="btn btn-outline-warning" data-container="body" data-placement="bottom" data-toggle="tooltip"
+					        title="Erase all timetable data and generate afresh"
+					        type="button">
 						<i class="fas fa-hammer"></i>
 						Rebuild timetable
 					</button>
 				</div>
-				<div class="col-auto" data-toggle="modal" data-target="#refresh-all-data-modal">
-					<button type="button" class="btn btn-outline-danger" data-toggle="tooltip" data-placement="bottom"
-					        data-container="body"
-					        title="Erase all timetable and university data and generate afresh">
+				<div class="col-auto" data-target="#refresh-all-data-modal" data-toggle="modal">
+					<button class="btn btn-outline-danger" data-container="body" data-placement="bottom" data-toggle="tooltip"
+					        title="Erase all timetable and university data and generate afresh"
+					        type="button">
 						<i class="fas fa-sync-alt fa-spin"></i>
 						Refresh all data
 					</button>

@@ -21,23 +21,23 @@
 			<div class="accordion shadow" id="courseList">
 
 				<div th:each="courseAttendees : ${allCourseAttendees}">
-					<button class="list-group-item list-group-item-action btn" id="course1"
-					        th:id="'course' + *{courseAttendees.key.id}"
-					        type="button"
-					        data-toggle="collapse"
+					<button aria-controls="studentsCourse1" class="list-group-item list-group-item-action btn"
 					        data-target="#studentsCourse1"
-					        aria-controls="studentsCourse1"
+					        data-toggle="collapse"
+					        id="course1"
 					        th:attr="data-target='#studentsCourse' + *{courseAttendees.key.id},
-					                 aria-controls='studentsCourse' + *{courseAttendees.key.id}">
+					                 aria-controls='studentsCourse' + *{courseAttendees.key.id}"
+					        th:id="'course' + *{courseAttendees.key.id}"
+					        type="button">
 						<span th:text="*{courseAttendees.key.name}">Course</span>
-						<small th:text="'(' + *{courseAttendees.value.size()} + ' attendees)'" class="text-muted ml-4">(300
+						<small class="text-muted ml-4" th:text="'(' + *{courseAttendees.value.size()} + ' attendees)'">(300
 							attendees)</small>
 					</button>
 
-					<div id="studentsCourse1" th:id="'studentsCourse' + *{courseAttendees.key.id}"
-					     class="collapse course-attendees-container list-group"
-					     aria-labelledby="course1" th:attr="aria-labelledby='course' + *{courseAttendees.key.id}"
-					     data-parent="#courseList">
+					<div aria-labelledby="course1" class="collapse course-attendees-container list-group"
+					     data-parent="#courseList"
+					     id="studentsCourse1" th:attr="aria-labelledby='course' + *{courseAttendees.key.id}"
+					     th:id="'studentsCourse' + *{courseAttendees.key.id}">
 
 						<div class="schedule-row no-border my-2">
 
@@ -45,11 +45,11 @@
 
 								<div class="list-group-item d-flex justify-content-between">
 									<div>
-										<span th:text="'ID: ' + *{student.id}" class="badge badge-pill badge-light">ID: 1</span>
-										<span th:text="*{student.fullName}" class="pl-2">Name One</span>
+										<span class="badge badge-pill badge-light" th:text="'ID: ' + *{student.id}">ID: 1</span>
+										<span class="pl-2" th:text="*{student.fullName}">Name One</span>
 									</div>
 									<div>
-										<span th:text="*{student.group.name}" class="badge badge-pill badge-secondary">G-01</span>
+										<span class="badge badge-pill badge-secondary" th:text="*{student.group.name}">G-01</span>
 									</div>
 								</div>
 

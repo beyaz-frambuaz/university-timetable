@@ -36,8 +36,8 @@ class IndexControllerTest {
 
         mvc.perform(get("/"))
                 .andExpect(status().isOk())
-                .andExpect(request()
-                        .sessionAttributeDoesNotExist("student", "professor"));
+                .andExpect(request().sessionAttributeDoesNotExist("student",
+                        "professor"));
     }
 
 }
