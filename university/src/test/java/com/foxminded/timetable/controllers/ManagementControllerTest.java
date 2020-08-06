@@ -1,17 +1,16 @@
 package com.foxminded.timetable.controllers;
 
-import com.foxminded.timetable.exceptions.NotFoundException;
-import com.foxminded.timetable.exceptions.ServiceException;
+import com.foxminded.timetable.config.ControllersTestConfig;
+import com.foxminded.timetable.exceptions.*;
 import com.foxminded.timetable.forms.*;
 import com.foxminded.timetable.forms.utility.*;
-import com.foxminded.timetable.forms.utility.formatter.OptionsFormatter;
-import com.foxminded.timetable.forms.utility.formatter.ScheduleFormatter;
+import com.foxminded.timetable.forms.utility.formatter.*;
+import com.foxminded.timetable.model.Period;
 import com.foxminded.timetable.model.*;
 import com.foxminded.timetable.service.TimetableFacade;
 import com.foxminded.timetable.service.model.generator.DataGenerator;
 import com.foxminded.timetable.service.utility.SemesterCalendar;
-import com.foxminded.timetable.service.utility.predicates.SchedulePredicate;
-import com.foxminded.timetable.service.utility.predicates.SchedulePredicateNoFilter;
+import com.foxminded.timetable.service.utility.predicates.*;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.ValueSource;
@@ -19,26 +18,19 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.context.annotation.Import;
-import org.springframework.test.web.servlet.MockMvc;
-import org.springframework.test.web.servlet.MvcResult;
-import org.springframework.test.web.servlet.RequestBuilder;
+import org.springframework.test.web.servlet.*;
 import org.springframework.validation.BindException;
 
 import javax.validation.ConstraintViolationException;
-import java.time.DayOfWeek;
-import java.time.LocalDate;
-import java.util.Collections;
-import java.util.List;
-import java.util.Optional;
+import java.time.*;
+import java.util.*;
 
-import static org.assertj.core.api.Assertions.assertThat;
-import static org.assertj.core.api.Assertions.assertThatExceptionOfType;
+import static org.assertj.core.api.Assertions.*;
 import static org.mockito.ArgumentMatchers.*;
-import static org.mockito.BDDMockito.given;
-import static org.mockito.BDDMockito.then;
+import static org.mockito.BDDMockito.*;
 import static org.mockito.Mockito.mock;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.request;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
 @WebMvcTest(ManagementController.class)
@@ -230,8 +222,8 @@ class ManagementControllerTest {
         scheduleForm.setId(id);
 
         RequestBuilder requestBuilder =
-                post("/timetable/management/schedule")
-                        .flashAttr("scheduleForm", scheduleForm);
+                post("/timetable/management/schedule").flashAttr("scheduleForm",
+                        scheduleForm);
         MvcResult mvcResult = mvc.perform(requestBuilder)
                 .andExpect(status().is3xxRedirection())
                 .andExpect(flash().attributeExists("errorAlert"))
@@ -822,7 +814,7 @@ class ManagementControllerTest {
         given(timetableFacade.getOption(anyLong())).willReturn(
                 Optional.of(option));
 
-        given(timetableFacade.rescheduleOnce(any(Schedule.class),
+        given(timetableFacade.rescheduleSingle(any(Schedule.class),
                 any(LocalDate.class),
                 any(ReschedulingOption.class))).willReturn(schedule);
         List<Schedule> affected = Collections.singletonList(schedule);
@@ -836,7 +828,7 @@ class ManagementControllerTest {
 
         then(timetableFacade).should().getSchedule(scheduleId);
         then(timetableFacade).should().getOption(optionId);
-        then(timetableFacade).should().rescheduleOnce(schedule, date, option);
+        then(timetableFacade).should().rescheduleSingle(schedule, date, option);
     }
 
     @Test
@@ -867,7 +859,7 @@ class ManagementControllerTest {
                 Optional.of(option));
 
         List<Schedule> affected = Collections.singletonList(schedule);
-        given(timetableFacade.reschedulePermanently(any(Schedule.class),
+        given(timetableFacade.rescheduleRecurring(any(Schedule.class),
                 any(LocalDate.class),
                 any(ReschedulingOption.class))).willReturn(affected);
 
@@ -881,58 +873,7 @@ class ManagementControllerTest {
         then(timetableFacade).should().getSchedule(scheduleId);
         then(timetableFacade).should().getOption(optionId);
         then(timetableFacade).should()
-                .reschedulePermanently(schedule, date, option);
-    }
-
-    @Test
-    public void postRescheduleShouldRequestServiceToReschedulePermanentlyAndRethrowException()
-            throws Exception {
-
-        long scheduleId = 1L;
-        long optionId = 2L;
-        LocalDate date = LocalDate.MAX;
-        RescheduleForm form = new RescheduleForm();
-        form.setScheduleId(scheduleId);
-        form.setOptionId(optionId);
-        form.setRescheduleFormOption(RescheduleFormOption.PERMANENTLY);
-        form.setDate(date.toString());
-
-        Auditorium auditorium = new Auditorium("");
-        Course course = new Course("");
-        Group group = new Group("");
-        Professor professor = new Professor("", "");
-        Schedule schedule =
-                new Schedule(scheduleId, null, date, DayOfWeek.MONDAY,
-                        Period.FIRST, auditorium, course, group, professor);
-        given(timetableFacade.getSchedule(anyLong())).willReturn(
-                Optional.of(schedule));
-
-        ReschedulingOption option = mock(ReschedulingOption.class);
-        given(timetableFacade.getOption(anyLong())).willReturn(
-                Optional.of(option));
-
-        given(timetableFacade.reschedulePermanently(any(Schedule.class),
-                any(LocalDate.class), any(ReschedulingOption.class))).willThrow(
-                new ServiceException(""));
-
-        MvcResult mvcResult = mvc.perform(
-                post("/timetable/management/schedule/reschedule").flashAttr(
-                        "rescheduleForm", form))
-                .andExpect(status().is3xxRedirection())
-                .andExpect(flash().attributeExists("errorAlert"))
-                .andExpect(redirectedUrl("/timetable/management/home"))
-                .andReturn();
-
-        Optional<NotFoundException> exception = Optional.ofNullable(
-                (NotFoundException) mvcResult.getResolvedException());
-        assertThat(exception).isPresent()
-                .containsInstanceOf(NotFoundException.class);
-
-        then(timetableFacade).should().getSchedule(scheduleId);
-        then(timetableFacade).should().getOption(optionId);
-        assertThatExceptionOfType(ServiceException.class).isThrownBy(
-                () -> timetableFacade.reschedulePermanently(schedule, date,
-                        option));
+                .rescheduleRecurring(schedule, date, option);
     }
 
 }

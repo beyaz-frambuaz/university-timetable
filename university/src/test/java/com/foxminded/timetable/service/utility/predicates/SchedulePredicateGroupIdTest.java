@@ -1,9 +1,7 @@
 package com.foxminded.timetable.service.utility.predicates;
 
-import com.foxminded.timetable.model.Group;
-import com.foxminded.timetable.model.Schedule;
-import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.api.Test;
+import com.foxminded.timetable.model.*;
+import org.junit.jupiter.api.*;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.junit.jupiter.MockitoExtension;
 
@@ -14,8 +12,8 @@ import static org.mockito.Mockito.mock;
 @ExtendWith(MockitoExtension.class)
 class SchedulePredicateGroupIdTest {
 
-    private final long              id = 1L;
-    private       SchedulePredicate predicate;
+    private final long id = 1L;
+    private SchedulePredicate predicate;
 
     @BeforeEach
     private void setUp() {
@@ -34,8 +32,7 @@ class SchedulePredicateGroupIdTest {
         long unexpectedId = 2L;
         Group unexpectedGroup = mock(Group.class);
         Schedule unexpectedSchedule = mock(Schedule.class);
-        given(unexpectedSchedule.getGroup()).willReturn(
-                unexpectedGroup);
+        given(unexpectedSchedule.getGroup()).willReturn(unexpectedGroup);
         given(unexpectedGroup.getId()).willReturn(unexpectedId);
 
         assertThat(predicate.test(expectedSchedule)).isTrue();

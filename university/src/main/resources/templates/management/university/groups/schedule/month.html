@@ -15,14 +15,14 @@
 	<div class="row align-items-center">
 		<div class="col">
 
-			<a href="#" th:href="@{/timetable/management/university/groups}" class="btn btn-outline-secondary btn-sm mb-3">
+			<a class="btn btn-outline-secondary btn-sm mb-3" href="#" th:href="@{/timetable/management/university/groups}">
 				<i class="fas fa-angle-left"></i>
 				Back
 			</a>
 
 			<h1 th:text="|Group ${group.name} schedule|">Group schedule</h1>
 			<h6 th:text="'Month of ' + ${monthSchedule.monthDescription}">For month ...</h6>
-			<p th:text="${monthSchedule.weekSchedules.isEmpty()}? 'No classes!' : _" class="text-warning"></p>
+			<p class="text-warning" th:text="${monthSchedule.weekSchedules.isEmpty()}? 'No classes!' : _"></p>
 			<br>
 
 			<div th:replace="layout :: monthSchedule"></div>

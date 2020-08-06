@@ -1,7 +1,7 @@
 package com.foxminded.timetable.service;
 
 import com.foxminded.timetable.constraints.IdValid;
-import com.foxminded.timetable.exceptions.ServiceException;
+import com.foxminded.timetable.exceptions.NotFoundException;
 import com.foxminded.timetable.model.*;
 import com.foxminded.timetable.service.utility.SemesterCalendar;
 import com.foxminded.timetable.service.utility.predicates.SchedulePredicate;
@@ -12,11 +12,10 @@ import org.springframework.validation.annotation.Validated;
 
 import javax.transaction.Transactional;
 import javax.validation.Valid;
-import javax.validation.constraints.NotNull;
+import javax.validation.constraints.*;
 import java.time.LocalDate;
 import java.util.*;
-import java.util.function.Function;
-import java.util.function.Predicate;
+import java.util.function.*;
 import java.util.stream.Collectors;
 
 @Service
@@ -188,6 +187,11 @@ public class TimetableFacade {
         return professorService.findAll();
     }
 
+    public List<Professor> getProfessorsTeaching(@Valid Course course) {
+
+        return professorService.findAllByCourse(course);
+    }
+
     public List<Professor> getAvailableProfessors(@NotNull LocalDate date,
             @NotNull Period period) {
 
@@ -226,7 +230,7 @@ public class TimetableFacade {
     }
 
     public List<ReschedulingOption> getOptionsForWeek(
-            @NotNull @Valid Schedule candidate, int semesterWeek) {
+            @NotNull @Valid Schedule candidate, @Min(1) int semesterWeek) {
 
         if (!semesterCalendar.isSemesterWeek(semesterWeek)) {
             return Collections.emptyList();
@@ -270,31 +274,33 @@ public class TimetableFacade {
             List<Schedule> schedules) {
 
         return option -> schedules.parallelStream()
-                .filter(schedule -> schedule.getDay().equals(option.getDay()))
+                .filter(schedule -> schedule.getDay().equals(option.getDay())
+                        && schedule.getPeriod() == option.getPeriod())
                 .noneMatch(scheduleBusy(candidate, option))
                 && templates.parallelStream()
-                .filter(template -> template.getDay().equals(option.getDay()))
+                .filter(template -> template.getDay().equals(option.getDay())
+                        && template.getPeriod() == option.getPeriod())
                 .noneMatch(templateBusy(candidate, option));
     }
 
     private Predicate<Schedule> scheduleBusy(Schedule candidate,
             ReschedulingOption option) {
 
-        return schedule -> schedule.getPeriod() == option.getPeriod() && (
-                schedule.getAuditorium().equals(option.getAuditorium()) || (
-                        schedule.getGroup().equals(candidate.getGroup())
-                                || schedule.getProfessor()
-                                .equals(candidate.getProfessor())));
+        return schedule ->
+                schedule.getAuditorium().equals(option.getAuditorium())
+                        || schedule.getGroup().equals(candidate.getGroup())
+                        || schedule.getProfessor()
+                        .equals(candidate.getProfessor());
     }
 
     private Predicate<ScheduleTemplate> templateBusy(Schedule candidate,
             ReschedulingOption option) {
 
-        return template -> template.getPeriod() == option.getPeriod() && (
-                template.getAuditorium().equals(option.getAuditorium()) || (
-                        template.getGroup().equals(candidate.getGroup())
-                                || template.getProfessor()
-                                .equals(candidate.getProfessor())));
+        return template ->
+                template.getAuditorium().equals(option.getAuditorium())
+                        || template.getGroup().equals(candidate.getGroup())
+                        || template.getProfessor()
+                        .equals(candidate.getProfessor());
     }
 
     public void deleteAllOptions() {
@@ -422,7 +428,7 @@ public class TimetableFacade {
         return scheduleService.save(schedule);
     }
 
-    public Schedule rescheduleOnce(@NotNull @Valid Schedule candidate,
+    public Schedule rescheduleSingle(@NotNull @Valid Schedule candidate,
             @NotNull LocalDate targetDate,
             @NotNull @Valid ReschedulingOption targetOption) {
 
@@ -435,21 +441,30 @@ public class TimetableFacade {
         return scheduleService.save(candidate);
     }
 
-    public List<Schedule> reschedulePermanently(
+    public boolean isValidToReschedule(@NotNull @Valid Schedule candidate) {
+
+        return scheduleService.findAllInRange(candidate.getDate(),
+                candidate.getDate())
+                .stream()
+                .filter(schedule -> schedule.getPeriod()
+                        == candidate.getPeriod())
+                .noneMatch(schedule -> schedule.getAuditorium()
+                        .equals(candidate.getAuditorium())
+                        || schedule.getGroup().equals(candidate.getGroup())
+                        || schedule.getProfessor()
+                        .equals(candidate.getProfessor()));
+    }
+
+    public List<Schedule> rescheduleRecurring(
             @NotNull @Valid Schedule candidate, @NotNull LocalDate targetDate,
-            @NotNull @Valid ReschedulingOption targetOption)
-            throws ServiceException {
+            @NotNull @Valid ReschedulingOption targetOption) {
 
         log.debug("Getting underlying template to reschedule permanently");
-        Optional<ScheduleTemplate> templateOptional =
-                templateService.findById(candidate.getTemplate().getId());
-
-        if (!templateOptional.isPresent()) {
-            throw new ServiceException(
-                    "Template with ID(" + candidate.getTemplate().getId()
-                            + ") could not be found");
-        }
-        ScheduleTemplate template = templateOptional.get();
+        ScheduleTemplate template =
+                templateService.findById(candidate.getTemplate().getId())
+                        .orElseThrow(() -> new NotFoundException(
+                                "Template with ID(" + candidate.getTemplate()
+                                        .getId() + ") could not be found"));
 
         log.debug("Updating template");
         boolean weekParity = semesterCalendar.getWeekParityOf(targetDate);

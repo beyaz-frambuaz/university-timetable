@@ -1,20 +1,13 @@
 package com.foxminded.timetable.forms.utility.formatter;
 
-import com.foxminded.timetable.forms.utility.DaySchedule;
-import com.foxminded.timetable.forms.utility.MonthSchedule;
-import com.foxminded.timetable.forms.utility.TwoWeekSchedule;
-import com.foxminded.timetable.forms.utility.WeekSchedule;
-import com.foxminded.timetable.model.Period;
-import com.foxminded.timetable.model.Schedule;
-import com.foxminded.timetable.model.ScheduleTemplate;
+import com.foxminded.timetable.forms.utility.*;
+import com.foxminded.timetable.model.*;
 import com.foxminded.timetable.service.TimetableFacade;
 import com.foxminded.timetable.service.utility.SemesterCalendar;
-import com.foxminded.timetable.service.utility.predicates.SchedulePredicate;
-import com.foxminded.timetable.service.utility.predicates.SchedulePredicateNoFilter;
+import com.foxminded.timetable.service.utility.predicates.*;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
-import org.mockito.InjectMocks;
-import org.mockito.Mock;
+import org.mockito.*;
 import org.mockito.junit.jupiter.MockitoExtension;
 
 import java.time.LocalDate;
@@ -22,23 +15,22 @@ import java.util.*;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.BDDMockito.given;
-import static org.mockito.BDDMockito.then;
+import static org.mockito.BDDMockito.*;
 import static org.mockito.Mockito.*;
 
 @ExtendWith(MockitoExtension.class)
 class ScheduleFormatterTest {
 
     private final SchedulePredicate predicate = new SchedulePredicateNoFilter();
-    private final LocalDate         start     = LocalDate.of(2020, 1, 1);
-    private final LocalDate         end       = LocalDate.of(2020, 1, 2);
-    private final boolean           filtered  = false;
+    private final LocalDate start = LocalDate.of(2020, 1, 1);
+    private final LocalDate end = LocalDate.of(2020, 1, 2);
+    private final boolean filtered = false;
     @Mock
-    private       TimetableFacade   timetableFacade;
+    private TimetableFacade timetableFacade;
     @Mock
-    private       SemesterCalendar  semesterCalendar;
+    private SemesterCalendar semesterCalendar;
     @InjectMocks
-    private       ScheduleFormatter formatter;
+    private ScheduleFormatter formatter;
 
     @Test
     public void prepareDayScheduleShouldRequestFilteredSchedulesFromServiceWhenFilteredIsTrue() {

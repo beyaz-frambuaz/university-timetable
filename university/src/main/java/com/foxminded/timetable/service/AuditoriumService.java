@@ -1,15 +1,13 @@
 package com.foxminded.timetable.service;
 
 import com.foxminded.timetable.dao.AuditoriumRepository;
-import com.foxminded.timetable.model.Auditorium;
-import com.foxminded.timetable.model.Period;
+import com.foxminded.timetable.model.*;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDate;
-import java.util.List;
-import java.util.Optional;
+import java.util.*;
 
 @Slf4j
 @Service
@@ -70,4 +68,5 @@ public class AuditoriumService {
         log.debug("Removing all auditoriums");
         repository.deleteAllInBatch();
     }
+
 }

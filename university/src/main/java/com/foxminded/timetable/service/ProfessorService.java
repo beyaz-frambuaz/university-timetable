@@ -1,15 +1,13 @@
 package com.foxminded.timetable.service;
 
 import com.foxminded.timetable.dao.ProfessorRepository;
-import com.foxminded.timetable.model.Period;
-import com.foxminded.timetable.model.Professor;
+import com.foxminded.timetable.model.*;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDate;
-import java.util.List;
-import java.util.Optional;
+import java.util.*;
 
 @Slf4j
 @Service
@@ -51,6 +49,12 @@ public class ProfessorService {
 
         log.debug("Fetching professor ID{} from repository", id);
         return repository.findById(id);
+    }
+
+    public List<Professor> findAllByCourse(Course course) {
+
+        log.debug("Fetching professors teaching {}", course);
+        return repository.findAllByCourses(course);
     }
 
     public List<Professor> findAvailableFor(LocalDate date, Period period) {

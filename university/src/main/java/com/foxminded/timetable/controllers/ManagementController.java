@@ -1,15 +1,10 @@
 package com.foxminded.timetable.controllers;
 
 import com.foxminded.timetable.exceptions.NotFoundException;
-import com.foxminded.timetable.exceptions.ServiceException;
 import com.foxminded.timetable.forms.*;
 import com.foxminded.timetable.forms.utility.*;
-import com.foxminded.timetable.forms.utility.formatter.OptionsFormatter;
-import com.foxminded.timetable.forms.utility.formatter.ScheduleFormatter;
-import com.foxminded.timetable.model.Auditorium;
-import com.foxminded.timetable.model.Professor;
-import com.foxminded.timetable.model.ReschedulingOption;
-import com.foxminded.timetable.model.Schedule;
+import com.foxminded.timetable.forms.utility.formatter.*;
+import com.foxminded.timetable.model.*;
 import com.foxminded.timetable.service.TimetableFacade;
 import com.foxminded.timetable.service.model.generator.DataGenerator;
 import com.foxminded.timetable.service.utility.SemesterCalendar;
@@ -18,21 +13,16 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.validation.BindException;
-import org.springframework.validation.ObjectError;
+import org.springframework.validation.*;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import javax.servlet.http.HttpSession;
-import javax.validation.ConstraintViolation;
-import javax.validation.ConstraintViolationException;
-import javax.validation.Valid;
+import javax.validation.*;
 import javax.validation.constraints.Min;
 import java.time.LocalDate;
-import java.util.Collections;
-import java.util.List;
-import java.util.Optional;
+import java.util.*;
 import java.util.stream.Collectors;
 
 @Controller
@@ -306,24 +296,20 @@ public class ManagementController {
                     schedule.getGroup().getName(),
                     schedule.getProfessor().getFullName());
             affected = Collections.singletonList(
-                    timetableFacade.rescheduleOnce(schedule,
+                    timetableFacade.rescheduleSingle(schedule,
                             rescheduleForm.getLocalDate(), option));
         }
         if (rescheduleForm.getRescheduleFormOption()
                 == RescheduleFormOption.PERMANENTLY) {
 
-            try {
-                message = String.format("All by-weekly occurrences of course "
-                                + "%s for group %s with professor %s have been "
-                                + "moved. See table below for details",
-                        schedule.getCourse().getName(),
-                        schedule.getGroup().getName(),
-                        schedule.getProfessor().getFullName());
-                affected = timetableFacade.reschedulePermanently(schedule,
-                        rescheduleForm.getLocalDate(), option);
-            } catch (ServiceException e) {
-                throw new NotFoundException(e.getMessage());
-            }
+            message = String.format("All by-weekly occurrences of course "
+                            + "%s for group %s with professor %s have been "
+                            + "moved. See table below for details",
+                    schedule.getCourse().getName(),
+                    schedule.getGroup().getName(),
+                    schedule.getProfessor().getFullName());
+            affected = timetableFacade.rescheduleRecurring(schedule,
+                    rescheduleForm.getLocalDate(), option);
         }
         model.addAttribute("affected", affected);
         model.addAttribute("message", message);

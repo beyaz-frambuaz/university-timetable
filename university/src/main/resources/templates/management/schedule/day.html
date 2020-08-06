@@ -17,7 +17,7 @@
 
 			<h1>Entire schedule</h1>
 			<h6 th:text="'For ' + ${scheduleForm.getDateDescription()}">For date</h6>
-			<p th:text="${daySchedule.periodSchedules.isEmpty()}? 'No classes!' : _" class="text-warning"></p>
+			<p class="text-warning" th:text="${daySchedule.periodSchedules.isEmpty()}? 'No classes!' : _"></p>
 
 			<hr class="my-4">
 

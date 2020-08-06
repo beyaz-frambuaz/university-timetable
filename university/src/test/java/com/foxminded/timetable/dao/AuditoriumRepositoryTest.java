@@ -1,7 +1,6 @@
 package com.foxminded.timetable.dao;
 
-import com.foxminded.timetable.model.Auditorium;
-import com.foxminded.timetable.model.Period;
+import com.foxminded.timetable.model.*;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;

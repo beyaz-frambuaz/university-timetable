@@ -17,7 +17,7 @@
 
 			<h1>Entire schedule</h1>
 			<h6 th:text="'Month of ' + ${monthSchedule.monthDescription}">For week ...</h6>
-			<p th:text="${monthSchedule.weekSchedules.isEmpty()}? 'No classes!' : _" class="text-warning"></p>
+			<p class="text-warning" th:text="${monthSchedule.weekSchedules.isEmpty()}? 'No classes!' : _"></p>
 
 			<hr class="my-4">
 

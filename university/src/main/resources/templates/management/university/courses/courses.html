@@ -22,28 +22,28 @@
 		<div class="col">
 
 			<!-- Alert Success -->
-			<div th:if="${!successAlert.isEmpty()}" class="alert alert-dismissible alert-success">
-				<button type="button" class="close" data-dismiss="alert">&times;</button>
+			<div class="alert alert-dismissible alert-success" th:if="${!successAlert.isEmpty()}">
+				<button class="close" data-dismiss="alert" type="button">&times;</button>
 				<h4 class="alert-heading">
 					<i class="fas fa-check-circle"></i>
 					Done!
 				</h4>
-				<p th:text="${successAlert}" class="mb-0">Message</p>
+				<p class="mb-0" th:text="${successAlert}">Message</p>
 			</div>
 
 			<!-- Alert Error -->
-			<div th:if="${!errorAlert.isEmpty()}" class="alert alert-dismissible alert-danger">
-				<button type="button" class="close" data-dismiss="alert">&times;</button>
+			<div class="alert alert-dismissible alert-danger" th:if="${!errorAlert.isEmpty()}">
+				<button class="close" data-dismiss="alert" type="button">&times;</button>
 				<h4 class="alert-heading">
 					<i class="fas fa-exclamation-circle"></i>
 					Error!
 				</h4>
-				<p th:text="${errorAlert}" class="mb-0">Message</p>
+				<p class="mb-0" th:text="${errorAlert}">Message</p>
 			</div>
 
 			<h1>Courses
-				<span type="button" class="text-body ml-4" data-toggle="modal" data-target="#new-item-modal">
-					<h3 class="fas fa-plus-circle icon-hover" data-toggle="tooltip" data-placement="right" data-container="body"
+				<span class="text-body ml-4" data-target="#new-item-modal" data-toggle="modal" type="button">
+					<h3 class="fas fa-plus-circle icon-hover" data-container="body" data-placement="right" data-toggle="tooltip"
 					    title="Add new course"></h3>
 				</span>
 			</h1>
@@ -54,32 +54,32 @@
 				<div class="list-group">
 
 					<!-- Each course -->
-					<div th:each="course : ${courses}" class="schedule-row no-border">
+					<div class="schedule-row no-border" th:each="course : ${courses}">
 
 						<div class="col list-group-item d-flex justify-content-between"
 						     th:classappend="${course.id.toString() == editedId}? 'btn-success'">
 
 							<div>
-								<span th:text="'ID: ' + *{course.id}" class="badge badge-pill badge-light">ID: 1</span>
-								<span th:text="*{course.name}" class="pl-2">Name One</span>
+								<span class="badge badge-pill badge-light" th:text="'ID: ' + *{course.id}">ID: 1</span>
+								<span class="pl-2" th:text="*{course.name}">Name One</span>
 							</div>
 						</div>
 
-						<button type="button" class="btn btn-outline-secondary toggle-button" data-toggle="modal"
-						        data-target="#filtered-schedule-modal" data-title="Name One" data-id="1"
-						        th:attr="data-title=${course.name}, data-id=${course.id}">
+						<button class="btn btn-outline-secondary toggle-button" data-id="1" data-target="#filtered-schedule-modal"
+						        data-title="Name One" data-toggle="modal" th:attr="data-title=${course.name}, data-id=${course.id}"
+						        type="button">
 							View schedule
 						</button>
 
-						<button type="button" class="btn btn-outline-warning toggle-button" data-toggle="modal"
-						        data-target="#rename-modal" data-title="Name One" data-rename-id="1"
-						        th:attr="data-title=${course.name}, data-rename-id=${course.id}">
+						<button class="btn btn-outline-warning toggle-button" data-rename-id="1" data-target="#rename-modal"
+						        data-title="Name One" data-toggle="modal" th:attr="data-title=${course.name}, data-rename-id=${course.id}"
+						        type="button">
 							Rename
 						</button>
 
-						<button type="button" class="btn btn-outline-danger toggle-button" data-toggle="modal"
-						        data-target="#delete-modal" data-title="Name One" data-delete-id="1"
-						        th:attr="data-title=${course.name}, data-delete-id=${course.id}">
+						<button class="btn btn-outline-danger toggle-button" data-delete-id="1" data-target="#delete-modal"
+						        data-title="Name One" data-toggle="modal" th:attr="data-title=${course.name}, data-delete-id=${course.id}"
+						        type="button">
 							Delete
 						</button>
 

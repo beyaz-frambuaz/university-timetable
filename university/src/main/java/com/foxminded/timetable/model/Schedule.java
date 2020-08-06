@@ -1,15 +1,16 @@
 package com.foxminded.timetable.model;
 
+import com.fasterxml.jackson.annotation.*;
+import com.fasterxml.jackson.databind.annotation.*;
+import com.fasterxml.jackson.datatype.jsr310.deser.LocalDateDeserializer;
+import com.fasterxml.jackson.datatype.jsr310.ser.LocalDateSerializer;
 import com.foxminded.timetable.constraints.IdValid;
-import lombok.AllArgsConstructor;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import lombok.*;
 
 import javax.persistence.*;
 import javax.validation.Valid;
 import javax.validation.constraints.NotNull;
-import java.time.DayOfWeek;
-import java.time.LocalDate;
+import java.time.*;
 
 @Entity
 @Table(name = "schedules")
@@ -26,11 +27,14 @@ public class Schedule implements Comparable<Schedule> {
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn
-    @Valid
+    @JsonIgnore
     private ScheduleTemplate template;
 
     @Column(name = "on_date")
     @NotNull
+    @JsonFormat(pattern = "yyyy-MM-dd")
+    @JsonSerialize(using = LocalDateSerializer.class)
+    @JsonDeserialize(using = LocalDateDeserializer.class)
     private LocalDate date;
 
     @Enumerated(EnumType.STRING)

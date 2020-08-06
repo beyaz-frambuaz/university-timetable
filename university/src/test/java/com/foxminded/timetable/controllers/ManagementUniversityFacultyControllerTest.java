@@ -1,24 +1,18 @@
 package com.foxminded.timetable.controllers;
 
+import com.foxminded.timetable.config.ControllersTestConfig;
 import com.foxminded.timetable.forms.*;
-import com.foxminded.timetable.forms.utility.DaySchedule;
-import com.foxminded.timetable.forms.utility.MonthSchedule;
-import com.foxminded.timetable.forms.utility.WeekSchedule;
+import com.foxminded.timetable.forms.utility.*;
 import com.foxminded.timetable.forms.utility.formatter.ScheduleFormatter;
-import com.foxminded.timetable.model.Course;
-import com.foxminded.timetable.model.Professor;
-import com.foxminded.timetable.model.Student;
+import com.foxminded.timetable.model.*;
 import com.foxminded.timetable.service.TimetableFacade;
-import com.foxminded.timetable.service.utility.predicates.SchedulePredicate;
-import com.foxminded.timetable.service.utility.predicates.SchedulePredicateProfessorId;
+import com.foxminded.timetable.service.utility.predicates.*;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.context.annotation.Import;
-import org.springframework.test.web.servlet.MockMvc;
-import org.springframework.test.web.servlet.MvcResult;
-import org.springframework.test.web.servlet.RequestBuilder;
+import org.springframework.test.web.servlet.*;
 import org.springframework.validation.BindException;
 
 import javax.validation.ConstraintViolationException;
@@ -27,11 +21,9 @@ import java.util.*;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.ArgumentMatchers.*;
-import static org.mockito.BDDMockito.given;
-import static org.mockito.BDDMockito.then;
+import static org.mockito.BDDMockito.*;
 import static org.mockito.Mockito.mock;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
 @Import(ControllersTestConfig.class)

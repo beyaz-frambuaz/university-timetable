@@ -11,22 +11,22 @@
 	<div class="row align-items-center">
 		<div class="col">
 
-			<div th:if="${!sessionExpired.isEmpty()}" class="alert alert-dismissible alert-warning">
-				<button type="button" class="close" data-dismiss="alert">&times;</button>
+			<div class="alert alert-dismissible alert-warning" th:if="${!sessionExpired.isEmpty()}">
+				<button class="close" data-dismiss="alert" type="button">&times;</button>
 				<h4 class="alert-heading">
 					<i class="fas fa-exclamation-circle"></i>
 					Warning!
 				</h4>
-				<p th:text="${sessionExpired}" class="mb-0">Message</p>
+				<p class="mb-0" th:text="${sessionExpired}">Message</p>
 			</div>
 
-			<div th:if="${!errorAlert.isEmpty()}" class="alert alert-dismissible alert-danger">
-				<button type="button" class="close" data-dismiss="alert">&times;</button>
+			<div class="alert alert-dismissible alert-danger" th:if="${!errorAlert.isEmpty()}">
+				<button class="close" data-dismiss="alert" type="button">&times;</button>
 				<h4 class="alert-heading">
 					<i class="fas fa-exclamation-circle"></i>
 					Error!
 				</h4>
-				<p th:text="${errorAlert}" class="mb-0">Message</p>
+				<p class="mb-0" th:text="${errorAlert}">Message</p>
 			</div>
 
 			<h1>Select a student</h1>
@@ -34,21 +34,21 @@
 			<div class="student-select-container shadow">
 				<div class="list-group">
 
-					<form action="" th:action="@{/timetable/students/list}" method="post">
+					<form action="" method="post" th:action="@{/timetable/students/list}">
 						<div class="schedule-row no-border">
 
 							<div class="col-6" th:each="student, index : ${students}">
 
-								<input id="radioS" th:id="'student' + *{index}" type="radio" style="display: none" name="studentId"
-								       value="id" th:value="*{student.id}"
-								       onchange="this.form.submit()">
-								<label for="radioS" th:for="'student' + *{index}" class="list-group-item">
+								<input id="radioS" name="studentId" onchange="this.form.submit()" style="display: none" th:id="'student' + *{index}"
+								       th:value="*{student.id}" type="radio"
+								       value="id">
+								<label class="list-group-item" for="radioS" th:for="'student' + *{index}">
 									<span class="d-flex justify-content-between">
 										<span>
-											<span th:text="'ID: ' + *{student.id}" class="badge badge-pill badge-light">ID: 1</span>
-											<span th:text="*{student.fullName}" class="pl-2">Name One</span>
+											<span class="badge badge-pill badge-light" th:text="'ID: ' + *{student.id}">ID: 1</span>
+											<span class="pl-2" th:text="*{student.fullName}">Name One</span>
 										</span>
-											<span th:text="*{student.group.name}" class="badge badge-pill badge-secondary">G-01</span>
+											<span class="badge badge-pill badge-secondary" th:text="*{student.group.name}">G-01</span>
 									</span>
 								</label>
 

@@ -1,11 +1,9 @@
 package com.foxminded.timetable.forms.utility;
 
-import com.foxminded.timetable.model.Period;
-import com.foxminded.timetable.model.ScheduleTemplate;
+import com.foxminded.timetable.model.*;
 import lombok.Data;
 
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 @Data
 public class TwoWeekSchedule {

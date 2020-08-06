@@ -1,9 +1,7 @@
 package com.foxminded.timetable.model;
 
 import com.foxminded.timetable.constraints.IdValid;
-import lombok.AllArgsConstructor;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import lombok.*;
 import org.hibernate.annotations.Immutable;
 
 import javax.persistence.*;
@@ -39,6 +37,12 @@ public class ReschedulingOption implements Comparable<ReschedulingOption> {
     @Valid
     @NotNull
     private Auditorium auditorium;
+
+    public ReschedulingOption(DayOfWeek day, Period period,
+            Auditorium auditorium) {
+
+        this(null, day, period, auditorium);
+    }
 
     @Override
     public int compareTo(ReschedulingOption other) {

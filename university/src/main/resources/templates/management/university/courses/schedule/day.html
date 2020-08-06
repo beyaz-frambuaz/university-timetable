@@ -15,14 +15,14 @@
 	<div class="row align-items-center">
 		<div class="col">
 
-			<a href="#" th:href="@{/timetable/management/university/courses}" class="btn btn-outline-secondary btn-sm mb-3">
+			<a class="btn btn-outline-secondary btn-sm mb-3" href="#" th:href="@{/timetable/management/university/courses}">
 				<i class="fas fa-angle-left"></i>
 				Back
 			</a>
 
 			<h1 th:text="|Course ${course.name} schedule|">Course schedule</h1>
 			<h6 th:text="'For ' + ${scheduleForm.getDateDescription()}">For date</h6>
-			<p th:text="${daySchedule.periodSchedules.isEmpty()}? 'No classes!' : _" class="text-warning"></p>
+			<p class="text-warning" th:text="${daySchedule.periodSchedules.isEmpty()}? 'No classes!' : _"></p>
 
 			<div th:replace="layout :: daySchedule"></div>
 

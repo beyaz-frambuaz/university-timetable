@@ -1,21 +1,16 @@
 package com.foxminded.timetable.service;
 
-import com.foxminded.timetable.dao.ScheduleRepository;
-import com.foxminded.timetable.dao.ScheduleTemplateRepository;
-import com.foxminded.timetable.model.Schedule;
-import com.foxminded.timetable.model.ScheduleTemplate;
+import com.foxminded.timetable.dao.*;
+import com.foxminded.timetable.model.*;
 import com.foxminded.timetable.service.utility.SemesterCalendar;
 import com.foxminded.timetable.service.utility.predicates.SchedulePredicate;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
-import java.time.DayOfWeek;
-import java.time.LocalDate;
+import java.time.*;
 import java.time.temporal.ChronoUnit;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Optional;
+import java.util.*;
 
 import static java.util.stream.Collectors.toList;
 
@@ -48,8 +43,12 @@ public class ScheduleService {
     public List<Schedule> updateAllWithSameTemplateId(Schedule candidate,
             LocalDate targetDate) {
 
+        long templateId = candidate.getTemplate().getId();
+
+        log.debug("Fetching all schedules linked to template ID({})",
+                templateId);
         List<Schedule> allByTemplateId =
-                findAllByTemplateId(candidate.getTemplate().getId());
+                repository.findAllByTemplateId(templateId);
         long deltaDays =
                 ChronoUnit.DAYS.between(candidate.getDate(), targetDate);
 
@@ -61,13 +60,6 @@ public class ScheduleService {
         }
 
         return allByTemplateId;
-    }
-
-    private List<Schedule> findAllByTemplateId(long templateId) {
-
-        log.debug("Fetching all schedules linked to template ID({}) from "
-                + "repository", templateId);
-        return repository.findAllByTemplateId(templateId);
     }
 
     public Optional<Schedule> findById(long id) {

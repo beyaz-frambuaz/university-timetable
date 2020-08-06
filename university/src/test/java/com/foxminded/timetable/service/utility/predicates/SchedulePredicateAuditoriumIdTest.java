@@ -1,9 +1,7 @@
 package com.foxminded.timetable.service.utility.predicates;
 
-import com.foxminded.timetable.model.Auditorium;
-import com.foxminded.timetable.model.Schedule;
-import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.api.Test;
+import com.foxminded.timetable.model.*;
+import org.junit.jupiter.api.*;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.junit.jupiter.MockitoExtension;
 
@@ -14,8 +12,8 @@ import static org.mockito.Mockito.mock;
 @ExtendWith(MockitoExtension.class)
 class SchedulePredicateAuditoriumIdTest {
 
-    private final long              id = 1L;
-    private       SchedulePredicate predicate;
+    private final long id = 1L;
+    private SchedulePredicate predicate;
 
     @BeforeEach
     private void setUp() {

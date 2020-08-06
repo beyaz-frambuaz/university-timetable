@@ -1,17 +1,12 @@
 package com.foxminded.timetable.service.utility;
 
-import lombok.Getter;
+import lombok.*;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 
-import java.time.DayOfWeek;
-import java.time.LocalDate;
-import java.time.Month;
-import java.time.format.DateTimeFormatter;
-import java.time.format.FormatStyle;
-import java.time.format.TextStyle;
-import java.time.temporal.ChronoUnit;
-import java.time.temporal.IsoFields;
+import java.time.*;
+import java.time.format.*;
+import java.time.temporal.*;
 import java.util.Locale;
 
 @Getter
@@ -21,6 +16,7 @@ public class SemesterCalendar {
     private final LocalDate startDate;
     private final LocalDate endDate;
     private final Integer lengthInWeeks;
+    private Semester semester;
 
     public SemesterCalendar(
             @Value("${university.semester.start.date}") String startDate,
@@ -157,6 +153,24 @@ public class SemesterCalendar {
                 .getDisplayName(TextStyle.SHORT, Locale.US).toUpperCase(),
                 date.format(DateTimeFormatter.ofLocalizedDate(FormatStyle.SHORT)
                         .withLocale(Locale.US)) };
+    }
+
+    public Semester getSemester() {
+
+        if (semester == null) {
+            semester = new Semester(startDate, endDate, lengthInWeeks);
+        }
+        return semester;
+    }
+
+    @Getter
+    @RequiredArgsConstructor
+    public static class Semester {
+
+        private final LocalDate startDate;
+        private final LocalDate endDate;
+        private final Integer lengthInWeeks;
+
     }
 
 }

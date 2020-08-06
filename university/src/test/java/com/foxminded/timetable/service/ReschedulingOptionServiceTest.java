@@ -1,35 +1,29 @@
 package com.foxminded.timetable.service;
 
 import com.foxminded.timetable.dao.ReschedulingOptionRepository;
-import com.foxminded.timetable.model.Auditorium;
-import com.foxminded.timetable.model.Period;
-import com.foxminded.timetable.model.ReschedulingOption;
+import com.foxminded.timetable.model.*;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
-import org.mockito.InjectMocks;
-import org.mockito.Mock;
+import org.mockito.*;
 import org.mockito.junit.jupiter.MockitoExtension;
 
 import java.time.DayOfWeek;
-import java.util.Collections;
-import java.util.List;
-import java.util.Optional;
+import java.util.*;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.ArgumentMatchers.*;
-import static org.mockito.BDDMockito.given;
-import static org.mockito.BDDMockito.then;
+import static org.mockito.BDDMockito.*;
 
 @ExtendWith(MockitoExtension.class)
 class ReschedulingOptionServiceTest {
 
-    private final ReschedulingOption        option =
+    private final ReschedulingOption option =
             new ReschedulingOption(1L, DayOfWeek.MONDAY, Period.FIRST,
                     new Auditorium("A-01"));
     @Mock
     private ReschedulingOptionRepository repository;
     @InjectMocks
-    private       ReschedulingOptionService service;
+    private ReschedulingOptionService service;
 
     @Test
     public void countShouldDelegateToRepository() {

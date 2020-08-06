@@ -1,35 +1,28 @@
 package com.foxminded.timetable.forms.utility.formatter;
 
-import com.foxminded.timetable.forms.utility.DayOptions;
-import com.foxminded.timetable.forms.utility.WeekOptions;
-import com.foxminded.timetable.model.Auditorium;
+import com.foxminded.timetable.forms.utility.*;
 import com.foxminded.timetable.model.Period;
-import com.foxminded.timetable.model.ReschedulingOption;
-import com.foxminded.timetable.model.Schedule;
+import com.foxminded.timetable.model.*;
 import com.foxminded.timetable.service.TimetableFacade;
 import com.foxminded.timetable.service.utility.SemesterCalendar;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
-import org.mockito.InjectMocks;
-import org.mockito.Mock;
+import org.mockito.*;
 import org.mockito.junit.jupiter.MockitoExtension;
 
-import java.time.DayOfWeek;
-import java.time.LocalDate;
+import java.time.*;
 import java.util.*;
 
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.ArgumentMatchers.anyInt;
-import static org.mockito.BDDMockito.given;
-import static org.mockito.BDDMockito.then;
+import static org.mockito.ArgumentMatchers.*;
+import static org.mockito.BDDMockito.*;
 import static org.mockito.Mockito.mock;
 
 @ExtendWith(MockitoExtension.class)
 class OptionsFormatterTest {
 
     @Mock
-    private TimetableFacade  timetableFacade;
+    private TimetableFacade timetableFacade;
     @Mock
     private SemesterCalendar semesterCalendar;
 

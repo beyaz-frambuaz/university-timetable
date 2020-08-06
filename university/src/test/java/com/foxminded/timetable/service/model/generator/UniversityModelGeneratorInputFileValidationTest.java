@@ -3,8 +3,7 @@ package com.foxminded.timetable.service.model.generator;
 import com.foxminded.timetable.service.TimetableFacade;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
-import org.mockito.InjectMocks;
-import org.mockito.Mock;
+import org.mockito.*;
 import org.mockito.junit.jupiter.MockitoExtension;
 
 import static org.assertj.core.api.Assertions.assertThatIllegalArgumentException;
