@@ -1,6 +1,19 @@
 # Welcome!
 This is a Timetable App I built as an educational project with the [Foxminded Java EE course](https://foxminded.com.ua/ua/java/).
 
+## Project transformations
+As this is an educational project it started off small and underwent a series of metamorphoses:
+* Decomposition and domain model UML
+* Simple Maven project implementing the designed model (no DB, consol output)
+* Added Spring Boot and DAO layer (Spring JDBC)
+* Moved business logic to a proper service layer
+* Added UI with Spring MVC, Thymeleaf and Bootstrap
+* Upgraded DAO layer from JDBC to Hibernate
+* Further transformation of DAO to Spring Data JPA
+* Validation in controllers and service facade
+* REST endpoints added
+* Swagger documentation
+
 ## Set-up
 App reads 20 first, 20 last names, and 10 courses from txt files and randomly generates a university model with (currently) 300 students grouped by 30, 5 professors, 10 courses, and 5 auditoriums. Professor-courses are randomly assigned with max 2 professors per course and 4 courses per professor. App also generates a random schedule where:
 * All groups take all courses
@@ -39,17 +52,3 @@ University management has a full spectrum of options:
   * View available professors/auditoriums for a specific period
   * Substitute professor/auditorium in a schedule item
   * Reschedule course: single occurrence or permanently
-
-
-## Project transformations
-As this is an educational project it started off small and underwent a series of metamorphoses:
-* Decomposition and domain model UML
-* Simple Maven project implementing the designed model (no DB, consol output)
-* Added Spring Boot and DAO layer (Spring JDBC)
-* Moved business logic to a proper service layer
-* Added UI with Spring MVC, Thymeleaf and Bootstrap
-* Upgraded DAO layer from JDBC to Hibernate
-* Further transformation of DAO to Spring Data JPA
-* Validation in controllers and service facade
-* REST endpoints added
-* Swagger documentation
