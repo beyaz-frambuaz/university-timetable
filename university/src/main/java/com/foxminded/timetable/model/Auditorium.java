@@ -1,10 +1,9 @@
 package com.foxminded.timetable.model;
 
-import com.foxminded.timetable.constraints.IdValid;
 import lombok.*;
 
 import javax.persistence.*;
-import javax.validation.constraints.NotBlank;
+import javax.validation.constraints.*;
 
 @Entity
 @Table(name = "auditoriums")
@@ -16,7 +15,7 @@ public class Auditorium implements Comparable<Auditorium> {
     @Id
     @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "a_seq")
     @SequenceGenerator(name = "a_seq", sequenceName = "auditorium_id_seq")
-    @IdValid("Auditorium")
+    @Min(1)
     private Long id;
 
     @NotBlank

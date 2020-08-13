@@ -52,6 +52,4 @@ As this is an educational project it started off small and underwent a series of
 * Further transformation of DAO to Spring Data JPA
 * Validation in controllers and service facade
 * REST endpoints added
-
-Work in progress:
-* Swagger 
+* Swagger documentation

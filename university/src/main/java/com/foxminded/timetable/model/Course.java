@@ -1,10 +1,9 @@
 package com.foxminded.timetable.model;
 
-import com.foxminded.timetable.constraints.IdValid;
 import lombok.*;
 
 import javax.persistence.*;
-import javax.validation.constraints.NotBlank;
+import javax.validation.constraints.*;
 import java.io.Serializable;
 
 @Entity
@@ -17,7 +16,7 @@ public class Course implements Comparable<Course>, Serializable {
     @Id
     @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "c_seq")
     @SequenceGenerator(name = "c_seq", sequenceName = "course_id_seq")
-    @IdValid("Course")
+    @Min(1)
     private Long id;
 
     @NotBlank
