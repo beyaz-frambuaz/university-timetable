@@ -1,11 +1,11 @@
 package com.foxminded.timetable.model;
 
-import com.foxminded.timetable.constraints.IdValid;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.*;
 
 import javax.persistence.*;
 import javax.validation.Valid;
-import javax.validation.constraints.NotBlank;
+import javax.validation.constraints.*;
 import java.io.Serializable;
 import java.util.*;
 
@@ -19,7 +19,7 @@ public class Professor implements Comparable<Professor>, Serializable {
     @Id
     @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "p_seq")
     @SequenceGenerator(name = "p_seq", sequenceName = "professor_id_seq")
-    @IdValid("Professor")
+    @Min(1)
     private Long id;
 
     @NotBlank
@@ -44,11 +44,6 @@ public class Professor implements Comparable<Professor>, Serializable {
         this.id = id;
     }
 
-    public Set<Course> getCourses() {
-
-        return this.courses;
-    }
-
     public void addCourse(Course course) {
 
         courses.add(course);
@@ -59,6 +54,7 @@ public class Professor implements Comparable<Professor>, Serializable {
         courses.remove(course);
     }
 
+    @JsonIgnore
     public String getFullName() {
 
         return firstName + " " + lastName;

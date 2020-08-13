@@ -1,12 +1,11 @@
 package com.foxminded.timetable.model;
 
-import com.foxminded.timetable.constraints.IdValid;
 import lombok.*;
 import org.hibernate.annotations.Immutable;
 
 import javax.persistence.*;
 import javax.validation.Valid;
-import javax.validation.constraints.NotNull;
+import javax.validation.constraints.*;
 import java.time.DayOfWeek;
 
 @Entity
@@ -21,7 +20,7 @@ public class ReschedulingOption implements Comparable<ReschedulingOption> {
     @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "r_o_seq")
     @SequenceGenerator(name = "r_o_seq",
                        sequenceName = "rescheduling_option_id_seq")
-    @IdValid("Option")
+    @Min(1)
     private Long id;
 
     @Enumerated(EnumType.STRING)

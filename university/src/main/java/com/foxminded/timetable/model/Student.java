@@ -1,11 +1,11 @@
 package com.foxminded.timetable.model;
 
-import com.foxminded.timetable.constraints.IdValid;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.*;
 
 import javax.persistence.*;
 import javax.validation.Valid;
-import javax.validation.constraints.NotBlank;
+import javax.validation.constraints.*;
 
 @Entity
 @Table(name = "students")
@@ -17,7 +17,7 @@ public class Student {
     @Id
     @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "st_seq")
     @SequenceGenerator(name = "st_seq", sequenceName = "student_id_seq")
-    @IdValid("Student")
+    @Min(1)
     private Long id;
 
     @NotBlank
@@ -43,6 +43,7 @@ public class Student {
         this.group = group;
     }
 
+    @JsonIgnore
     public String getFullName() {
 
         return firstName + " " + lastName;

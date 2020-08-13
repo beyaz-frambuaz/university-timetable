@@ -1,6 +1,6 @@
 package com.foxminded.timetable.config;
 
-import com.foxminded.timetable.rest.assemblers.*;
+import com.foxminded.timetable.api.rest.assemblers.*;
 import com.foxminded.timetable.service.utility.SemesterCalendar;
 import org.springframework.boot.test.context.TestConfiguration;
 import org.springframework.context.annotation.Bean;

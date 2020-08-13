@@ -4,12 +4,11 @@ import com.fasterxml.jackson.annotation.*;
 import com.fasterxml.jackson.databind.annotation.*;
 import com.fasterxml.jackson.datatype.jsr310.deser.LocalDateDeserializer;
 import com.fasterxml.jackson.datatype.jsr310.ser.LocalDateSerializer;
-import com.foxminded.timetable.constraints.IdValid;
 import lombok.*;
 
 import javax.persistence.*;
 import javax.validation.Valid;
-import javax.validation.constraints.NotNull;
+import javax.validation.constraints.*;
 import java.time.*;
 
 @Entity
@@ -22,7 +21,7 @@ public class Schedule implements Comparable<Schedule> {
     @Id
     @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "sch_seq")
     @SequenceGenerator(name = "sch_seq", sequenceName = "schedule_id_seq")
-    @IdValid("Schedule")
+    @Min(1)
     private Long id;
 
     @ManyToOne(fetch = FetchType.LAZY)
