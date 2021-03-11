@@ -7,11 +7,11 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 
-import java.io.IOException;
-import java.net.*;
-import java.nio.file.*;
+import java.io.*;
+import java.net.URL;
+import java.nio.charset.StandardCharsets;
 import java.util.*;
-import java.util.stream.*;
+import java.util.stream.Collectors;
 
 @Slf4j
 @Setter
@@ -173,15 +173,17 @@ public class UniversityModelGenerator {
 
         URL url = validateUrl(filePath);
 
-        try (Stream<String> fileStream = Files.lines(Paths.get(url.toURI()))) {
-            List<String> fileLines = fileStream.collect(Collectors.toList());
+        try (BufferedReader reader = new BufferedReader(
+                new InputStreamReader(url.openStream(), StandardCharsets.UTF_8))) {
+
+            List<String> fileLines = reader.lines().collect(Collectors.toList());
 
             if (fileLines.isEmpty()) {
                 throw new IllegalArgumentException(filePath + " appears to be empty");
             }
 
             return fileLines;
-        } catch (IOException | URISyntaxException e) {
+        } catch (IOException e) {
             log.error("Unable to read {}", filePath);
             throw new IllegalArgumentException("Unable to read " + filePath, e);
         }
