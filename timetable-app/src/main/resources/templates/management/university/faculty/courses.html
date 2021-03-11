@@ -1,0 +1,220 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head th:replace="layout :: header(~{::title})">
+	<title>Management: Faculty</title>
+</head>
+<body>
+
+<!-- Drop course form modal -->
+<div aria-hidden="true" aria-labelledby="drop-course-label" class="modal fade" id="drop-course-modal"
+     role="dialog" tabindex="-1">
+	<div class="modal-dialog modal-dialog-centered" role="document">
+		<div class="modal-content">
+
+			<!--Header-->
+			<div class="modal-header">
+				<h5 class="modal-title" id="drop-course-label">
+					<i class="fas fa-backspace"></i>
+					Drop course confirmation
+				</h5>
+				<button aria-label="Close" class="close" data-dismiss="modal" type="button">
+					<span aria-hidden="true">&times;</span>
+				</button>
+			</div>
+
+			<!--Body-->
+			<div class="modal-body">
+				<h3>
+					Drop course
+					<span id="drop-course-title">course name</span>
+					?
+				</h3>
+				<br>
+
+				<form action="#" class="needs-validation" method="post"
+				      novalidate th:action="@{/management/university/faculty/courses/drop}" th:object="${dropCourseForm}">
+
+					<input id="drop-course-professor-id" name="professorId" th:field="*{professorId}" type="hidden" value="">
+					<input id="drop-course-course-id" name="courseId" th:field="*{courseId}" type="hidden" value="">
+
+					<!--Submit-->
+
+					<div class="modal-footer">
+						<button class="btn btn-outline-primary" type="submit">Confirm</button>
+					</div>
+
+				</form>
+			</div>
+		</div>
+
+	</div>
+</div>
+
+<!-- Add course form modal -->
+<div aria-hidden="true" aria-labelledby="change-group-label" class="modal fade" id="add-course-modal"
+     role="dialog" tabindex="-1">
+	<div class="modal-dialog modal-dialog-centered" role="document">
+		<div class="modal-content">
+
+			<!--Header-->
+			<div class="modal-header">
+				<h5 class="modal-title" id="add-course-label">
+					<i class="fas fa-plus-circle"></i>
+					Add course
+				</h5>
+				<button aria-label="Close" class="close" data-dismiss="modal" type="button">
+					<span aria-hidden="true">&times;</span>
+				</button>
+			</div>
+
+			<!--Body-->
+			<div class="modal-body">
+				<h4 th:text="${professor.fullName}">Professor</h4>
+				<br>
+
+				<form action="#" class="needs-validation" method="post"
+				      novalidate th:action="@{/timetable/management/university/faculty/courses/add}"
+				      th:object="${addCourseForm}">
+
+					<div class="container">
+
+						<div class="form-group row align-items-center">
+							<label class="form-control-label col-sm-4" for="new-course">New course:</label>
+							<div class="col-sm-8">
+								<select class="custom-select" id="new-course" name="newCourse" required>
+									<option disabled hidden selected value="">Select new course...</option>
+									<option th:each="course : *{newCourses}" th:text="${course.name}" th:value="${course.id}"
+									        value="1">
+										G-01
+									</option>
+								</select>
+								<div class="invalid-feedback">Course required</div>
+							</div>
+						</div>
+
+						<input id="add-course-professor-id" name="professorId" th:value="${professor.id}" type="hidden" value="">
+
+						<!--Submit-->
+
+						<div class="modal-footer">
+							<button class="btn btn-outline-primary" type="submit">Add</button>
+						</div>
+
+					</div>
+				</form>
+			</div>
+
+		</div>
+	</div>
+</div>
+
+<div th:replace="layout :: scheduleFormManagement"></div>
+
+<div th:replace="layout :: navbar"></div>
+
+<div class="container">
+	<div class="row align-items-center">
+		<div class="col">
+
+			<a class="btn btn-outline-secondary btn-sm mb-3" href="#" th:href="@{/timetable/management/university/faculty}">
+				<i class="fas fa-angle-left"></i>
+				Back
+			</a>
+
+			<!-- Alert Error -->
+			<div class="alert alert-dismissible alert-danger" th:if="${!errorAlert.isEmpty()}">
+				<button class="close" data-dismiss="alert" type="button">&times;</button>
+				<h4 class="alert-heading">
+					<i class="fas fa-exclamation-circle"></i>
+					Error!
+				</h4>
+				<p class="mb-0" th:text="${errorAlert}">Message</p>
+			</div>
+
+			<!-- Alert Success -->
+			<div class="alert alert-dismissible alert-success" th:if="${!successAlert.isEmpty()}">
+				<button class="close" data-dismiss="alert" type="button">&times;</button>
+				<h4 class="alert-heading">
+					<i class="fas fa-check-circle"></i>
+					Done!
+				</h4>
+				<p class="mb-0" th:text="${successAlert}">Message</p>
+			</div>
+
+			<h1>
+				<span th:text="|${professor.fullName} courses:|">Professor courses:</span>
+				<span class="text-body ml-4" data-target="#add-course-modal" data-toggle="modal" type="button">
+					<h3 class="fas fa-plus-circle icon-hover" data-container="body" data-placement="right" data-toggle="tooltip"
+					    title="Add new course"></h3>
+				</span>
+			</h1>
+
+			<hr class="my-3">
+			<p class="text-muted">Click on course name to view attendees</p>
+
+			<p class="text-warning" th:if="${allCourseAttendees.isEmpty()}">No courses to show</p>
+
+			<!-- List of courses -->
+			<div class="accordion shadow mb-3" id="courseList" th:unless="${allCourseAttendees.isEmpty()}">
+
+				<div th:each="courseAttendees : ${allCourseAttendees}">
+					<div class="schedule-row no-border">
+
+						<button aria-controls="studentsCourse1" class="col list-group-item list-group-item-action btn"
+						        data-target="#studentsCourse1"
+						        data-toggle="collapse"
+						        id="course1"
+						        th:attr="data-target='#studentsCourse' + *{courseAttendees.key.id},
+					                 aria-controls='studentsCourse' + *{courseAttendees.key.id}"
+						        th:classappend="*{courseAttendees.key.id.toString() == editedId}? 'btn-success'"
+						        th:id="'course' + *{courseAttendees.key.id}"
+						        type="button">
+							<span th:text="*{courseAttendees.key.name}">Course</span>
+							<small class="text-muted ml-4" th:text="|(*{courseAttendees.value.size()} attendees)|">(300
+								attendees)</small>
+						</button>
+
+						<button class="btn btn-outline-danger toggle-button" data-course-id="9" data-professor-id="1"
+						        data-target="#drop-course-modal" data-title="Course" data-toggle="modal" th:attr="data-title=*{courseAttendees.key.name}, data-professor-id=${professor.id},
+														 data-course-id=*{courseAttendees.key.id}"
+						        type="button">
+							Drop course
+						</button>
+					</div>
+
+					<div aria-labelledby="course1" class="collapse course-attendees-container list-group"
+					     data-parent="#courseList"
+					     id="studentsCourse1" th:attr="aria-labelledby='course' + *{courseAttendees.key.id}"
+					     th:id="'studentsCourse' + *{courseAttendees.key.id}">
+
+						<div class="schedule-row no-border my-2">
+
+							<div class="col-6" th:each="student : ${courseAttendees.value}">
+
+								<div class="list-group-item d-flex justify-content-between">
+									<div>
+										<span class="badge badge-pill badge-light" th:text="|ID: *{student.id}|">ID: 1</span>
+										<span class="pl-2" th:text="*{student.fullName}">Name One</span>
+									</div>
+									<div>
+										<span class="badge badge-pill badge-secondary" th:text="*{student.group.name}">G-01</span>
+									</div>
+								</div>
+
+							</div>
+
+						</div>
+
+					</div>
+				</div>
+
+			</div>
+
+		</div>
+	</div>
+</div>
+
+<div th:replace="layout :: scripts"></div>
+
+</body>
+</html>

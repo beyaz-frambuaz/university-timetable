@@ -1,0 +1,257 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head th:replace="layout :: header(~{::title})">
+	<title>Management: Schedule</title>
+</head>
+<body>
+
+<!-- Reschedule form modal -->
+<div aria-hidden="true" aria-labelledby="reschedule-label" class="modal fade" id="reschedule-modal"
+     role="dialog" tabindex="-1">
+	<div class="modal-dialog modal-dialog-centered" role="document">
+		<div class="modal-content">
+
+			<!--Header-->
+			<div class="modal-header">
+				<h5 class="modal-title" id="reschedule-label">
+					<i class="fas fa-calendar-times"></i>
+					Reschedule
+				</h5>
+				<button aria-label="Close" class="close" data-dismiss="modal" type="button">
+					<span aria-hidden="true">&times;</span>
+				</button>
+			</div>
+
+			<!--Body-->
+			<div class="modal-body">
+
+				<p>You can reschedule this schedule item once or permanently.</p>
+				<p>Permanent rescheduling means that all further occurrences of this class with take place as
+					specified by the rescheduling option you picked.</p>
+				<p>Permanent rescheduling will trigger an update on all existing schedule items with the same week parity.</p>
+				<p>Reschedule to
+					<span class="text-warning" id="reschedule-form-title">Jan 01, 2020, FIRST 08:15-09:45 period, A-03</span>
+				</p>
+
+				<form action="#" class="needs-validation" method="post"
+				      novalidate th:action="@{/timetable/management/schedule/reschedule}" th:object="${rescheduleForm}">
+
+					<div class="container">
+
+						<div class="form-group">
+							<div class="custom-control custom-radio">
+								<input checked class="custom-control-input" id="management-schedule-radio1" name="scheduleOption"
+								       required th:field="*{rescheduleFormOption}"
+								       th:value="${T(com.shablii.timetable.forms.RescheduleFormOption).ONCE}" type="radio"
+								       value="date">
+								<label class="custom-control-label" for="management-schedule-radio1">Once</label>
+							</div>
+						</div>
+
+						<div class="form-group">
+							<div class="custom-control custom-radio">
+								<input class="custom-control-input" id="management-schedule-radio2" name="scheduleOption" required
+								       th:field="*{rescheduleFormOption}"
+								       th:value="${T(com.shablii.timetable.forms.RescheduleFormOption).PERMANENTLY}"
+								       type="radio" value="week">
+								<label class="custom-control-label" for="management-schedule-radio2">Permanently</label>
+							</div>
+						</div>
+
+						<input name="scheduleId" th:value="${schedule.id}" type="hidden" value="">
+						<input id="option-id" name="optionId" type="hidden" value="">
+						<input id="date" name="date" type="hidden" value="">
+
+						<!--Submit-->
+
+						<div class="modal-footer">
+							<button class="btn btn-outline-primary" type="submit">Reschedule</button>
+						</div>
+
+					</div>
+				</form>
+			</div>
+
+		</div>
+	</div>
+</div>
+
+<div th:replace="layout :: scheduleFormManagement"></div>
+
+<div th:replace="layout :: navbar"></div>
+
+<div class="container">
+	<div class="row align-items-center">
+		<div class="col">
+
+			<h3>Schedule item:</h3>
+			<div class="row">
+				<div class="col-2">
+					<span>Date:</span>
+				</div>
+				<div class="col">
+					<span th:text="${@semesterCalendar.getDayDescription(schedule.date)}">Jan 01, 2020</span>
+				</div>
+			</div>
+			<div class="row">
+				<div class="col-2">
+					<span>Day:</span>
+				</div>
+				<div class="col">
+					<span th:text="${schedule.day}">Monday</span>
+				</div>
+			</div>
+			<div class="row">
+				<div class="col-2">
+					<span>Period:</span>
+				</div>
+				<div class="col">
+					<span th:text="${schedule.period.toString()}">FIRST 08:30-09:45</span>
+				</div>
+			</div>
+			<div class="row">
+				<div class="col-2">
+					<span>Auditorium:</span>
+				</div>
+				<div class="col">
+					<span th:text="${schedule.auditorium.name}">A-01</span>
+				</div>
+			</div>
+			<div class="row">
+				<div class="col-2">
+					<span>Course:</span>
+				</div>
+				<div class="col">
+					<span th:text="${schedule.course.name}">Dark Magic Against Defense Against Dark Magic</span>
+				</div>
+			</div>
+			<div class="row">
+				<div class="col-2">
+					<span>Group:</span>
+				</div>
+				<div class="col">
+					<span th:text="${schedule.group.name}">G-01</span>
+				</div>
+			</div>
+			<div class="row">
+				<div class="col-2">
+					<span>Professor:</span>
+				</div>
+				<div class="col">
+					<span th:text="${schedule.professor.fullName}">Some really long professor name that might not fit</span>
+				</div>
+			</div>
+
+			<hr class="my-3">
+
+			<h1>Rescheduling options:</h1>
+
+
+			<!-- Week Rescheduling options -->
+			<div th:if="${weekOptions}">
+				<p th:text="|Week of ${weekOptions.weekDescription}|">For week</p>
+				<small class="text-muted">Click on the option below to reschedule</small>
+				<!--Header-->
+				<div class="schedule-row schedule-header shadow">
+
+					<div class="col-1">Period</div>
+					<div class="col" th:each="dayOption : ${weekOptions.dayOptions}">
+						<span th:text="*{dayOption.dayShortDescription[0]}">MON</span>
+						<small class="text-muted"
+						       th:text="'(' + *{dayOption.dayShortDescription[1]} + ')'">(09.07.20)</small>
+					</div>
+				</div>
+				<!--Body-->
+				<div class="schedule-container shadow rounded">
+
+					<!--Background week #-->
+					<div class="schedule-background">
+						<span class="col-1 d-flex justify-content-center">W</span>
+						<span class="col-1 d-flex justify-content-center">e</span>
+						<span class="col-1 d-flex justify-content-center">e</span>
+						<span class="col-1 d-flex justify-content-center">k</span>
+						<span class="col-1 d-flex justify-content-center pt-2"
+						      th:text="${weekOptions.weekNumber}">14</span>
+					</div>
+
+					<!-- Options -->
+					<div class="schedule-body">
+
+						<!-- Each Period -->
+						<div class="schedule-row" th:each="period : ${T(com.shablii.timetable.model.Period).values()}">
+
+							<div class="schedule-period col-1">
+								<span th:text="*{period.getTime()}">8:15-9:45</span>
+							</div>
+
+							<!--Day-->
+							<div class="schedule col px-1" th:each="dayOptions : ${weekOptions.dayOptions}">
+								<div class="list-group"
+								     th:each="dayPeriodOption : *{dayOptions.periodOptions.get(period)}">
+									<button class="list-group-item list-group-item-action" data-date="2020-01-01" data-option-id="1"
+									        data-target="#reschedule-modal"
+									        data-title="title: Jan 01, 2020, FIRST 08:15-09:45 period, A-03"
+									        data-toggle="modal" th:attr="data-option-id=*{dayPeriodOption.id},
+									        data-title=${dayOptions.dayDescription}
+									        + ', ' + ${period.toString()}
+													+ ', ' + *{dayPeriodOption.auditorium.name},
+													data-date=${dayOptions.date}"
+									        type="button">
+										<span th:text="*{dayPeriodOption.auditorium.name}">A-02</span>
+									</button>
+								</div>
+							</div>
+
+						</div>
+
+					</div>
+
+				</div>
+			</div>
+
+			<!-- Day Rescheduling options -->
+			<div th:if="${dayOptions}">
+				<p th:text="|Day of ${dayOptions.dayDescription}|">For day</p>
+				<small class="text-muted">Click on the option below to reschedule</small>
+				<div class="day-schedule-container">
+
+					<div class="schedule-row no-border align-items-center py-2"
+					     th:each="periodOptions : ${dayOptions.periodOptions}">
+
+						<div class="col-2">
+							<span class="pl-4" th:text="*{periodOptions.key.getTime()}">8:15-9:45</span>
+						</div>
+
+						<div class="col-10">
+							<ul class="list-group">
+								<div th:each="dayPeriodOption : *{periodOptions.value}">
+
+									<button class="list-group-item list-group-item-action" data-date="2020-01-01" data-option-id="1"
+									        data-target="#reschedule-modal"
+									        data-title="title: Jan 01, 2020, FIRST 08:15-09:45 period, A-03"
+									        data-toggle="modal" th:attr="data-option-id=*{dayPeriodOption.id},
+									        data-title=${dayOptions.dayDescription}
+									        + ', ' + ${periodOptions.key.toString()}
+													+ ', ' + *{dayPeriodOption.auditorium.name},
+													data-date=${dayOptions.date}"
+									        type="button">
+										<span th:text="*{dayPeriodOption.auditorium.name}">A-02</span>
+									</button>
+
+								</div>
+							</ul>
+						</div>
+					</div>
+
+				</div>
+			</div>
+
+
+		</div>
+	</div>
+</div>
+
+<div th:replace="layout :: scripts"></div>
+
+</body>
+</html>

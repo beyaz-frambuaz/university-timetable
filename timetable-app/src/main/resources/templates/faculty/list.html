@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head th:replace="layout :: header(~{::title})">
+	<title>Timetable: Select Professor</title>
+</head>
+<body>
+
+<div th:replace="layout :: navbar"></div>
+
+<div class="container">
+	<div class="row align-items-center">
+		<div class="col">
+
+			<div class="alert alert-dismissible alert-warning" th:if="${!sessionExpired.isEmpty()}">
+				<button class="close" data-dismiss="alert" type="button">&times;</button>
+				<h4 class="alert-heading">
+					<i class="fas fa-exclamation-circle"></i>
+					Warning!
+				</h4>
+				<p class="mb-0" th:text="${sessionExpired}">Message</p>
+			</div>
+
+			<div class="alert alert-dismissible alert-danger" th:if="${!errorAlert.isEmpty()}">
+				<button class="close" data-dismiss="alert" type="button">&times;</button>
+				<h4 class="alert-heading">
+					<i class="fas fa-exclamation-circle"></i>
+					Error!
+				</h4>
+				<p class="mb-0" th:text="${errorAlert}">Message</p>
+			</div>
+
+			<h1>Select a professor</h1>
+
+			<div class="student-select-container shadow">
+				<div class="list-group">
+
+					<form action="" method="post" th:action="@{/timetable/faculty/list}">
+						<div class="schedule-row no-border">
+
+							<div class="col-12" th:each="professor, index : ${professors}">
+
+								<input id="radioP" name="professorId" onchange="this.form.submit()" style="display: none"
+								       th:id="'professor' + *{index}"
+								       th:value="*{professor.id}" type="radio"
+								       value="id">
+								<label class="list-group-item" for="radioP" th:for="'professor' + *{index}">
+									<span class="badge badge-pill badge-light" th:text="'ID: ' + *{professor.id}">ID: 1</span>
+									<span class="pl-2" th:text="*{professor.fullName}">Name One</span>
+								</label>
+
+							</div>
+
+						</div>
+					</form>
+
+				</div>
+			</div>
+
+			<div class="my-3 text-muted">All active professors</div>
+
+		</div>
+	</div>
+</div>
+
+<div th:replace="layout :: scripts"></div>
+
+</body>
+</html>
