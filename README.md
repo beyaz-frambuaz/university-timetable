@@ -1,6 +1,8 @@
 # Welcome!
 This is a Timetable App I built as an educational project with the [Foxminded Java EE course](https://foxminded.com.ua/ua/java/).
 
+**Skip the boring part and hit the ground running** `docker run -p 8080:8080 beyazframbuaz/timetable-app`
+
 ## Project transformations
 As this is an educational project it started off small and underwent a series of metamorphoses:
 * Decomposition and domain model UML
@@ -13,6 +15,7 @@ As this is an educational project it started off small and underwent a series of
 * Validation in controllers and service facade
 * REST endpoints added
 * Swagger documentation
+* [Docker image](https://hub.docker.com/r/beyazframbuaz/timetable-app)
 
 ## Set-up
 App reads 20 first, 20 last names, and 10 courses from txt files and randomly generates a university model with (currently) 300 students grouped by 30, 5 professors, 10 courses, and 5 auditoriums. Professor-courses are randomly assigned with max 2 professors per course and 4 courses per professor. App also generates a random schedule where:
