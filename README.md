@@ -2,8 +2,12 @@
 This is a Timetable App I built as an educational project with the [Foxminded Java EE course](https://foxminded.com.ua/ua/java/).
 
 **Skip the boring part and hit the ground running:**
-* Stand-alone container with H2 under the hood  `docker run -p 8080:8080 beyazframbuaz/timetable-app:v1.1`
-* Linked to PostgreSQL container  `mvn clean package; docker-compose up`
+* `v1.1` Stand-alone container with H2 under the hood  `docker run -p 8080:8080 beyazframbuaz/timetable-app:v1.1`
+* `v1.2` Requires running PostgreSQL container  `docker-compose up` or 
+```bash
+docker run -d --name=db -p 5432:5432 -e POSTGRES_USER=sa -e POSTGRES_PASSWORD=sa -e POSTGRES_DB=data postgres; 
+docker run --name=timetable-app -p 8080:8080 --link=db beyazframbuaz/timetable-app
+```
 
 ---
   </br>
@@ -18,6 +22,8 @@ This is a Timetable App I built as an educational project with the [Foxminded Ja
     <img alt="Auditorium schedule" src="screenshots/auditorium-schedule.png">
   </div>
 </div>
+
+# tl;dr
 
 ## Project transformations
 As this is an educational project it started off small and underwent a series of metamorphoses:
