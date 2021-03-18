@@ -1,0 +1,29 @@
+version: "3.9"
+
+services:
+  timetable-app:
+    image: beyazframbuaz/timetable-app
+    build:
+      context: .
+    container_name: timetable-app
+    ports:
+      - 8080:8080
+    depends_on:
+      - db
+    networks:
+      - timetable
+    restart: always
+
+  db:
+    image: postgres
+    container_name: db
+    environment:
+      - POSTGRES_PASSWORD=sa
+      - POSTGRES_USER=sa
+      - POSTGRES_DB=data
+    networks:
+      - timetable
+    restart: always
+
+networks:
+  timetable:

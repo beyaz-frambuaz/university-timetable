@@ -37,12 +37,15 @@ CREATE TABLE students
     group_id   BIGINT REFERENCES groups (id) ON UPDATE CASCADE ON DELETE CASCADE
 );
 
+CREATE TYPE DAY_OF_WEEK AS ENUM ('MONDAY', 'TUESDAY', 'WEDNESDAY', 'THURSDAY', 'FRIDAY');
+CREATE TYPE PERIOD_ORDER AS ENUM ('FIRST', 'SECOND', 'THIRD', 'FOURTH', 'FIFTH');
+
 CREATE TABLE schedule_templates
 (
     id            BIGINT PRIMARY KEY,
     week_parity   BOOLEAN,
-    day           ENUM('MONDAY', 'TUESDAY', 'WEDNESDAY', 'THURSDAY', 'FRIDAY'),
-    period        ENUM('FIRST', 'SECOND', 'THIRD', 'FOURTH', 'FIFTH'),
+    day           DAY_OF_WEEK,
+    period        PERIOD_ORDER,
     auditorium_id BIGINT REFERENCES auditoriums (id) ON UPDATE CASCADE ON DELETE CASCADE,
     course_id     BIGINT REFERENCES courses (id) ON UPDATE CASCADE ON DELETE CASCADE,
     group_id      BIGINT REFERENCES groups (id) ON UPDATE CASCADE ON DELETE CASCADE,
@@ -54,8 +57,8 @@ CREATE TABLE schedules
     id            BIGINT PRIMARY KEY,
     template_id   BIGINT REFERENCES schedule_templates (id) ON UPDATE CASCADE ON DELETE CASCADE,
     on_date       DATE,
-    day           ENUM('MONDAY', 'TUESDAY', 'WEDNESDAY', 'THURSDAY', 'FRIDAY'),
-    period        ENUM('FIRST', 'SECOND', 'THIRD', 'FOURTH', 'FIFTH'),
+    day           DAY_OF_WEEK,
+    period        PERIOD_ORDER,
     auditorium_id BIGINT REFERENCES auditoriums (id) ON UPDATE CASCADE ON DELETE CASCADE,
     course_id     BIGINT REFERENCES courses (id) ON UPDATE CASCADE ON DELETE CASCADE,
     group_id      BIGINT REFERENCES groups (id) ON UPDATE CASCADE ON DELETE CASCADE,
@@ -65,7 +68,7 @@ CREATE TABLE schedules
 CREATE TABLE rescheduling_options
 (
     id            BIGINT PRIMARY KEY,
-    day           ENUM('MONDAY', 'TUESDAY', 'WEDNESDAY', 'THURSDAY', 'FRIDAY'),
-    period        ENUM('FIRST', 'SECOND', 'THIRD', 'FOURTH', 'FIFTH'),
+    day           DAY_OF_WEEK,
+    period        PERIOD_ORDER,
     auditorium_id BIGINT REFERENCES auditoriums (id) ON UPDATE CASCADE ON DELETE CASCADE
 );
